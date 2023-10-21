@@ -70,6 +70,14 @@ class Client(webcface.member.Member):
                 self.sync_init = True
                 is_first = True
 
+            msgs.append(webcface.message.Sync.new())
+
+            for k, v in self.data.value_store.transfer_send(is_first).items():
+                msgs.append(webcface.message.Value.new(k, v))
+            for m, r in self.data.value_store.transfer_req(is_first).items():
+                for k, i in r.items():
+                    msgs.append(webcface.message.ValueReq.new(m, k, i))
+
             self.ws.send(webcface.message.pack(msgs))
 
     @property

@@ -1,6 +1,7 @@
 from __future__ import annotations
 import msgpack
 from typing import Tuple
+import datetime
 
 
 class MessageBase:
@@ -59,9 +60,60 @@ class SvrVersion(MessageBase):
         return self.msg["v"]
 
 
-message_classes = [
+class Sync(MessageBase):
+    kind_def = 87
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new() -> Sync:
+        return Sync({"m": 0, "t": int(datetime.datetime.now().timestamp() * 1000)})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def time(self) -> datetime.datetime:
+        return datetime.datetime.fromtimestamp(self.msg["t"] / 1000)
+
+
+class Value(MessageBase):
+    kind_def = 0
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(f: str, d: list[float]) -> Value:
+        return Value({"f": f, "d": d})
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> list[float]:
+        return self.msg["d"]
+
+
+class ValueReq(MessageBase):
+    kind_def = 20
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str, f: str, i: int) -> ValueReq:
+        return ValueReq({"m": m, "f": f, "i": i})
+
+
+message_classes_recv = [
     SyncInit,
     SvrVersion,
+    Sync,
+    Value,
 ]
 
 
@@ -82,7 +134,7 @@ def unpack(packed: bytes) -> list[MessageBase]:
         msg = unpack_obj[i + 1]
         assert isinstance(kind, int)
         assert isinstance(msg, dict)
-        for C in message_classes:
+        for C in message_classes_recv:
             if kind == C.kind_def:
                 msg_ret.append(C(msg))
     return msg_ret
