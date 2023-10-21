@@ -11,6 +11,8 @@ class SyncDataStore2(Generic[T]):
     entry: Dict[str, list[str]]
     req: Dict[str, Dict[str, int]]
     req_send: Dict[str, Dict[str, int]]
+    svr_name: str
+    svr_version: str
 
     def __init__(self, name: str) -> None:
         self.self_member_name = name
@@ -20,6 +22,8 @@ class SyncDataStore2(Generic[T]):
         self.entry = {}
         self.req = {}
         self.req_send = {}
+        self.svr_name = ""
+        self.svr_version = ""
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member

@@ -9,6 +9,7 @@ readme = "README.md"
 [tool.poetry.dependencies]
 python = "^3.8"
 websocket-client = "^1.6.4"
+msgpack = "^1.0.7"
 
 
 [tool.poetry.group.test.dependencies]

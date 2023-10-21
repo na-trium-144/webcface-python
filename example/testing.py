@@ -1,11 +1,17 @@
-from webcface import Member, Value
-from webcface.client_data import ClientData
-from webcface.field import Field
+from webcface import Member, Value, Client
+import time
 
-data = ClientData("a")
-m = Member(Field(data, ""), "a")
-v = m.value("fuga")
+wcli = Client("a")
+v = wcli.value("fuga")
 
 print(v.get())
 v.set(12345)
 print(v.get())
+
+
+time.sleep(1)
+wcli.sync()
+time.sleep(1)
+
+print(wcli.server_name)
+print(wcli.server_version)
