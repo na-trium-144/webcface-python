@@ -11,6 +11,9 @@ python = "^3.8"
 websocket-client = "^1.6.4"
 
 
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.2"
+
 [build-system]
 requires = ["poetry-core"]
 build-backend = "poetry.core.masonry.api"
