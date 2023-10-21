@@ -1,11 +1,5 @@
 from typing import TypeVar, Generic, Dict, Tuple
 
-
-class ClientData:
-    def __init__(self, name: str) -> None:
-        self.self_member_name = name
-
-
 T = TypeVar("T")
 
 
@@ -156,3 +150,37 @@ class SyncDataStore1(Generic[T]):
             r = self.req_send
             self.req_send = {}
             return r
+
+
+class ClientData:
+    self_member_name: str
+    value_store: SyncDataStore2[list[float]]
+    text_store: SyncDataStore2[str]
+    member_ids: Dict[str, int]
+    member_lib_name: Dict[str, str]
+    member_lib_ver: Dict[str, str]
+    member_remote_addr: Dict[str, str]
+    svr_name: str
+    svr_version: str
+
+    def __init__(self, name: str) -> None:
+        self.self_member_name = name
+        self.value_store = SyncDataStore2[list[float]](name)
+        self.text_store = SyncDataStore2[str](name)
+        self.member_ids = {}
+        self.member_lib_name = {}
+        self.member_remote_addr = {}
+        self.svr_name = ""
+        self.svr_version = ""
+
+    def is_self(self, member: str) -> bool:
+        return self.self_member_name == member
+
+    def get_member_name_from_id(self, m_id: int) -> str:
+        for k, v in self.member_ids.items():
+            if v == m_id:
+                return k
+        return ""
+
+    def get_member_id_from_name(self, name: str) -> int:
+        return self.member_ids.get(name, 0)

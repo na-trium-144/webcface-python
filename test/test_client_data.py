@@ -147,3 +147,18 @@ def test_s1_transfre_req(s1):
     s = s1.transfer_req(True)
     assert s["a"] == True
     assert s["b"] == True
+
+
+def test_is_self(data):
+    assert data.is_self(self_name)
+    assert not data.is_self("a")
+    assert not data.is_self("")
+
+
+def test_get_member(data):
+    data.member_ids["a"] = 10
+    assert data.get_member_name_from_id(10) == "a"
+    assert data.get_member_name_from_id(999) == ""
+    assert data.get_member_id_from_name("a") == 10
+    assert data.get_member_id_from_name("b") == 0
+    assert data.get_member_id_from_name("") == 0

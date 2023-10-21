@@ -1,5 +1,5 @@
 from pytest import fixture
-from webcface.client_data import SyncDataStore2, SyncDataStore1
+from webcface.client_data import SyncDataStore2, SyncDataStore1, ClientData
 
 self_name = "test"
 
@@ -12,3 +12,8 @@ def s2():
 @fixture
 def s1():
     return SyncDataStore1[str](self_name)
+
+
+@fixture
+def data():
+    return ClientData(self_name)
