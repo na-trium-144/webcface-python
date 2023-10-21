@@ -118,3 +118,41 @@ class SyncDataStore2(Generic[T]):
                     else:
                         return (rm, rf)
         return ("", "")
+
+
+class SyncDataStore1(Generic[T]):
+    self_member_name: str
+    data_recv: Dict[str, T]
+    req: Dict[str, bool]
+    req_send: Dict[str, bool]
+
+    def __init__(self, name: str) -> None:
+        self.self_member_name = name
+        self.data_recv = {}
+        self.req = {}
+        self.req_send = {}
+
+    def is_self(self, member: str) -> bool:
+        return self.self_member_name == member
+
+    def set_recv(self, member: str, data: T) -> None:
+        self.data_recv[member] = data
+
+    def get_recv(self, member: str) -> T | None:
+        if not self.is_self(member) and not self.req.get(member, False):
+            self.req[member] = True
+            self.req_send[member] = True
+        return self.data_recv.get(member, None)
+
+    def unset_recv(self, member: str) -> None:
+        if member in self.data_recv:
+            del self.data_recv[member]
+
+    def transfer_req(self, is_first: bool) -> Dict[str, bool]:
+        if is_first:
+            self.req_send = {}
+            return self.req
+        else:
+            r = self.req_send
+            self.req_send = {}
+            return r

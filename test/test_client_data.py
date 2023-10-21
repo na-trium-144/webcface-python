@@ -109,3 +109,41 @@ def test_s2_get_req(s2):
     assert s2.get_req(1, "") == ("a", "b")
     assert s2.get_req(1, "c") == ("a", "b.c")
     assert s2.get_req(999, "") == ("", "")
+
+
+def test_s1_self(s1):
+    assert s1.is_self(self_name)
+    assert not s1.is_self("a")
+    assert not s1.is_self("")
+
+
+def test_s1_set_recv(s1):
+    s1.set_recv("a", "b")
+    assert s1.data_recv["a"] == "b"
+
+
+def test_s1_get_recv(s1):
+    s1.data_recv["a"] = "b"
+    assert s1.get_recv("a") == "b"
+    assert s1.req["a"] == True
+    assert s1.req_send["a"] == True
+
+    s1.get_recv(self_name)
+    assert self_name not in s1.req
+    assert self_name not in s1.req_send
+
+
+def test_s1_transfre_req(s1):
+    s1.req_send = {"a": True}
+    s1.req = {"a": True, "b": True}
+
+    s = s1.transfer_req(False)
+    assert s["a"] == True
+    assert "b" not in s
+
+    s = s1.transfer_req(False)
+    assert len(s) == 0
+
+    s = s1.transfer_req(True)
+    assert s["a"] == True
+    assert s["b"] == True
