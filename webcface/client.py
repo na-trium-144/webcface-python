@@ -10,7 +10,9 @@ import webcface.message
 class Client(webcface.member.Member):
     connected: bool
     sync_init: bool
-    ws: websocket.WebSocketApp
+    ws: websocket.WebSocketApp | None
+    closing: bool
+    ws_thread: threading.Thread
 
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
@@ -18,11 +20,10 @@ class Client(webcface.member.Member):
         super().__init__(
             webcface.field.Field(webcface.client_data.ClientData(name), name), name
         )
-        self.host = host
-        self.port = port
         self.ws = None
         self.connected = False
         self.sync_init = False
+        self.closing = False
 
         def on_open(ws):
             print("open")
@@ -35,6 +36,14 @@ class Client(webcface.member.Member):
                     if isinstance(m, webcface.message.SvrVersion):
                         self.data.svr_name = m.svr_name
                         self.data.svr_version = m.ver
+                    if isinstance(m, webcface.message.ValueRes):
+                        member, field = self.data.value_store.get_req(
+                            m.req_id, m.sub_field
+                        )
+                        self.data.value_store.set_recv(member, field, m.data)
+                    if isinstance(m, webcface.message.ValueEntry):
+                        member = self.data.get_member_name_from_id(m.member_id)
+                        self.data.value_store.set_entry(member, m.field)
 
         def on_error(ws, error):
             print(error)
@@ -44,7 +53,7 @@ class Client(webcface.member.Member):
             self.connected = False
 
         def reconnect():
-            while True:
+            while not self.closing:
                 self.ws = websocket.WebSocketApp(
                     f"ws://{host}:{port}/",
                     on_open=on_open,
@@ -56,13 +65,22 @@ class Client(webcface.member.Member):
                     self.ws.run_forever()
                 except Exception as e:
                     print(e)
-                time.sleep(1)
+                    time.sleep(1)
 
         self.ws_thread = threading.Thread(target=reconnect)
         self.ws_thread.start()
 
+    def __del__(self) -> None:
+        self.close()
+
+    def close(self) -> None:
+        self.closing = True
+        if self.ws is not None:
+            self.ws.close()
+        self.ws_thread.join()
+
     def sync(self) -> None:
-        if self.connected:
+        if self.connected and self.ws is not None:
             msgs: list[webcface.message.MessageBase] = []
             is_first = False
             if not self.sync_init:
@@ -79,6 +97,9 @@ class Client(webcface.member.Member):
                     msgs.append(webcface.message.ValueReq.new(m, k, i))
 
             self.ws.send(webcface.message.pack(msgs))
+
+    def member(self, member_name) -> webcface.member.Member:
+        return webcface.member.Member(self, member_name)
 
     @property
     def server_name(self) -> str:

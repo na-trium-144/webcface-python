@@ -89,8 +89,30 @@ class Value(MessageBase):
     def new(f: str, d: list[float]) -> Value:
         return Value({"f": f, "d": d})
 
+
+class ValueReq(MessageBase):
+    kind_def = 40
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str, f: str, i: int) -> ValueReq:
+        return ValueReq({"M": m, "f": f, "i": i})
+
+
+class ValueRes(MessageBase):
+    kind_def = 60
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
     @property
-    def field(self) -> str:
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
         return self.msg["f"]
 
     @property
@@ -98,22 +120,29 @@ class Value(MessageBase):
         return self.msg["d"]
 
 
-class ValueReq(MessageBase):
+class ValueEntry(MessageBase):
     kind_def = 20
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
-    @staticmethod
-    def new(m: str, f: str, i: int) -> ValueReq:
-        return ValueReq({"m": m, "f": f, "i": i})
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
 
 
+# 受信する可能性のあるメッセージのリスト
 message_classes_recv = [
     SyncInit,
     SvrVersion,
     Sync,
     Value,
+    ValueRes,
+    ValueEntry,
 ]
 
 
