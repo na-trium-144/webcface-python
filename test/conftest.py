@@ -17,3 +17,4 @@ def s1():
 @fixture
 def data():
     return ClientData(self_name)
+
