@@ -5,6 +5,8 @@ import webcface.member
 import webcface.field
 import webcface.client_data
 import webcface.message
+from blinker import signal
+import json
 
 
 class Client(webcface.member.Member):
@@ -41,9 +43,15 @@ class Client(webcface.member.Member):
                             m.req_id, m.sub_field
                         )
                         self.data.value_store.set_recv(member, field, m.data)
+                        signal(json.dumps(["valueChange", member, field])).send(
+                            self.member(member).value(field)
+                        )
                     if isinstance(m, webcface.message.ValueEntry):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.value_store.set_entry(member, m.field)
+                        signal(json.dumps(["valueEntry", member])).send(
+                            self.member(member).value(field)
+                        )
 
         def on_error(ws, error):
             print(error)

@@ -74,7 +74,17 @@ def test_value_set(data):
 
     # objectを渡した時
 
-    # changeEvent
+    called = 0
+
+    def callback(v):
+        assert v.member.name == self_name
+        assert v.name == "b"
+        nonlocal called
+        called += 1
+
+    Value(Field(data, self_name, "b")).signal.connect(callback)
+    Value(Field(data, self_name, "b")).set(1)
+    assert called == 1
 
     with pytest.raises(ValueError) as e:
         Value(Field(data, "a", "b")).set(123456)

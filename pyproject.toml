@@ -10,6 +10,7 @@ readme = "README.md"
 python = "^3.8"
 websocket-client = "^1.6.4"
 msgpack = "^1.0.7"
+blinker = "^1.6.3"
 
 
 [tool.poetry.group.test.dependencies]

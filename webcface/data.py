@@ -1,6 +1,8 @@
 from __future__ import annotations
 import webcface.field
 import webcface.member
+from blinker import signal
+import json
 
 
 class Value(webcface.field.Field):
@@ -14,6 +16,10 @@ class Value(webcface.field.Field):
     @property
     def name(self) -> str:
         return self._field
+
+    @property
+    def signal(self) -> signal:
+        return signal(json.dumps(["valueChange", self._member, self._field]))
 
     def child(self, field: str) -> Value:
         return Value(self, self._field + "." + field)
@@ -37,9 +43,9 @@ class Value(webcface.field.Field):
         if self.data.is_self(self._member):
             if isinstance(data, int):
                 self.data.value_store.set_send(self._field, [data])
-                # self.triggerEvent()
+                self.signal.send(self)
             elif isinstance(data, list):
                 self.data.value_store.set_send(self._field, data)
-                # self.triggerEvent()
+                self.signal.send(self)
         else:
             raise ValueError("Cannot set data to member other than self")
