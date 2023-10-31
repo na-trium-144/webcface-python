@@ -49,3 +49,38 @@ class Value(webcface.field.Field):
                 self.signal.send(self)
         else:
             raise ValueError("Cannot set data to member other than self")
+
+
+class Text(webcface.field.Field):
+    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+        super().__init__(base.data, base._member, field if field != "" else base._field)
+
+    @property
+    def member(self) -> webcface.member.Member:
+        return webcface.member.Member(self)
+
+    @property
+    def name(self) -> str:
+        return self._field
+
+    @property
+    def signal(self) -> signal:
+        return signal(json.dumps(["textChange", self._member, self._field]))
+
+    def child(self, field: str) -> Text:
+        return Text(self, self._field + "." + field)
+
+    def try_get(self) -> str | None:
+        return self.data.text_store.get_recv(self._member, self._field)
+
+    def get(self) -> str:
+        v = self.try_get()
+        return v if v is not None else ""
+
+    def set(self, data: str) -> None:
+        if self.data.is_self(self._member):
+            if isinstance(data, str):
+                self.data.text_store.set_send(self._field, data)
+                self.signal.send(self)
+        else:
+            raise ValueError("Cannot set data to member other than self")

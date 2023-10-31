@@ -13,3 +13,6 @@ class Member(webcface.field.Field):
 
     def value(self, field: str) -> webcface.data.Value:
         return webcface.data.Value(self, field)
+
+    def text(self, field: str) -> webcface.data.Text:
+        return webcface.data.Text(self, field)
