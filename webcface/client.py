@@ -1,18 +1,19 @@
 import threading
 import time
+from typing import Optional
+import json
 import websocket
+from blinker import signal
 import webcface.member
 import webcface.field
 import webcface.client_data
 import webcface.message
-from blinker import signal
-import json
 
 
 class Client(webcface.member.Member):
     connected: bool
     sync_init: bool
-    ws: websocket.WebSocketApp | None
+    ws: Optional[websocket.WebSocketApp]
     closing: bool
     ws_thread: threading.Thread
 

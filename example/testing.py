@@ -1,5 +1,5 @@
-from webcface import Member, Value, Client
 import time
+from webcface import Member, Value, Client
 
 wcli = Client("a")
 v = wcli.value("fuga")

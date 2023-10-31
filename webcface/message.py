@@ -1,7 +1,6 @@
 from __future__ import annotations
-import msgpack
-from typing import Tuple
 import datetime
+import msgpack
 
 
 class MessageBase:

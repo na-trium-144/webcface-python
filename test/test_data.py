@@ -1,8 +1,8 @@
 from conftest import self_name
+import pytest
 from webcface.data import Value, Text
 from webcface.field import Field
 from webcface.member import Member
-import pytest
 
 
 def test_value_member(data):

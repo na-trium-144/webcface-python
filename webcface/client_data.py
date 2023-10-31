@@ -1,4 +1,4 @@
-from typing import TypeVar, Generic, Dict, Tuple
+from typing import TypeVar, Generic, Dict, Tuple, Optional
 
 T = TypeVar("T")
 
@@ -43,7 +43,7 @@ class SyncDataStore2(Generic[T]):
             max_req = max(max_req, max(r.values()))
         return max_req
 
-    def get_recv(self, member: str, field: str) -> T | None:
+    def get_recv(self, member: str, field: str) -> Optional[T]:
         if not self.is_self(member) and self.req.get(member, {}).get(field, 0) == 0:
             new_req = self.get_max_req() + 1
             if member not in self.req:
@@ -136,7 +136,7 @@ class SyncDataStore1(Generic[T]):
     def set_recv(self, member: str, data: T) -> None:
         self.data_recv[member] = data
 
-    def get_recv(self, member: str) -> T | None:
+    def get_recv(self, member: str) -> Optional[T]:
         if not self.is_self(member) and not self.req.get(member, False):
             self.req[member] = True
             self.req_send[member] = True

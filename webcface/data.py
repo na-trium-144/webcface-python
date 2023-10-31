@@ -1,8 +1,9 @@
 from __future__ import annotations
+from typing import Optional
+import json
+from blinker import signal
 import webcface.field
 import webcface.member
-from blinker import signal
-import json
 
 
 class Value(webcface.field.Field):
@@ -24,10 +25,10 @@ class Value(webcface.field.Field):
     def child(self, field: str) -> Value:
         return Value(self, self._field + "." + field)
 
-    def try_get_vec(self) -> list[float] | None:
+    def try_get_vec(self) -> Optional[list[float]]:
         return self.data.value_store.get_recv(self._member, self._field)
 
-    def try_get(self) -> float | None:
+    def try_get(self) -> Optional[float]:
         v = self.try_get_vec()
         return v[0] if v is not None else None
 
@@ -70,7 +71,7 @@ class Text(webcface.field.Field):
     def child(self, field: str) -> Text:
         return Text(self, self._field + "." + field)
 
-    def try_get(self) -> str | None:
+    def try_get(self) -> Optional[str]:
         return self.data.text_store.get_recv(self._member, self._field)
 
     def get(self) -> str:
