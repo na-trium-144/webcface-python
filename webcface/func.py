@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Callable, Optional
 from enum import IntEnum
+from copy import deepcopy
 import inspect
 import webcface.member
 import webcface.field
@@ -77,10 +78,12 @@ class Arg:
 class FuncInfo:
     return_type: int
     args: list[Arg]
+    hidden: bool
     func_impl: Callable
 
     def __init__(self, func: Callable) -> None:
         self.func_impl = func
+        self.hidden = False
         sig = inspect.signature(func)
         self.args = []
         for pname in sig.parameters:
@@ -106,4 +109,68 @@ class Func(webcface.field.Field):
         return self._field
 
     def set(self, func: Callable) -> None:
-        self.data.func_store.setSend(FuncInfo(func))
+        if self.data.is_self(self._member):
+            self.data.func_store.set_send(self._field, FuncInfo(func))
+        else:
+            raise ValueError("Cannot set data to member other than self")
+
+    @property
+    def hidden(self) -> bool:
+        func_info = self.data.func_store.get_recv(self._member, self._field)
+        if func_info is None:
+            raise ValueError("Func not set")
+        return func_info.hidden
+
+    @hidden.setter
+    def hidden(self, h: bool) -> None:
+        if self.data.is_self(self._member):
+            func_info = self.data.func_store.get_recv(self._member, self._field)
+            if func_info is None:
+                raise ValueError("Func not set")
+            func_info.hidden = h
+        else:
+            raise ValueError("Cannot set data to member other than self")
+
+    def free(self) -> None:
+        self.data.func_store.unset_recv(self._member, self._field)
+
+    def run(self, *args) -> Optional[float | bool | str]:
+        pass
+
+    def runAsync(self, *args) -> Optional[float | bool | str]:
+        pass
+
+    def __call__(self, *args) -> Optional[float | bool | str]:
+        return self.run(*args)
+
+    @property
+    def return_type(self) -> int:
+        func_info = self.data.func_store.get_recv(self._member, self._field)
+        if func_info is None:
+            raise ValueError("Func not set")
+        return func_info.return_type
+
+    @property
+    def args(self) -> list[Arg]:
+        func_info = self.data.func_store.get_recv(self._member, self._field)
+        if func_info is None:
+            raise ValueError("Func not set")
+        return deepcopy(func_info.args)
+
+
+class AnonymousFunc:
+    field_id = 0
+    @staticmethod
+    def field_name_tmp() -> str:
+        AnonymousFunc.field_id += 1
+        return f".tmp{AnonymousFunc.field_id}"
+
+    base_init: bool
+    _func: Callable
+    base: Func
+
+    def __init__(self, base: Optional[webcface.field.Field], callback: Callable) -> None:
+        if base is not None:
+            self.base = Func(base, self.field_name_tmp())
+        else:
+            

@@ -1,4 +1,5 @@
 from typing import TypeVar, Generic, Dict, Tuple, Optional
+import webcface.func
 
 T = TypeVar("T")
 
@@ -160,6 +161,7 @@ class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[list[float]]
     text_store: SyncDataStore2[str]
+    func_store: SyncDataStore2[webcface.func.FuncInfo]
     member_ids: Dict[str, int]
     member_lib_name: Dict[str, str]
     member_lib_ver: Dict[str, str]
@@ -171,6 +173,7 @@ class ClientData:
         self.self_member_name = name
         self.value_store = SyncDataStore2[list[float]](name)
         self.text_store = SyncDataStore2[str](name)
+        self.func_store = SyncDataStore2[webcface.func.FuncInfo](name)
         self.member_ids = {}
         self.member_lib_name = {}
         self.member_remote_addr = {}
