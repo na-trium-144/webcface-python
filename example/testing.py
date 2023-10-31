@@ -15,6 +15,11 @@ wcli.sync()
 time.sleep(1)
 print(wcli.member("example_main").value("test").get_vec())
 
+print(wcli.member("example_main").text("str").get())
+wcli.sync()
+time.sleep(1)
+print(wcli.member("example_main").text("str").get())
+
 print(wcli.server_name)
 print(wcli.server_version)
 wcli.close()

@@ -50,7 +50,21 @@ class Client(webcface.member.Member):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.value_store.set_entry(member, m.field)
                         signal(json.dumps(["valueEntry", member])).send(
-                            self.member(member).value(field)
+                            self.member(member).value(m.field)
+                        )
+                    if isinstance(m, webcface.message.TextRes):
+                        member, field = self.data.text_store.get_req(
+                            m.req_id, m.sub_field
+                        )
+                        self.data.text_store.set_recv(member, field, m.data)
+                        signal(json.dumps(["textChange", member, field])).send(
+                            self.member(member).text(field)
+                        )
+                    if isinstance(m, webcface.message.TextEntry):
+                        member = self.data.get_member_name_from_id(m.member_id)
+                        self.data.text_store.set_entry(member, m.field)
+                        signal(json.dumps(["textEntry", member])).send(
+                            self.member(member).text(m.field)
                         )
 
         def on_error(ws, error):
@@ -103,6 +117,11 @@ class Client(webcface.member.Member):
             for m, r in self.data.value_store.transfer_req(is_first).items():
                 for k, i in r.items():
                     msgs.append(webcface.message.ValueReq.new(m, k, i))
+            for k, v2 in self.data.text_store.transfer_send(is_first).items():
+                msgs.append(webcface.message.Text.new(k, v2))
+            for m, r in self.data.text_store.transfer_req(is_first).items():
+                for k, i in r.items():
+                    msgs.append(webcface.message.TextReq.new(m, k, i))
 
             self.ws.send(webcface.message.pack(msgs))
 

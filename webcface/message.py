@@ -134,6 +134,61 @@ class ValueEntry(MessageBase):
     def field(self) -> str:
         return self.msg["f"]
 
+class Text(MessageBase):
+    kind_def = 1
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(f: str, d: str) -> Text:
+        return Text({"f": f, "d": d})
+
+
+class TextReq(MessageBase):
+    kind_def = 41
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str, f: str, i: int) -> TextReq:
+        return TextReq({"M": m, "f": f, "i": i})
+
+
+class TextRes(MessageBase):
+    kind_def = 61
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> str:
+        return self.msg["d"]
+
+
+class TextEntry(MessageBase):
+    kind_def = 21
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
 
 # 受信する可能性のあるメッセージのリスト
 message_classes_recv = [
@@ -143,6 +198,9 @@ message_classes_recv = [
     Value,
     ValueRes,
     ValueEntry,
+    Text,
+    TextRes,
+    TextEntry,
 ]
 
 
