@@ -1,4 +1,6 @@
+from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional
+import webcface.field
 import webcface.func_info
 
 T = TypeVar("T")
@@ -157,11 +159,30 @@ class SyncDataStore1(Generic[T]):
             return r
 
 
+class FuncResultStore:
+    results: list[webcface.func_info.AsyncFuncResult]
+
+    def __init__(self):
+        self.results = []
+
+    def add_result(
+        self, caller: str, base: webcface.field.Field
+    ) -> webcface.func_info.AsyncFuncResult:
+        caller_id = len(self.results)
+        r = webcface.func_info.AsyncFuncResult(caller_id, caller, base)
+        self.results.append(r)
+        return r
+
+    def get_result(self, caller_id: int) -> webcface.func_info.AsyncFuncResult:
+        return self.results[caller_id]
+
+
 class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[list[float]]
     text_store: SyncDataStore2[str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
+    func_result_store: FuncResultStore
     member_ids: Dict[str, int]
     member_lib_name: Dict[str, str]
     member_lib_ver: Dict[str, str]
@@ -174,6 +195,7 @@ class ClientData:
         self.value_store = SyncDataStore2[list[float]](name)
         self.text_store = SyncDataStore2[str](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
+        self.func_result_store = FuncResultStore()
         self.member_ids = {}
         self.member_lib_name = {}
         self.member_remote_addr = {}

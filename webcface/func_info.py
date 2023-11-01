@@ -2,6 +2,9 @@ from __future__ import annotations
 from typing import Callable, Optional
 from enum import IntEnum
 import inspect
+import threading
+import webcface.field
+import webcface.member
 
 
 class ValType(IntEnum):
@@ -118,3 +121,64 @@ class FuncInfo:
             self.return_type = get_type_enum(return_type)
         else:
             self.return_type = get_type_enum(sig.return_annotation)
+
+    def run(self, *args) -> float | bool | str:
+        
+
+class FuncNotFoundError(RuntimeError):
+    def __init__(self, base: webcface.field.FieldBase) -> None:
+        super().__init__(f'member("{base._member}").func("{base._field}") is not set')
+
+
+class AsyncFuncResult:
+    _caller_id: int
+    _caller: str
+    _started: bool
+    _started_ready: bool
+    _result: float | bool | str
+    _result_ready: bool
+    _result_is_error: bool
+    _cv: threading.Condition
+    _base: webcface.field.Field
+
+    def __init__(
+        self,
+        caller_id: int,
+        caller: str,
+        base: webcface.field.Field,
+    ) -> None:
+        self._caller_id = caller_id
+        self._caller = caller
+        self._base = base
+        self._started = False
+        self._started_ready = False
+        self._result = ""
+        self._result_ready = False
+        self._result_is_error = False
+        self._cv = threading.Condition()
+
+    @property
+    def member(self) -> webcface.member.Member:
+        return webcface.member.Member(self._base)
+
+    @property
+    def name(self) -> str:
+        return self._base._field
+
+    @property
+    def started(self) -> bool:
+        with self._cv:
+            while not self._started_ready:
+                self._cv.wait()
+        return self._started
+
+    @property
+    def result(self) -> Optional[float | bool | str]:
+        with self._cv:
+            while not self._result_ready:
+                self._cv.wait()
+        if not self._started:
+            raise FuncNotFoundError(self._base)
+        if self._result_is_error:
+            raise RuntimeError(self._result)
+        return self._result

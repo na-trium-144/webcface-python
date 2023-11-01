@@ -40,7 +40,7 @@ class Value(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else 0
 
-    def set(self, data: list[float] | float) -> None:
+    def set(self, data: list[float] | float) -> Value:
         if self.data.is_self(self._member):
             if isinstance(data, int):
                 self.data.value_store.set_send(self._field, [data])
@@ -48,6 +48,7 @@ class Value(webcface.field.Field):
             elif isinstance(data, list):
                 self.data.value_store.set_send(self._field, data)
                 self.signal.send(self)
+            return self
         else:
             raise ValueError("Cannot set data to member other than self")
 
@@ -78,10 +79,11 @@ class Text(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else ""
 
-    def set(self, data: str) -> None:
+    def set(self, data: str) -> Text:
         if self.data.is_self(self._member):
             if isinstance(data, str):
                 self.data.text_store.set_send(self._field, data)
                 self.signal.send(self)
+            return self
         else:
             raise ValueError("Cannot set data to member other than self")
