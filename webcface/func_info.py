@@ -62,7 +62,7 @@ class Arg:
         self._min = min
         self._max = max
         self._init = init
-        self._option = option
+        self._option = deepcopy(option)
 
     def merge_config(self, a: Arg) -> Arg:
         if a._name != "":
@@ -102,6 +102,18 @@ class Arg:
     @property
     def init(self) -> Optional[float | bool | str]:
         return self._init
+
+    @property
+    def max(self) -> Optional[float]:
+        return self._max
+
+    @property
+    def min(self) -> Optional[float]:
+        return self._min
+
+    @property
+    def option(self) -> list[float | str]:
+        return self._option
 
 
 class FuncInfo:
