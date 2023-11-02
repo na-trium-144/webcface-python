@@ -72,13 +72,16 @@ def test_func_run(data):
         assert a == 123
         assert b == 123.45
         assert c == "a"
-        assert d == True
+        assert d
         nonlocal called
         called += 1
         return 123.45
 
     ret = Func(Field(data, self_name, "a")).set(f1).run(123, 123.45, "a", True)
     assert called == 1
+    assert ret == 123.45
+    ret = Func(Field(data, self_name, "a")).run("123", "123.45", "a", 1)
+    assert called == 2
     assert ret == 123.45
 
     called = 0

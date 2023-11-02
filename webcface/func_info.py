@@ -1,6 +1,7 @@
 from __future__ import annotations
 from typing import Callable, Optional
 from enum import IntEnum
+from copy import deepcopy
 import inspect
 import threading
 import webcface.field
@@ -78,6 +79,18 @@ class Arg:
             self._option = a._option
         return self
 
+    def __repr__(self) -> str:
+        s = f"name={repr(self._name)}, type={repr(self._type)}"
+        if self._min is not None:
+            s += f", min={repr(self._min)}"
+        if self._max is not None:
+            s += f", max={repr(self._max)}"
+        if self._init is not None:
+            s += f", init={repr(self._init)}"
+        if len(self._option) > 0:
+            s += f", option={repr(self._option)}"
+        return "Arg(" + s + ")"
+
     @property
     def name(self) -> str:
         return self._name
@@ -103,7 +116,7 @@ class FuncInfo:
         self.func_impl = func
         self.hidden = False
         sig = inspect.signature(func)
-        self.args = args
+        self.args = deepcopy(args)
         for i, pname in enumerate(sig.parameters):
             p = sig.parameters[pname]
             if p.default != inspect.Parameter.empty:
@@ -122,8 +135,24 @@ class FuncInfo:
         else:
             self.return_type = get_type_enum(sig.return_annotation)
 
-    def run(self, *args) -> float | bool | str:
-        
+    def run(self, args) -> float | bool | str:
+        if len(args) != len(self.args):
+            raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
+        new_args: list[int | float | bool | str] = []
+        for i, a in enumerate(args):
+            if self.args[i].type == ValType.INT:
+                new_args.append(int(a))
+            elif self.args[i].type == ValType.FLOAT:
+                new_args.append(float(a))
+            elif self.args[i].type == ValType.BOOL:
+                new_args.append(bool(a))
+            else:
+                new_args.append(str(a))
+        ret = self.func_impl(*new_args)
+        if ret is None:
+            ret = ""
+        return ret
+
 
 class FuncNotFoundError(RuntimeError):
     def __init__(self, base: webcface.field.FieldBase) -> None:

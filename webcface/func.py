@@ -80,7 +80,7 @@ class Func(webcface.field.Field):
                         r._started = True
                         r._started_ready = True
                         try:
-                            res = func_info.run(*args)
+                            res = func_info.run(args)
                             r._result = res
                             r._result_ready = True
                         except Exception as e:
