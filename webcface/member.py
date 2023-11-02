@@ -1,6 +1,8 @@
 from __future__ import annotations
+from typing import Callable, Optional
 import webcface.field
 import webcface.data
+import webcface.func
 
 
 class Member(webcface.field.Field):
@@ -16,3 +18,21 @@ class Member(webcface.field.Field):
 
     def text(self, field: str) -> webcface.data.Text:
         return webcface.data.Text(self, field)
+
+    def func(
+        self, arg: Optional[str | Callable], **kwargs
+    ) -> webcface.func.Func | webcface.func.AnonymousFunc | Callable:
+        if isinstance(arg, str):
+            return webcface.func.Func(self, arg)
+        elif callable(arg):
+            return webcface.func.AnonymousFunc(self, arg, **kwargs)
+        elif arg is None:
+
+            def decorator(callback: Callable):
+                target = webcface.func.Func(self, callback.__name__)
+                target.set(callback, **kwargs)
+                return callback
+
+            return decorator
+        else:
+            raise ValueError()
