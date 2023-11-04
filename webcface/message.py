@@ -1,6 +1,7 @@
 from __future__ import annotations
 import datetime
 import msgpack
+import webcface.func_info
 
 
 class MessageBase:
@@ -133,6 +134,7 @@ class ValueEntry(MessageBase):
     def field(self) -> str:
         return self.msg["f"]
 
+
 class Text(MessageBase):
     kind_def = 1
 
@@ -189,6 +191,134 @@ class TextEntry(MessageBase):
         return self.msg["f"]
 
 
+class FuncInfo(MessageBase):
+    kind_def = 84
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(f: str, fi: webcface.func_info.FuncInfo) -> FuncInfo:
+        ad = []
+        for a in fi.args:
+            ad.append(
+                {
+                    "n": a.name,
+                    "t": a.type,
+                    "i": a.init,
+                    "m": a.min,
+                    "x": a.max,
+                    "o": a.option,
+                }
+            )
+        return FuncInfo({"m": 0, "f": f, "r": fi.return_type, "a": ad})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def func_info(self) -> webcface.func_info.FuncInfo:
+        args = []
+        for a in self.msg["a"]:
+            args.append(
+                webcface.func_info.Arg(
+                    name=a["n"],
+                    type=a["t"],
+                    init=a["i"],
+                    min=a["m"],
+                    max=a["x"],
+                    option=a["o"],
+                )
+            )
+        return webcface.func_info.FuncInfo(None, args, self.msg["r"])
+
+
+class Call(MessageBase):
+    kind_def = 81
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, c: int, r: int, f: str, a: list[float | bool | str]) -> Call:
+        return Call({"i": i, "c": c, "r": r, "f": f, "a": a})
+
+    @property
+    def caller_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def caller_member_id(self) -> int:
+        return self.msg["c"]
+
+    @property
+    def target_member_id(self) -> int:
+        return self.msg["r"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def args(self) -> list[float | bool | str]:
+        return self.msg["a"]
+
+
+class CallResponse(MessageBase):
+    kind_def = 82
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, c: int, s: bool) -> CallResponse:
+        return CallResponse({"i": i, "c": c, "s": s})
+
+    @property
+    def caller_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def caller_member_id(self) -> int:
+        return self.msg["c"]
+
+    @property
+    def started(self) -> bool:
+        return self.msg["s"]
+
+
+class CallResult(MessageBase):
+    kind_def = 83
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, c: int, e: bool, r: float | bool | str) -> CallResponse:
+        return CallResponse({"i": i, "c": c, "e": e, "r": r})
+
+    @property
+    def caller_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def caller_member_id(self) -> int:
+        return self.msg["c"]
+
+    @property
+    def is_error(self) -> bool:
+        return self.msg["e"]
+
+    @property
+    def result(self) -> float | bool | str:
+        return self.msg["r"]
+
+
 # 受信する可能性のあるメッセージのリスト
 message_classes_recv = [
     SyncInit,
@@ -200,6 +330,10 @@ message_classes_recv = [
     Text,
     TextRes,
     TextEntry,
+    FuncInfo,
+    Call,
+    CallResponse,
+    CallResult,
 ]
 
 

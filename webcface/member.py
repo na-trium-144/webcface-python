@@ -21,7 +21,7 @@ class Member(webcface.field.Field):
 
     def func(
         self, arg: Optional[str | Callable] = None, **kwargs
-    ) -> webcface.func.Func | webcface.func.AnonymousFunc | Callable:
+    ) -> webcface.func.Func | webcface.func.AnonymousFunc:
         if isinstance(arg, str):
             return webcface.func.Func(self, arg, **kwargs)
         else:

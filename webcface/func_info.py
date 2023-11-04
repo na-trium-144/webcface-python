@@ -120,35 +120,43 @@ class FuncInfo:
     return_type: int
     args: list[Arg]
     hidden: bool
-    func_impl: Callable
+    func_impl: Optional[Callable]
 
     def __init__(
-        self, func: Callable, args: Optional[list[Arg]], return_type: Optional[int | type]
+        self,
+        func: Optional[Callable],
+        args: Optional[list[Arg]],
+        return_type: Optional[int | type],
     ) -> None:
         self.func_impl = func
         self.hidden = False
-        sig = inspect.signature(func)
         if args is None:
             self.args = []
         else:
             self.args = deepcopy(args)
-        for i, pname in enumerate(sig.parameters):
-            p = sig.parameters[pname]
-            if p.default != inspect.Parameter.empty:
-                init = p.default
-            else:
-                init = None
-            auto_arg = Arg(name=pname, type=p.annotation, init=init)
-            if i < len(self.args):
-                self.args[i] = auto_arg.merge_config(self.args[i])
-            else:
-                self.args.append(auto_arg)
+        if func is None:
+            sig = None
+        else:
+            sig = inspect.signature(func)
+            for i, pname in enumerate(sig.parameters):
+                p = sig.parameters[pname]
+                if p.default != inspect.Parameter.empty:
+                    init = p.default
+                else:
+                    init = None
+                auto_arg = Arg(name=pname, type=p.annotation, init=init)
+                if i < len(self.args):
+                    self.args[i] = auto_arg.merge_config(self.args[i])
+                else:
+                    self.args.append(auto_arg)
         if isinstance(return_type, int):
             self.return_type = return_type
         elif isinstance(return_type, type):
             self.return_type = get_type_enum(return_type)
-        else:
+        elif sig is not None:
             self.return_type = get_type_enum(sig.return_annotation)
+        else:
+            raise ValueError()
 
     def run(self, args) -> float | bool | str:
         if len(args) != len(self.args):
@@ -217,7 +225,7 @@ class AsyncFuncResult:
         return self._started
 
     @property
-    def result(self) -> Optional[float | bool | str]:
+    def result(self) -> float | bool | str:
         with self._cv:
             while not self._result_ready:
                 self._cv.wait()

@@ -20,8 +20,28 @@ class Client(webcface.member.Member):
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
     ) -> None:
+        def call_func(
+            r: webcface.func_info.AsyncFuncResult,
+            target: webcface.field.FieldBase,
+            args: list[float | bool | str],
+        ) -> None:
+            self._send(
+                [
+                    webcface.message.Call.new(
+                        r._caller_id,
+                        0,
+                        self.data.get_member_id_from_name(target._member),
+                        target._field,
+                        args,
+                    )
+                ]
+            )
+
         super().__init__(
-            webcface.field.Field(webcface.client_data.ClientData(name), name), name
+            webcface.field.Field(
+                webcface.client_data.ClientData(name, call_func), name
+            ),
+            name,
         )
         self.ws = None
         self.connected = False
@@ -39,6 +59,17 @@ class Client(webcface.member.Member):
                     if isinstance(m, webcface.message.SvrVersion):
                         self.data.svr_name = m.svr_name
                         self.data.svr_version = m.ver
+                    if isinstance(m, webcface.message.SyncInit):
+                        self.data.value_store.add_member(m.member_name)
+                        self.data.text_store.add_member(m.member_name)
+                        self.data.func_store.add_member(m.member_name)
+                        self.data.member_ids[m.member_name] = m.member_id
+                        self.data.member_lib_name[m.member_id] = m.lib_name
+                        self.data.member_lib_ver[m.member_id] = m.lib_ver
+                        self.data.member_remote_addr[m.member_id] = m.addr
+                        signal(json.dumps(["memberEntry"])).send(
+                            self.member(m.member_name)
+                        )
                     if isinstance(m, webcface.message.ValueRes):
                         member, field = self.data.value_store.get_req(
                             m.req_id, m.sub_field
@@ -67,6 +98,75 @@ class Client(webcface.member.Member):
                         signal(json.dumps(["textEntry", member])).send(
                             self.member(member).text(m.field)
                         )
+                    if isinstance(m, webcface.message.FuncInfo):
+                        member = self.data.get_member_name_from_id(m.member_id)
+                        self.data.func_store.set_entry(member, m.field)
+                        self.data.func_store.set_recv(member, m.field, m.func_info)
+                        signal(json.dumps(["funcEntry", member])).send(
+                            self.member(member).func(m.field)
+                        )
+                    if isinstance(m, webcface.message.Call):
+                        func_info = self.data.func_store.get_recv(
+                            self.data.self_member_name, m.field
+                        )
+                        if func_info is not None:
+
+                            def do_call():
+                                self._send(
+                                    [
+                                        webcface.message.CallResponse(
+                                            m.caller_id, m.caller_member_id, True
+                                        )
+                                    ]
+                                )
+                                try:
+                                    result = func_info.run(m.args)
+                                    is_error = False
+                                except Exception as e:
+                                    is_error = True
+                                    result = str(e)
+                                self._send(
+                                    [
+                                        webcface.message.CallResult(
+                                            m.caller_id,
+                                            m.caller_member_id,
+                                            is_error,
+                                            result,
+                                        )
+                                    ]
+                                )
+
+                            threading.Thread(target=do_call).start()
+                        else:
+                            self._send(
+                                [
+                                    webcface.message.CallResponse(
+                                        m.caller_id, m.caller_member_id, True
+                                    )
+                                ]
+                            )
+                    if isinstance(m, webcface.message.CallResponse):
+                        try:
+                            r = self.data.func_result_store.get_result(m.caller_id)
+                            with r._cv:
+                                r._started = m.started
+                                r._started_ready = True
+                                if not m.started:
+                                    r._result_is_error = True
+                                    r._result_ready = True
+                                r._cv.notify_all()
+                        except IndexError:
+                            print(f"error receiving call response id={m.caller_id}")
+                    if isinstance(m, webcface.message.CallResult):
+                        try:
+                            r = self.data.func_result_store.get_result(m.caller_id)
+                            with r._cv:
+                                r._result_is_error = m.is_error
+                                r._result = m.result
+                                r._result_ready = True
+                                r._cv.notify_all()
+                        except IndexError:
+                            print(f"error receiving call result id={m.caller_id}")
 
         def on_error(ws, error):
             print(error)
@@ -87,7 +187,7 @@ class Client(webcface.member.Member):
                 try:
                     self.ws.run_forever()
                 except Exception as e:
-                    print(e)
+                    print(f"ws error: {e}")
                     time.sleep(1)
 
         self.ws_thread = threading.Thread(target=reconnect)
@@ -101,6 +201,10 @@ class Client(webcface.member.Member):
         if self.ws is not None:
             self.ws.close()
         self.ws_thread.join()
+
+    def _send(self, msgs: list[webcface.message.MessageBase]) -> None:
+        if self.connected and self.ws is not None:
+            self.ws.send(webcface.message.pack(msgs))
 
     def sync(self) -> None:
         if self.connected and self.ws is not None:
@@ -124,7 +228,10 @@ class Client(webcface.member.Member):
                 for k, i in r.items():
                     msgs.append(webcface.message.TextReq.new(m, k, i))
 
-            self.ws.send(webcface.message.pack(msgs))
+            for k, v3 in self.data.func_store.transfer_send(is_first).items():
+                msgs.append(webcface.message.FuncInfo.new(k, v3))
+
+            self._send(msgs)
 
     def member(self, member_name) -> webcface.member.Member:
         return webcface.member.Member(self, member_name)

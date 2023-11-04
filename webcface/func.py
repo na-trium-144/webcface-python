@@ -81,11 +81,11 @@ class Func(webcface.field.Field):
             res = func_info.run(args)
             return res
         else:
-            return ""
+            return self.run_async(*args).result
 
     def run_async(self, *args) -> webcface.func_info.AsyncFuncResult:
+        r = self.data.func_result_store.add_result("", self)
         if self.data.is_self(self._member):
-            r = self.data.func_result_store.add_result("", self)
 
             def target():
                 with r._cv:
@@ -109,9 +109,9 @@ class Func(webcface.field.Field):
                     r._cv.notify_all()
 
             threading.Thread(target=target).start()
-            return r
         else:
-            return ""
+            self.data.call_func(r, self, list(args))
+        return r
 
     def __call__(self, *args) -> float | bool | str | Callable:
         if len(args) == 1 and callable(args[0]):

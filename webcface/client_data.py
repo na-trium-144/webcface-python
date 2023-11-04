@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Dict, Tuple, Optional
+from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import webcface.field
 import webcface.func_info
 
@@ -189,8 +189,27 @@ class ClientData:
     member_remote_addr: Dict[str, str]
     svr_name: str
     svr_version: str
+    call_func: Callable[
+        [
+            webcface.func_info.AsyncFuncResult,
+            webcface.field.FieldBase,
+            list[float | bool | str],
+        ],
+        None,
+    ]
 
-    def __init__(self, name: str) -> None:
+    def __init__(
+        self,
+        name: str,
+        call_func: Callable[
+            [
+                webcface.func_info.AsyncFuncResult,
+                webcface.field.FieldBase,
+                list[float | bool | str],
+            ],
+            None,
+        ],
+    ) -> None:
         self.self_member_name = name
         self.value_store = SyncDataStore2[list[float]](name)
         self.text_store = SyncDataStore2[str](name)
@@ -198,9 +217,11 @@ class ClientData:
         self.func_result_store = FuncResultStore()
         self.member_ids = {}
         self.member_lib_name = {}
+        self.member_lib_ver = {}
         self.member_remote_addr = {}
         self.svr_name = ""
         self.svr_version = ""
+        self.call_func = call_func
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member
