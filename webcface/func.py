@@ -9,11 +9,22 @@ import webcface.func_info
 
 
 class Func(webcface.field.Field):
-    def __init__(self, base: Optional[webcface.field.Field], field: str = "") -> None:
+    _args: Optional[list[webcface.func_info.Arg]]
+    _return_type: Optional[int | type]
+
+    def __init__(
+        self,
+        base: Optional[webcface.field.Field],
+        field: str = "",
+        args: Optional[list[webcface.func_info.Arg]] = None,
+        return_type: Optional[int | type] = None,
+    ) -> None:
         if base is not None:
             super().__init__(
                 base.data, base._member, field if field != "" else base._field
             )
+        self._args = args
+        self._return_type = return_type
 
     @property
     def member(self) -> webcface.member.Member:
@@ -38,11 +49,15 @@ class Func(webcface.field.Field):
     def set(
         self,
         func: Callable,
-        args: list[webcface.func_info.Arg] = [],
+        args: Optional[list[webcface.func_info.Arg]] = None,
         return_type: Optional[int | type] = None,
     ) -> Func:
+        if args is not None:
+            self._args = args
+        if return_type is not None:
+            self._return_type = return_type
         self._set_check()
-        self._set_info(webcface.func_info.FuncInfo(func, args, return_type))
+        self._set_info(webcface.func_info.FuncInfo(func, self._args, self._return_type))
         return self
 
     @property
@@ -98,8 +113,16 @@ class Func(webcface.field.Field):
         else:
             return ""
 
-    def __call__(self, *args) -> float | bool | str:
-        return self.run(*args)
+    def __call__(self, *args) -> float | bool | str | Callable:
+        if len(args) == 1 and callable(args[0]):
+            if isinstance(self, AnonymousFunc):
+                target = Func(self, args[0].__name__, self._args, self._return_type)
+            else:
+                target = self
+            target.set(args[0])
+            return args[0]
+        else:
+            return self.run(*args)
 
     @property
     def return_type(self) -> int:
@@ -119,23 +142,29 @@ class AnonymousFunc(Func):
         return f".tmp{AnonymousFunc.field_id}"
 
     _base_init: bool
-    _func: Callable
+    _func: Optional[Callable]
 
     def __init__(
-        self, base: Optional[webcface.field.Field], callback: Callable, **kwargs
+        self,
+        base: Optional[webcface.field.Field],
+        callback: Optional[Callable],
+        **kwargs,
     ) -> None:
         if base is not None:
-            super().__init__(base, AnonymousFunc.field_name_tmp())
-            self.set(callback, **kwargs)
-            self.hidden = True
+            super().__init__(base, AnonymousFunc.field_name_tmp(), **kwargs)
+            if callback is not None:
+                self.set(callback)
+                self.hidden = True
             self._base_init = True
         else:
-            super().__init__(None)
+            super().__init__(None, "", **kwargs)
             self._base_init = False
             self._func = callback
 
     def lock_to(self, target: Func) -> None:
         if not self._base_init:
+            if self._func is None:
+                raise ValueError("func not set")
             self.data = target.data
             self._member = target._member
             self._field = AnonymousFunc.field_name_tmp()

@@ -123,12 +123,15 @@ class FuncInfo:
     func_impl: Callable
 
     def __init__(
-        self, func: Callable, args: list[Arg], return_type: Optional[int | type]
+        self, func: Callable, args: Optional[list[Arg]], return_type: Optional[int | type]
     ) -> None:
         self.func_impl = func
         self.hidden = False
         sig = inspect.signature(func)
-        self.args = deepcopy(args)
+        if args is None:
+            self.args = []
+        else:
+            self.args = deepcopy(args)
         for i, pname in enumerate(sig.parameters):
             p = sig.parameters[pname]
             if p.default != inspect.Parameter.empty:

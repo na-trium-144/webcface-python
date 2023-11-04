@@ -20,19 +20,9 @@ class Member(webcface.field.Field):
         return webcface.data.Text(self, field)
 
     def func(
-        self, arg: Optional[str | Callable], **kwargs
+        self, arg: Optional[str | Callable] = None, **kwargs
     ) -> webcface.func.Func | webcface.func.AnonymousFunc | Callable:
         if isinstance(arg, str):
-            return webcface.func.Func(self, arg)
-        elif callable(arg):
-            return webcface.func.AnonymousFunc(self, arg, **kwargs)
-        elif arg is None:
-
-            def decorator(callback: Callable):
-                target = webcface.func.Func(self, callback.__name__)
-                target.set(callback, **kwargs)
-                return callback
-
-            return decorator
+            return webcface.func.Func(self, arg, **kwargs)
         else:
-            raise ValueError()
+            return webcface.func.AnonymousFunc(self, arg, **kwargs)
