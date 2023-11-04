@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import webcface.field
 import webcface.func_info
+import webcface.view_component
 
 T = TypeVar("T")
 
@@ -182,6 +183,7 @@ class ClientData:
     value_store: SyncDataStore2[list[float]]
     text_store: SyncDataStore2[str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
+    view_store: SyncDataStore2[list[webcface.view_component.ViewComponent]]
     func_result_store: FuncResultStore
     member_ids: Dict[str, int]
     member_lib_name: Dict[str, str]
@@ -214,6 +216,9 @@ class ClientData:
         self.value_store = SyncDataStore2[list[float]](name)
         self.text_store = SyncDataStore2[str](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
+        self.view_component = SyncDataStore2[
+            list[webcface.view_component.ViewComponent]
+        ](name)
         self.func_result_store = FuncResultStore()
         self.member_ids = {}
         self.member_lib_name = {}
