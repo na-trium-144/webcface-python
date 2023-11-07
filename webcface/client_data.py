@@ -216,7 +216,7 @@ class ClientData:
         self.value_store = SyncDataStore2[list[float]](name)
         self.text_store = SyncDataStore2[str](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
-        self.view_component = SyncDataStore2[
+        self.view_store = SyncDataStore2[
             list[webcface.view_base.ViewComponentBase]
         ](name)
         self.func_result_store = FuncResultStore()

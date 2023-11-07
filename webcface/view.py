@@ -204,6 +204,7 @@ class View(webcface.field.Field):
         for i, c in enumerate(data2):
             data2[i] = c.lock_tmp(self.data, f"{self._field}_f{i}")
         self.data.view_store.set_send(self._field, list(data2))
+        self.signal.send(self)
         return self
 
     def init(self) -> View:
@@ -214,6 +215,7 @@ class View(webcface.field.Field):
         self.set(self._components)
         return self
 
-    def add(self, c: ViewComponent | str | bool | float | int) -> View:
-        self._components.append(c)
+    def add(self, *args: ViewComponent | str | bool | float | int) -> View:
+        for c in args:
+            self._components.append(c)
         return self

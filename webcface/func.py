@@ -19,7 +19,11 @@ class Func(webcface.field.Field):
         args: Optional[list[webcface.func_info.Arg]] = None,
         return_type: Optional[int | type] = None,
     ) -> None:
-        if base is not None:
+        if base is None:
+            self.data = None
+            self._member = ""
+            self._field = ""
+        else:
             super().__init__(
                 base.data, base._member, field if field != "" else base._field
             )
