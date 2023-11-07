@@ -3,7 +3,7 @@ from typing import Dict
 import datetime
 import msgpack
 import webcface.func_info
-import webcface.view
+import webcface.view_base
 import webcface.field
 
 
@@ -201,7 +201,7 @@ class View(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, d: Dict[str, webcface.view.ViewComponent], l: int) -> View:
+    def new(f: str, d: Dict[str, webcface.view_base.ViewComponentBase], l: int) -> View:
         vd = {}
         for i, c in d.items():
             vd[i] = {
@@ -241,10 +241,10 @@ class ViewRes(MessageBase):
         return self.msg["f"]
 
     @property
-    def data_diff(self) -> Dict[str, webcface.view.ViewComponent]:
+    def data_diff(self) -> Dict[str, webcface.view_base.ViewComponentBase]:
         vc = {}
         for i, d in self.msg["d"].items():
-            vc[i] = webcface.view.ViewComponent(
+            vc[i] = webcface.view_base.ViewComponentBase(
                     type=d["t"],
                     text=d["x"],
                     on_click=(

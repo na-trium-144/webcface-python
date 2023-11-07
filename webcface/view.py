@@ -4,8 +4,9 @@ from typing import Optional, Callable
 from copy import deepcopy
 import json
 from blinker import signal
-import webcface.client_data
 import webcface.field
+import webcface.view_base
+import webcface.client_data
 import webcface.func
 
 
@@ -32,14 +33,23 @@ class ViewColor(IntEnum):
     PINK = 23
 
 
-class ViewComponent:
-    _type: int
-    _text: str
+class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: Optional[webcface.client_data.ClientData]
-    _on_click_func: Optional[webcface.field.FieldBase]
     _on_click_func_tmp: Optional[webcface.func.AnonymousFunc]
-    _text_color: int
-    _bg_color: int
+
+    @staticmethod
+    def from_base(
+        base: webcface.view_base.ViewComponentBase,
+    ) -> ViewComponent:
+        vc = ViewComponent(
+            base._type,
+            base._text,
+            base._on_click_func,
+            base._text_color,
+            base._bg_color,
+        )
+        vc._data = base._data
+        return vc
 
     def __init__(
         self,
@@ -49,8 +59,8 @@ class ViewComponent:
         text_color: int = 0,
         bg_color: int = 0,
     ) -> None:
-        self._type = type
-        self._text = text
+        super().__init__(type, text, None, text_color, bg_color)
+        self._data = None
         self._on_click_func = None
         self._on_click_func_tmp = None
         if isinstance(on_click, webcface.func.AnonymousFunc):
@@ -59,8 +69,8 @@ class ViewComponent:
             self._on_click_func = on_click
         elif callable(on_click):
             self._on_click_func_tmp = webcface.func.AnonymousFunc(None, on_click)
-        self._text_color = text_color
-        self._bg_color = bg_color
+        if isinstance(on_click, webcface.field.Field) and on_click.data is not None:
+            self._data = on_click.data
 
     def lock_tmp(
         self, data: webcface.client_data.ClientData, field_id: str
@@ -72,6 +82,7 @@ class ViewComponent:
             self._on_click_func_tmp.lock_to(on_click)
             on_click.hidden = True
             self._on_click_func = on_click
+        self._data = data
         return self
 
     def __eq__(self, other) -> bool:
@@ -164,7 +175,11 @@ class View(webcface.field.Field):
         return View(self, self._field + "." + field)
 
     def try_get(self) -> Optional[list[ViewComponent]]:
-        return deepcopy(self.data.view_store.get_recv(self._member, self._field))
+        v = self.data.view_store.get_recv(self._member, self._field)
+        v2: Optional[list[ViewComponent]] = None
+        if v is not None:
+            v2 = list(map(ViewComponent.from_base, v))
+        return v2
 
     def get(self) -> list[ViewComponent]:
         v = self.try_get()
@@ -188,7 +203,7 @@ class View(webcface.field.Field):
                 data2.append(text(str(c)))
         for i, c in enumerate(data2):
             data2[i] = c.lock_tmp(self.data, f"{self._field}_f{i}")
-        self.data.view_store.set_send(self._field, data2)
+        self.data.view_store.set_send(self._field, list(data2))
         return self
 
     def init(self) -> View:

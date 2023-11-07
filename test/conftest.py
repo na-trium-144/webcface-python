@@ -17,5 +17,4 @@ def s1():
 
 @fixture
 def data():
-    return ClientData(self_name)
-
+    return ClientData(self_name, lambda *args: None)
