@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Callable, Optional
 import webcface.field
 import webcface.data
+import webcface.view
 import webcface.func
 
 
@@ -18,6 +19,9 @@ class Member(webcface.field.Field):
 
     def text(self, field: str) -> webcface.data.Text:
         return webcface.data.Text(self, field)
+
+    def view(self, field: str) -> webcface.view.View:
+        return webcface.view.View(self, field)
 
     def func(
         self, arg: Optional[str | Callable] = None, **kwargs

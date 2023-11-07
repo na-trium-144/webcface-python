@@ -98,6 +98,30 @@ class Client(webcface.member.Member):
                         signal(json.dumps(["textEntry", member])).send(
                             self.member(member).text(m.field)
                         )
+                    if isinstance(m, webcface.message.ViewRes):
+                        member, field = self.data.view_store.get_req(
+                            m.req_id, m.sub_field
+                        )
+                        v_prev = self.data.view_store.get_recv(member, field)
+                        if v_prev is None:
+                            v_prev = []
+                            self.data.view_store.set_recv(member, field, v_prev)
+                        for i, c in m.data_diff.items():
+                            if i >= len(v_prev):
+                                v_prev.append(c)
+                            else:
+                                v_prev[i] = c
+                        if len(v_prev) >= m.length:
+                            del v_prev[m.length :]
+                        signal(json.dumps(["viewChange", member, field])).send(
+                            self.member(member).view(field)
+                        )
+                    if isinstance(m, webcface.message.ViewEntry):
+                        member = self.data.get_member_name_from_id(m.member_id)
+                        self.data.view_store.set_entry(member, m.field)
+                        signal(json.dumps(["viewEntry", member])).send(
+                            self.member(member).view(m.field)
+                        )
                     if isinstance(m, webcface.message.FuncInfo):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.func_store.set_entry(member, m.field)
@@ -227,6 +251,19 @@ class Client(webcface.member.Member):
             for m, r in self.data.text_store.transfer_req(is_first).items():
                 for k, i in r.items():
                     msgs.append(webcface.message.TextReq.new(m, k, i))
+
+            view_send_prev = self.data.view_store.get_send_prev(is_first)
+            view_send = self.data.view_store.transfer_send(is_first)
+            for k, v4 in view_send.items():
+                v_prev = view_send_prev.get(k, [])
+                v_diff = {}
+                for i, c in enumerate(v4):
+                    if i >= len(v_prev) or v_prev[i] != c:
+                        v_diff[str(i)] = c
+                msgs.append(webcface.message.View.new(k, v_diff, len(v4)))
+            for m, r in self.data.view_store.transfer_req(is_first).items():
+                for k, i in r.items():
+                    msgs.append(webcface.message.ViewReq.new(m, k, i))
 
             for k, v3 in self.data.func_store.transfer_send(is_first).items():
                 msgs.append(webcface.message.FuncInfo.new(k, v3))

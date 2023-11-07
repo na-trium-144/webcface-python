@@ -1,7 +1,10 @@
 from __future__ import annotations
+from typing import Dict
 import datetime
 import msgpack
 import webcface.func_info
+import webcface.view
+import webcface.field
 
 
 class MessageBase:
@@ -191,6 +194,89 @@ class TextEntry(MessageBase):
         return self.msg["f"]
 
 
+class View(MessageBase):
+    kind_def = 3
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(f: str, d: Dict[str, webcface.view.ViewComponent], l: int) -> View:
+        vd = {}
+        for i, c in d.items():
+            vd[i] = {
+                    "t": c._type,
+                    "x": c._text,
+                    "L": None if c._on_click_func is None else c._on_click_func._member,
+                    "l": None if c._on_click_func is None else c._on_click_func._field,
+                    "c": c._text_color,
+                    "b": c._bg_color,
+                }
+        return View({"f": f, "d": vd, "l": l})
+
+
+class ViewReq(MessageBase):
+    kind_def = 43
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str, f: str, i: int) -> ViewReq:
+        return ViewReq({"M": m, "f": f, "i": i})
+
+
+class ViewRes(MessageBase):
+    kind_def = 63
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data_diff(self) -> Dict[str, webcface.view.ViewComponent]:
+        vc = {}
+        for i, d in self.msg["d"].items():
+            vc[i] = webcface.view.ViewComponent(
+                    type=d["t"],
+                    text=d["x"],
+                    on_click=(
+                        None
+                        if d["L"] is None or d["l"] is None
+                        else webcface.field.FieldBase(d["L"], d["l"])
+                    ),
+                    text_color=d["c"],
+                    bg_color=d["b"],
+                )
+        return vc
+
+    @property
+    def length(self) -> int:
+        return self.msg["l"]
+
+
+class ViewEntry(MessageBase):
+    kind_def = 23
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+
 class FuncInfo(MessageBase):
     kind_def = 84
 
@@ -324,12 +410,12 @@ message_classes_recv = [
     SyncInit,
     SvrVersion,
     Sync,
-    Value,
     ValueRes,
     ValueEntry,
-    Text,
     TextRes,
     TextEntry,
+    ViewRes,
+    ViewEntry,
     FuncInfo,
     Call,
     CallResponse,

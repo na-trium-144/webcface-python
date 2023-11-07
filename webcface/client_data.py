@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import webcface.field
 import webcface.func_info
-import webcface.view_component
+import webcface.view
 
 T = TypeVar("T")
 

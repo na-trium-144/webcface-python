@@ -35,7 +35,8 @@ class ViewColor(IntEnum):
 class ViewComponent:
     _type: int
     _text: str
-    _on_click_func: Optional[webcface.func.Func]
+    _data: Optional[webcface.client_data.ClientData]
+    _on_click_func: Optional[webcface.field.FieldBase]
     _on_click_func_tmp: Optional[webcface.func.AnonymousFunc]
     _text_color: int
     _bg_color: int
@@ -44,9 +45,7 @@ class ViewComponent:
         self,
         type: int = 0,
         text: str = "",
-        on_click: Optional[
-            webcface.func.Func | webcface.func.AnonymousFunc | Callable
-        ] = None,
+        on_click: Optional[webcface.field.FieldBase | Callable] = None,
         text_color: int = 0,
         bg_color: int = 0,
     ) -> None:
@@ -56,7 +55,7 @@ class ViewComponent:
         self._on_click_func_tmp = None
         if isinstance(on_click, webcface.func.AnonymousFunc):
             self._on_click_func_tmp = on_click
-        elif isinstance(on_click, webcface.func.Func):
+        elif isinstance(on_click, webcface.field.FieldBase):
             self._on_click_func = on_click
         elif callable(on_click):
             self._on_click_func_tmp = webcface.func.AnonymousFunc(None, on_click)
@@ -75,6 +74,24 @@ class ViewComponent:
             self._on_click_func = on_click
         return self
 
+    def __eq__(self, other) -> bool:
+        return (
+            isinstance(other, ViewComponent)
+            and self._type == other._type
+            and self._text == other._text
+            and (
+                (self._on_click_func is None and other._on_click_func is None)
+                or (
+                    self._on_click_func is not None
+                    and other._on_click_func is not None
+                    and self._on_click_func._member == other._on_click_func._member
+                    and self._on_click_func._field == other._on_click_func._field
+                )
+            )
+            and self._text_color == other._text_color
+            and self._bg_color == other._bg_color
+        )
+
     @property
     def type(self) -> int:
         return self._type
@@ -85,7 +102,15 @@ class ViewComponent:
 
     @property
     def on_click(self) -> Optional[webcface.func.Func]:
-        return self._on_click_func
+        if self._on_click_func is not None:
+            if self._data is None:
+                raise RuntimeError("internal data not set")
+            return webcface.func.Func(
+                webcface.field.Field(
+                    self._data, self._on_click_func._member, self._on_click_func._field
+                )
+            )
+        return None
 
     @property
     def text_color(self) -> int:
