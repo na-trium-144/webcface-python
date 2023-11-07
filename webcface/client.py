@@ -138,7 +138,7 @@ class Client(webcface.member.Member):
                             def do_call():
                                 self._send(
                                     [
-                                        webcface.message.CallResponse(
+                                        webcface.message.CallResponse.new(
                                             m.caller_id, m.caller_member_id, True
                                         )
                                     ]
@@ -151,7 +151,7 @@ class Client(webcface.member.Member):
                                     result = str(e)
                                 self._send(
                                     [
-                                        webcface.message.CallResult(
+                                        webcface.message.CallResult.new(
                                             m.caller_id,
                                             m.caller_member_id,
                                             is_error,
@@ -164,7 +164,7 @@ class Client(webcface.member.Member):
                         else:
                             self._send(
                                 [
-                                    webcface.message.CallResponse(
+                                    webcface.message.CallResponse.new(
                                         m.caller_id, m.caller_member_id, True
                                     )
                                 ]
@@ -214,7 +214,7 @@ class Client(webcface.member.Member):
                     print(f"ws error: {e}")
                     time.sleep(1)
 
-        self.ws_thread = threading.Thread(target=reconnect)
+        self.ws_thread = threading.Thread(target=reconnect, daemon=True)
         self.ws_thread.start()
 
     def __del__(self) -> None:
@@ -266,7 +266,8 @@ class Client(webcface.member.Member):
                     msgs.append(webcface.message.ViewReq.new(m, k, i))
 
             for k, v3 in self.data.func_store.transfer_send(is_first).items():
-                msgs.append(webcface.message.FuncInfo.new(k, v3))
+                if not v3.hidden:
+                    msgs.append(webcface.message.FuncInfo.new(k, v3))
 
             self._send(msgs)
 

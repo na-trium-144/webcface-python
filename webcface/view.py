@@ -103,6 +103,9 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             and self._bg_color == other._bg_color
         )
 
+    def __ne__(self, other) -> bool:
+        return not self == other
+
     @property
     def type(self) -> int:
         return self._type

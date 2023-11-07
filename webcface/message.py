@@ -205,13 +205,13 @@ class View(MessageBase):
         vd = {}
         for i, c in d.items():
             vd[i] = {
-                    "t": c._type,
-                    "x": c._text,
-                    "L": None if c._on_click_func is None else c._on_click_func._member,
-                    "l": None if c._on_click_func is None else c._on_click_func._field,
-                    "c": c._text_color,
-                    "b": c._bg_color,
-                }
+                "t": c._type,
+                "x": c._text,
+                "L": None if c._on_click_func is None else c._on_click_func._member,
+                "l": None if c._on_click_func is None else c._on_click_func._field,
+                "c": c._text_color,
+                "b": c._bg_color,
+            }
         return View({"f": f, "d": vd, "l": l})
 
 
@@ -245,16 +245,16 @@ class ViewRes(MessageBase):
         vc = {}
         for i, d in self.msg["d"].items():
             vc[i] = webcface.view_base.ViewComponentBase(
-                    type=d["t"],
-                    text=d["x"],
-                    on_click=(
-                        None
-                        if d["L"] is None or d["l"] is None
-                        else webcface.field.FieldBase(d["L"], d["l"])
-                    ),
-                    text_color=d["c"],
-                    bg_color=d["b"],
-                )
+                type=d["t"],
+                text=d["x"],
+                on_click=(
+                    None
+                    if d["L"] is None or d["l"] is None
+                    else webcface.field.FieldBase(d["L"], d["l"])
+                ),
+                text_color=d["c"],
+                bg_color=d["b"],
+            )
         return vc
 
     @property
@@ -385,8 +385,8 @@ class CallResult(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, e: bool, r: float | bool | str) -> CallResponse:
-        return CallResponse({"i": i, "c": c, "e": e, "r": r})
+    def new(i: int, c: int, e: bool, r: float | bool | str) -> CallResult:
+        return CallResult({"i": i, "c": c, "e": e, "r": r})
 
     @property
     def caller_id(self) -> int:
