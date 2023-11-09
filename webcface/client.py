@@ -2,6 +2,7 @@ import threading
 import time
 from typing import Optional
 import json
+import logging
 import websocket
 from blinker import signal
 import webcface.member
@@ -191,8 +192,18 @@ class Client(webcface.member.Member):
                                 r._cv.notify_all()
                         except IndexError:
                             print(f"error receiving call result id={m.caller_id}")
+                    if isinstance(m, webcface.message.Log):
+                        member = self.data.get_member_name_from_id(m.member_id)
+                        log_s = self.data.log_store.get_recv(member)
+                        if log_s is None:
+                            log_s = []
+                            self.data.log_store.set_recv(member, log_s)
+                        log_s.extend(m.log)
+                        signal(json.dumps(["logAppend", member])).send(
+                            self.member(member).log()
+                        )
 
-        def on_error(ws, error):
+        def on_error(dws, error):
             print(error)
 
         def on_close(ws, close_status_code, close_msg):
@@ -269,10 +280,29 @@ class Client(webcface.member.Member):
                 if not v3.hidden:
                     msgs.append(webcface.message.FuncInfo.new(k, v3))
 
+            log_send = []
+            if is_first:
+                log_all = self.data.log_store.get_recv(self.data.self_member_name)
+                if log_all is not None:
+                    log_send.extend(log_all)
+            else:
+                new_logs = self.data.log_handler._send_queue
+                log_send.extend(new_logs)
+            self.data.log_handler._send_queue = []
+
+            if len(log_send) > 0:
+                msgs.append(webcface.message.Log.new(log_send))
+            for m, r2 in self.data.log_store.transfer_req(is_first).items():
+                msgs.append(webcface.message.LogReq.new(m))
+
             self._send(msgs)
 
     def member(self, member_name) -> webcface.member.Member:
         return webcface.member.Member(self, member_name)
+
+    @property
+    def logging_handler(self) -> logging.Handler:
+        return self.data.log_handler
 
     @property
     def server_name(self) -> str:

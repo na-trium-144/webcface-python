@@ -1,4 +1,5 @@
 import time
+from logging import getLogger, StreamHandler, DEBUG
 from webcface import Client, Arg, view
 
 
@@ -33,6 +34,16 @@ def main():
     def func2(a: int, b: float, c: bool, d: str) -> float:
         print(f"hello2 a={a},b={b},c={c},d={d}")
         return a + b
+
+    logger = getLogger("main")
+    logger.setLevel(DEBUG)
+    logger.addHandler(StreamHandler())
+    logger.addHandler(wcli.logging_handler)
+    logger.critical("this is critical")
+    logger.error("this is error")
+    logger.warning("this is warning")
+    logger.info("this is info")
+    logger.debug("this is debug")
 
     i = 0
     while True:

@@ -5,6 +5,7 @@ import msgpack
 import webcface.func_info
 import webcface.view_base
 import webcface.field
+import webcface.log_handler
 
 
 class MessageBase:
@@ -15,6 +16,14 @@ class MessageBase:
     def __init__(self, kind: int, msg: dict):
         self.kind = kind
         self.msg = msg
+
+
+def time_to_int(t: datetime.datetime) -> int:
+    return int(t.timestamp() * 1000)
+
+
+def int_to_time(t: int) -> datetime.datetime:
+    return datetime.datetime.fromtimestamp(t / 1000)
 
 
 class SyncInit(MessageBase):
@@ -71,7 +80,7 @@ class Sync(MessageBase):
 
     @staticmethod
     def new() -> Sync:
-        return Sync({"m": 0, "t": int(datetime.datetime.now().timestamp() * 1000)})
+        return Sync({"m": 0, "t": time_to_int(datetime.datetime.now())})
 
     @property
     def member_id(self) -> int:
@@ -79,7 +88,7 @@ class Sync(MessageBase):
 
     @property
     def time(self) -> datetime.datetime:
-        return datetime.datetime.fromtimestamp(self.msg["t"] / 1000)
+        return int_to_time(self.msg["t"])
 
 
 class Value(MessageBase):
@@ -405,6 +414,47 @@ class CallResult(MessageBase):
         return self.msg["r"]
 
 
+class Log(MessageBase):
+    kind_def = 85
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(lls: list[webcface.log_handler.LogLine]) -> Log:
+        return Log(
+            {
+                "m": 0,
+                "l": [
+                    {"v": ll.level, "t": time_to_int(ll.time), "m": ll.message}
+                    for ll in lls
+                ],
+            }
+        )
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def log(self) -> list[webcface.log_handler.LogLine]:
+        return [
+            webcface.log_handler.LogLine(l["v"], int_to_time(l["t"]), l["m"])
+            for l in self.msg["l"]
+        ]
+
+
+class LogReq(MessageBase):
+    kind_def = 86
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str) -> ViewReq:
+        return ViewReq({"M": m})
+
+
 # 受信する可能性のあるメッセージのリスト
 message_classes_recv = [
     SyncInit,
@@ -420,6 +470,7 @@ message_classes_recv = [
     Call,
     CallResponse,
     CallResult,
+    Log,
 ]
 
 

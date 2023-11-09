@@ -3,6 +3,7 @@ from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import webcface.field
 import webcface.func_info
 import webcface.view_base
+import webcface.log_handler
 
 T = TypeVar("T")
 
@@ -184,7 +185,9 @@ class ClientData:
     text_store: SyncDataStore2[str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[list[webcface.view_base.ViewComponentBase]]
+    log_store: SyncDataStore1[list[webcface.log_handler.LogLine]]
     func_result_store: FuncResultStore
+    log_handler: webcface.log_handler.Handler
     member_ids: Dict[str, int]
     member_lib_name: Dict[str, str]
     member_lib_ver: Dict[str, str]
@@ -216,10 +219,12 @@ class ClientData:
         self.value_store = SyncDataStore2[list[float]](name)
         self.text_store = SyncDataStore2[str](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
-        self.view_store = SyncDataStore2[
-            list[webcface.view_base.ViewComponentBase]
-        ](name)
+        self.view_store = SyncDataStore2[list[webcface.view_base.ViewComponentBase]](
+            name
+        )
+        self.log_store = SyncDataStore1[list[webcface.log_handler.LogLine]](name)
         self.func_result_store = FuncResultStore()
+        self.log_handler = webcface.log_handler.Handler(self)
         self.member_ids = {}
         self.member_lib_name = {}
         self.member_lib_ver = {}
