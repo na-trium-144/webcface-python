@@ -21,27 +21,8 @@ class Client(webcface.member.Member):
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
     ) -> None:
-        def call_func(
-            r: webcface.func_info.AsyncFuncResult,
-            target: webcface.field.FieldBase,
-            args: list[float | bool | str],
-        ) -> None:
-            self._send(
-                [
-                    webcface.message.Call.new(
-                        r._caller_id,
-                        0,
-                        self.data.get_member_id_from_name(target._member),
-                        target._field,
-                        args,
-                    )
-                ]
-            )
-
         super().__init__(
-            webcface.field.Field(
-                webcface.client_data.ClientData(name, call_func), name
-            ),
+            webcface.field.Field(webcface.client_data.ClientData(name), name),
             name,
         )
         self.ws = None
@@ -137,7 +118,7 @@ class Client(webcface.member.Member):
                         if func_info is not None:
 
                             def do_call():
-                                self._send(
+                                self.data.queue_msg(
                                     [
                                         webcface.message.CallResponse.new(
                                             m.caller_id, m.caller_member_id, True
@@ -150,7 +131,7 @@ class Client(webcface.member.Member):
                                 except Exception as e:
                                     is_error = True
                                     result = str(e)
-                                self._send(
+                                self.data.queue_msg(
                                     [
                                         webcface.message.CallResult.new(
                                             m.caller_id,
@@ -163,7 +144,7 @@ class Client(webcface.member.Member):
 
                             threading.Thread(target=do_call).start()
                         else:
-                            self._send(
+                            self.data.queue_msg(
                                 [
                                     webcface.message.CallResponse.new(
                                         m.caller_id, m.caller_member_id, True
@@ -225,8 +206,15 @@ class Client(webcface.member.Member):
                     print(f"ws error: {e}")
                     time.sleep(1)
 
-        self.ws_thread = threading.Thread(target=reconnect, daemon=True)
-        self.ws_thread.start()
+        threading.Thread(target=reconnect, daemon=True).start()
+
+        def msg_send():
+            while not self.closing:
+                msgs = self.data.pop_msg()
+                if self.connected and self.ws is not None:
+                    self.ws.send(webcface.message.pack(msgs))
+
+        threading.Thread(target=msg_send, daemon=True).start()
 
     def __del__(self) -> None:
         self.close()
@@ -236,10 +224,6 @@ class Client(webcface.member.Member):
         if self.ws is not None:
             self.ws.close()
         self.ws_thread.join()
-
-    def _send(self, msgs: list[webcface.message.MessageBase]) -> None:
-        if self.connected and self.ws is not None:
-            self.ws.send(webcface.message.pack(msgs))
 
     def sync(self) -> None:
         if self.connected and self.ws is not None:
@@ -295,7 +279,7 @@ class Client(webcface.member.Member):
             for m, r2 in self.data.log_store.transfer_req(is_first).items():
                 msgs.append(webcface.message.LogReq.new(m))
 
-            self._send(msgs)
+            self.data.queue_msg(msgs)
 
     def member(self, member_name) -> webcface.member.Member:
         return webcface.member.Member(self, member_name)

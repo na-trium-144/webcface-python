@@ -171,7 +171,9 @@ class FuncInfo:
                 new_args.append(bool(a))
             else:
                 new_args.append(str(a))
-        ret = self.func_impl(*new_args)
+        ret = None
+        if self.func_impl is not None:
+            ret = self.func_impl(*new_args)
         if ret is None:
             ret = ""
         return ret

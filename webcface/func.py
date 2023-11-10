@@ -114,7 +114,17 @@ class Func(webcface.field.Field):
 
             threading.Thread(target=target).start()
         else:
-            self.data.call_func(r, self, list(args))
+            self.data.queue_msg(
+                [
+                    webcface.message.Call.new(
+                        r._caller_id,
+                        0,
+                        self.data.get_member_id_from_name(self._member),
+                        self._field,
+                        list(args),
+                    )
+                ]
+            )
         return r
 
     def __call__(self, *args) -> float | bool | str | Callable:
