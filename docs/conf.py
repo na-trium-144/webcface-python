@@ -10,8 +10,11 @@ sys.path.insert(0, os.path.abspath(".."))
 
 # -- Project information -----------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#project-information
+import toml
+import os
+conf = toml.load(os.path.join(os.path.dirname(__file__), "../pyproject.toml"))
 
-project = "WebCFace"
+project = f"WebCFace-Python {conf['tool']['poetry']['version']}"
 copyright = "2023, na-trium-144"
 author = "na-trium-144"
 

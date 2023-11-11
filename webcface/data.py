@@ -1,6 +1,5 @@
 from __future__ import annotations
 from typing import Optional
-import json
 from blinker import signal
 import webcface.field
 import webcface.member
@@ -20,7 +19,7 @@ class Value(webcface.field.Field):
 
     @property
     def signal(self) -> signal:
-        return signal(json.dumps(["valueChange", self._member, self._field]))
+        return self.data.signal("value_change", self._member, self._field)
 
     def child(self, field: str) -> Value:
         return Value(self, self._field + "." + field)
@@ -65,7 +64,7 @@ class Text(webcface.field.Field):
 
     @property
     def signal(self) -> signal:
-        return signal(json.dumps(["textChange", self._member, self._field]))
+        return self.data.signal("text_change", self._member, self._field)
 
     def child(self, field: str) -> Text:
         return Text(self, self._field + "." + field)

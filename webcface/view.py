@@ -2,7 +2,6 @@ from __future__ import annotations
 from enum import IntEnum
 from typing import Optional, Callable
 from copy import deepcopy
-import json
 from blinker import signal
 import webcface.field
 import webcface.view_base
@@ -172,7 +171,7 @@ class View(webcface.field.Field):
 
     @property
     def signal(self) -> signal:
-        return signal(json.dumps(["viewChange", self._member, self._field]))
+        return self.data.signal("view_change", self._member, self._field)
 
     def child(self, field: str) -> View:
         return View(self, self._field + "." + field)

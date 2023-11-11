@@ -1,6 +1,8 @@
 from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import threading
+import json
+from blinker import signal
 import webcface.field
 import webcface.func_info
 import webcface.view_base
@@ -263,3 +265,27 @@ class ClientData:
 
     def get_member_id_from_name(self, name: str) -> int:
         return self.member_ids.get(name, 0)
+
+    def signal(self, signal_type: str, member: str = "", field: str = "") -> signal:
+        if signal_type == "member_entry":
+            assert member == "" and field == ""
+            key = [id(self), signal_type]
+        elif (
+            signal_type == "value_entry"
+            or signal_type == "text_entry"
+            or signal_type == "view_entry"
+            or signal_type == "func_entry"
+            or signal_type == "log_append"
+        ):
+            assert member != "" and field == ""
+            key = [id(self), signal_type, member]
+        elif (
+            signal_type == "value_change"
+            or signal_type == "text_change"
+            or signal_type == "view_change"
+        ):
+            assert member != "" and field != ""
+            key = [id(self), signal_type, member, field]
+        else:
+            raise ValueError("invalid signal type " + signal_type)
+        return signal(json.dumps(key))

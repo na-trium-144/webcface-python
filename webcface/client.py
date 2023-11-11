@@ -1,10 +1,9 @@
 import threading
 import time
-from typing import Optional
-import json
+from typing import Optional, Iterable
 import logging
-import websocket
 from blinker import signal
+import websocket
 import webcface.member
 import webcface.field
 import webcface.client_data
@@ -12,11 +11,19 @@ import webcface.message
 
 
 class Client(webcface.member.Member):
+    """サーバーに接続する
+
+    詳細は `Clientのドキュメント <https://na-trium-144.github.io/webcface/md_01__client.html>`_ を参照
+
+    :arg name: 名前
+    :arg host: サーバーのアドレス
+    :arg port: サーバーのポート
+    """
+
     connected: bool
-    sync_init: bool
-    ws: Optional[websocket.WebSocketApp]
-    closing: bool
-    ws_thread: threading.Thread
+    _sync_init: bool
+    _ws: Optional[websocket.WebSocketApp]
+    _closing: bool
 
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
@@ -25,15 +32,15 @@ class Client(webcface.member.Member):
             webcface.field.Field(webcface.client_data.ClientData(name), name),
             name,
         )
-        self.ws = None
+        self._ws = None
         self.connected = False
-        self.sync_init = False
-        self.closing = False
+        self._sync_init = False
+        self._closing = False
 
         def on_open(ws):
             print("open")
             self.connected = True
-            self.sync_init = False
+            self._sync_init = False
 
         def on_message(ws, message):
             if len(message) > 0:
@@ -49,7 +56,7 @@ class Client(webcface.member.Member):
                         self.data.member_lib_name[m.member_id] = m.lib_name
                         self.data.member_lib_ver[m.member_id] = m.lib_ver
                         self.data.member_remote_addr[m.member_id] = m.addr
-                        signal(json.dumps(["memberEntry"])).send(
+                        self.data.signal("member_entry").send(
                             self.member(m.member_name)
                         )
                     if isinstance(m, webcface.message.ValueRes):
@@ -57,13 +64,13 @@ class Client(webcface.member.Member):
                             m.req_id, m.sub_field
                         )
                         self.data.value_store.set_recv(member, field, m.data)
-                        signal(json.dumps(["valueChange", member, field])).send(
+                        self.data.signal("value_change", member, field).send(
                             self.member(member).value(field)
                         )
                     if isinstance(m, webcface.message.ValueEntry):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.value_store.set_entry(member, m.field)
-                        signal(json.dumps(["valueEntry", member])).send(
+                        self.data.signal("value_entry", member).send(
                             self.member(member).value(m.field)
                         )
                     if isinstance(m, webcface.message.TextRes):
@@ -71,13 +78,13 @@ class Client(webcface.member.Member):
                             m.req_id, m.sub_field
                         )
                         self.data.text_store.set_recv(member, field, m.data)
-                        signal(json.dumps(["textChange", member, field])).send(
+                        self.data.signal("text_change", member, field).send(
                             self.member(member).text(field)
                         )
                     if isinstance(m, webcface.message.TextEntry):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.text_store.set_entry(member, m.field)
-                        signal(json.dumps(["textEntry", member])).send(
+                        self.data.signal("text_entry", member).send(
                             self.member(member).text(m.field)
                         )
                     if isinstance(m, webcface.message.ViewRes):
@@ -95,20 +102,20 @@ class Client(webcface.member.Member):
                                 v_prev[i] = c
                         if len(v_prev) >= m.length:
                             del v_prev[m.length :]
-                        signal(json.dumps(["viewChange", member, field])).send(
+                        self.data.signal("view_change", member, field).send(
                             self.member(member).view(field)
                         )
                     if isinstance(m, webcface.message.ViewEntry):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.view_store.set_entry(member, m.field)
-                        signal(json.dumps(["viewEntry", member])).send(
+                        self.data.signal("view_entry", member).send(
                             self.member(member).view(m.field)
                         )
                     if isinstance(m, webcface.message.FuncInfo):
                         member = self.data.get_member_name_from_id(m.member_id)
                         self.data.func_store.set_entry(member, m.field)
                         self.data.func_store.set_recv(member, m.field, m.func_info)
-                        signal(json.dumps(["funcEntry", member])).send(
+                        self.data.signal("func_entry", member).send(
                             self.member(member).func(m.field)
                         )
                     if isinstance(m, webcface.message.Call):
@@ -180,11 +187,11 @@ class Client(webcface.member.Member):
                             log_s = []
                             self.data.log_store.set_recv(member, log_s)
                         log_s.extend(m.log)
-                        signal(json.dumps(["logAppend", member])).send(
+                        self.data.signal("log_append", member).send(
                             self.member(member).log()
                         )
 
-        def on_error(dws, error):
+        def on_error(ws, error):
             print(error)
 
         def on_close(ws, close_status_code, close_msg):
@@ -192,8 +199,8 @@ class Client(webcface.member.Member):
             self.connected = False
 
         def reconnect():
-            while not self.closing:
-                self.ws = websocket.WebSocketApp(
+            while not self._closing:
+                self._ws = websocket.WebSocketApp(
                     f"ws://{host}:{port}/",
                     on_open=on_open,
                     on_message=on_message,
@@ -209,10 +216,10 @@ class Client(webcface.member.Member):
         threading.Thread(target=reconnect, daemon=True).start()
 
         def msg_send():
-            while not self.closing:
+            while not self._closing:
                 msgs = self.data.pop_msg()
-                if self.connected and self.ws is not None:
-                    self.ws.send(webcface.message.pack(msgs))
+                if self.connected and self._ws is not None:
+                    self._ws.send(webcface.message.pack(msgs))
 
         threading.Thread(target=msg_send, daemon=True).start()
 
@@ -220,18 +227,26 @@ class Client(webcface.member.Member):
         self.close()
 
     def close(self) -> None:
-        self.closing = True
-        if self.ws is not None:
-            self.ws.close()
-        self.ws_thread.join()
+        """接続を切る"""
+        self._closing = True
+        if self._ws is not None:
+            self._ws.close()
 
     def sync(self) -> None:
-        if self.connected and self.ws is not None:
+        """データをまとめて送信する
+
+        * 送信用にセットしたデータをすべて送る。
+        * データ受信のリクエストを送る。
+        * 他memberの情報を取得できるのは初回のsync()の後のみ。
+        * 他memberの関数の呼び出しと結果の受信はsync()とは非同期に行われる。
+        * clientを使用する時は必ずsendを適当なタイミングで繰り返し呼ぶこと。
+        """
+        if self.connected and self._ws is not None:
             msgs: list[webcface.message.MessageBase] = []
             is_first = False
-            if not self.sync_init:
+            if not self._sync_init:
                 msgs.append(webcface.message.SyncInit.new(self.name, "python", "1.0.0"))
-                self.sync_init = True
+                self._sync_init = True
                 is_first = True
 
             msgs.append(webcface.message.Sync.new())
@@ -282,16 +297,51 @@ class Client(webcface.member.Member):
             self.data.queue_msg(msgs)
 
     def member(self, member_name) -> webcface.member.Member:
+        """他のメンバーにアクセスする"""
         return webcface.member.Member(self, member_name)
+
+    def members(self) -> Iterable[webcface.member.Member]:
+        """サーバーに接続されている他のmemberをすべて取得する。
+
+        自分自身と、無名のmemberを除く。
+        """
+        return map(self.member, self.data.value_store.get_members())
+
+    @property
+    def on_member_entry(self) -> signal:
+        """Memberが追加されたときのイベント
+
+        このクライアントが接続する前から存在したメンバーについては
+        初回の sync() 後に一度に送られるので、
+        eventの設定は初回のsync()より前に行うと良い
+
+        :return: blinker.signal オブジェクト
+
+        呼び出したいコールバック関数をfunc(引数にMember型をとる)として
+        :code:`client.on_member_entry.connect(func)`
+        などとすれば関数を登録できる。
+
+        または :code:`@client.on_member_entry.connect` をデコレーターとして使う。
+        """
+        return self.data.signal("member_entry")
 
     @property
     def logging_handler(self) -> logging.Handler:
+        """webcfaceに出力するloggingのHandler
+
+        :return: logger.addHandler にセットして使う
+        """
         return self.data.log_handler
 
     @property
     def server_name(self) -> str:
+        """サーバーの識別情報
+
+        :return: 通常は"webcface"が返る
+        """
         return self.data.svr_name
 
     @property
     def server_version(self) -> str:
+        """サーバーのバージョン"""
         return self.data.svr_version
