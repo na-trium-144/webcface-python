@@ -233,10 +233,10 @@ class Client(webcface.member.Member):
             self._ws.close()
 
     def sync(self) -> None:
-        """データをまとめて送信する
+        """送信用にセットしたデータとリクエストデータをすべて送信キューに入れる。
 
-        * 送信用にセットしたデータをすべて送る。
-        * データ受信のリクエストを送る。
+        実際に送信をするのは別スレッドであり、この関数はブロックしない。
+
         * 他memberの情報を取得できるのは初回のsync()の後のみ。
         * 他memberの関数の呼び出しと結果の受信はsync()とは非同期に行われる。
         * clientを使用する時は必ずsendを適当なタイミングで繰り返し呼ぶこと。
@@ -311,17 +311,18 @@ class Client(webcface.member.Member):
     def on_member_entry(self) -> signal:
         """Memberが追加されたときのイベント
 
+        コールバックの引数にはMemberオブジェクトが渡される。
+
         このクライアントが接続する前から存在したメンバーについては
         初回の sync() 後に一度に送られるので、
         eventの設定は初回のsync()より前に行うと良い
 
         :return: blinker.signal オブジェクト
 
-        呼び出したいコールバック関数をfunc(引数にMember型をとる)として
+        * 呼び出したいコールバック関数をfuncとして
         :code:`client.on_member_entry.connect(func)`
         などとすれば関数を登録できる。
-
-        または :code:`@client.on_member_entry.connect` をデコレーターとして使う。
+        * または :code:`@client.on_member_entry.connect` をデコレーターとして使う。
         """
         return self.data.signal("member_entry")
 
