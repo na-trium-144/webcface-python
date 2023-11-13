@@ -3,6 +3,7 @@ from webcface.data import Value, Text
 from webcface.func import Func, AnonymousFunc
 from webcface.func_info import ValType, Arg
 from webcface.field import Field
+from webcface.view import View
 from webcface.member import Member
 import pytest
 
@@ -74,3 +75,94 @@ def test_func(data):
     assert m.func("f6")(0, 0) == 123
     assert len(m.func("f6").args) == 2
     assert m.func("f6").return_type == ValType.INT
+
+
+def test_view(data):
+    v = Member(Field(data, "a"), "").view("b")
+    assert isinstance(v, View)
+    assert v.member.name == "a"
+    assert v.name == "b"
+
+
+def test_values(data):
+    data.value_store.entry = {"a": ["b", "c", "d"]}
+    assert len(list(Member(Field(data, "a")).values())) == 3
+    assert list(Member(Field(data, "b")).values()) == []
+
+
+def test_texts(data):
+    data.text_store.entry = {"a": ["b", "c", "d"]}
+    assert len(list(Member(Field(data, "a")).texts())) == 3
+    assert list(Member(Field(data, "b")).texts()) == []
+
+
+def test_funcs(data):
+    data.func_store.entry = {"a": ["b", "c", "d"]}
+    assert len(list(Member(Field(data, "a")).funcs())) == 3
+    assert list(Member(Field(data, "b")).funcs()) == []
+
+
+def test_views(data):
+    data.view_store.entry = {"a": ["b", "c", "d"]}
+    assert len(list(Member(Field(data, "a")).views())) == 3
+    assert list(Member(Field(data, "b")).views()) == []
+
+
+def test_on_value_entry(data):
+    called = 0
+
+    @Member(Field(data, "a")).on_value_entry.connect
+    def a(a):
+        nonlocal called
+        called += 1
+
+    data.signal("value_entry", "a").send()
+    assert called == 1
+
+
+def test_on_text_entry(data):
+    called = 0
+
+    @Member(Field(data, "a")).on_text_entry.connect
+    def a(a):
+        nonlocal called
+        called += 1
+
+    data.signal("text_entry", "a").send()
+    assert called == 1
+
+
+def test_on_func_entry(data):
+    called = 0
+
+    @Member(Field(data, "a")).on_func_entry.connect
+    def a(a):
+        nonlocal called
+        called += 1
+
+    data.signal("func_entry", "a").send()
+    assert called == 1
+
+
+def test_on_view_entry(data):
+    called = 0
+
+    @Member(Field(data, "a")).on_view_entry.connect
+    def a(a):
+        nonlocal called
+        called += 1
+
+    data.signal("view_entry", "a").send()
+    assert called == 1
+
+
+def test_on_sync(data):
+    called = 0
+
+    @Member(Field(data, "a")).on_sync.connect
+    def a(a):
+        nonlocal called
+        called += 1
+
+    data.signal("sync", "a").send()
+    assert called == 1

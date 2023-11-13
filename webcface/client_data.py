@@ -213,11 +213,14 @@ class ClientData:
     func_result_store: FuncResultStore
     log_handler: webcface.log_handler.Handler
     member_ids: Dict[str, int]
-    member_lib_name: Dict[str, str]
-    member_lib_ver: Dict[str, str]
-    member_remote_addr: Dict[str, str]
+    member_lib_name: Dict[int, str]
+    member_lib_ver: Dict[int, str]
+    member_remote_addr: Dict[int, str]
     svr_name: str
     svr_version: str
+    ping_status_req: bool
+    ping_status_req_send: bool
+    ping_status: dict[int, int]
     _msg_queue: list[webcface.message.MessageBase]
     _msg_cv: threading.Condition
 
@@ -238,6 +241,9 @@ class ClientData:
         self.member_remote_addr = {}
         self.svr_name = ""
         self.svr_version = ""
+        self.ping_status_req = False
+        self.ping_status_req_send = False
+        self.ping_status = {}
         self._msg_queue = []
         self._msg_cv = threading.Condition()
 
@@ -276,6 +282,8 @@ class ClientData:
             or signal_type == "view_entry"
             or signal_type == "func_entry"
             or signal_type == "log_append"
+            or signal_type == "sync"
+            or signal_type == "ping"
         ):
             assert member != "" and field == ""
             key = [id(self), signal_type, member]
