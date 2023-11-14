@@ -313,12 +313,6 @@ class Client(webcface.member.Member):
 
         コールバックの引数にはMemberオブジェクトが渡される。
 
-        このクライアントが接続する前から存在したメンバーについては
-        初回の sync() 後に一度に送られるので、
-        eventの設定は初回のsync()より前に行うと良い
-
-        :return: blinker.signal オブジェクト
-
         * 呼び出したいコールバック関数をfuncとして
         :code:`client.on_member_entry.connect(func)`
         などとすれば関数を登録できる。

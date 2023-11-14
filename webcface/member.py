@@ -82,13 +82,6 @@ class Member(webcface.field.Field):
         """Valueが追加されたときのイベント
 
         コールバックの引数にはValueオブジェクトが渡される。
-
-        コールバックを設定する前から存在したデータについてはコールバックは呼び出されない。
-        member名がわかっていれば初回のClient::sync()前に設定するか、
-        Client::onMemberEntry()
-        イベントのコールバックの中で各種イベントを設定すれば間に合う。
-
-        :return: blinker.signal オブジェクト
         """
         return self.data.signal("value_entry", self._member)
 
@@ -97,8 +90,6 @@ class Member(webcface.field.Field):
         """Textが追加されたときのイベント
 
         コールバックの引数にはTextオブジェクトが渡される。
-
-        詳細はon_value_entryを参照。
         """
         return self.data.signal("text_entry", self._member)
 
@@ -107,8 +98,6 @@ class Member(webcface.field.Field):
         """Viewが追加されたときのイベント
 
         コールバックの引数にはViewオブジェクトが渡される。
-
-        詳細はon_value_entryを参照。
         """
         return self.data.signal("view_entry", self._member)
 
@@ -117,8 +106,6 @@ class Member(webcface.field.Field):
         """Funcが追加されたときのイベント
 
         コールバックの引数にはFuncオブジェクトが渡される。
-
-        詳細はon_value_entryを参照。
         """
         return self.data.signal("func_entry", self._member)
 
