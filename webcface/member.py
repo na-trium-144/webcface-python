@@ -1,8 +1,9 @@
 from __future__ import annotations
 from typing import Callable, Optional, Iterable
-from blinker import signal
+import blinker
 import webcface.field
-import webcface.data
+import webcface.value
+import webcface.text
 import webcface.view
 import webcface.func
 
@@ -23,13 +24,13 @@ class Member(webcface.field.Field):
         """Member名"""
         return self._member
 
-    def value(self, field: str) -> webcface.data.Value:
+    def value(self, field: str) -> webcface.value.Value:
         """Valueを参照する"""
-        return webcface.data.Value(self, field)
+        return webcface.value.Value(self, field)
 
-    def text(self, field: str) -> webcface.data.Text:
+    def text(self, field: str) -> webcface.text.Text:
         """Textを参照する"""
-        return webcface.data.Text(self, field)
+        return webcface.text.Text(self, field)
 
     def view(self, field: str) -> webcface.view.View:
         """Viewを参照する"""
@@ -61,11 +62,11 @@ class Member(webcface.field.Field):
 
     # def log()
 
-    def values(self) -> Iterable[webcface.data.Value]:
+    def values(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。"""
         return map(self.value, self.data.value_store.get_entry(self._member))
 
-    def texts(self) -> Iterable[webcface.data.Text]:
+    def texts(self) -> Iterable[webcface.text.Text]:
         """このメンバーのTextをすべて取得する。"""
         return map(self.text, self.data.text_store.get_entry(self._member))
 
@@ -78,7 +79,7 @@ class Member(webcface.field.Field):
         return map(self.func, self.data.func_store.get_entry(self._member))
 
     @property
-    def on_value_entry(self) -> signal:
+    def on_value_entry(self) -> blinker.NamedSignal:
         """Valueが追加されたときのイベント
 
         コールバックの引数にはValueオブジェクトが渡される。
@@ -86,7 +87,7 @@ class Member(webcface.field.Field):
         return self.data.signal("value_entry", self._member)
 
     @property
-    def on_text_entry(self) -> signal:
+    def on_text_entry(self) -> blinker.NamedSignal:
         """Textが追加されたときのイベント
 
         コールバックの引数にはTextオブジェクトが渡される。
@@ -94,7 +95,7 @@ class Member(webcface.field.Field):
         return self.data.signal("text_entry", self._member)
 
     @property
-    def on_view_entry(self) -> signal:
+    def on_view_entry(self) -> blinker.NamedSignal:
         """Viewが追加されたときのイベント
 
         コールバックの引数にはViewオブジェクトが渡される。
@@ -102,7 +103,7 @@ class Member(webcface.field.Field):
         return self.data.signal("view_entry", self._member)
 
     @property
-    def on_func_entry(self) -> signal:
+    def on_func_entry(self) -> blinker.NamedSignal:
         """Funcが追加されたときのイベント
 
         コールバックの引数にはFuncオブジェクトが渡される。
@@ -110,7 +111,7 @@ class Member(webcface.field.Field):
         return self.data.signal("func_entry", self._member)
 
     @property
-    def on_sync(self) -> signal:
+    def on_sync(self) -> blinker.NamedSignal:
         """Memberがsyncしたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。
@@ -158,7 +159,7 @@ class Member(webcface.field.Field):
         )
 
     @property
-    def on_ping(self) -> signal:
+    def on_ping(self) -> blinker.NamedSignal:
         """通信速度データが更新されたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。

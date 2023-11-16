@@ -2,7 +2,7 @@ import threading
 import time
 from typing import Optional, Iterable
 import logging
-from blinker import signal
+import blinker
 import websocket
 import webcface.member
 import webcface.field
@@ -308,7 +308,7 @@ class Client(webcface.member.Member):
         return map(self.member, self.data.value_store.get_members())
 
     @property
-    def on_member_entry(self) -> signal:
+    def on_member_entry(self) -> blinker.NamedSignal:
         """Memberが追加されたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。

@@ -1,5 +1,6 @@
 from conftest import self_name
-from webcface.data import Value, Text
+from webcface.value import Value
+from webcface.text import Text
 from webcface.func import Func, AnonymousFunc
 from webcface.func_info import ValType, Arg
 from webcface.field import Field

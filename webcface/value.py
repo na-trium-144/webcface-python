@@ -1,6 +1,6 @@
 from __future__ import annotations
 from typing import Optional
-from blinker import signal
+import blinker
 import webcface.field
 import webcface.member
 
@@ -27,7 +27,7 @@ class Value(webcface.field.Field):
         return self._field
 
     @property
-    def signal(self) -> signal:
+    def signal(self) -> blinker.NamedSignal:
         """値が変化したときのイベント
 
         コールバックの引数にはValueオブジェクトが渡される。
@@ -36,7 +36,7 @@ class Value(webcface.field.Field):
 
     def child(self, field: str) -> Value:
         """子フィールドを返す
-        
+
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするValue
         """
         return Value(self, self._field + "." + field)
@@ -68,39 +68,5 @@ class Value(webcface.field.Field):
             self.signal.send(self)
         elif isinstance(data, list):
             self.data.value_store.set_send(self._field, data)
-            self.signal.send(self)
-        return self
-
-
-class Text(webcface.field.Field):
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
-        super().__init__(base.data, base._member, field if field != "" else base._field)
-
-    @property
-    def member(self) -> webcface.member.Member:
-        return webcface.member.Member(self)
-
-    @property
-    def name(self) -> str:
-        return self._field
-
-    @property
-    def signal(self) -> signal:
-        return self.data.signal("text_change", self._member, self._field)
-
-    def child(self, field: str) -> Text:
-        return Text(self, self._field + "." + field)
-
-    def try_get(self) -> Optional[str]:
-        return self.data.text_store.get_recv(self._member, self._field)
-
-    def get(self) -> str:
-        v = self.try_get()
-        return v if v is not None else ""
-
-    def set(self, data: str) -> Text:
-        self._set_check()
-        if isinstance(data, str):
-            self.data.text_store.set_send(self._field, data)
             self.signal.send(self)
         return self

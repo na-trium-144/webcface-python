@@ -2,7 +2,7 @@ from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import threading
 import json
-from blinker import signal
+import blinker
 import webcface.field
 import webcface.func_info
 import webcface.view_base
@@ -272,7 +272,7 @@ class ClientData:
     def get_member_id_from_name(self, name: str) -> int:
         return self.member_ids.get(name, 0)
 
-    def signal(self, signal_type: str, member: str = "", field: str = "") -> signal:
+    def signal(self, signal_type: str, member: str = "", field: str = "") -> blinker.NamedSignal:
         if signal_type == "member_entry":
             assert member == "" and field == ""
             key = [id(self), signal_type]
@@ -296,4 +296,4 @@ class ClientData:
             key = [id(self), signal_type, member, field]
         else:
             raise ValueError("invalid signal type " + signal_type)
-        return signal(json.dumps(key))
+        return blinker.signal(json.dumps(key))

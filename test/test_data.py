@@ -1,6 +1,7 @@
 from conftest import self_name
 import pytest
-from webcface.data import Value, Text
+from webcface.value import Value
+from webcface.text import Text
 from webcface.field import Field
 from webcface.member import Member
 
