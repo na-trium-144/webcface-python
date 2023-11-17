@@ -127,9 +127,10 @@ class FuncInfo:
         func: Optional[Callable],
         args: Optional[list[Arg]],
         return_type: Optional[int | type],
+        hidden: bool
     ) -> None:
         self.func_impl = func
-        self.hidden = False
+        self.hidden = hidden
         if args is None:
             self.args = []
         else:
@@ -185,6 +186,7 @@ class FuncNotFoundError(RuntimeError):
 
 
 class AsyncFuncResult:
+    """非同期で実行した関数の実行結果を表す。"""
     _caller_id: int
     _caller: str
     _started: bool
@@ -213,21 +215,33 @@ class AsyncFuncResult:
 
     @property
     def member(self) -> webcface.member.Member:
+        """関数のMember"""
         return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
+        """関数のfield名"""
         return self._base._field
 
     @property
     def started(self) -> bool:
+        """関数が開始したらTrue, 存在しなければFalse
+
+        Falseの場合自動でresultにもFuncNotFoundErrorが入る
+        """
         with self._cv:
             while not self._started_ready:
                 self._cv.wait()
         return self._started
 
     @property
+    def started_ready(self) -> bool:
+        """startedが取得可能であればTrue"""
+        return self._started_ready
+
+    @property
     def result(self) -> float | bool | str:
+        """実行結果または例外"""
         with self._cv:
             while not self._result_ready:
                 self._cv.wait()
@@ -236,3 +250,8 @@ class AsyncFuncResult:
         if self._result_is_error:
             raise RuntimeError(self._result)
         return self._result
+
+    @property
+    def result_ready(self) -> bool:
+        """resultが取得可能であればTrue"""
+        return self._result_ready

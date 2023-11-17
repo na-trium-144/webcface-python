@@ -9,16 +9,25 @@ import webcface.func_info
 
 
 class Func(webcface.field.Field):
-    _args: Optional[list[webcface.func_info.Arg]]
     _return_type: Optional[int | type]
+    _args: Optional[list[webcface.func_info.Arg]]
+    _hidden: Optional[bool]
 
     def __init__(
         self,
         base: Optional[webcface.field.Field],
         field: str = "",
-        args: Optional[list[webcface.func_info.Arg]] = None,
         return_type: Optional[int | type] = None,
+        args: Optional[list[webcface.func_info.Arg]] = None,
+        hidden: Optional[bool] = None,
     ) -> None:
+        """Funcを指すクラス
+
+        このコンストラクタを直接使わず、
+        Member.func(), Member.funcs(), Member.onFuncEntry などを使うこと
+
+        詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
+        """
         if base is None:
             self.data = None
             self._member = ""
@@ -27,15 +36,18 @@ class Func(webcface.field.Field):
             super().__init__(
                 base.data, base._member, field if field != "" else base._field
             )
-        self._args = args
         self._return_type = return_type
+        self._args = args
+        self._hidden = hidden
 
     @property
     def member(self) -> webcface.member.Member:
+        """Memberを返す"""
         return webcface.member.Member(self)
 
     @property
     def name(self) -> str:
+        """field名を返す"""
         return self._field
 
     def _set_info(self, info: webcface.func_info.FuncInfo) -> None:
@@ -53,31 +65,49 @@ class Func(webcface.field.Field):
     def set(
         self,
         func: Callable,
-        args: Optional[list[webcface.func_info.Arg]] = None,
         return_type: Optional[int | type] = None,
+        args: Optional[list[webcface.func_info.Arg]] = None,
+        hidden: Optional[bool] = None,
     ) -> Func:
-        if args is not None:
-            self._args = args
+        """関数からFuncInfoを構築しセットする
+
+        関数にアノテーションがついている場合はreturn_typeとargs内のtypeは不要
+
+        :arg func: 登録したい関数
+        :arg return_type: 関数の戻り値 (ValTypeのEnumまたはtypeクラス)
+        :arg args: 関数の引数の情報
+        :arg hidden: Trueにすると関数を他のMemberから隠す
+        """
         if return_type is not None:
             self._return_type = return_type
+        if args is not None:
+            self._args = args
+        if hidden is not None:
+            self._hidden = hidden
         self._set_check()
-        self._set_info(webcface.func_info.FuncInfo(func, self._args, self._return_type))
+        self._set_info(
+            webcface.func_info.FuncInfo(
+                func, self._args, self._return_type, self._hidden
+            )
+        )
         return self
 
-    @property
-    def hidden(self) -> bool:
-        return self._get_info().hidden
-
-    @hidden.setter
-    def hidden(self, h: bool) -> None:
-        self._set_check()
-        self._get_info().hidden = h
-
     def free(self) -> Func:
+        """関数の設定を削除"""
         self.data.func_store.unset_recv(self._member, self._field)
         return self
 
     def run(self, *args) -> float | bool | str:
+        """関数を実行する (同期)
+
+        selfの関数の場合、このスレッドで直接実行する
+        例外が発生した場合そのままraise, 関数が存在しない場合 FuncNotFoundError
+        をraiseする
+
+        リモートの場合、関数呼び出しを送信し結果が返ってくるまで待機
+        例外が発生した場合 RuntimeError, 関数が存在しない場合 FuncNotFoundError
+        をthrowする
+        """
         if self.data.is_self(self._member):
             func_info = self.data.func_store.get_recv(self._member, self._field)
             if func_info is None:
@@ -88,6 +118,10 @@ class Func(webcface.field.Field):
             return self.run_async(*args).result
 
     def run_async(self, *args) -> webcface.func_info.AsyncFuncResult:
+        """関数を実行する (非同期)
+
+        戻り値やエラー、例外はAsyncFuncResultから取得する
+        """
         r = self.data.func_result_store.add_result("", self)
         if self.data.is_self(self._member):
 
@@ -128,6 +162,11 @@ class Func(webcface.field.Field):
         return r
 
     def __call__(self, *args) -> float | bool | str | Callable:
+        """引数にCallableを1つだけ渡した場合、set()してそのCallableを返す
+        (Funcをデコレータとして使う場合の処理)
+
+        それ以外の場合、run()する
+        """
         if len(args) == 1 and callable(args[0]):
             if isinstance(self, AnonymousFunc):
                 target = Func(self, args[0].__name__, self._args, self._return_type)
@@ -140,10 +179,15 @@ class Func(webcface.field.Field):
 
     @property
     def return_type(self) -> int:
+        """戻り値の型を返す
+
+        ValTypeのEnumを使う
+        """
         return self._get_info().return_type
 
     @property
     def args(self) -> list[webcface.func_info.Arg]:
+        """引数の情報を返す"""
         return deepcopy(self._get_info().args)
 
 
@@ -164,11 +208,14 @@ class AnonymousFunc(Func):
         callback: Optional[Callable],
         **kwargs,
     ) -> None:
+        """名前を指定せず先に関数を登録するFuncクラス
+
+        詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
+        """
         if base is not None:
             super().__init__(base, AnonymousFunc.field_name_tmp(), **kwargs)
             if callback is not None:
-                self.set(callback)
-                self.hidden = True
+                self.set(callback, hidden=True)
             self._base_init = True
         else:
             super().__init__(None, "", **kwargs)
@@ -176,13 +223,13 @@ class AnonymousFunc(Func):
             self._func = callback
 
     def lock_to(self, target: Func) -> None:
+        """target に関数を移動"""
         if not self._base_init:
             if self._func is None:
                 raise ValueError("func not set")
             self.data = target.data
             self._member = target._member
             self._field = AnonymousFunc.field_name_tmp()
-            self.set(self._func)
-            self.hidden = True
+            self.set(self._func, hidden=True)
         target._set_info(self._get_info())
         self.free()
