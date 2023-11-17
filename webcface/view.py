@@ -161,32 +161,6 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return self._bg_color
 
 
-def text(text: str, **kwargs) -> ViewComponent:
-    """textコンポーネント
-
-    kwargsに指定したプロパティはViewComponentのコンストラクタに渡される
-    """
-    return ViewComponent(type=ViewComponentType.TEXT, text=text, **kwargs)
-
-
-def new_line() -> ViewComponent:
-    """newLineコンポーネント
-
-    kwargsに指定したプロパティはViewComponentのコンストラクタに渡される
-    """
-    return ViewComponent(type=ViewComponentType.NEW_LINE)
-
-
-def button(
-    text: str, on_click: webcface.func.Func | webcface.func.AnonymousFunc | Callable
-) -> ViewComponent:
-    """buttonコンポーネント
-
-    kwargsに指定したプロパティはViewComponentのコンストラクタに渡される
-    """
-    return ViewComponent(type=ViewComponentType.BUTTON, text=text, on_click=on_click)
-
-
 class View(webcface.field.Field):
     _components: list[ViewComponent | str | bool | float | int]
 
