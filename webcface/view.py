@@ -5,6 +5,7 @@ from copy import deepcopy
 import blinker
 import webcface.field
 import webcface.view_base
+import webcface.view_components
 import webcface.client_data
 import webcface.func
 
@@ -227,13 +228,13 @@ class View(webcface.field.Field):
             elif isinstance(c, str):
                 while "\n" in c:
                     s = c[: c.find("\n")]
-                    data2.append(text(s))
-                    data2.append(new_line())
+                    data2.append(webcface.view_components.text(s))
+                    data2.append(webcface.view_components.new_line())
                     c = c[c.find("\n") + 1 :]
                 if c != "":
-                    data2.append(text(c))
+                    data2.append(webcface.view_components.text(c))
             else:
-                data2.append(text(str(c)))
+                data2.append(webcface.view_components.text(str(c)))
         for i, c in enumerate(data2):
             data2[i] = c.lock_tmp(self.data, f"{self._field}_f{i}")
         self.data.view_store.set_send(self._field, list(data2))

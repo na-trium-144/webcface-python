@@ -1,4 +1,7 @@
 from __future__ import annotations
+import io
+from typing import Iterable
+import sys
 import logging
 import datetime
 import webcface.client_data
@@ -25,14 +28,49 @@ class Handler(logging.Handler):
         self._send_queue = []
 
     def emit(self, record: logging.LogRecord) -> None:
-        ll = LogLine(
-            record.levelno // 10,
-            datetime.datetime.fromtimestamp(record.created),
-            record.message,
+        self.write(
+            LogLine(
+                record.levelno // 10,
+                datetime.datetime.fromtimestamp(record.created),
+                record.message,
+            )
         )
-        self._send_queue.append(ll)
+
+    def write(self, line: LogLine) -> None:
+        self._send_queue.append(line)
         ls = self._data.log_store.get_recv(self._data.self_member_name)
         if ls is None:
             ls = []
             self._data.log_store.set_recv(self._data.self_member_name, ls)
-        ls.append(ll)
+        ls.append(line)
+
+
+class LogWriteIO(io.TextIOBase):
+    _data: webcface.client_data.ClientData
+
+    def __init__(self, data: webcface.client_data.ClientData) -> None:
+        super().__init__()
+        self._data = data
+
+    def isatty(self) -> bool:
+        """:return: False"""
+        return False
+
+    def readable(self) -> bool:
+        """:return: False"""
+        return False
+
+    def seekable(self) -> bool:
+        """:return: False"""
+        return False
+
+    def writable(self) -> bool:
+        """:return: True"""
+        return True
+
+    def write(self, s: str) -> int:
+        """webcfaceに文字列を出力すると同時にsys.__stderr__にも流す"""
+        for l in s.split("\n"):
+            if len(l) > 0:
+                self._data.log_handler.write(LogLine(2, datetime.datetime.now(), l))
+        return sys.__stdout__.write(s)

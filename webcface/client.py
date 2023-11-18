@@ -2,6 +2,7 @@ import threading
 import time
 from typing import Optional, Iterable
 import logging
+import io
 import blinker
 import websocket
 import webcface.member
@@ -208,7 +209,7 @@ class Client(webcface.member.Member):
                     on_close=on_close,
                 )
                 try:
-                    self.ws.run_forever()
+                    self._ws.run_forever()
                 except Exception as e:
                     print(f"ws error: {e}")
                     time.sleep(1)
@@ -327,6 +328,11 @@ class Client(webcface.member.Member):
         :return: logger.addHandler にセットして使う
         """
         return self.data.log_handler
+
+    @property
+    def logging_io(self) -> io.TextIOBase:
+        """webcfaceとstderrに出力するio"""
+        return self.data.log_write_io
 
     @property
     def server_name(self) -> str:

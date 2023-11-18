@@ -1,6 +1,6 @@
 import time
 from logging import getLogger, StreamHandler, DEBUG
-from webcface import Client, Arg, view
+from webcface import Client, Arg, view_components
 
 
 class A:
@@ -45,6 +45,13 @@ def main():
     logger.info("this is info")
     logger.debug("this is debug")
 
+    print("this is print", file=wcli.logging_io)
+
+    import sys
+    sys.stdout = wcli.logging_io
+    print("this is print with replaced stdout")
+    sys.stdout = sys.__stdout__
+
     i = 0
     while True:
         time.sleep(0.1)
@@ -56,7 +63,7 @@ def main():
         # viewを送信
         v = wcli.view("a")
         v.add(f"hello, world\n{i}\n")
-        v.add(view.button("a", lambda: print("hello")))
+        v.add(view_components.button("a", lambda: print("hello")))
         v.sync()
 
         # a =
