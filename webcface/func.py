@@ -87,7 +87,7 @@ class Func(webcface.field.Field):
         self._set_check()
         self._set_info(
             webcface.func_info.FuncInfo(
-                func, self._args, self._return_type, self._hidden
+                func, self._return_type, self._args, self._hidden
             )
         )
         return self
@@ -169,7 +169,7 @@ class Func(webcface.field.Field):
         """
         if len(args) == 1 and callable(args[0]):
             if isinstance(self, AnonymousFunc):
-                target = Func(self, args[0].__name__, self._args, self._return_type)
+                target = Func(self, args[0].__name__, self._return_type, self._args)
             else:
                 target = self
             target.set(args[0])

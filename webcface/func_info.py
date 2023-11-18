@@ -125,12 +125,12 @@ class FuncInfo:
     def __init__(
         self,
         func: Optional[Callable],
-        args: Optional[list[Arg]],
         return_type: Optional[int | type],
-        hidden: bool
+        args: Optional[list[Arg]],
+        hidden: Optional[bool]
     ) -> None:
         self.func_impl = func
-        self.hidden = hidden
+        self.hidden = hidden is True
         if args is None:
             self.args = []
         else:
