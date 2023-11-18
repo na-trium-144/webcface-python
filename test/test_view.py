@@ -61,28 +61,28 @@ def test_view_get(data):
 
 
 def test_value_set(data):
-    v = View(Field(data, self_name, "b"))
-    called = 0
+    with View(Field(data, self_name, "b")) as v:
+        called = 0
 
-    def callback(v):
-        assert v.member.name == self_name
-        assert v.name == "b"
-        nonlocal called
-        called += 1
+        def callback(v):
+            assert v.member.name == self_name
+            assert v.name == "b"
+            nonlocal called
+            called += 1
 
-    v.signal.connect(callback)
-    v.add("a\n").add(1)
-    v.add(
-        view.text("aaa", text_color=ViewColor.YELLOW, bg_color=ViewColor.GREEN),
-        view.new_line(),
-    )
-    v.add(
-        view.button("f", Func(Field(data, self_name, "f"))),
-        view.button("a", AnonymousFunc(Field(data, self_name, "a"), lambda: 1)),
-        view.button("a2", AnonymousFunc(None, lambda: 2)),
-        view.button("a3", lambda: 3),
-    )
-    v.sync()
+        v.signal.connect(callback)
+        v.add("a\n").add(1)
+        v.add(
+            view.text("aaa", text_color=ViewColor.YELLOW, bg_color=ViewColor.GREEN),
+            view.new_line(),
+        )
+        v.add(
+            view.button("f", Func(Field(data, self_name, "f"))),
+            view.button("a", AnonymousFunc(Field(data, self_name, "a"), lambda: 1)),
+            view.button("a2", AnonymousFunc(None, lambda: 2)),
+            view.button("a3", lambda: 3),
+        )
+        # v.sync()
 
     vd = data.view_store.data_send.get("b", [])
     assert vd[0]._type == ViewComponentType.TEXT
@@ -115,11 +115,13 @@ def test_value_set(data):
     assert vd[8]._on_click_func._field != ""
     assert called == 1
 
-    v.init()
-    v.sync()
+    # v.init()
+    # v.sync()
+    with View(Field(data, self_name, "b")) as v:
+        pass
     vd = data.view_store.data_send.get("b", [])
     assert len(vd) == 0
     assert called == 2
 
     with pytest.raises(ValueError) as e:
-        View(Field(data, "a", "b")).sync()
+        View(Field(data, "a", "b")).init()

@@ -163,6 +163,8 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
 class View(webcface.field.Field):
     _components: list[ViewComponent | str | bool | float | int]
+    _inited: bool
+    _synced: bool
 
     def __init__(self, base: webcface.field.Field, field: str = "") -> None:
         """Viewを指すクラス
@@ -174,8 +176,8 @@ class View(webcface.field.Field):
         """
         super().__init__(base.data, base._member, field if field != "" else base._field)
         self._components = []
-        if self.data.is_self(self._field):
-            self.init()
+        self._inited = False
+        self._synced = False
 
     @property
     def member(self) -> webcface.member.Member:
@@ -238,21 +240,38 @@ class View(webcface.field.Field):
         self.signal.send(self)
         return self
 
-    def init(self) -> View:
-        """このViewオブジェクトにaddした内容を初期化する
-
-        コンストラクタ内でも自動で呼ばれる
-        """
-        self._components = []
+    def __enter__(self) -> View:
+        """with構文の最初で自動でinit()を呼ぶ"""
+        self.init()
         return self
+
+    def init(self) -> View:
+        """このViewオブジェクトにaddした内容を初期化する"""
+        self._set_check()
+        self._components = []
+        self._inited = True
+        self._synced = False
+        return self
+
+    def __exit__(self, type, value, tb) -> None:
+        """with構文の終わりに自動でsync()を呼ぶ"""
+        self.sync()
 
     def sync(self) -> View:
         """Viewの内容をclientに反映し送信可能にする"""
-        self.set(self._components)
+        if self._inited and not self._synced:
+            self.set(self._components)
+            self._synced = True
         return self
 
     def add(self, *args: ViewComponent | str | bool | float | int) -> View:
-        """コンポーネントを追加"""
+        """コンポーネントを追加
+
+        Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする
+        """
+        if not self._inited:
+            self.init()
         for c in args:
             self._components.append(c)
+        self._synced = False
         return self
