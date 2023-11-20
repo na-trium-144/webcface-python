@@ -1,9 +1,12 @@
 from conftest import self_name
+import datetime
 import pytest
 from webcface.value import Value
 from webcface.text import Text
+from webcface.log import Log
 from webcface.field import Field
 from webcface.member import Member
+from webcface.log_handler import LogLine
 
 
 def test_value_member(data):
@@ -149,3 +152,40 @@ def test_text_set(data):
 
     with pytest.raises(ValueError) as e:
         Text(Field(data, "a", "b")).set("abc")
+
+
+def test_log_member(data):
+    assert isinstance(Log(Field(data, "a")).member, Member)
+    assert Log(Field(data, "a")).member.name == "a"
+
+
+def text_log_try_get(data):
+    assert Log(Field(data, "a")).try_get() is None
+    assert data.log_store.req.get("a", False) is True
+
+    Log(Field(data, self_name)).try_get()
+    assert self_name not in data.log_store.req
+
+    data.log_store.data_recv["a"] = [LogLine(1, datetime.datetime.now(), "a")]
+    assert len(Log(Field(data, "a")).try_get()) == 1
+    assert Log(Field(data, "a")).try_get()[0].level == 1
+    assert Log(Field(data, "a")).try_get()[0].message == "a"
+
+
+def test_log_get(data):
+    assert Log(Field(data, "a")).get() == []
+    assert data.log_store.req.get("a", False) is True
+
+    Log(Field(data, self_name)).get()
+    assert self_name not in data.log_store.req
+
+    data.log_store.data_recv["a"] = [LogLine(1, datetime.datetime.now(), "a")]
+    assert len(Log(Field(data, "a")).get()) == 1
+    assert Log(Field(data, "a")).get()[0].level == 1
+    assert Log(Field(data, "a")).get()[0].message == "a"
+
+
+def test_log_clear(data):
+    data.log_store.data_recv["a"] = [LogLine(1, datetime.datetime.now(), "a")]
+    Log(Field(data, "a")).clear()
+    assert data.log_store.data_recv["a"] == []
