@@ -1,5 +1,4 @@
 from __future__ import annotations
-from enum import IntEnum
 from typing import Optional, Callable
 from copy import deepcopy
 import blinker
@@ -8,29 +7,6 @@ import webcface.view_base
 import webcface.view_components
 import webcface.client_data
 import webcface.func
-
-
-class ViewComponentType(IntEnum):
-    TEXT = 0
-    NEW_LINE = 1
-    BUTTON = 2
-
-
-class ViewColor(IntEnum):
-    INHERIT = 0
-    BLACK = 1
-    WHITE = 2
-    GRAY = 4
-    RED = 8
-    ORANGE = 9
-    YELLOW = 11
-    GREEN = 13
-    TEAL = 15
-    CYAN = 16
-    BLUE = 18
-    INDIGO = 19
-    PURPLE = 21
-    PINK = 23
 
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
@@ -77,8 +53,8 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             self._on_click_func = on_click
         elif callable(on_click):
             self._on_click_func_tmp = webcface.func.AnonymousFunc(None, on_click)
-        if isinstance(on_click, webcface.field.Field) and on_click.data is not None:
-            self._data = on_click.data
+        if isinstance(on_click, webcface.field.Field) and on_click._data is not None:
+            self._data = on_click._data
 
     def lock_tmp(
         self, data: webcface.client_data.ClientData, field_id: str
@@ -175,7 +151,9 @@ class View(webcface.field.Field):
 
         詳細は `Viewのドキュメント <https://na-trium-144.github.io/webcface/md_13__view.html>`_ を参照
         """
-        super().__init__(base.data, base._member, field if field != "" else base._field)
+        super().__init__(
+            base._data, base._member, field if field != "" else base._field
+        )
         self._components = []
         self._inited = False
         self._synced = False
@@ -196,7 +174,7 @@ class View(webcface.field.Field):
 
         コールバックの引数にはViewオブジェクトが渡される。
         """
-        return self.data.signal("view_change", self._member, self._field)
+        return self._data_check().signal("view_change", self._member, self._field)
 
     def child(self, field: str) -> View:
         """子フィールドを返す
@@ -207,7 +185,7 @@ class View(webcface.field.Field):
 
     def try_get(self) -> Optional[list[ViewComponent]]:
         """ViewをlistまたはNoneで返す"""
-        v = self.data.view_store.get_recv(self._member, self._field)
+        v = self._data_check().view_store.get_recv(self._member, self._field)
         v2: Optional[list[ViewComponent]] = None
         if v is not None:
             v2 = list(map(ViewComponent.from_base, v))
@@ -220,7 +198,6 @@ class View(webcface.field.Field):
 
     def set(self, components: list[ViewComponent | str | bool | float | int]) -> View:
         """Viewのリストをセットする"""
-        self._set_check()
         data2 = []
         for c in components:
             if isinstance(c, ViewComponent):
@@ -236,8 +213,8 @@ class View(webcface.field.Field):
             else:
                 data2.append(webcface.view_components.text(str(c)))
         for i, c in enumerate(data2):
-            data2[i] = c.lock_tmp(self.data, f"{self._field}_f{i}")
-        self.data.view_store.set_send(self._field, list(data2))
+            data2[i] = c.lock_tmp(self._set_check(), f"{self._field}_f{i}")
+        self._set_check().view_store.set_send(self._field, list(data2))
         self.signal.send(self)
         return self
 

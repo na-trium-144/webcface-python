@@ -15,7 +15,7 @@ class Log(webcface.field.Field):
 
         詳細は `Logのドキュメント <https://na-trium-144.github.io/webcface/md_40__log.html>`_ を参照
         """
-        super().__init__(base.data, base._member)
+        super().__init__(base._data, base._member)
 
     @property
     def member(self) -> webcface.member.Member:
@@ -28,11 +28,11 @@ class Log(webcface.field.Field):
 
         コールバックの引数にはLogオブジェクトが渡される。
         """
-        return self.data.signal("log_append", self._member)
+        return self._data_check().signal("log_append", self._member)
 
     def try_get(self) -> Optional[list[webcface.log_handler.LogLine]]:
         """ログをlistまたはNoneで返す"""
-        return self.data.log_store.get_recv(self._member)
+        return self._data_check().log_store.get_recv(self._member)
 
     def get(self) -> list[webcface.log_handler.LogLine]:
         """ログをlistで返す"""
@@ -43,5 +43,5 @@ class Log(webcface.field.Field):
         """受信したログを空にする
 
         リクエスト状態はクリアしない"""
-        self.data.log_store.set_recv(self._member, [])
+        self._data_check().log_store.set_recv(self._member, [])
         return self

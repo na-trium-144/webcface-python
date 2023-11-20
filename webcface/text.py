@@ -14,7 +14,7 @@ class Text(webcface.field.Field):
 
         詳細は `Textのドキュメント <https://na-trium-144.github.io/webcface/md_11__text.html>`_ を参照
         """
-        super().__init__(base.data, base._member, field if field != "" else base._field)
+        super().__init__(base._data, base._member, field if field != "" else base._field)
 
     @property
     def member(self) -> webcface.member.Member:
@@ -32,7 +32,7 @@ class Text(webcface.field.Field):
 
         コールバックの引数にはTextオブジェクトが渡される。
         """
-        return self.data.signal("text_change", self._member, self._field)
+        return self._data_check().signal("text_change", self._member, self._field)
 
     def child(self, field: str) -> Text:
         """子フィールドを返す
@@ -43,7 +43,7 @@ class Text(webcface.field.Field):
 
     def try_get(self) -> Optional[str]:
         """文字列をstrまたはNoneで返す"""
-        return self.data.text_store.get_recv(self._member, self._field)
+        return self._data_check().text_store.get_recv(self._member, self._field)
 
     def get(self) -> str:
         """文字列をstrで返す"""
@@ -52,8 +52,7 @@ class Text(webcface.field.Field):
 
     def set(self, data: str) -> Text:
         """値をセットする"""
-        self._set_check()
         if isinstance(data, str):
-            self.data.text_store.set_send(self._field, data)
+            self._set_check().text_store.set_send(self._field, data)
             self.signal.send(self)
         return self

@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Optional
 import webcface.client_data
 
 
@@ -12,16 +13,24 @@ class FieldBase:
 
 
 class Field(FieldBase):
-    data: webcface.client_data.ClientData
+    _data: Optional[webcface.client_data.ClientData]
 
     def __init__(
-        self, data: webcface.client_data.ClientData, member: str, field: str = ""
+        self,
+        data: Optional[webcface.client_data.ClientData],
+        member: str,
+        field: str = "",
     ) -> None:
         super().__init__(member, field)
-        self.data = data
+        self._data = data
 
-    def _set_check(self) -> None:
-        if not isinstance(self.data, webcface.client_data.ClientData):
-            raise RuntimeError("Cannot access internal data")
-        if not self.data.is_self(self._member):
-            raise ValueError("Cannot set data to member other than self")
+    def _data_check(self) -> webcface.client_data.ClientData:
+        if isinstance(self._data, webcface.client_data.ClientData):
+            return self._data
+        raise RuntimeError("Cannot access internal data")
+
+    def _set_check(self) -> webcface.client_data.ClientData:
+        data = self._data_check()
+        if data.is_self(self._member):
+            return data
+        raise ValueError("Cannot set data to member other than self")

@@ -14,7 +14,9 @@ class Value(webcface.field.Field):
 
         詳細は `Valueのドキュメント <https://na-trium-144.github.io/webcface/md_10__value.html>`_ を参照
         """
-        super().__init__(base.data, base._member, field if field != "" else base._field)
+        super().__init__(
+            base._data, base._member, field if field != "" else base._field
+        )
 
     @property
     def member(self) -> webcface.member.Member:
@@ -32,7 +34,7 @@ class Value(webcface.field.Field):
 
         コールバックの引数にはValueオブジェクトが渡される。
         """
-        return self.data.signal("value_change", self._member, self._field)
+        return self._data_check().signal("value_change", self._member, self._field)
 
     def child(self, field: str) -> Value:
         """子フィールドを返す
@@ -43,7 +45,7 @@ class Value(webcface.field.Field):
 
     def try_get_vec(self) -> Optional[list[float]]:
         """値をlistまたはNoneで返す"""
-        return self.data.value_store.get_recv(self._member, self._field)
+        return self._data_check().value_store.get_recv(self._member, self._field)
 
     def try_get(self) -> Optional[float]:
         """値をfloatまたはNoneで返す"""
@@ -64,9 +66,9 @@ class Value(webcface.field.Field):
         """値をセットする"""
         self._set_check()
         if isinstance(data, int):
-            self.data.value_store.set_send(self._field, [data])
+            self._set_check().value_store.set_send(self._field, [data])
             self.signal.send(self)
         elif isinstance(data, list):
-            self.data.value_store.set_send(self._field, data)
+            self._set_check().value_store.set_send(self._field, data)
             self.signal.send(self)
         return self

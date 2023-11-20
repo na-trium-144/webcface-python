@@ -6,6 +6,7 @@ import webcface.value
 import webcface.text
 import webcface.view
 import webcface.func
+import webcface.log
 
 
 class Member(webcface.field.Field):
@@ -17,7 +18,7 @@ class Member(webcface.field.Field):
 
         詳細は `Memberのドキュメント <https://na-trium-144.github.io/webcface/md_02__member.html>`_ を参照
         """
-        super().__init__(base.data, member if member != "" else base._member)
+        super().__init__(base._data, member if member != "" else base._member)
 
     @property
     def name(self) -> str:
@@ -35,6 +36,10 @@ class Member(webcface.field.Field):
     def view(self, field: str) -> webcface.view.View:
         """Viewを参照する"""
         return webcface.view.View(self, field)
+
+    def log(self) -> webcface.log.Log:
+        """Logを参照する"""
+        return webcface.log.Log(self)
 
     def func(
         self, arg: Optional[str | Callable] = None, **kwargs
@@ -64,19 +69,19 @@ class Member(webcface.field.Field):
 
     def values(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。"""
-        return map(self.value, self.data.value_store.get_entry(self._member))
+        return map(self.value, self._data_check().value_store.get_entry(self._member))
 
     def texts(self) -> Iterable[webcface.text.Text]:
         """このメンバーのTextをすべて取得する。"""
-        return map(self.text, self.data.text_store.get_entry(self._member))
+        return map(self.text, self._data_check().text_store.get_entry(self._member))
 
     def views(self) -> Iterable[webcface.view.View]:
         """このメンバーのViewをすべて取得する。"""
-        return map(self.view, self.data.view_store.get_entry(self._member))
+        return map(self.view, self._data_check().view_store.get_entry(self._member))
 
     def funcs(self) -> Iterable[webcface.func.Func]:
         """このメンバーのFuncをすべて取得する。"""
-        return map(self.func, self.data.func_store.get_entry(self._member))
+        return map(self.func, self._data_check().func_store.get_entry(self._member))
 
     @property
     def on_value_entry(self) -> blinker.NamedSignal:
@@ -84,7 +89,7 @@ class Member(webcface.field.Field):
 
         コールバックの引数にはValueオブジェクトが渡される。
         """
-        return self.data.signal("value_entry", self._member)
+        return self._data_check().signal("value_entry", self._member)
 
     @property
     def on_text_entry(self) -> blinker.NamedSignal:
@@ -92,7 +97,7 @@ class Member(webcface.field.Field):
 
         コールバックの引数にはTextオブジェクトが渡される。
         """
-        return self.data.signal("text_entry", self._member)
+        return self._data_check().signal("text_entry", self._member)
 
     @property
     def on_view_entry(self) -> blinker.NamedSignal:
@@ -100,7 +105,7 @@ class Member(webcface.field.Field):
 
         コールバックの引数にはViewオブジェクトが渡される。
         """
-        return self.data.signal("view_entry", self._member)
+        return self._data_check().signal("view_entry", self._member)
 
     @property
     def on_func_entry(self) -> blinker.NamedSignal:
@@ -108,7 +113,7 @@ class Member(webcface.field.Field):
 
         コールバックの引数にはFuncオブジェクトが渡される。
         """
-        return self.data.signal("func_entry", self._member)
+        return self._data_check().signal("func_entry", self._member)
 
     @property
     def on_sync(self) -> blinker.NamedSignal:
@@ -116,7 +121,7 @@ class Member(webcface.field.Field):
 
         コールバックの引数にはMemberオブジェクトが渡される。
         """
-        return self.data.signal("sync", self._member)
+        return self._data_check().signal("sync", self._member)
 
     @property
     def lib_name(self) -> str:
@@ -125,22 +130,22 @@ class Member(webcface.field.Field):
         c++クライアントライブラリは"cpp", javascriptクライアントは"js",
         pythonクライアントは"python"を返す。
         """
-        return self.data.member_lib_name.get(
-            self.data.get_member_id_from_name(self._member), ""
+        return self._data_check().member_lib_name.get(
+            self._data_check().get_member_id_from_name(self._member), ""
         )
 
     @property
     def lib_version(self) -> str:
         """このMemberが使っているWebCFaceのバージョン"""
-        return self.data.member_lib_ver.get(
-            self.data.get_member_id_from_name(self._member), ""
+        return self._data_check().member_lib_ver.get(
+            self._data_check().get_member_id_from_name(self._member), ""
         )
 
     @property
     def remote_addr(self) -> str:
         """このMemberのIPアドレス"""
-        return self.data.member_remote_addr.get(
-            self.data.get_member_id_from_name(self._member), ""
+        return self._data_check().member_remote_addr.get(
+            self._data_check().get_member_id_from_name(self._member), ""
         )
 
     @property
@@ -151,11 +156,11 @@ class Member(webcface.field.Field):
         sync()後通信速度が得られるようになる
         :return: 初回→ None, 2回目以降(取得できれば)→ pingの往復時間 (ms)
         """
-        if not self.data.ping_status_req:
-            self.data.ping_status_req_send = True
-            self.data.ping_status_req = True
-        return self.data.ping_status.get(
-            self.data.get_member_id_from_name(self._member), None
+        if not self._data_check().ping_status_req:
+            self._data_check().ping_status_req_send = True
+            self._data_check().ping_status_req = True
+        return self._data_check().ping_status.get(
+            self._data_check().get_member_id_from_name(self._member), None
         )
 
     @property
@@ -165,4 +170,4 @@ class Member(webcface.field.Field):
         コールバックの引数にはMemberオブジェクトが渡される。
         """
         self.ping_status
-        return self.data.signal("ping")
+        return self._data_check().signal("ping")

@@ -29,12 +29,10 @@ class Func(webcface.field.Field):
         詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
         """
         if base is None:
-            self.data = None
-            self._member = ""
-            self._field = ""
+            super().__init__(None, "", "")
         else:
             super().__init__(
-                base.data, base._member, field if field != "" else base._field
+                base._data, base._member, field if field != "" else base._field
             )
         self._return_type = return_type
         self._args = args
@@ -51,13 +49,10 @@ class Func(webcface.field.Field):
         return self._field
 
     def _set_info(self, info: webcface.func_info.FuncInfo) -> None:
-        if self.data.is_self(self._member):
-            self.data.func_store.set_send(self._field, info)
-        else:
-            raise ValueError("Cannot set data to member other than self")
+        self._set_check().func_store.set_send(self._field, info)
 
     def _get_info(self) -> webcface.func_info.FuncInfo:
-        func_info = self.data.func_store.get_recv(self._member, self._field)
+        func_info = self._data_check().func_store.get_recv(self._member, self._field)
         if func_info is None:
             raise ValueError("Func not set")
         return func_info
@@ -84,7 +79,6 @@ class Func(webcface.field.Field):
             self._args = args
         if hidden is not None:
             self._hidden = hidden
-        self._set_check()
         self._set_info(
             webcface.func_info.FuncInfo(
                 func, self._return_type, self._args, self._hidden
@@ -92,9 +86,20 @@ class Func(webcface.field.Field):
         )
         return self
 
+    @property
+    def hidden(self) -> bool:
+        return self._get_info().hidden
+
+    @hidden.setter
+    def hidden(self, h: bool) -> None:
+        """関数の登録後にhidden属性を変更する"""
+        info = self._get_info()
+        info.hidden = h
+        self._set_info(info)
+
     def free(self) -> Func:
         """関数の設定を削除"""
-        self.data.func_store.unset_recv(self._member, self._field)
+        self._data_check().func_store.unset_recv(self._member, self._field)
         return self
 
     def run(self, *args) -> float | bool | str:
@@ -108,8 +113,10 @@ class Func(webcface.field.Field):
         例外が発生した場合 RuntimeError, 関数が存在しない場合 FuncNotFoundError
         をthrowする
         """
-        if self.data.is_self(self._member):
-            func_info = self.data.func_store.get_recv(self._member, self._field)
+        if self._data_check().is_self(self._member):
+            func_info = self._data_check().func_store.get_recv(
+                self._member, self._field
+            )
             if func_info is None:
                 raise webcface.func_info.FuncNotFoundError(self)
             res = func_info.run(args)
@@ -122,12 +129,14 @@ class Func(webcface.field.Field):
 
         戻り値やエラー、例外はAsyncFuncResultから取得する
         """
-        r = self.data.func_result_store.add_result("", self)
-        if self.data.is_self(self._member):
+        r = self._data_check().func_result_store.add_result("", self)
+        if self._data_check().is_self(self._member):
 
             def target():
                 with r._cv:
-                    func_info = self.data.func_store.get_recv(self._member, self._field)
+                    func_info = self._data_check().func_store.get_recv(
+                        self._member, self._field
+                    )
                     if func_info is None:
                         r._started = False
                         r._started_ready = True
@@ -148,7 +157,7 @@ class Func(webcface.field.Field):
 
             threading.Thread(target=target).start()
         else:
-            self.data.queue_msg(
+            self._data_check().queue_msg(
                 [
                     webcface.message.Call.new(
                         r._caller_id,
@@ -227,9 +236,10 @@ class AnonymousFunc(Func):
         if not self._base_init:
             if self._func is None:
                 raise ValueError("func not set")
-            self.data = target.data
+            self._data = target._data
             self._member = target._member
             self._field = AnonymousFunc.field_name_tmp()
             self.set(self._func, hidden=True)
         target._set_info(self._get_info())
+        target.hidden = False
         self.free()
