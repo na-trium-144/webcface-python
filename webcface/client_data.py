@@ -18,7 +18,6 @@ class SyncDataStore2(Generic[T]):
     data_recv: Dict[str, Dict[str, T]]
     entry: Dict[str, list[str]]
     req: Dict[str, Dict[str, int]]
-    req_send: Dict[str, Dict[str, int]]
     lock: threading.RLock
 
     def __init__(self, name: str) -> None:
@@ -28,7 +27,6 @@ class SyncDataStore2(Generic[T]):
         self.data_recv = {}
         self.entry = {}
         self.req = {}
-        self.req_send = {}
         self.lock = threading.RLock()
 
     def is_self(self, member: str) -> bool:
@@ -45,35 +43,32 @@ class SyncDataStore2(Generic[T]):
                 self.data_recv[member] = {}
             self.data_recv[member][field] = data
 
-    def get_max_req(self) -> int:
-        with self.lock:
-            max_req = 0
-            for r in self.req.values():
-                max_req = max(max_req, max(r.values()))
-            return max_req
-
-    def get_recv(self, member: str, field: str) -> Optional[T]:
+    def add_req(self, member: str, field: str) -> int:
         with self.lock:
             if not self.is_self(member) and self.req.get(member, {}).get(field, 0) == 0:
-                new_req = self.get_max_req() + 1
+                max_req = 0
+                for r in self.req.values():
+                    max_req = max(max_req, max(r.values()))
+                new_req = max_req + 1
                 if member not in self.req:
                     self.req[member] = {}
                 self.req[member][field] = new_req
-                if member not in self.req_send:
-                    self.req_send[member] = {}
-                self.req_send[member][field] = new_req
+                return new_req
+            return 0
+
+    def get_recv(self, member: str, field: str) -> Optional[T]:
+        with self.lock:
             d = self.data_recv.get(member, {}).get(field)
             return d
 
-    def unset_recv(self, member: str, field: str) -> None:
+    def unset_recv(self, member: str, field: str) -> bool:
         with self.lock:
-            if not self.is_self(member) and self.req.get(member, {}).get(field, 0) > 0:
-                self.req[member][field] = 0
-                if member not in self.req_send:
-                    self.req_send[member] = {}
-                self.req_send[member][field] = 0
             if self.data_recv.get(member, {}).get(field) is not None:
                 del self.data_recv[member][field]
+            if not self.is_self(member) and self.req.get(member, {}).get(field, 0) > 0:
+                self.req[member][field] = 0
+                return True
+            return False
 
     def get_members(self) -> list[str]:
         with self.lock:
@@ -115,15 +110,15 @@ class SyncDataStore2(Generic[T]):
             else:
                 return self.data_send_prev
 
-    def transfer_req(self, is_first: bool) -> Dict[str, Dict[str, int]]:
+    def transfer_req(self) -> Dict[str, Dict[str, int]]:
         with self.lock:
-            if is_first:
-                self.req_send = {}
-                return self.req
-            else:
-                r = self.req_send
-                self.req_send = {}
-                return r
+            # if is_first:
+            # self.req_send = {}
+            return self.req
+            # else:
+            #     r = self.req_send
+            #     self.req_send = {}
+            #     return r
 
     def get_req(self, i: int, sub_field: str) -> Tuple[str, str]:
         with self.lock:
@@ -141,14 +136,12 @@ class SyncDataStore1(Generic[T]):
     self_member_name: str
     data_recv: Dict[str, T]
     req: Dict[str, bool]
-    req_send: Dict[str, bool]
     lock: threading.RLock
 
     def __init__(self, name: str) -> None:
         self.self_member_name = name
         self.data_recv = {}
         self.req = {}
-        self.req_send = {}
         self.lock = threading.RLock()
 
     def is_self(self, member: str) -> bool:
@@ -158,27 +151,33 @@ class SyncDataStore1(Generic[T]):
         with self.lock:
             self.data_recv[member] = data
 
-    def get_recv(self, member: str) -> Optional[T]:
+    def add_req(self, member: str) -> bool:
         with self.lock:
             if not self.is_self(member) and not self.req.get(member, False):
                 self.req[member] = True
-                self.req_send[member] = True
+                return True
+            return False
+
+    def get_recv(self, member: str) -> Optional[T]:
+        with self.lock:
             return self.data_recv.get(member, None)
 
-    def unset_recv(self, member: str) -> None:
+    def clear_req(self, member: str) -> bool:
         with self.lock:
-            if member in self.data_recv:
-                del self.data_recv[member]
+            if not self.is_self(member) and self.req.get(member, False):
+                self.req[member] = False
+                return True
+            return False
 
-    def transfer_req(self, is_first: bool) -> Dict[str, bool]:
+    def transfer_req(self) -> Dict[str, bool]:
         with self.lock:
-            if is_first:
-                self.req_send = {}
-                return self.req
-            else:
-                r = self.req_send
-                self.req_send = {}
-                return r
+            # if is_first:
+            #     self.req_send = {}
+            return self.req
+            # else:
+            #     r = self.req_send
+            #     self.req_send = {}
+            #     return r
 
 
 class FuncResultStore:
@@ -212,6 +211,7 @@ class ClientData:
     log_store: SyncDataStore1[list[webcface.log_handler.LogLine]]
     func_result_store: FuncResultStore
     log_handler: webcface.log_handler.Handler
+    log_sent_lines: int
     log_write_io: webcface.log_handler.LogWriteIO
     member_ids: Dict[str, int]
     member_lib_name: Dict[int, str]
@@ -222,7 +222,7 @@ class ClientData:
     ping_status_req: bool
     ping_status_req_send: bool
     ping_status: dict[int, int]
-    _msg_queue: list[webcface.message.MessageBase]
+    _msg_queue: list[list[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
 
     def __init__(self, name: str) -> None:
@@ -234,6 +234,8 @@ class ClientData:
             name
         )
         self.log_store = SyncDataStore1[list[webcface.log_handler.LogLine]](name)
+        self.log_store.set_recv(name, [])
+        self.log_sent_lines = 0
         self.func_result_store = FuncResultStore()
         self.log_handler = webcface.log_handler.Handler(self)
         self.log_write_io = webcface.log_handler.LogWriteIO(self)
@@ -251,16 +253,26 @@ class ClientData:
 
     def queue_msg(self, msgs: list[webcface.message.MessageBase]) -> None:
         with self._msg_cv:
-            self._msg_queue.extend(msgs)
+            self._msg_queue.append(msgs)
             self._msg_cv.notify_all()
 
-    def pop_msg(self) -> list[webcface.message.MessageBase]:
+    def clear_msg(self) -> None:
+        with self._msg_cv:
+            self._msg_queue = []
+
+    def has_msg(self) -> bool:
+        return len(self._msg_queue) > 0
+
+    def wait_msg(self) -> None:
         with self._msg_cv:
             while len(self._msg_queue) == 0:
                 self._msg_cv.wait()
-            q = self._msg_queue
-            self._msg_queue = []
-            return q
+
+    def pop_msg(self) -> Optional[list[webcface.message.MessageBase]]:
+        with self._msg_cv:
+            if len(self._msg_queue) == 0:
+                return None
+            return self._msg_queue.pop(0)
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member
@@ -274,7 +286,9 @@ class ClientData:
     def get_member_id_from_name(self, name: str) -> int:
         return self.member_ids.get(name, 0)
 
-    def signal(self, signal_type: str, member: str = "", field: str = "") -> blinker.NamedSignal:
+    def signal(
+        self, signal_type: str, member: str = "", field: str = ""
+    ) -> blinker.NamedSignal:
         if signal_type == "member_entry":
             assert member == "" and field == ""
             key = [id(self), signal_type]

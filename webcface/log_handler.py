@@ -20,12 +20,10 @@ class LogLine:
 
 class Handler(logging.Handler):
     _data: webcface.client_data.ClientData
-    _send_queue: list[LogLine]
 
     def __init__(self, data: webcface.client_data.ClientData) -> None:
         super().__init__(logging.NOTSET)
         self._data = data
-        self._send_queue = []
 
     def emit(self, record: logging.LogRecord) -> None:
         self.write(
@@ -37,12 +35,10 @@ class Handler(logging.Handler):
         )
 
     def write(self, line: LogLine) -> None:
-        self._send_queue.append(line)
-        ls = self._data.log_store.get_recv(self._data.self_member_name)
-        if ls is None:
-            ls = []
-            self._data.log_store.set_recv(self._data.self_member_name, ls)
-        ls.append(line)
+        with self._data.log_store.lock:
+            ls = self._data.log_store.get_recv(self._data.self_member_name)
+            assert ls is not None
+            ls.append(line)
 
 
 class LogWriteIO(io.TextIOBase):

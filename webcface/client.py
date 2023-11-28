@@ -1,4 +1,5 @@
 import threading
+import multiprocessing
 import time
 from typing import Optional, Iterable
 import logging
@@ -9,6 +10,7 @@ import webcface.member
 import webcface.field
 import webcface.client_data
 import webcface.message
+import webcface.client_impl
 
 
 class Client(webcface.member.Member):
@@ -22,9 +24,11 @@ class Client(webcface.member.Member):
     """
 
     connected: bool
-    _sync_init: bool
+    _connection_cv: threading.Condition
     _ws: Optional[websocket.WebSocketApp]
     _closing: bool
+    _reconnect_thread: threading.Thread
+    _send_thread: threading.Thread
 
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
@@ -35,162 +39,30 @@ class Client(webcface.member.Member):
         )
         self._ws = None
         self.connected = False
-        self._sync_init = False
+        self._connection_cv = threading.Condition()
         self._closing = False
 
         def on_open(ws):
             print("open")
-            self.connected = True
-            self._sync_init = False
+            with self._connection_cv:
+                self.connected = True
+                self._connection_cv.notify_all()
 
-        def on_message(ws, message):
+        def on_message(ws, message: bytes):
             data = self._data_check()
-            if len(message) > 0:
-                for m in webcface.message.unpack(message):
-                    if isinstance(m, webcface.message.SvrVersion):
-                        data.svr_name = m.svr_name
-                        data.svr_version = m.ver
-                    if isinstance(m, webcface.message.SyncInit):
-                        data.value_store.add_member(m.member_name)
-                        data.text_store.add_member(m.member_name)
-                        data.func_store.add_member(m.member_name)
-                        data.member_ids[m.member_name] = m.member_id
-                        data.member_lib_name[m.member_id] = m.lib_name
-                        data.member_lib_ver[m.member_id] = m.lib_ver
-                        data.member_remote_addr[m.member_id] = m.addr
-                        data.signal("member_entry").send(self.member(m.member_name))
-                    if isinstance(m, webcface.message.ValueRes):
-                        member, field = data.value_store.get_req(m.req_id, m.sub_field)
-                        data.value_store.set_recv(member, field, m.data)
-                        data.signal("value_change", member, field).send(
-                            self.member(member).value(field)
-                        )
-                    if isinstance(m, webcface.message.ValueEntry):
-                        member = data.get_member_name_from_id(m.member_id)
-                        data.value_store.set_entry(member, m.field)
-                        data.signal("value_entry", member).send(
-                            self.member(member).value(m.field)
-                        )
-                    if isinstance(m, webcface.message.TextRes):
-                        member, field = data.text_store.get_req(m.req_id, m.sub_field)
-                        data.text_store.set_recv(member, field, m.data)
-                        data.signal("text_change", member, field).send(
-                            self.member(member).text(field)
-                        )
-                    if isinstance(m, webcface.message.TextEntry):
-                        member = data.get_member_name_from_id(m.member_id)
-                        data.text_store.set_entry(member, m.field)
-                        data.signal("text_entry", member).send(
-                            self.member(member).text(m.field)
-                        )
-                    if isinstance(m, webcface.message.ViewRes):
-                        member, field = data.view_store.get_req(m.req_id, m.sub_field)
-                        v_prev = data.view_store.get_recv(member, field)
-                        if v_prev is None:
-                            v_prev = []
-                            data.view_store.set_recv(member, field, v_prev)
-                        for i, c in m.data_diff.items():
-                            if i >= len(v_prev):
-                                v_prev.append(c)
-                            else:
-                                v_prev[i] = c
-                        if len(v_prev) >= m.length:
-                            del v_prev[m.length :]
-                        data.signal("view_change", member, field).send(
-                            self.member(member).view(field)
-                        )
-                    if isinstance(m, webcface.message.ViewEntry):
-                        member = data.get_member_name_from_id(m.member_id)
-                        data.view_store.set_entry(member, m.field)
-                        data.signal("view_entry", member).send(
-                            self.member(member).view(m.field)
-                        )
-                    if isinstance(m, webcface.message.FuncInfo):
-                        member = data.get_member_name_from_id(m.member_id)
-                        data.func_store.set_entry(member, m.field)
-                        data.func_store.set_recv(member, m.field, m.func_info)
-                        data.signal("func_entry", member).send(
-                            self.member(member).func(m.field)
-                        )
-                    if isinstance(m, webcface.message.Call):
-                        func_info = data.func_store.get_recv(
-                            data.self_member_name, m.field
-                        )
-                        if func_info is not None:
-
-                            def do_call():
-                                data.queue_msg(
-                                    [
-                                        webcface.message.CallResponse.new(
-                                            m.caller_id, m.caller_member_id, True
-                                        )
-                                    ]
-                                )
-                                try:
-                                    result = func_info.run(m.args)
-                                    is_error = False
-                                except Exception as e:
-                                    is_error = True
-                                    result = str(e)
-                                data.queue_msg(
-                                    [
-                                        webcface.message.CallResult.new(
-                                            m.caller_id,
-                                            m.caller_member_id,
-                                            is_error,
-                                            result,
-                                        )
-                                    ]
-                                )
-
-                            threading.Thread(target=do_call).start()
-                        else:
-                            data.queue_msg(
-                                [
-                                    webcface.message.CallResponse.new(
-                                        m.caller_id, m.caller_member_id, True
-                                    )
-                                ]
-                            )
-                    if isinstance(m, webcface.message.CallResponse):
-                        try:
-                            r = data.func_result_store.get_result(m.caller_id)
-                            with r._cv:
-                                r._started = m.started
-                                r._started_ready = True
-                                if not m.started:
-                                    r._result_is_error = True
-                                    r._result_ready = True
-                                r._cv.notify_all()
-                        except IndexError:
-                            print(f"error receiving call response id={m.caller_id}")
-                    if isinstance(m, webcface.message.CallResult):
-                        try:
-                            r = data.func_result_store.get_result(m.caller_id)
-                            with r._cv:
-                                r._result_is_error = m.is_error
-                                r._result = m.result
-                                r._result_ready = True
-                                r._cv.notify_all()
-                        except IndexError:
-                            print(f"error receiving call result id={m.caller_id}")
-                    if isinstance(m, webcface.message.Log):
-                        member = data.get_member_name_from_id(m.member_id)
-                        log_s = data.log_store.get_recv(member)
-                        if log_s is None:
-                            log_s = []
-                            data.log_store.set_recv(member, log_s)
-                        log_s.extend(m.log)
-                        data.signal("log_append", member).send(
-                            self.member(member).log()
-                        )
+            webcface.client_impl.on_recv(self, data, message)
 
         def on_error(ws, error):
             print(error)
 
         def on_close(ws, close_status_code, close_msg):
             print("closed")
-            self.connected = False
+            with self._connection_cv:
+                self.connected = False
+                self._connection_cv.notify_all()
+            data = self._data_check()
+            data.clear_msg()
+            data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
         def reconnect():
             while not self._closing:
@@ -207,18 +79,34 @@ class Client(webcface.member.Member):
                     print(f"ws error: {e}")
                     time.sleep(1)
 
-        threading.Thread(target=reconnect, daemon=True).start()
+        self._reconnect_thread = threading.Thread(target=reconnect, daemon=True)
 
         def msg_send():
+            data = self._data_check()
             while not self._closing:
+                while (not self.connected or not data.has_msg()) and not self._closing:
+                    with self._connection_cv:
+                        while not self.connected:
+                            self._connection_cv.wait()
+                    data.wait_msg()
                 msgs = self._data_check().pop_msg()
-                if self.connected and self._ws is not None:
-                    self._ws.send(webcface.message.pack(msgs))
+                if msgs is not None and self._ws is not None:
+                    try:
+                        self._ws.send(webcface.message.pack(msgs))
+                    except Exception as e:
+                        print(e)
 
-        threading.Thread(target=msg_send, daemon=True).start()
+        self._send_thread = threading.Thread(target=msg_send, daemon=True)
+
+        data = self._data_check()
+        data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
     def __del__(self) -> None:
         self.close()
+        if self._reconnect_thread.is_alive():
+            self._reconnect_thread.join()
+        if self._send_thread.is_alive():
+            self._send_thread.join()
 
     def close(self) -> None:
         """接続を切る"""
@@ -226,70 +114,32 @@ class Client(webcface.member.Member):
         if self._ws is not None:
             self._ws.close()
 
+    def start(self) -> None:
+        """サーバーに接続を開始する"""
+        if not self._reconnect_thread.is_alive():
+            self._reconnect_thread.start()
+        if not self._send_thread.is_alive():
+            self._send_thread.start()
+
+    def wait_connection(self) -> None:
+        """サーバーに接続が成功するまで待機する。
+
+        接続していない場合、start()を呼び出す。
+        """
+        with self._connection_cv:
+            while not self.connected:
+                self._connection_cv.wait()
+
     def sync(self) -> None:
         """送信用にセットしたデータとリクエストデータをすべて送信キューに入れる。
 
         実際に送信をするのは別スレッドであり、この関数はブロックしない。
 
-        * 他memberの情報を取得できるのは初回のsync()の後のみ。
-        * 他memberの関数の呼び出しと結果の受信はsync()とは非同期に行われる。
-        * clientを使用する時は必ずsendを適当なタイミングで繰り返し呼ぶこと。
+        サーバーに接続していない場合、start()を呼び出す。
         """
+        self.start()
         data = self._data_check()
-        if self.connected and self._ws is not None:
-            msgs: list[webcface.message.MessageBase] = []
-            is_first = False
-            if not self._sync_init:
-                msgs.append(webcface.message.SyncInit.new(self.name, "python", "1.0.0"))
-                self._sync_init = True
-                is_first = True
-
-            msgs.append(webcface.message.Sync.new())
-
-            for k, v in data.value_store.transfer_send(is_first).items():
-                msgs.append(webcface.message.Value.new(k, v))
-            for m, r in data.value_store.transfer_req(is_first).items():
-                for k, i in r.items():
-                    msgs.append(webcface.message.ValueReq.new(m, k, i))
-            for k, v2 in data.text_store.transfer_send(is_first).items():
-                msgs.append(webcface.message.Text.new(k, v2))
-            for m, r in data.text_store.transfer_req(is_first).items():
-                for k, i in r.items():
-                    msgs.append(webcface.message.TextReq.new(m, k, i))
-
-            view_send_prev = data.view_store.get_send_prev(is_first)
-            view_send = data.view_store.transfer_send(is_first)
-            for k, v4 in view_send.items():
-                v_prev = view_send_prev.get(k, [])
-                v_diff = {}
-                for i, c in enumerate(v4):
-                    if i >= len(v_prev) or v_prev[i] != c:
-                        v_diff[str(i)] = c
-                msgs.append(webcface.message.View.new(k, v_diff, len(v4)))
-            for m, r in data.view_store.transfer_req(is_first).items():
-                for k, i in r.items():
-                    msgs.append(webcface.message.ViewReq.new(m, k, i))
-
-            for k, v3 in data.func_store.transfer_send(is_first).items():
-                if not v3.hidden:
-                    msgs.append(webcface.message.FuncInfo.new(k, v3))
-
-            log_send = []
-            if is_first:
-                log_all = data.log_store.get_recv(data.self_member_name)
-                if log_all is not None:
-                    log_send.extend(log_all)
-            else:
-                new_logs = data.log_handler._send_queue
-                log_send.extend(new_logs)
-            data.log_handler._send_queue = []
-
-            if len(log_send) > 0:
-                msgs.append(webcface.message.Log.new(log_send))
-            for m, r2 in data.log_store.transfer_req(is_first).items():
-                msgs.append(webcface.message.LogReq.new(m))
-
-            data.queue_msg(msgs)
+        data.queue_msg(webcface.client_impl.sync_data(self, data, False))
 
     def member(self, member_name) -> webcface.member.Member:
         """他のメンバーにアクセスする"""
