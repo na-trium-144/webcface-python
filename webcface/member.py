@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Callable, Optional, Iterable
+import datetime
 import blinker
 import webcface.field
 import webcface.value
@@ -7,6 +8,7 @@ import webcface.text
 import webcface.view
 import webcface.func
 import webcface.log
+import webcface.message
 
 
 class Member(webcface.field.Field):
@@ -65,8 +67,6 @@ class Member(webcface.field.Field):
         else:
             return webcface.func.AnonymousFunc(self, arg, **kwargs)
 
-    # def log()
-
     def values(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。"""
         return map(self.value, self._data_check().value_store.get_entry(self._member))
@@ -124,6 +124,15 @@ class Member(webcface.field.Field):
         return self._data_check().signal("sync", self._member)
 
     @property
+    def sync_time(self) -> datetime.datetime:
+        """memberが最後にsyncした時刻を返す"""
+        t = self._data_check().sync_time_store.get_recv(self._member)
+        if t is not None:
+            return t
+        else:
+            return datetime.datetime.fromtimestamp(0)
+
+    @property
     def lib_name(self) -> str:
         """このMemberが使っているWebCFaceライブラリの識別情報
 
@@ -157,8 +166,8 @@ class Member(webcface.field.Field):
         :return: 初回→ None, 2回目以降(取得できれば)→ pingの往復時間 (ms)
         """
         if not self._data_check().ping_status_req:
-            self._data_check().ping_status_req_send = True
             self._data_check().ping_status_req = True
+            self._data_check().queue_msg([webcface.message.PingStatusReq.new()])
         return self._data_check().ping_status.get(
             self._data_check().get_member_id_from_name(self._member), None
         )
@@ -170,4 +179,4 @@ class Member(webcface.field.Field):
         コールバックの引数にはMemberオブジェクトが渡される。
         """
         self.ping_status
-        return self._data_check().signal("ping")
+        return self._data_check().signal("ping", self._member)

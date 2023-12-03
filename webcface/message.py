@@ -72,6 +72,39 @@ class SvrVersion(MessageBase):
         return self.msg["v"]
 
 
+class Ping(MessageBase):
+    kind_def = 89
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new() -> Ping:
+        return Ping({})
+
+
+class PingStatus(MessageBase):
+    kind_def = 90
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @property
+    def status(self) -> Dict[int, int]:
+        return self.msg["s"]
+
+
+class PingStatusReq(MessageBase):
+    kind_def = 91
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new() -> PingStatusReq:
+        return PingStatusReq({})
+
+
 class Sync(MessageBase):
     kind_def = 87
 
@@ -459,6 +492,8 @@ class LogReq(MessageBase):
 message_classes_recv = [
     SyncInit,
     SvrVersion,
+    Ping,
+    PingStatus,
     Sync,
     ValueRes,
     ValueEntry,

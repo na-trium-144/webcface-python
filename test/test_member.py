@@ -1,12 +1,14 @@
 from conftest import self_name
+import datetime
+import pytest
 from webcface.value import Value
 from webcface.text import Text
 from webcface.func import Func, AnonymousFunc
 from webcface.func_info import ValType, Arg
 from webcface.field import Field
 from webcface.view import View
+from webcface.log import Log
 from webcface.member import Member
-import pytest
 
 
 def test_name(data):
@@ -83,6 +85,12 @@ def test_view(data):
     assert isinstance(v, View)
     assert v.member.name == "a"
     assert v.name == "b"
+
+
+def test_log(data):
+    v = Member(Field(data, "a"), "").log()
+    assert isinstance(v, Log)
+    assert v.member.name == "a"
 
 
 def test_values(data):
@@ -166,4 +174,43 @@ def test_on_sync(data):
         called += 1
 
     data.signal("sync", "a").send()
+    assert called == 1
+
+
+def test_sync_time(data):
+    t = datetime.datetime.now()
+    data.sync_time_store.set_recv(self_name, t)
+    assert Member(Field(data, self_name)).sync_time == t
+
+
+def test_lib_version(data):
+    data.member_ids["a"] = 1
+    data.member_lib_name[1] = "aaa"
+    data.member_lib_ver[1] = "bbb"
+    data.member_remote_addr[1] = "ccc"
+    a = Member(Field(data, "a"))
+    assert a.lib_name == "aaa"
+    assert a.lib_version == "bbb"
+    assert a.remote_addr == "ccc"
+
+
+def test_ping_status(data):
+    data.member_ids["a"] = 1
+    data.ping_status[1] = 10
+    a = Member(Field(data, "a"))
+    assert a.ping_status == 10
+    assert data.ping_status_req is True
+
+
+def test_on_ping(data):
+    called = 0
+
+    @Member(Field(data, "a")).on_ping.connect
+    def a(a):
+        nonlocal called
+        called += 1
+
+    assert data.ping_status_req is True
+
+    data.signal("ping", "a").send()
     assert called == 1

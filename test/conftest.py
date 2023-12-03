@@ -1,5 +1,4 @@
 from pytest import fixture
-import webcface.field
 from webcface.client_data import SyncDataStore2, SyncDataStore1, ClientData
 
 self_name = "test"

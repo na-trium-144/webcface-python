@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
 import threading
 import json
+import datetime
 import blinker
 import webcface.field
 import webcface.func_info
@@ -209,6 +210,7 @@ class ClientData:
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[list[webcface.view_base.ViewComponentBase]]
     log_store: SyncDataStore1[list[webcface.log_handler.LogLine]]
+    sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
     logging_handler: webcface.log_handler.Handler
     log_sent_lines: int
@@ -220,7 +222,6 @@ class ClientData:
     svr_name: str
     svr_version: str
     ping_status_req: bool
-    ping_status_req_send: bool
     ping_status: dict[int, int]
     _msg_queue: list[list[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
@@ -236,6 +237,7 @@ class ClientData:
         self.log_store = SyncDataStore1[list[webcface.log_handler.LogLine]](name)
         self.log_store.set_recv(name, [])
         self.log_sent_lines = 0
+        self.sync_time_store = SyncDataStore1[datetime.datetime](name)
         self.func_result_store = FuncResultStore()
         self.logging_handler = webcface.log_handler.Handler(self)
         self.logging_io = webcface.log_handler.LogWriteIO(self)
@@ -246,7 +248,6 @@ class ClientData:
         self.svr_name = ""
         self.svr_version = ""
         self.ping_status_req = False
-        self.ping_status_req_send = False
         self.ping_status = {}
         self._msg_queue = []
         self._msg_cv = threading.Condition()
