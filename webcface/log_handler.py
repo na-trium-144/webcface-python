@@ -30,7 +30,7 @@ class Handler(logging.Handler):
             LogLine(
                 record.levelno // 10,
                 datetime.datetime.fromtimestamp(record.created),
-                record.message,
+                record.getMessage(),
             )
         )
 
@@ -68,5 +68,5 @@ class LogWriteIO(io.TextIOBase):
         """webcfaceに文字列を出力すると同時にsys.__stderr__にも流す"""
         for l in s.split("\n"):
             if len(l) > 0:
-                self._data.log_handler.write(LogLine(2, datetime.datetime.now(), l))
+                self._data.logging_handler.write(LogLine(2, datetime.datetime.now(), l))
         return sys.__stdout__.write(s)

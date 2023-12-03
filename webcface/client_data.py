@@ -210,9 +210,9 @@ class ClientData:
     view_store: SyncDataStore2[list[webcface.view_base.ViewComponentBase]]
     log_store: SyncDataStore1[list[webcface.log_handler.LogLine]]
     func_result_store: FuncResultStore
-    log_handler: webcface.log_handler.Handler
+    logging_handler: webcface.log_handler.Handler
     log_sent_lines: int
-    log_write_io: webcface.log_handler.LogWriteIO
+    logging_io: webcface.log_handler.LogWriteIO
     member_ids: Dict[str, int]
     member_lib_name: Dict[int, str]
     member_lib_ver: Dict[int, str]
@@ -237,8 +237,8 @@ class ClientData:
         self.log_store.set_recv(name, [])
         self.log_sent_lines = 0
         self.func_result_store = FuncResultStore()
-        self.log_handler = webcface.log_handler.Handler(self)
-        self.log_write_io = webcface.log_handler.LogWriteIO(self)
+        self.logging_handler = webcface.log_handler.Handler(self)
+        self.logging_io = webcface.log_handler.LogWriteIO(self)
         self.member_ids = {}
         self.member_lib_name = {}
         self.member_lib_ver = {}

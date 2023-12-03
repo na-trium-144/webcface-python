@@ -171,12 +171,12 @@ class Client(webcface.member.Member):
 
         :return: logger.addHandler にセットして使う
         """
-        return self._data_check().log_handler
+        return self._data_check().logging_handler
 
     @property
     def logging_io(self) -> io.TextIOBase:
         """webcfaceとstderrに出力するio"""
-        return self._data_check().log_write_io
+        return self._data_check().logging_io
 
     @property
     def server_name(self) -> str:
