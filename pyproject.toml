@@ -16,6 +16,7 @@ toml = "^0.10.2"
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
+simplewebsocketserver = "^0.1.2"
 
 
 [tool.poetry.group.docs.dependencies]
