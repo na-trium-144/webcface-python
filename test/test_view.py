@@ -61,7 +61,7 @@ def test_view_get(data):
     assert isinstance(View(Field(data, "a", "b")).get()[0], ViewComponent)
 
 
-def test_value_set(data):
+def test_view_set(data):
     with View(Field(data, self_name, "b")) as v:
         called = 0
 
@@ -125,4 +125,4 @@ def test_value_set(data):
     assert called == 2
 
     with pytest.raises(ValueError) as e:
-        View(Field(data, "a", "b")).init()
+        View(Field(data, "a", "b")).sync()

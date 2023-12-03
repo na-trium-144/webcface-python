@@ -14,7 +14,9 @@ class Text(webcface.field.Field):
 
         詳細は `Textのドキュメント <https://na-trium-144.github.io/webcface/md_11__text.html>`_ を参照
         """
-        super().__init__(base._data, base._member, field if field != "" else base._field)
+        super().__init__(
+            base._data, base._member, field if field != "" else base._field
+        )
 
     @property
     def member(self) -> webcface.member.Member:
@@ -31,7 +33,10 @@ class Text(webcface.field.Field):
         """値が変化したときのイベント
 
         コールバックの引数にはTextオブジェクトが渡される。
+
+        まだ値をリクエストされてなければ自動でリクエストされる
         """
+        self.request()
         return self._data_check().signal("text_change", self._member, self._field)
 
     def child(self, field: str) -> Text:
@@ -41,12 +46,21 @@ class Text(webcface.field.Field):
         """
         return Text(self, self._field + "." + field)
 
+    def request(self) -> None:
+        """値の受信をリクエストする"""
+        req = self._data_check().text_store.add_req(self._member, self._field)
+        if req > 0:
+            self._data_check().queue_msg(
+                [webcface.message.TextReq.new(self._member, self._field, req)]
+            )
+
     def try_get(self) -> Optional[str]:
-        """文字列をstrまたはNoneで返す"""
+        """文字列をstrまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
+        self.request()
         return self._data_check().text_store.get_recv(self._member, self._field)
 
     def get(self) -> str:
-        """文字列をstrで返す"""
+        """文字列をstrで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else ""
 

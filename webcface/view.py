@@ -140,8 +140,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
 class View(webcface.field.Field):
     _components: list[ViewComponent | str | bool | float | int]
-    _inited: bool
-    _synced: bool
+    _modified: bool
 
     def __init__(self, base: webcface.field.Field, field: str = "") -> None:
         """Viewを指すクラス
@@ -155,8 +154,7 @@ class View(webcface.field.Field):
             base._data, base._member, field if field != "" else base._field
         )
         self._components = []
-        self._inited = False
-        self._synced = False
+        self._modified = False
 
     @property
     def member(self) -> webcface.member.Member:
@@ -173,7 +171,10 @@ class View(webcface.field.Field):
         """値が変化したときのイベント
 
         コールバックの引数にはViewオブジェクトが渡される。
+
+        まだリクエストされてなければ自動でリクエストする。
         """
+        self.request()
         return self._data_check().signal("view_change", self._member, self._field)
 
     def child(self, field: str) -> View:
@@ -183,8 +184,17 @@ class View(webcface.field.Field):
         """
         return View(self, self._field + "." + field)
 
+    def request(self) -> None:
+        """値の受信をリクエストする"""
+        req = self._data_check().view_store.add_req(self._member, self._field)
+        if req > 0:
+            self._data_check().queue_msg(
+                [webcface.message.ViewReq.new(self._member, self._field, req)]
+            )
+
     def try_get(self) -> Optional[list[ViewComponent]]:
-        """ViewをlistまたはNoneで返す"""
+        """ViewをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
+        self.request()
         v = self._data_check().view_store.get_recv(self._member, self._field)
         v2: Optional[list[ViewComponent]] = None
         if v is not None:
@@ -192,7 +202,7 @@ class View(webcface.field.Field):
         return v2
 
     def get(self) -> list[ViewComponent]:
-        """Viewをlistで返す"""
+        """Viewをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
 
@@ -225,10 +235,8 @@ class View(webcface.field.Field):
 
     def init(self) -> View:
         """このViewオブジェクトにaddした内容を初期化する"""
-        self._set_check()
         self._components = []
-        self._inited = True
-        self._synced = False
+        self._modified = True
         return self
 
     def __exit__(self, type, value, tb) -> None:
@@ -237,9 +245,10 @@ class View(webcface.field.Field):
 
     def sync(self) -> View:
         """Viewの内容をclientに反映し送信可能にする"""
-        if self._inited and not self._synced:
+        self._set_check()
+        if self._modified:
             self.set(self._components)
-            self._synced = True
+            self._modified = False
         return self
 
     def add(self, *args: ViewComponent | str | bool | float | int) -> View:
@@ -247,9 +256,7 @@ class View(webcface.field.Field):
 
         Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする
         """
-        if not self._inited:
-            self.init()
         for c in args:
             self._components.append(c)
-        self._synced = False
+        self._modified = True
         return self

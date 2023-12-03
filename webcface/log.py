@@ -27,15 +27,27 @@ class Log(webcface.field.Field):
         """logが追加されたときのイベント
 
         コールバックの引数にはLogオブジェクトが渡される。
+
+        まだリクエストされてなければ自動でリクエストする。
         """
+        self.request()
         return self._data_check().signal("log_append", self._member)
 
+    def request(self) -> None:
+        """値の受信をリクエストする"""
+        req = self._data_check().log_store.add_req(self._member)
+        if req:
+            self._data_check().queue_msg(
+                [webcface.message.LogReq.new(self._member)]
+            )
+
     def try_get(self) -> Optional[list[webcface.log_handler.LogLine]]:
-        """ログをlistまたはNoneで返す"""
+        """ログをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
+        self.request()
         return self._data_check().log_store.get_recv(self._member)
 
     def get(self) -> list[webcface.log_handler.LogLine]:
-        """ログをlistで返す"""
+        """ログをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
 

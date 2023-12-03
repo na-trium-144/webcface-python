@@ -21,22 +21,25 @@ def test_s2_set_recv(s2):
 def test_s2_get_recv(s2):
     s2.data_recv["a"] = {"b": "c"}
     assert s2.get_recv("a", "b") == "c"
-    assert s2.req["a"]["b"] == 1
-    assert s2.req_send["a"]["b"] == 1
 
-    s2.get_recv(self_name, "b")
+
+def test_s2_add_req(s2):
+    assert s2.add_req("a", "b") == 1
+    assert s2.req["a"]["b"] == 1
+
+    assert s2.add_req(self_name, "b") == 0
     assert self_name not in s2.req
-    assert self_name not in s2.req_send
 
 
 def test_s2_unset_recv(s2):
     s2.data_recv["a"] = {"b": "c"}
     s2.req["a"] = {"b": 1}
-    s2.req_send["a"] = {"b": 1}
-    s2.unset_recv("a", "b")
+    assert s2.unset_recv("a", "b") is True
     assert "b" not in s2.data_recv["a"]
     assert s2.req["a"]["b"] == 0
-    assert s2.req_send["a"]["b"] == 0
+
+    assert s2.unset_recv("a", "b") is False
+    assert s2.unset_recv(self_name, "b") is False
 
 
 def test_s2_add_member(s2):
@@ -89,17 +92,13 @@ def test_s2_get_send_prev(s2):
 
 
 def test_s2_transfer_req(s2):
-    s2.req_send["a"] = {"b": 1}
     s2.req["a"] = {"b": 1, "c": 2}
 
-    s = s2.transfer_req(False)
+    s = s2.transfer_req()
     assert s["a"]["b"] == 1
-    assert "c" not in s["a"]
+    assert s["a"]["c"] == 2
 
-    s = s2.transfer_req(False)
-    assert len(s) == 0
-
-    s = s2.transfer_req(True)
+    s = s2.transfer_req()
     assert s["a"]["b"] == 1
     assert s["a"]["c"] == 2
 
@@ -125,28 +124,34 @@ def test_s1_set_recv(s1):
 def test_s1_get_recv(s1):
     s1.data_recv["a"] = "b"
     assert s1.get_recv("a") == "b"
-    assert s1.req["a"] == True
-    assert s1.req_send["a"] == True
 
-    s1.get_recv(self_name)
+
+def test_s1_add_req(s1):
+    s1.add_req("a")
+    assert s1.req["a"] is True
+
+    assert s1.add_req(self_name) is False
     assert self_name not in s1.req
-    assert self_name not in s1.req_send
+
+
+def test_s1_clear_req(s1):
+    s1.req["a"] = True
+    assert s1.clear_req("a") is True
+
+    assert s1.clear_req("a") is False
+    assert s1.clear_req(self_name) is False
 
 
 def test_s1_transfre_req(s1):
-    s1.req_send = {"a": True}
     s1.req = {"a": True, "b": True}
 
-    s = s1.transfer_req(False)
-    assert s["a"] == True
-    assert "b" not in s
+    s = s1.transfer_req()
+    assert s["a"] is True
+    assert s["b"] is True
 
-    s = s1.transfer_req(False)
-    assert len(s) == 0
-
-    s = s1.transfer_req(True)
-    assert s["a"] == True
-    assert s["b"] == True
+    s = s1.transfer_req()
+    assert s["a"] is True
+    assert s["b"] is True
 
 
 def test_is_self(data):
