@@ -5,7 +5,9 @@ import webcface.client
 
 
 def on_recv(
-    wcli: webcface.client.Client, data: webcface.client_data.ClientData, message: bytes
+    wcli: "webcface.client.Client",
+    data: webcface.client_data.ClientData,
+    message: bytes,
 ) -> None:
     if len(message) > 0:
         for m in webcface.message.unpack(message):
@@ -145,7 +147,7 @@ def on_recv(
 
 
 def sync_data_first(
-    wcli: webcface.client.Client, data: webcface.client_data.ClientData
+    wcli: "webcface.client.Client", data: webcface.client_data.ClientData
 ) -> list[webcface.message.MessageBase]:
     msgs: list[webcface.message.MessageBase] = []
     msgs.append(webcface.message.SyncInit.new(wcli.name, "python", "1.0.0"))
@@ -171,7 +173,9 @@ def sync_data_first(
 
 
 def sync_data(
-    wcli: webcface.client.Client, data: webcface.client_data.ClientData, is_first: bool
+    wcli: "webcface.client.Client",
+    data: webcface.client_data.ClientData,
+    is_first: bool,
 ) -> list[webcface.message.MessageBase]:
     msgs: list[webcface.message.MessageBase] = []
     msgs.append(webcface.message.Sync.new())
