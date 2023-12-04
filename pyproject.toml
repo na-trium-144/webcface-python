@@ -1,10 +1,12 @@
 [tool.poetry]
 name = "webcface"
-version = "1.0.0"
+version = "1.0.0a1"
 description = "WebCFace Client for Python"
 authors = ["na-trium-144 <100704180+na-trium-144@users.noreply.github.com>"]
 license = "MIT"
 readme = "README.md"
+repository = "https://github.com/na-trium-144/webcface-python"
+documentation = "https://na-trium-144.github.io/webcface-python/"
 
 [tool.poetry.dependencies]
 python = "^3.8"
