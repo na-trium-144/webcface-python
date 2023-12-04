@@ -36,6 +36,10 @@ class SyncInit(MessageBase):
     def new(M: str, l: str, v: str) -> SyncInit:
         return SyncInit({"M": M, "m": 0, "l": l, "v": v, "a": ""})
 
+    @staticmethod
+    def new_full(M: str, m: int, l: str, v: str, a: str) -> SyncInit:
+        return SyncInit({"M": M, "m": m, "l": l, "v": v, "a": a})
+
     @property
     def member_name(self) -> str:
         return self.msg["M"]
@@ -63,6 +67,10 @@ class SvrVersion(MessageBase):
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
+    @staticmethod
+    def new(n: str, v: str) -> SvrVersion:
+        return SvrVersion({"n": n, "v": v})
+
     @property
     def svr_name(self) -> str:
         return self.msg["n"]
@@ -88,6 +96,10 @@ class PingStatus(MessageBase):
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(s: Dict[int, int]) -> PingStatus:
+        return PingStatus({"s": s})
 
     @property
     def status(self) -> Dict[int, int]:
@@ -171,6 +183,10 @@ class ValueEntry(MessageBase):
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
+    @staticmethod
+    def new(m: int, f: str) -> ValueEntry:
+        return ValueEntry({"m": m, "f": f})
+
     @property
     def member_id(self) -> int:
         return self.msg["m"]
@@ -226,6 +242,10 @@ class TextEntry(MessageBase):
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int, f: str) -> TextEntry:
+        return TextEntry({"m": m, "f": f})
 
     @property
     def member_id(self) -> int:
@@ -309,6 +329,10 @@ class ViewEntry(MessageBase):
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int, f: str) -> ViewEntry:
+        return ViewEntry({"m": m, "f": f})
 
     @property
     def member_id(self) -> int:
@@ -518,7 +542,7 @@ def pack(msgs: List[MessageBase]) -> bytes:
 
 
 def unpack(packed: bytes) -> List[MessageBase]:
-    unpack_obj = msgpack.unpackb(packed)
+    unpack_obj = msgpack.unpackb(packed, strict_map_key=False)
     assert len(unpack_obj) % 2 == 0
     msg_ret = []
     for i in range(0, len(unpack_obj), 2):

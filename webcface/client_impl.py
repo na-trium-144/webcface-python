@@ -15,6 +15,12 @@ def on_recv(
             if isinstance(m, webcface.message.SvrVersion):
                 data.svr_name = m.svr_name
                 data.svr_version = m.ver
+            if isinstance(m, webcface.message.Ping):
+                data.queue_msg([webcface.message.Ping.new()])
+            if isinstance(m, webcface.message.PingStatus):
+                data.ping_status = m.status
+                for member in wcli.members():
+                    data.signal("ping", member.name).send(member)
             if isinstance(m, webcface.message.SyncInit):
                 data.value_store.add_member(m.member_name)
                 data.text_store.add_member(m.member_name)

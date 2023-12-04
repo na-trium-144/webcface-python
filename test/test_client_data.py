@@ -1,4 +1,5 @@
 from conftest import self_name
+import webcface.message
 
 
 def test_s2_self(s2):
@@ -167,3 +168,20 @@ def test_get_member(data):
     assert data.get_member_id_from_name("a") == 10
     assert data.get_member_id_from_name("b") == 0
     assert data.get_member_id_from_name("") == 0
+
+
+def test_queue_msg(data):
+    data.queue_msg([webcface.message.Ping.new()])
+    assert len(data._msg_queue) == 1
+
+
+def test_clear_msg(data):
+    data._msg_queue = [webcface.message.Ping.new()]
+    data.clear_msg()
+    assert len(data._msg_queue) == 0
+
+
+def test_pop_msg(data):
+    data._msg_queue = [webcface.message.Ping.new()]
+    assert isinstance(data.pop_msg(), webcface.message.Ping)
+    assert len(data._msg_queue) == 0
