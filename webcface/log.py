@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, List
 import blinker
 import webcface.field
 import webcface.member
@@ -41,12 +41,12 @@ class Log(webcface.field.Field):
                 [webcface.message.LogReq.new(self._member)]
             )
 
-    def try_get(self) -> Optional[list[webcface.log_handler.LogLine]]:
+    def try_get(self) -> Optional[List[webcface.log_handler.LogLine]]:
         """ログをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         return self._data_check().log_store.get_recv(self._member)
 
-    def get(self) -> list[webcface.log_handler.LogLine]:
+    def get(self) -> List[webcface.log_handler.LogLine]:
         """ログをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []

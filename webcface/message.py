@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict
+from typing import Dict, List
 import datetime
 import msgpack
 import webcface.func_info
@@ -131,7 +131,7 @@ class Value(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, d: list[float]) -> Value:
+    def new(f: str, d: List[float]) -> Value:
         return Value({"f": f, "d": d})
 
 
@@ -161,7 +161,7 @@ class ValueRes(MessageBase):
         return self.msg["f"]
 
     @property
-    def data(self) -> list[float]:
+    def data(self) -> List[float]:
         return self.msg["d"]
 
 
@@ -373,7 +373,7 @@ class Call(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, r: int, f: str, a: list[float | bool | str]) -> Call:
+    def new(i: int, c: int, r: int, f: str, a: List[float | bool | str]) -> Call:
         return Call({"i": i, "c": c, "r": r, "f": f, "a": a})
 
     @property
@@ -393,7 +393,7 @@ class Call(MessageBase):
         return self.msg["f"]
 
     @property
-    def args(self) -> list[float | bool | str]:
+    def args(self) -> List[float | bool | str]:
         return self.msg["a"]
 
 
@@ -454,7 +454,7 @@ class Log(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(lls: list[webcface.log_handler.LogLine]) -> Log:
+    def new(lls: List[webcface.log_handler.LogLine]) -> Log:
         return Log(
             {
                 "m": 0,
@@ -470,7 +470,7 @@ class Log(MessageBase):
         return self.msg["m"]
 
     @property
-    def log(self) -> list[webcface.log_handler.LogLine]:
+    def log(self) -> List[webcface.log_handler.LogLine]:
         return [
             webcface.log_handler.LogLine(l["v"], int_to_time(l["t"]), l["m"])
             for l in self.msg["l"]
@@ -509,15 +509,15 @@ message_classes_recv = [
 ]
 
 
-def pack(msgs: list[MessageBase]) -> bytes:
-    send_msgs: list[int | dict] = []
+def pack(msgs: List[MessageBase]) -> bytes:
+    send_msgs: List[int | dict] = []
     for m in msgs:
         send_msgs.append(m.kind)
         send_msgs.append(m.msg)
     return msgpack.packb(send_msgs)
 
 
-def unpack(packed: bytes) -> list[MessageBase]:
+def unpack(packed: bytes) -> List[MessageBase]:
     unpack_obj = msgpack.unpackb(packed)
     assert len(unpack_obj) % 2 == 0
     msg_ret = []

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional
+from typing import Optional, List
 import blinker
 import webcface.field
 import webcface.member
@@ -55,7 +55,7 @@ class Value(webcface.field.Field):
                 [webcface.message.ValueReq.new(self._member, self._field, req)]
             )
 
-    def try_get_vec(self) -> Optional[list[float]]:
+    def try_get_vec(self) -> Optional[List[float]]:
         """値をlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         return self._data_check().value_store.get_recv(self._member, self._field)
@@ -65,7 +65,7 @@ class Value(webcface.field.Field):
         v = self.try_get_vec()
         return v[0] if v is not None else None
 
-    def get_vec(self) -> list[float]:
+    def get_vec(self) -> List[float]:
         """値をlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get_vec()
         return v if v is not None else []
@@ -75,7 +75,7 @@ class Value(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else 0
 
-    def set(self, data: list[float] | float) -> Value:
+    def set(self, data: List[float] | float) -> Value:
         """値をセットする"""
         self._set_check()
         if isinstance(data, int):

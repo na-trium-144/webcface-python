@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 from enum import IntEnum
 from copy import deepcopy
 import inspect
@@ -43,7 +43,7 @@ class Arg:
     _min: Optional[float]
     _max: Optional[float]
     _init: Optional[float | bool | str]
-    _option: list[float | str]
+    _option: List[float | str]
 
     def __init__(
         self,
@@ -52,7 +52,7 @@ class Arg:
         min: Optional[float] = None,
         max: Optional[float] = None,
         init: Optional[float | bool | str] = None,
-        option: list[float | str] = [],
+        option: List[float | str] = [],
     ) -> None:
         self._name = name
         if isinstance(type, int):
@@ -112,13 +112,13 @@ class Arg:
         return self._min
 
     @property
-    def option(self) -> list[float | str]:
+    def option(self) -> List[float | str]:
         return self._option
 
 
 class FuncInfo:
     return_type: int
-    args: list[Arg]
+    args: List[Arg]
     hidden: bool
     func_impl: Optional[Callable]
 
@@ -126,7 +126,7 @@ class FuncInfo:
         self,
         func: Optional[Callable],
         return_type: Optional[int | type],
-        args: Optional[list[Arg]],
+        args: Optional[List[Arg]],
         hidden: Optional[bool]
     ) -> None:
         self.func_impl = func
@@ -162,7 +162,7 @@ class FuncInfo:
     def run(self, args) -> float | bool | str:
         if len(args) != len(self.args):
             raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
-        new_args: list[int | float | bool | str] = []
+        new_args: List[int | float | bool | str] = []
         for i, a in enumerate(args):
             if self.args[i].type == ValType.INT:
                 new_args.append(int(a))

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Callable
+from typing import Optional, Callable, List
 from copy import deepcopy
 import blinker
 import webcface.field
@@ -139,7 +139,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
 
 class View(webcface.field.Field):
-    _components: list[ViewComponent | str | bool | float | int]
+    _components: List[ViewComponent | str | bool | float | int]
     _modified: bool
 
     def __init__(self, base: webcface.field.Field, field: str = "") -> None:
@@ -192,21 +192,21 @@ class View(webcface.field.Field):
                 [webcface.message.ViewReq.new(self._member, self._field, req)]
             )
 
-    def try_get(self) -> Optional[list[ViewComponent]]:
+    def try_get(self) -> Optional[List[ViewComponent]]:
         """ViewをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         v = self._data_check().view_store.get_recv(self._member, self._field)
-        v2: Optional[list[ViewComponent]] = None
+        v2: Optional[List[ViewComponent]] = None
         if v is not None:
             v2 = list(map(ViewComponent.from_base, v))
         return v2
 
-    def get(self) -> list[ViewComponent]:
+    def get(self) -> List[ViewComponent]:
         """Viewをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
 
-    def set(self, components: list[ViewComponent | str | bool | float | int]) -> View:
+    def set(self, components: List[ViewComponent | str | bool | float | int]) -> View:
         """Viewのリストをセットする"""
         data2 = []
         for c in components:

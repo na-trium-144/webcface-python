@@ -1,4 +1,5 @@
 import threading
+from typing import List
 import webcface.client_data
 import webcface.message
 import webcface.client
@@ -148,8 +149,8 @@ def on_recv(
 
 def sync_data_first(
     wcli: "webcface.client.Client", data: webcface.client_data.ClientData
-) -> list[webcface.message.MessageBase]:
-    msgs: list[webcface.message.MessageBase] = []
+) -> List[webcface.message.MessageBase]:
+    msgs: List[webcface.message.MessageBase] = []
     msgs.append(webcface.message.SyncInit.new(wcli.name, "python", "1.0.0"))
 
     with data.value_store.lock:
@@ -176,8 +177,8 @@ def sync_data(
     wcli: "webcface.client.Client",
     data: webcface.client_data.ClientData,
     is_first: bool,
-) -> list[webcface.message.MessageBase]:
-    msgs: list[webcface.message.MessageBase] = []
+) -> List[webcface.message.MessageBase]:
+    msgs: List[webcface.message.MessageBase] = []
     msgs.append(webcface.message.Sync.new())
 
     with data.value_store.lock:

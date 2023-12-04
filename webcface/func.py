@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional
+from typing import Callable, Optional, List
 from copy import deepcopy
 import threading
 import sys
@@ -10,7 +10,7 @@ import webcface.func_info
 
 class Func(webcface.field.Field):
     _return_type: Optional[int | type]
-    _args: Optional[list[webcface.func_info.Arg]]
+    _args: Optional[List[webcface.func_info.Arg]]
     _hidden: Optional[bool]
 
     def __init__(
@@ -18,7 +18,7 @@ class Func(webcface.field.Field):
         base: Optional[webcface.field.Field],
         field: str = "",
         return_type: Optional[int | type] = None,
-        args: Optional[list[webcface.func_info.Arg]] = None,
+        args: Optional[List[webcface.func_info.Arg]] = None,
         hidden: Optional[bool] = None,
     ) -> None:
         """Funcを指すクラス
@@ -61,7 +61,7 @@ class Func(webcface.field.Field):
         self,
         func: Callable,
         return_type: Optional[int | type] = None,
-        args: Optional[list[webcface.func_info.Arg]] = None,
+        args: Optional[List[webcface.func_info.Arg]] = None,
         hidden: Optional[bool] = None,
     ) -> Func:
         """関数からFuncInfoを構築しセットする
@@ -195,7 +195,7 @@ class Func(webcface.field.Field):
         return self._get_info().return_type
 
     @property
-    def args(self) -> list[webcface.func_info.Arg]:
+    def args(self) -> List[webcface.func_info.Arg]:
         """引数の情報を返す"""
         return deepcopy(self._get_info().args)
 

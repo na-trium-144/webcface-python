@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable
+from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List
 import threading
 import json
 import datetime
@@ -17,7 +17,7 @@ class SyncDataStore2(Generic[T]):
     data_send: Dict[str, T]
     data_send_prev: Dict[str, T]
     data_recv: Dict[str, Dict[str, T]]
-    entry: Dict[str, list[str]]
+    entry: Dict[str, List[str]]
     req: Dict[str, Dict[str, int]]
     lock: threading.RLock
 
@@ -71,11 +71,11 @@ class SyncDataStore2(Generic[T]):
                 return True
             return False
 
-    def get_members(self) -> list[str]:
+    def get_members(self) -> List[str]:
         with self.lock:
             return list(self.entry.keys())
 
-    def get_entry(self, member: str) -> list[str]:
+    def get_entry(self, member: str) -> List[str]:
         with self.lock:
             return self.entry.get(member, [])
 
@@ -182,7 +182,7 @@ class SyncDataStore1(Generic[T]):
 
 
 class FuncResultStore:
-    results: list[webcface.func_info.AsyncFuncResult]
+    results: List[webcface.func_info.AsyncFuncResult]
     lock: threading.Lock
 
     def __init__(self):
@@ -205,11 +205,11 @@ class FuncResultStore:
 
 class ClientData:
     self_member_name: str
-    value_store: SyncDataStore2[list[float]]
+    value_store: SyncDataStore2[List[float]]
     text_store: SyncDataStore2[str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
-    view_store: SyncDataStore2[list[webcface.view_base.ViewComponentBase]]
-    log_store: SyncDataStore1[list[webcface.log_handler.LogLine]]
+    view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
+    log_store: SyncDataStore1[List[webcface.log_handler.LogLine]]
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
     logging_handler: webcface.log_handler.Handler
@@ -223,18 +223,18 @@ class ClientData:
     svr_version: str
     ping_status_req: bool
     ping_status: dict[int, int]
-    _msg_queue: list[list[webcface.message.MessageBase]]
+    _msg_queue: List[List[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
 
     def __init__(self, name: str) -> None:
         self.self_member_name = name
-        self.value_store = SyncDataStore2[list[float]](name)
+        self.value_store = SyncDataStore2[List[float]](name)
         self.text_store = SyncDataStore2[str](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
-        self.view_store = SyncDataStore2[list[webcface.view_base.ViewComponentBase]](
+        self.view_store = SyncDataStore2[List[webcface.view_base.ViewComponentBase]](
             name
         )
-        self.log_store = SyncDataStore1[list[webcface.log_handler.LogLine]](name)
+        self.log_store = SyncDataStore1[List[webcface.log_handler.LogLine]](name)
         self.log_store.set_recv(name, [])
         self.log_sent_lines = 0
         self.sync_time_store = SyncDataStore1[datetime.datetime](name)
@@ -252,7 +252,7 @@ class ClientData:
         self._msg_queue = []
         self._msg_cv = threading.Condition()
 
-    def queue_msg(self, msgs: list[webcface.message.MessageBase]) -> None:
+    def queue_msg(self, msgs: List[webcface.message.MessageBase]) -> None:
         with self._msg_cv:
             self._msg_queue.append(msgs)
             self._msg_cv.notify_all()
@@ -269,7 +269,7 @@ class ClientData:
             while len(self._msg_queue) == 0:
                 self._msg_cv.wait()
 
-    def pop_msg(self) -> Optional[list[webcface.message.MessageBase]]:
+    def pop_msg(self) -> Optional[List[webcface.message.MessageBase]]:
         with self._msg_cv:
             if len(self._msg_queue) == 0:
                 return None
