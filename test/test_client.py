@@ -1,5 +1,6 @@
 from conftest import self_name, check_sent, clear_sent, send_back
 from webcface.message import *
+import webcface.func_info
 
 
 def test_name(wcli):
@@ -87,3 +88,60 @@ def test_entry(wcli):
     called = 0
     assert len(list(m.texts())) == 1
     assert list(m.texts())[0].name == "b"
+
+    m.on_func_entry.connect(callback)
+    send_back(
+        wcli,
+        [
+            FuncInfo.new_full(
+                10,
+                "b",
+                webcface.func_info.FuncInfo(
+                    None,
+                    webcface.func_info.ValType.INT,
+                    [webcface.func_info.Arg()],
+                    False,
+                ),
+            )
+        ],
+    )
+    assert called == 1
+    called = 0
+    assert len(list(m.funcs())) == 1
+    assert list(m.funcs())[0].name == "b"
+    assert m.func("b").return_type == webcface.func_info.ValType.INT
+    assert len(m.func("b").args) == 1
+
+    m.on_sync.connect(callback)
+    send_back(wcli, [Sync.new_full(10, 0)])
+    assert called == 1
+    called = 0
+
+
+def test_value_send(wcli):
+    wcli._data_check().value_store.set_send("a", [5])
+    wcli.sync()
+    m = check_sent(wcli, Value)
+    assert isinstance(m, Value)
+    assert m.field == "a"
+    assert m.data == [5]
+
+
+def test_value_req(wcli):
+    called = 0
+
+    def callback(v):
+        nonlocal called
+        called += 1
+
+    wcli.member("a").value("b").signal.connect(callback)
+    m = check_sent(wcli, ValueReq)
+    assert isinstance(m, ValueReq)
+    assert m.member == "a"
+    assert m.field == "b"
+    assert m.req_id == 1
+
+    send_back(wcli, [ValueRes.new(1, "", [1, 2, 3]), ValueRes.new(1, "c", [1, 2, 3])])
+    assert called == 1
+    assert wcli._data_check().value_store.get_recv("a", "b") == [1, 2, 3]
+    assert wcli._data_check().value_store.get_recv("a", "b.c") == [1, 2, 3]

@@ -34,7 +34,7 @@ class SyncInit(MessageBase):
 
     @staticmethod
     def new(M: str, l: str, v: str) -> SyncInit:
-        return SyncInit({"M": M, "m": 0, "l": l, "v": v, "a": ""})
+        return SyncInit.new_full(M, 0, l, v, "")
 
     @staticmethod
     def new_full(M: str, m: int, l: str, v: str, a: str) -> SyncInit:
@@ -127,6 +127,10 @@ class Sync(MessageBase):
     def new() -> Sync:
         return Sync({"m": 0, "t": time_to_int(datetime.datetime.now())})
 
+    @staticmethod
+    def new_full(m: int, t: int) -> Sync:
+        return Sync({"m": m, "t": t})
+
     @property
     def member_id(self) -> int:
         return self.msg["m"]
@@ -146,6 +150,14 @@ class Value(MessageBase):
     def new(f: str, d: List[float]) -> Value:
         return Value({"f": f, "d": d})
 
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> List[float]:
+        return self.msg["d"]
+
 
 class ValueReq(MessageBase):
     kind_def = 40
@@ -157,12 +169,28 @@ class ValueReq(MessageBase):
     def new(m: str, f: str, i: int) -> ValueReq:
         return ValueReq({"M": m, "f": f, "i": i})
 
+    @property
+    def member(self) -> str:
+        return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
 
 class ValueRes(MessageBase):
     kind_def = 60
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, f: str, d: List[float]) -> ValueRes:
+        return ValueRes({"i": i, "f": f, "d": d})
 
     @property
     def req_id(self) -> int:
@@ -351,6 +379,10 @@ class FuncInfo(MessageBase):
 
     @staticmethod
     def new(f: str, fi: webcface.func_info.FuncInfo) -> FuncInfo:
+        return FuncInfo.new_full(0, f, fi)
+
+    @staticmethod
+    def new_full(m: int, f: str, fi: webcface.func_info.FuncInfo) -> FuncInfo:
         ad = []
         for a in fi.args:
             ad.append(
@@ -363,7 +395,7 @@ class FuncInfo(MessageBase):
                     "o": a.option,
                 }
             )
-        return FuncInfo({"m": 0, "f": f, "r": fi.return_type, "a": ad})
+        return FuncInfo({"m": m, "f": f, "r": fi.return_type, "a": ad})
 
     @property
     def member_id(self) -> int:
@@ -387,7 +419,7 @@ class FuncInfo(MessageBase):
                     option=a["o"],
                 )
             )
-        return webcface.func_info.FuncInfo(None, args, self.msg["r"])
+        return webcface.func_info.FuncInfo(None, self.msg["r"], args, False)
 
 
 class Call(MessageBase):

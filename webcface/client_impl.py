@@ -10,6 +10,7 @@ def on_recv(
     data: webcface.client_data.ClientData,
     message: bytes,
 ) -> None:
+    sync_members: List[str] = []
     if len(message) > 0:
         for m in webcface.message.unpack(message):
             if isinstance(m, webcface.message.SvrVersion):
@@ -19,8 +20,12 @@ def on_recv(
                 data.queue_msg([webcface.message.Ping.new()])
             if isinstance(m, webcface.message.PingStatus):
                 data.ping_status = m.status
-                for member in wcli.members():
-                    data.signal("ping", member.name).send(member)
+                for member2 in wcli.members():
+                    data.signal("ping", member2.name).send(member2)
+            if isinstance(m, webcface.message.Sync):
+                member = data.get_member_name_from_id(m.member_id)
+                data.sync_time_store.set_recv(member, m.time)
+                sync_members.append(member)
             if isinstance(m, webcface.message.SyncInit):
                 data.value_store.add_member(m.member_name)
                 data.text_store.add_member(m.member_name)
@@ -61,10 +66,10 @@ def on_recv(
                     v_prev = []
                     data.view_store.set_recv(member, field, v_prev)
                 for i, c in m.data_diff.items():
-                    if i >= len(v_prev):
+                    if int(i) >= len(v_prev):
                         v_prev.append(c)
                     else:
-                        v_prev[i] = c
+                        v_prev[int(i)] = c
                 if len(v_prev) >= m.length:
                     del v_prev[m.length :]
                 data.signal("view_change", member, field).send(
@@ -151,6 +156,8 @@ def on_recv(
                     data.log_store.set_recv(member, log_s)
                 log_s.extend(m.log)
                 data.signal("log_append", member).send(wcli.member(member).log())
+        for member in sync_members:
+            data.signal("sync", member).send(wcli.member(member))
 
 
 def sync_data_first(
