@@ -16,6 +16,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
     @staticmethod
     def from_base(
         base: webcface.view_base.ViewComponentBase,
+        data: Optional[webcface.client_data.ClientData]
     ) -> ViewComponent:
         vc = ViewComponent(
             base._type,
@@ -24,7 +25,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             base._text_color,
             base._bg_color,
         )
-        vc._data = base._data
+        vc._data = data
         return vc
 
     def __init__(
@@ -198,7 +199,7 @@ class View(webcface.field.Field):
         v = self._data_check().view_store.get_recv(self._member, self._field)
         v2: Optional[List[ViewComponent]] = None
         if v is not None:
-            v2 = list(map(ViewComponent.from_base, v))
+            v2 = [ViewComponent.from_base(vb, self._data) for vb in v]
         return v2
 
     def get(self) -> List[ViewComponent]:

@@ -1,6 +1,10 @@
 from conftest import self_name, check_sent, clear_sent, send_back
 from webcface.message import *
+from webcface.field import Field
+from webcface.func import Func
+from webcface.view import ViewComponent
 import webcface.func_info
+import webcface.view_components
 
 
 def test_name(wcli):
@@ -145,3 +149,122 @@ def test_value_req(wcli):
     assert called == 1
     assert wcli._data_check().value_store.get_recv("a", "b") == [1, 2, 3]
     assert wcli._data_check().value_store.get_recv("a", "b.c") == [1, 2, 3]
+
+
+def test_text_send(wcli):
+    wcli._data_check().text_store.set_send("a", "b")
+    wcli.sync()
+    m = check_sent(wcli, Text)
+    assert isinstance(m, Text)
+    assert m.field == "a"
+    assert m.data == "b"
+
+
+def test_text_req(wcli):
+    called = 0
+
+    def callback(v):
+        nonlocal called
+        called += 1
+
+    wcli.member("a").text("b").signal.connect(callback)
+    m = check_sent(wcli, TextReq)
+    assert isinstance(m, TextReq)
+    assert m.member == "a"
+    assert m.field == "b"
+    assert m.req_id == 1
+
+    send_back(wcli, [TextRes.new(1, "", "z"), TextRes.new(1, "c", "z")])
+    assert called == 1
+    assert wcli._data_check().text_store.get_recv("a", "b") == "z"
+    assert wcli._data_check().text_store.get_recv("a", "b.c") == "z"
+
+
+def test_view_send(wcli):
+    wcli._data_check().view_store.set_send(
+        "a",
+        [
+            webcface.view_components.text(
+                "a",
+                text_color=webcface.view_components.ViewColor.YELLOW,
+                bg_color=webcface.view_components.ViewColor.GREEN,
+            ),
+            webcface.view_components.new_line(),
+            webcface.view_components.button(
+                "a", Func(Field(wcli._data_check(), "x", "y"))
+            ),
+        ],
+    )
+    wcli.sync()
+    m = check_sent(wcli, View)
+    assert isinstance(m, View)
+    assert m.field == "a"
+    assert m.length == 3
+    assert len(m.data) == 3
+    m_vc = lambda i: ViewComponent.from_base(m.data[str(i)], wcli._data)
+    assert m_vc(0).type == webcface.view_components.ViewComponentType.TEXT
+    assert m_vc(0).text == "a"
+    assert m_vc(0).text_color == webcface.view_components.ViewColor.YELLOW
+    assert m_vc(0).bg_color == webcface.view_components.ViewColor.GREEN
+    assert m_vc(1).type == webcface.view_components.ViewComponentType.NEW_LINE
+    assert m_vc(2).type == webcface.view_components.ViewComponentType.BUTTON
+    assert m_vc(2).on_click.member.name == "x"
+    assert m_vc(2).on_click.name == "y"
+    clear_sent(wcli)
+
+    wcli._data_check().view_store.set_send(
+        "a",
+        [
+            webcface.view_components.text(
+                "b",
+                text_color=webcface.view_components.ViewColor.RED,
+                bg_color=webcface.view_components.ViewColor.GREEN,
+            ),
+            webcface.view_components.new_line(),
+            webcface.view_components.button(
+                "a", Func(Field(wcli._data_check(), "x", "y"))
+            ),
+        ],
+    )
+    wcli.sync()
+    m = check_sent(wcli, View)
+    assert isinstance(m, View)
+    assert m.field == "a"
+    assert m.length == 3
+    assert len(m.data) == 1
+    m_vc = lambda i: ViewComponent.from_base(m.data[str(i)], wcli._data)
+    assert m_vc(0).type == webcface.view_components.ViewComponentType.TEXT
+    assert m_vc(0).text == "b"
+    assert m_vc(0).text_color == webcface.view_components.ViewColor.RED
+    assert m_vc(0).bg_color == webcface.view_components.ViewColor.GREEN
+
+
+def test_view_req(wcli):
+    called = 0
+
+    def callback(v):
+        nonlocal called
+        called += 1
+
+    wcli.member("a").view("b").signal.connect(callback)
+    m = check_sent(wcli, ViewReq)
+    assert isinstance(m, ViewReq)
+    assert m.member == "a"
+    assert m.field == "b"
+    assert m.req_id == 1
+
+    v = {
+        "0": webcface.view_components.text(
+            "b",
+            text_color=webcface.view_components.ViewColor.RED,
+            bg_color=webcface.view_components.ViewColor.GREEN,
+        ),
+        "1": webcface.view_components.new_line(),
+        "2": webcface.view_components.button(
+            "a", Func(Field(wcli._data_check(), "x", "y"))
+        ),
+    }
+    send_back(wcli, [ViewRes.new(1, "", v, 3), ViewRes.new(1, "c", v, 3)])
+    assert called == 1
+    assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b.c")) == 3

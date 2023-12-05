@@ -6,7 +6,6 @@ import webcface.client_data
 class ViewComponentBase:
     _type: int
     _text: str
-    _data: Optional[webcface.client_data.ClientData]
     _on_click_func: Optional[webcface.field.FieldBase]
     _text_color: int
     _bg_color: int
@@ -24,5 +23,4 @@ class ViewComponentBase:
         self._on_click_func = on_click
         self._text_color = text_color
         self._bg_color = bg_color
-        self._data = None
 

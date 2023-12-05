@@ -234,6 +234,14 @@ class Text(MessageBase):
     def new(f: str, d: str) -> Text:
         return Text({"f": f, "d": d})
 
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> str:
+        return self.msg["d"]
+
 
 class TextReq(MessageBase):
     kind_def = 41
@@ -245,12 +253,28 @@ class TextReq(MessageBase):
     def new(m: str, f: str, i: int) -> TextReq:
         return TextReq({"M": m, "f": f, "i": i})
 
+    @property
+    def member(self) -> str:
+        return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
 
 class TextRes(MessageBase):
     kind_def = 61
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, f: str, d: str) -> TextRes:
+        return TextRes({"i": i, "f": f, "d": d})
 
     @property
     def req_id(self) -> int:
@@ -284,6 +308,39 @@ class TextEntry(MessageBase):
         return self.msg["f"]
 
 
+def vb_to_vd(vb: Dict[str, webcface.view_base.ViewComponentBase]) -> dict:
+    """ViewComponentBaseクラスからメッセージに変換"""
+    vd = {}
+    for i, b in vb.items():
+        vd[i] = {
+            "t": b._type,
+            "x": b._text,
+            "L": None if b._on_click_func is None else b._on_click_func._member,
+            "l": None if b._on_click_func is None else b._on_click_func._field,
+            "c": b._text_color,
+            "b": b._bg_color,
+        }
+    return vd
+
+
+def vd_to_vb(vd: dict) -> Dict[str, webcface.view_base.ViewComponentBase]:
+    """メッセージからViewComponentBaseクラスに変換"""
+    vb = {}
+    for i, d in vd.items():
+        vb[i] = webcface.view_base.ViewComponentBase(
+            type=d["t"],
+            text=d["x"],
+            on_click=(
+                None
+                if d["L"] is None or d["l"] is None
+                else webcface.field.FieldBase(d["L"], d["l"])
+            ),
+            text_color=d["c"],
+            bg_color=d["b"],
+        )
+    return vb
+
+
 class View(MessageBase):
     kind_def = 3
 
@@ -292,17 +349,19 @@ class View(MessageBase):
 
     @staticmethod
     def new(f: str, d: Dict[str, webcface.view_base.ViewComponentBase], l: int) -> View:
-        vd = {}
-        for i, c in d.items():
-            vd[i] = {
-                "t": c._type,
-                "x": c._text,
-                "L": None if c._on_click_func is None else c._on_click_func._member,
-                "l": None if c._on_click_func is None else c._on_click_func._field,
-                "c": c._text_color,
-                "b": c._bg_color,
-            }
-        return View({"f": f, "d": vd, "l": l})
+        return View({"f": f, "d": vb_to_vd(d), "l": l})
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> Dict[str, webcface.view_base.ViewComponentBase]:
+        return vd_to_vb(self.msg["d"])
+
+    @property
+    def length(self) -> int:
+        return self.msg["l"]
 
 
 class ViewReq(MessageBase):
@@ -315,12 +374,30 @@ class ViewReq(MessageBase):
     def new(m: str, f: str, i: int) -> ViewReq:
         return ViewReq({"M": m, "f": f, "i": i})
 
+    @property
+    def member(self) -> str:
+        return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
 
 class ViewRes(MessageBase):
     kind_def = 63
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(
+        i: int, f: str, d: Dict[str, webcface.view_base.ViewComponentBase], l: int
+    ) -> ViewRes:
+        return ViewRes({"i": i, "f": f, "d": vb_to_vd(d), "l": l})
 
     @property
     def req_id(self) -> int:
@@ -332,20 +409,7 @@ class ViewRes(MessageBase):
 
     @property
     def data_diff(self) -> Dict[str, webcface.view_base.ViewComponentBase]:
-        vc = {}
-        for i, d in self.msg["d"].items():
-            vc[i] = webcface.view_base.ViewComponentBase(
-                type=d["t"],
-                text=d["x"],
-                on_click=(
-                    None
-                    if d["L"] is None or d["l"] is None
-                    else webcface.field.FieldBase(d["L"], d["l"])
-                ),
-                text_color=d["c"],
-                bg_color=d["b"],
-            )
-        return vc
+        return vd_to_vb(self.msg["d"])
 
     @property
     def length(self) -> int:
