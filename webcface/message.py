@@ -575,9 +575,13 @@ class Log(MessageBase):
 
     @staticmethod
     def new(lls: List[webcface.log_handler.LogLine]) -> Log:
+        return Log.new_full(0, lls)
+
+    @staticmethod
+    def new_full(m: int, lls: List[webcface.log_handler.LogLine]) -> Log:
         return Log(
             {
-                "m": 0,
+                "m": m,
                 "l": [
                     {"v": ll.level, "t": time_to_int(ll.time), "m": ll.message}
                     for ll in lls
@@ -604,8 +608,12 @@ class LogReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str) -> ViewReq:
-        return ViewReq({"M": m})
+    def new(m: str) -> LogReq:
+        return LogReq({"M": m})
+
+    @property
+    def member_name(self) -> str:
+        return self.msg["M"]
 
 
 # 受信する可能性のあるメッセージのリスト

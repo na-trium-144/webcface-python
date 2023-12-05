@@ -1,8 +1,10 @@
+import datetime
 from conftest import self_name, check_sent, clear_sent, send_back
 from webcface.message import *
 from webcface.field import Field
 from webcface.func import Func
 from webcface.view import ViewComponent
+from webcface.log_handler import LogLine
 import webcface.func_info
 import webcface.view_components
 
@@ -256,7 +258,7 @@ def test_view_req(wcli):
     v = {
         "0": webcface.view_components.text(
             "b",
-            text_color=webcface.view_components.ViewColor.RED,
+            text_color=webcface.view_components.ViewColor.YELLOW,
             bg_color=webcface.view_components.ViewColor.GREEN,
         ),
         "1": webcface.view_components.new_line(),
@@ -267,4 +269,94 @@ def test_view_req(wcli):
     send_back(wcli, [ViewRes.new(1, "", v, 3), ViewRes.new(1, "c", v, 3)])
     assert called == 1
     assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
+    assert (
+        wcli._data_check().view_store.get_recv("a", "b")[0]._text_color
+        == webcface.view_components.ViewColor.YELLOW
+    )
     assert len(wcli._data_check().view_store.get_recv("a", "b.c")) == 3
+
+    v2 = {
+        "0": webcface.view_components.text(
+            "b",
+            text_color=webcface.view_components.ViewColor.RED,
+            bg_color=webcface.view_components.ViewColor.GREEN,
+        ),
+    }
+    send_back(wcli, [ViewRes.new(1, "", v2, 3)])
+    assert called == 2
+    assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
+    assert (
+        wcli._data_check().view_store.get_recv("a", "b")[0]._text_color
+        == webcface.view_components.ViewColor.RED
+    )
+
+
+def test_log_send(wcli):
+    ls = [
+        LogLine(0, datetime.datetime.now(), "a" * 100000),
+        LogLine(1, datetime.datetime.now(), "b"),
+    ]
+    wcli._data_check().log_store.set_recv(self_name, ls)
+    wcli.sync()
+    m = check_sent(wcli, Log)
+    assert isinstance(m, Log)
+    assert len(m.log) == 2
+    assert m.log[0].level == 0
+    assert m.log[0].message == "a" * 100000
+    assert m.log[1].level == 1
+    assert m.log[1].message == "b"
+    clear_sent(wcli)
+
+    ls.append(LogLine(2, datetime.datetime.now(), "c"))
+    wcli.sync()
+    m = check_sent(wcli, Log)
+    assert isinstance(m, Log)
+    assert len(m.log) == 1
+    assert m.log[0].level == 2
+    assert m.log[0].message == "c"
+
+
+def test_log_req(wcli):
+    called = 0
+
+    def callback(l):
+        nonlocal called
+        called += 1
+
+    wcli.member("a").log().signal.connect(callback)
+    m = check_sent(wcli, LogReq)
+    assert isinstance(m, LogReq)
+    assert m.member_name == "a"
+
+    send_back(
+        wcli,
+        [
+            SyncInit.new_full("a", 10, "", "", ""),
+            Log.new_full(
+                10,
+                [
+                    LogLine(0, datetime.datetime.now(), "a" * 100000),
+                    LogLine(1, datetime.datetime.now(), "b"),
+                ],
+            ),
+        ],
+    )
+    assert called == 1
+    assert len(wcli._data_check().log_store.get_recv("a")) == 2
+    assert wcli._data_check().log_store.get_recv("a")[0].level == 0
+    assert wcli._data_check().log_store.get_recv("a")[0].message == "a" * 100000
+
+    send_back(
+        wcli,
+        [
+            Log.new_full(
+                10,
+                [
+                    LogLine(2, datetime.datetime.now(), "c"),
+                ],
+            )
+        ],
+    )
+    assert called == 2
+    assert len(wcli._data_check().log_store.get_recv("a")) == 3
+
