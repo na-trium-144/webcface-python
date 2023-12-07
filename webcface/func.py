@@ -162,7 +162,7 @@ class Func(webcface.field.Field):
                     webcface.message.Call.new(
                         r._caller_id,
                         0,
-                        self.data.get_member_id_from_name(self._member),
+                        self._data.get_member_id_from_name(self._member),
                         self._field,
                         list(args),
                     )

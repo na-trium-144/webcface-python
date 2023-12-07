@@ -1,8 +1,10 @@
 import datetime
 from conftest import self_name, check_sent, clear_sent, send_back
+import pytest
 from webcface.message import *
 from webcface.field import Field
 from webcface.func import Func
+from webcface.func_info import Arg, ValType, FuncNotFoundError
 from webcface.view import ViewComponent
 from webcface.log_handler import LogLine
 import webcface.func_info
@@ -360,3 +362,71 @@ def test_log_req(wcli):
     assert called == 2
     assert len(wcli._data_check().log_store.get_recv("a")) == 3
 
+
+def test_func_info(wcli):
+    f = wcli.func("a").set(
+        lambda: 1,
+        return_type=ValType.INT,
+        args=[Arg("a", type=ValType.INT, init=3)],
+    )
+    wcli.sync()
+    m = check_sent(wcli, FuncInfo)
+    assert isinstance(m, FuncInfo)
+    assert m.field == "a"
+    assert m.func_info.return_type == ValType.INT
+    assert len(m.func_info.args) == 1
+    assert m.func_info.args[0].name == "a"
+
+
+def test_func_call(wcli):
+    send_back(wcli, [SyncInit.new_full("a", 10, "", "", "")])
+    r = wcli.member("a").func("b").run_async(1, True, "a")
+    m = check_sent(wcli, Call)
+    assert isinstance(m, Call)
+    assert m.caller_id == 0
+    assert m.target_member_id == 10
+    assert m.field == "b"
+    assert len(m.args) == 3
+    assert m.args[0] == 1
+    assert m.args[1] is True
+    assert m.args[2] == "a"
+
+    send_back(wcli, [CallResponse.new(0, 0, False)])
+    assert r.started is False
+    with pytest.raises(FuncNotFoundError) as e:
+        res = r.result
+    clear_sent(wcli)
+
+    # 2nd call
+    r = wcli.member("a").func("b").run_async(1, True, "a")
+    m = check_sent(wcli, Call)
+    assert isinstance(m, Call)
+    assert m.caller_id == 1
+    assert m.target_member_id == 10
+    assert m.field == "b"
+
+    send_back(wcli, [CallResponse.new(1, 0, True)])
+    assert r.started is True
+
+    send_back(wcli, [CallResult.new(1, 0, True, "a")])
+    with pytest.raises(RuntimeError) as e:
+        res = r.result
+    try:
+        res = r.result
+    except RuntimeError as e:
+        assert str(e) == "a"
+    clear_sent(wcli)
+
+    # 3rd call
+    r = wcli.member("a").func("b").run_async(1, True, "a")
+    m = check_sent(wcli, Call)
+    assert isinstance(m, Call)
+    assert m.caller_id == 2
+    assert m.target_member_id == 10
+    assert m.field == "b"
+
+    send_back(wcli, [CallResponse.new(2, 0, True)])
+    assert r.started is True
+
+    send_back(wcli, [CallResult.new(2, 0, False, "b")])
+    assert r.result == "b"
