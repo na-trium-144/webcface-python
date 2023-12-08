@@ -4,6 +4,7 @@ import time
 from typing import Optional, Iterable
 import logging
 import io
+import os
 import blinker
 import websocket
 import webcface.member
@@ -42,21 +43,31 @@ class Client(webcface.member.Member):
         self._connection_cv = threading.Condition()
         self._closing = False
 
+        logger = logging.getLogger("webcface")
+        logger.addHandler(logging.StreamHandler())
+        if "WEBCFACE_TRACE" in os.environ:
+            logger.setLevel(logging.DEBUG)
+        elif "WEBCFACE_VERBOSE" in os.environ:
+            logger.setLevel(logging.INFO)
+        else:
+            logger.setLevel(logging.CRITICAL + 1)
+
         def on_open(ws):
-            print("open")
+            logging.getLogger("webcface").info("WebSocket Open")
             with self._connection_cv:
                 self.connected = True
                 self._connection_cv.notify_all()
 
         def on_message(ws, message: bytes):
+            logging.getLogger("webcface").debug("Received message")
             data = self._data_check()
             webcface.client_impl.on_recv(self, data, message)
 
         def on_error(ws, error):
-            print(error)
+            logging.getLogger("webcface").info(f"WebSocket Error: {error}")
 
         def on_close(ws, close_status_code, close_msg):
-            print("closed")
+            logging.getLogger("webcface").info("WebSocket Closed")
             with self._connection_cv:
                 self.connected = False
                 self._connection_cv.notify_all()
@@ -76,8 +87,8 @@ class Client(webcface.member.Member):
                 try:
                     self._ws.run_forever()
                 except Exception as e:
-                    print(f"ws error: {e}")
-                    time.sleep(1)
+                    logging.getLogger("webcface").debug(f"WebSocket Error: {e}")
+                time.sleep(1)
 
         self._reconnect_thread = threading.Thread(target=reconnect, daemon=True)
 
@@ -92,9 +103,12 @@ class Client(webcface.member.Member):
                 msgs = self._data_check().pop_msg()
                 if msgs is not None and self._ws is not None:
                     try:
+                        logging.getLogger("webcface").debug("Sending message")
                         self._ws.send(webcface.message.pack(msgs))
                     except Exception as e:
-                        print(e)
+                        logging.getLogger("webcface").error(
+                            f"Error Sending message {e}"
+                        )
 
         self._send_thread = threading.Thread(target=msg_send, daemon=True)
 

@@ -4,6 +4,7 @@ from enum import IntEnum
 from copy import deepcopy
 import inspect
 import threading
+import logging
 import webcface.field
 import webcface.member
 
@@ -33,7 +34,7 @@ def get_type_enum(t: type) -> int:
         or t is None
     ):
         return ValType.NONE
-    print("unknown type")
+    logging.getLogger("webcface").error("unknown type enum")
     return ValType.STRING
 
 

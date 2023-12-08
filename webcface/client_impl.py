@@ -1,4 +1,5 @@
 import threading
+import logging
 from typing import List
 import webcface.client_data
 import webcface.message
@@ -137,7 +138,7 @@ def on_recv(
                             r._result_ready = True
                         r._cv.notify_all()
                 except IndexError:
-                    print(f"error receiving call response id={m.caller_id}")
+                    logging.getLogger("webcface").error(f"error receiving call response id={m.caller_id}")
             if isinstance(m, webcface.message.CallResult):
                 try:
                     r = data.func_result_store.get_result(m.caller_id)
@@ -147,7 +148,7 @@ def on_recv(
                         r._result_ready = True
                         r._cv.notify_all()
                 except IndexError:
-                    print(f"error receiving call result id={m.caller_id}")
+                    logging.getLogger("webcface").error(f"error receiving call result id={m.caller_id}")
             if isinstance(m, webcface.message.Log):
                 member = data.get_member_name_from_id(m.member_id)
                 log_s = data.log_store.get_recv(member)
