@@ -120,7 +120,10 @@ def test_views(data):
 def test_on_value_entry(data):
     called = 0
 
-    @Member(Field(data, "a")).on_value_entry.connect
+    # python3.8ではデコレーターに直接書けない
+    decorator = Member(Field(data, "a")).on_value_entry.connect
+
+    @decorator
     def a(a):
         nonlocal called
         called += 1
@@ -132,7 +135,9 @@ def test_on_value_entry(data):
 def test_on_text_entry(data):
     called = 0
 
-    @Member(Field(data, "a")).on_text_entry.connect
+    decorator = Member(Field(data, "a")).on_text_entry.connect
+
+    @decorator
     def a(a):
         nonlocal called
         called += 1
@@ -144,7 +149,9 @@ def test_on_text_entry(data):
 def test_on_func_entry(data):
     called = 0
 
-    @Member(Field(data, "a")).on_func_entry.connect
+    decorator = Member(Field(data, "a")).on_func_entry.connect
+
+    @decorator
     def a(a):
         nonlocal called
         called += 1
@@ -156,7 +163,9 @@ def test_on_func_entry(data):
 def test_on_view_entry(data):
     called = 0
 
-    @Member(Field(data, "a")).on_view_entry.connect
+    decorator = Member(Field(data, "a")).on_view_entry.connect
+
+    @decorator
     def a(a):
         nonlocal called
         called += 1
@@ -168,7 +177,9 @@ def test_on_view_entry(data):
 def test_on_sync(data):
     called = 0
 
-    @Member(Field(data, "a")).on_sync.connect
+    decorator = Member(Field(data, "a")).on_sync.connect
+
+    @decorator
     def a(a):
         nonlocal called
         called += 1
@@ -205,7 +216,9 @@ def test_ping_status(data):
 def test_on_ping(data):
     called = 0
 
-    @Member(Field(data, "a")).on_ping.connect
+    decorator = Member(Field(data, "a")).on_ping.connect
+
+    @decorator
     def a(a):
         nonlocal called
         called += 1
