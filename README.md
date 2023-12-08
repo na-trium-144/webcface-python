@@ -1,5 +1,8 @@
 # webcface-python
 
+![PyPI - Python Version](https://img.shields.io/pypi/pyversions/webcface)
+[![PyPI - Version](https://img.shields.io/pypi/v/webcface)](https://pypi.org/project/webcface/)
+
 [WebCFace](https://github.com/na-trium-144/webcface) client library written in pure python.
 
 Please refer to the WebCFace repository for how to use it. To use this library, you need WebCFace server separately.

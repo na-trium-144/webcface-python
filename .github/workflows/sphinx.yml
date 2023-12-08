@@ -2,8 +2,7 @@ name: Sphinx Build
 on:
   push:
     branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+
 jobs:
   sphinx:
     runs-on: ubuntu-latest
