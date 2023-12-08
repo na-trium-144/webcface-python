@@ -64,6 +64,13 @@ class Text(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else ""
 
+    def __str__(self) -> str:
+        """printしたときなど
+
+        <member("...").text("...") = ...> のように表示する
+        """
+        return f'<member("{self.member.name}").text("{self.name}") = {self.try_get()}>'
+
     def set(self, data: str) -> Text:
         """値をセットする"""
         if isinstance(data, str):

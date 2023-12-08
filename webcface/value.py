@@ -75,6 +75,13 @@ class Value(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else 0
 
+    def __str__(self) -> str:
+        """printしたときなど
+
+        <member("...").value("...") = ...> のように表示する
+        """
+        return f'<member("{self.member.name}").value("{self.name}") = {self.try_get_vec()}>'
+
     def set(self, data: List[float] | float) -> Value:
         """値をセットする"""
         self._set_check()
