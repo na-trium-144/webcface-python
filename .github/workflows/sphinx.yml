@@ -1,0 +1,23 @@
+name: Sphinx Build
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+jobs:
+  sphinx:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v3
+    - uses: actions/setup-python@v4
+      with:
+        python-version: "3.10"
+    - uses: abatilo/actions-poetry@v2
+    - run: poetry install
+    - name: Generate Documentation
+      run: |
+        poetry run sphinx-apidoc -e -o ./docs ./
+        poetry run sphinx-build ./docs ./docs/_build
+    - uses: JamesIves/github-pages-deploy-action@v4
+      with:
+        folder: docs/_build
