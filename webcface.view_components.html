@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webcface.view_components module &mdash; WebCFace-Python 1.0.0  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="prev" title="webcface.view_base module" href="webcface.view_base.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            WebCFace-Python 1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="webcface.html">webcface package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="webcface.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.view_components module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.view_components.ViewColor"><code class="docutils literal notranslate"><span class="pre">ViewColor</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.view_components.ViewComponentType"><code class="docutils literal notranslate"><span class="pre">ViewComponentType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.view_components.button"><code class="docutils literal notranslate"><span class="pre">button()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.view_components.new_line"><code class="docutils literal notranslate"><span class="pre">new_line()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.view_components.text"><code class="docutils literal notranslate"><span class="pre">text()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.html#module-webcface">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WebCFace-Python 1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="webcface.html">webcface package</a></li>
+      <li class="breadcrumb-item active">webcface.view_components module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/webcface.view_components.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-webcface.view_components">
+<span id="webcface-view-components-module"></span><h1>webcface.view_components module<a class="headerlink" href="#module-webcface.view_components" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.view_components.</span></span><span class="sig-name descname"><span class="pre">ViewColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view_components.html#ViewColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view_components.ViewColor" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.BLACK">
+<span class="sig-name descname"><span class="pre">BLACK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.BLACK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.BLUE">
+<span class="sig-name descname"><span class="pre">BLUE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">18</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.BLUE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.CYAN">
+<span class="sig-name descname"><span class="pre">CYAN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">16</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.CYAN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.GRAY">
+<span class="sig-name descname"><span class="pre">GRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.GRAY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.GREEN">
+<span class="sig-name descname"><span class="pre">GREEN</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">13</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.GREEN" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.INDIGO">
+<span class="sig-name descname"><span class="pre">INDIGO</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">19</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.INDIGO" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.INHERIT">
+<span class="sig-name descname"><span class="pre">INHERIT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.INHERIT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.ORANGE">
+<span class="sig-name descname"><span class="pre">ORANGE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.ORANGE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.PINK">
+<span class="sig-name descname"><span class="pre">PINK</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">23</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.PINK" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.PURPLE">
+<span class="sig-name descname"><span class="pre">PURPLE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">21</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.PURPLE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.RED">
+<span class="sig-name descname"><span class="pre">RED</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.RED" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.TEAL">
+<span class="sig-name descname"><span class="pre">TEAL</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">15</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.TEAL" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.WHITE">
+<span class="sig-name descname"><span class="pre">WHITE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.WHITE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewColor.YELLOW">
+<span class="sig-name descname"><span class="pre">YELLOW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#webcface.view_components.ViewColor.YELLOW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.view_components.ViewComponentType">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.view_components.</span></span><span class="sig-name descname"><span class="pre">ViewComponentType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view_components.html#ViewComponentType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view_components.ViewComponentType" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewComponentType.BUTTON">
+<span class="sig-name descname"><span class="pre">BUTTON</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#webcface.view_components.ViewComponentType.BUTTON" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewComponentType.NEW_LINE">
+<span class="sig-name descname"><span class="pre">NEW_LINE</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#webcface.view_components.ViewComponentType.NEW_LINE" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.view_components.ViewComponentType.TEXT">
+<span class="sig-name descname"><span class="pre">TEXT</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#webcface.view_components.ViewComponentType.TEXT" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.view_components.button">
+<span class="sig-prename descclassname"><span class="pre">webcface.view_components.</span></span><span class="sig-name descname"><span class="pre">button</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_click</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="webcface.func.html#webcface.func.AnonymousFunc" title="webcface.func.AnonymousFunc"><span class="pre">AnonymousFunc</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a></span></span><a class="reference internal" href="_modules/webcface/view_components.html#button"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view_components.button" title="Link to this definition"></a></dt>
+<dd><p>buttonコンポーネント</p>
+<p>kwargsに指定したプロパティはViewComponentのコンストラクタに渡される</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.view_components.new_line">
+<span class="sig-prename descclassname"><span class="pre">webcface.view_components.</span></span><span class="sig-name descname"><span class="pre">new_line</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a></span></span><a class="reference internal" href="_modules/webcface/view_components.html#new_line"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view_components.new_line" title="Link to this definition"></a></dt>
+<dd><p>newLineコンポーネント</p>
+<p>kwargsに指定したプロパティはViewComponentのコンストラクタに渡される</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.view_components.text">
+<span class="sig-prename descclassname"><span class="pre">webcface.view_components.</span></span><span class="sig-name descname"><span class="pre">text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a></span></span><a class="reference internal" href="_modules/webcface/view_components.html#text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view_components.text" title="Link to this definition"></a></dt>
+<dd><p>textコンポーネント</p>
+<p>kwargsに指定したプロパティはViewComponentのコンストラクタに渡される</p>
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="webcface.view_base.html" class="btn btn-neutral float-left" title="webcface.view_base module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, na-trium-144.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

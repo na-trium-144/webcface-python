@@ -1,0 +1,7 @@
+webcface.text module
+====================
+
+.. automodule:: webcface.text
+   :members:
+   :undoc-members:
+   :show-inheritance:

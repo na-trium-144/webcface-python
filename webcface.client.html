@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webcface.client module &mdash; WebCFace-Python 1.0.0  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="webcface.client_data module" href="webcface.client_data.html" />
+    <link rel="prev" title="webcface package" href="webcface.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            WebCFace-Python 1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="webcface.html">webcface package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="webcface.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.client module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.client.Client"><code class="docutils literal notranslate"><span class="pre">Client</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html">webcface.view_components module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.html#module-webcface">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WebCFace-Python 1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="webcface.html">webcface package</a></li>
+      <li class="breadcrumb-item active">webcface.client module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/webcface.client.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-webcface.client">
+<span id="webcface-client-module"></span><h1>webcface.client module<a class="headerlink" href="#module-webcface.client" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.client.Client">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.client.</span></span><span class="sig-name descname"><span class="pre">Client</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">host</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'127.0.0.1'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">port</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">7530</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/client.html#Client"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><code class="xref py py-class docutils literal notranslate"><span class="pre">Member</span></code></a></p>
+<p>サーバーに接続する</p>
+<p>詳細は <a class="reference external" href="https://na-trium-144.github.io/webcface/md_01__client.html">Clientのドキュメント</a> を参照</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – 名前</p></li>
+<li><p><strong>host</strong> – サーバーのアドレス</p></li>
+<li><p><strong>port</strong> – サーバーのポート</p></li>
+</ul>
+</dd>
+</dl>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client.Client.close">
+<span class="sig-name descname"><span class="pre">close</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client.html#Client.close"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client.close" title="Link to this definition"></a></dt>
+<dd><p>接続を切る</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client.Client.connected">
+<span class="sig-name descname"><span class="pre">connected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#webcface.client.Client.connected" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.client.Client.logging_handler">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logging_handler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Handler</span></em><a class="headerlink" href="#webcface.client.Client.logging_handler" title="Link to this definition"></a></dt>
+<dd><p>webcfaceに出力するloggingのHandler</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logger.addHandler にセットして使う</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.client.Client.logging_io">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">logging_io</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TextIOBase</span></em><a class="headerlink" href="#webcface.client.Client.logging_io" title="Link to this definition"></a></dt>
+<dd><p>webcfaceとstderrに出力するio</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client.Client.member">
+<span class="sig-name descname"><span class="pre">member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member_name</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a></span></span><a class="reference internal" href="_modules/webcface/client.html#Client.member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client.member" title="Link to this definition"></a></dt>
+<dd><p>他のメンバーにアクセスする</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client.Client.members">
+<span class="sig-name descname"><span class="pre">members</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/client.html#Client.members"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client.members" title="Link to this definition"></a></dt>
+<dd><p>サーバーに接続されている他のmemberをすべて取得する。</p>
+<p>自分自身と、無名のmemberを除く。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.client.Client.on_member_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_member_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.client.Client.on_member_entry" title="Link to this definition"></a></dt>
+<dd><p>Memberが追加されたときのイベント</p>
+<p>コールバックの引数にはMemberオブジェクトが渡される。</p>
+<ul class="simple">
+<li><p>呼び出したいコールバック関数をfuncとして</p></li>
+</ul>
+<p><code class="code docutils literal notranslate"><span class="pre">client.on_member_entry.connect(func)</span></code>
+などとすれば関数を登録できる。
+* または <code class="code docutils literal notranslate"><span class="pre">&#64;client.on_member_entry.connect</span></code> をデコレーターとして使う。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.client.Client.server_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">server_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.client.Client.server_name" title="Link to this definition"></a></dt>
+<dd><p>サーバーの識別情報</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>通常は”webcface”が返る</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.client.Client.server_version">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">server_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.client.Client.server_version" title="Link to this definition"></a></dt>
+<dd><p>サーバーのバージョン</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client.Client.start">
+<span class="sig-name descname"><span class="pre">start</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client.html#Client.start"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client.start" title="Link to this definition"></a></dt>
+<dd><p>サーバーに接続を開始する</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client.Client.sync">
+<span class="sig-name descname"><span class="pre">sync</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client.html#Client.sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client.sync" title="Link to this definition"></a></dt>
+<dd><p>送信用にセットしたデータとリクエストデータをすべて送信キューに入れる。</p>
+<p>実際に送信をするのは別スレッドであり、この関数はブロックしない。</p>
+<p>サーバーに接続していない場合、start()を呼び出す。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client.Client.wait_connection">
+<span class="sig-name descname"><span class="pre">wait_connection</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client.html#Client.wait_connection"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client.Client.wait_connection" title="Link to this definition"></a></dt>
+<dd><p>サーバーに接続が成功するまで待機する。</p>
+<p>接続していない場合、start()を呼び出す。</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="webcface.html" class="btn btn-neutral float-left" title="webcface package" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="webcface.client_data.html" class="btn btn-neutral float-right" title="webcface.client_data module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, na-trium-144.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

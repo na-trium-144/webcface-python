@@ -1,0 +1,7 @@
+webcface.log\_handler module
+============================
+
+.. automodule:: webcface.log_handler
+   :members:
+   :undoc-members:
+   :show-inheritance:

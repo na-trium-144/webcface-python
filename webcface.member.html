@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webcface.member module &mdash; WebCFace-Python 1.0.0  documentation</title>
+      <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="_static/jquery.js?v=5d32c60e"></script>
+        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="_static/doctools.js?v=888ff710"></script>
+        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="webcface.message module" href="webcface.message.html" />
+    <link rel="prev" title="webcface.log_handler module" href="webcface.log_handler.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="index.html" class="icon icon-home">
+            WebCFace-Python 1.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="webcface.html">webcface package</a><ul class="current">
+<li class="toctree-l2 current"><a class="reference internal" href="webcface.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.member module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.member.Member"><code class="docutils literal notranslate"><span class="pre">Member</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html">webcface.view_components module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.html#module-webcface">Module contents</a></li>
+</ul>
+</li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">WebCFace-Python 1.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="webcface.html">webcface package</a></li>
+      <li class="breadcrumb-item active">webcface.member module</li>
+      <li class="wy-breadcrumbs-aside">
+            <a href="_sources/webcface.member.rst.txt" rel="nofollow"> View page source</a>
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <section id="module-webcface.member">
+<span id="webcface-member-module"></span><h1>webcface.member module<a class="headerlink" href="#module-webcface.member" title="Link to this heading"></a></h1>
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.member.Member">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.member.</span></span><span class="sig-name descname"><span class="pre">Member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/member.html#Member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.func">
+<span class="sig-name descname"><span class="pre">func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="webcface.func.html#webcface.func.AnonymousFunc" title="webcface.func.AnonymousFunc"><span class="pre">AnonymousFunc</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.func" title="Link to this definition"></a></dt>
+<dd><p>FuncオブジェクトまたはAnonymousオブジェクトを生成</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>member.func(arg: str)</dt><dd><ul class="simple">
+<li><p>指定した名前のFuncオブジェクトを生成・参照する。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>member.func(arg: Callable, [<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs])</dt><dd><ul class="simple">
+<li><p>Funcの名前を決めずに一時的なFuncオブジェクト(AnonymoudFuncオブジェクト)を作成し、関数をセットする。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>&#64;member.func(arg: str, [<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs])</dt><dd><ul class="simple">
+<li><p>デコレータとして使い、デコレートした関数を指定した名前でセットする。</p></li>
+<li><p>デコレート後、関数は元のまま返す。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>&#64;member.func([<a href="#id5"><span class="problematic" id="id6">**</span></a>kwargs])</dt><dd><ul class="simple">
+<li><p>3と同じだが、名前はデコレートした関数から自動で取得される。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>2,3,4について、関数のセットに関しては Func.set() を参照。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>1→ Func, 2→ AnonymousFunc</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.funcs">
+<span class="sig-name descname"><span class="pre">funcs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.funcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.funcs" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのFuncをすべて取得する。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.lib_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lib_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.member.Member.lib_name" title="Link to this definition"></a></dt>
+<dd><p>このMemberが使っているWebCFaceライブラリの識別情報</p>
+<p>c++クライアントライブラリは”cpp”, javascriptクライアントは”js”,
+pythonクライアントは”python”を返す。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.lib_version">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lib_version</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.member.Member.lib_version" title="Link to this definition"></a></dt>
+<dd><p>このMemberが使っているWebCFaceのバージョン</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.log" title="Link to this definition"></a></dt>
+<dd><p>Logを参照する</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.member.Member.name" title="Link to this definition"></a></dt>
+<dd><p>Member名</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_func_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_func_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_func_entry" title="Link to this definition"></a></dt>
+<dd><p>Funcが追加されたときのイベント</p>
+<p>コールバックの引数にはFuncオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_ping">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_ping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_ping" title="Link to this definition"></a></dt>
+<dd><p>通信速度データが更新されたときのイベント</p>
+<p>コールバックの引数にはMemberオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_sync">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_sync</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_sync" title="Link to this definition"></a></dt>
+<dd><p>Memberがsyncしたときのイベント</p>
+<p>コールバックの引数にはMemberオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_text_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_text_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_text_entry" title="Link to this definition"></a></dt>
+<dd><p>Textが追加されたときのイベント</p>
+<p>コールバックの引数にはTextオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_value_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_value_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_value_entry" title="Link to this definition"></a></dt>
+<dd><p>Valueが追加されたときのイベント</p>
+<p>コールバックの引数にはValueオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_view_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_view_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_view_entry" title="Link to this definition"></a></dt>
+<dd><p>Viewが追加されたときのイベント</p>
+<p>コールバックの引数にはViewオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.ping_status">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ping_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.member.Member.ping_status" title="Link to this definition"></a></dt>
+<dd><p>通信速度を調べる</p>
+<p>初回の呼び出しで通信速度データをリクエストし、
+sync()後通信速度が得られるようになる
+:return: 初回→ None, 2回目以降(取得できれば)→ pingの往復時間 (ms)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.remote_addr">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">remote_addr</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.member.Member.remote_addr" title="Link to this definition"></a></dt>
+<dd><p>このMemberのIPアドレス</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.sync_time">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sync_time</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">datetime</span></em><a class="headerlink" href="#webcface.member.Member.sync_time" title="Link to this definition"></a></dt>
+<dd><p>memberが最後にsyncした時刻を返す</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.text">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.text" title="Link to this definition"></a></dt>
+<dd><p>Textを参照する</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.texts">
+<span class="sig-name descname"><span class="pre">texts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.texts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.texts" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのTextをすべて取得する。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.value">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.value" title="Link to this definition"></a></dt>
+<dd><p>Valueを参照する</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.values">
+<span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.values" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのValueをすべて取得する。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.view">
+<span class="sig-name descname"><span class="pre">view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.view" title="Link to this definition"></a></dt>
+<dd><p>Viewを参照する</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.views">
+<span class="sig-name descname"><span class="pre">views</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.views"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.views" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのViewをすべて取得する。</p>
+</dd></dl>
+
+</dd></dl>
+
+</section>
+
+
+           </div>
+          </div>
+          <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
+        <a href="webcface.log_handler.html" class="btn btn-neutral float-left" title="webcface.log_handler module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="webcface.message.html" class="btn btn-neutral float-right" title="webcface.message module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+    </div>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, na-trium-144.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

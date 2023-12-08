@@ -1,0 +1,7 @@
+webcface.view\_base module
+==========================
+
+.. automodule:: webcface.view_base
+   :members:
+   :undoc-members:
+   :show-inheritance:

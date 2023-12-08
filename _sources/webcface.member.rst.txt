@@ -1,0 +1,7 @@
+webcface.member module
+======================
+
+.. automodule:: webcface.member
+   :members:
+   :undoc-members:
+   :show-inheritance:
