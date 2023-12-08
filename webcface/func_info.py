@@ -170,8 +170,10 @@ class FuncInfo:
                 new_args.append(float(a))
             elif self.args[i].type == ValType.BOOL:
                 new_args.append(bool(a))
-            else:
+            elif self.args[i].type == ValType.STRING:
                 new_args.append(str(a))
+            else:
+                new_args.append(a)
         ret = None
         if self.func_impl is not None:
             ret = self.func_impl(*new_args)

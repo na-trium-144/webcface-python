@@ -1,4 +1,5 @@
 import datetime
+import time
 from conftest import self_name, check_sent, clear_sent, send_back
 import pytest
 from webcface.message import *
@@ -430,3 +431,66 @@ def test_func_call(wcli):
 
     send_back(wcli, [CallResult.new(2, 0, False, "b")])
     assert r.result == "b"
+
+
+def test_func_response(wcli):
+    @wcli.func("a")
+    def hoge(a):
+        if a == 0:
+            raise ValueError("a==0")
+        else:
+            return a
+
+    send_back(wcli, [Call.new(7, 100, 0, "n", [])])
+    time.sleep(0.01)
+    m = check_sent(wcli, CallResponse)
+    assert isinstance(m, CallResponse)
+    assert m.caller_id == 7
+    assert m.caller_member_id == 100
+    assert m.started is False
+    clear_sent(wcli)
+
+    send_back(wcli, [Call.new(8, 100, 0, "a", [1, "zzz"])])
+    time.sleep(0.01)
+    m = check_sent(wcli, CallResponse)
+    assert isinstance(m, CallResponse)
+    assert m.caller_id == 8
+    assert m.caller_member_id == 100
+    assert m.started is True
+    m = check_sent(wcli, CallResult)
+    assert isinstance(m, CallResult)
+    assert m.caller_id == 8
+    assert m.caller_member_id == 100
+    assert m.is_error is True
+    assert m.result == "requires 1 arguments but got 2"
+    clear_sent(wcli)
+
+    send_back(wcli, [Call.new(9, 100, 0, "a", [0])])
+    time.sleep(0.01)
+    m = check_sent(wcli, CallResponse)
+    assert isinstance(m, CallResponse)
+    assert m.caller_id == 9
+    assert m.caller_member_id == 100
+    assert m.started is True
+    m = check_sent(wcli, CallResult)
+    assert isinstance(m, CallResult)
+    assert m.caller_id == 9
+    assert m.caller_member_id == 100
+    assert m.is_error is True
+    assert m.result == "a==0"
+    clear_sent(wcli)
+
+    send_back(wcli, [Call.new(10, 100, 0, "a", [123])])
+    time.sleep(0.01)
+    m = check_sent(wcli, CallResponse)
+    assert isinstance(m, CallResponse)
+    assert m.caller_id == 10
+    assert m.caller_member_id == 100
+    assert m.started is True
+    m = check_sent(wcli, CallResult)
+    assert isinstance(m, CallResult)
+    assert m.caller_id == 10
+    assert m.caller_member_id == 100
+    assert m.is_error is False
+    assert m.result == 123
+    clear_sent(wcli)
