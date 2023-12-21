@@ -132,14 +132,16 @@
 <div class="viewcode-block" id="button">
 <a class="viewcode-back" href="../../webcface.view_components.html#webcface.button">[docs]</a>
 <span class="k">def</span> <span class="nf">button</span><span class="p">(</span>
-    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">on_click</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span> <span class="o">|</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">AnonymousFunc</span> <span class="o">|</span> <span class="n">Callable</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">on_click</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span> <span class="o">|</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">AnonymousFunc</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;buttonコンポーネント</span>
 
 <span class="sd">    kwargsに指定したプロパティはViewComponentのコンストラクタに渡される</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
-        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">on_click</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">on_click</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
 
 </pre></div>
