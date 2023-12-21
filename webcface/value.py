@@ -82,13 +82,17 @@ class Value(webcface.field.Field):
         """
         return f'<member("{self.member.name}").value("{self.name}") = {self.try_get_vec()}>'
 
-    def set(self, data: List[float] | float) -> Value:
+    def set(self, data: List[float] | int | float) -> Value:
         """値をセットする"""
         self._set_check()
-        if isinstance(data, int):
+        try:
+            data_f = float(data)
             self._set_check().value_store.set_send(self._field, [data])
             self.signal.send(self)
-        elif isinstance(data, list):
-            self._set_check().value_store.set_send(self._field, data)
-            self.signal.send(self)
+        except TypeError:
+            if isinstance(data, list):
+                self._set_check().value_store.set_send(self._field, data)
+                self.signal.send(self)
+            else:
+                raise TypeError("unsupported data type for value.set()")
         return self

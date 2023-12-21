@@ -77,15 +77,15 @@ def test_func_run(data):
         called += 1
         return 123.45
 
-    ret = Func(Field(data, self_name, "a")).set(f1).run(123, 123.45, "a", True)
+    ret = Func(Field(data, self_name, "a")).set(f1).run(123.45, 123.45, "a", True)
     assert called == 1
     assert ret == 123.45
-    ret = Func(Field(data, self_name, "a")).run("123", "123.45", "a", 1)
+    ret = Func(Field(data, self_name, "a")).run("123.45", "123.45", "a", 1)
     assert called == 2
     assert ret == 123.45
 
     called = 0
-    ret = Func(Field(data, self_name, "a")).run_async(123, 123.45, "a", True)
+    ret = Func(Field(data, self_name, "a")).run_async(123.45, 123.45, "a", True)
     assert ret.started
     assert ret.result == 123.45
     assert ret.member.name == self_name

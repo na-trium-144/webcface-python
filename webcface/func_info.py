@@ -166,7 +166,7 @@ class FuncInfo:
         new_args: List[int | float | bool | str] = []
         for i, a in enumerate(args):
             if self.args[i].type == ValType.INT:
-                new_args.append(int(a))
+                new_args.append(int(float(a)))
             elif self.args[i].type == ValType.FLOAT:
                 new_args.append(float(a))
             elif self.args[i].type == ValType.BOOL:
