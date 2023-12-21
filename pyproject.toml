@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "webcface"
-version = "1.0.1"
+version = "1.0.2"
 description = "WebCFace Client for Python"
 authors = ["na-trium-144 <100704180+na-trium-144@users.noreply.github.com>"]
 license = "MIT"
@@ -13,11 +13,11 @@ python = "^3.8"
 websocket-client = "^1.6.4"
 msgpack = "^1.0.7"
 blinker = "^1.6.3"
-toml = "^0.10.2"
 
 
 [tool.poetry.group.test.dependencies]
 pytest = "^7.4.2"
+toml = "^0.10.2"
 
 
 [tool.poetry.group.docs.dependencies]
