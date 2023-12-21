@@ -47,12 +47,14 @@ def new_line() -> webcface.view.ViewComponent:
 
 
 def button(
-    text: str, on_click: webcface.func.Func | webcface.func.AnonymousFunc | Callable
+    text: str,
+    on_click: webcface.func.Func | webcface.func.AnonymousFunc | Callable,
+    **kwargs,
 ) -> webcface.view.ViewComponent:
     """buttonコンポーネント
 
     kwargsに指定したプロパティはViewComponentのコンストラクタに渡される
     """
     return webcface.view.ViewComponent(
-        type=ViewComponentType.BUTTON, text=text, on_click=on_click
+        type=ViewComponentType.BUTTON, text=text, on_click=on_click, **kwargs
     )

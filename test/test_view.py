@@ -78,7 +78,7 @@ def test_view_set(data):
             view.new_line(),
         )
         v.add(
-            view.button("f", Func(Field(data, self_name, "f"))),
+            view.button("f", Func(Field(data, self_name, "f")), bg_color=ViewColor.RED),
             view.button("a", AnonymousFunc(Field(data, self_name, "a"), lambda: 1)),
             view.button("a2", AnonymousFunc(None, lambda: 2)),
             view.button("a3", lambda: 3),
@@ -102,6 +102,7 @@ def test_view_set(data):
     assert vd[5]._text == "f"
     assert vd[5]._on_click_func._member == self_name
     assert vd[5]._on_click_func._field == "f"
+    assert vd[5]._bg_color == ViewColor.RED
     assert vd[6]._type == ViewComponentType.BUTTON
     assert vd[6]._text == "a"
     assert vd[6]._on_click_func._member == self_name
