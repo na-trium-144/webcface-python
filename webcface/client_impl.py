@@ -4,7 +4,7 @@ from typing import List
 import webcface.client_data
 import webcface.message
 import webcface.client
-
+import webcface
 
 def on_recv(
     wcli: "webcface.client.Client",
@@ -165,7 +165,7 @@ def sync_data_first(
     wcli: "webcface.client.Client", data: webcface.client_data.ClientData
 ) -> List[webcface.message.MessageBase]:
     msgs: List[webcface.message.MessageBase] = []
-    msgs.append(webcface.message.SyncInit.new(wcli.name, "python", "1.0.0"))
+    msgs.append(webcface.message.SyncInit.new(wcli.name, "python", webcface.__version__))
 
     with data.value_store.lock:
         with data.text_store.lock:

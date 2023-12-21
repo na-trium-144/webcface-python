@@ -1,7 +1,9 @@
 import datetime
 import time
-from conftest import self_name, check_sent, clear_sent, send_back
+import os
 import pytest
+import toml
+from conftest import self_name, check_sent, clear_sent, send_back
 from webcface.message import *
 from webcface.field import Field
 from webcface.func import Func
@@ -10,6 +12,8 @@ from webcface.view import ViewComponent
 from webcface.log_handler import LogLine
 import webcface.func_info
 import webcface.view_components
+
+conf = toml.load(os.path.join(os.path.dirname(__file__), "../pyproject.toml"))
 
 
 def test_name(wcli):
@@ -22,7 +26,7 @@ def test_sync(wcli):
     assert isinstance(m, SyncInit)
     assert m.member_name == self_name
     assert m.lib_name == "python"
-    assert m.lib_ver == "1.0.0"
+    assert m.lib_ver == conf["tool"]["poetry"]["version"]
     m = check_sent(wcli, Sync)
     assert isinstance(m, Sync)
     clear_sent(wcli)
