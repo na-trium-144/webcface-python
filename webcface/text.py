@@ -76,4 +76,6 @@ class Text(webcface.field.Field):
         if isinstance(data, str):
             self._set_check().text_store.set_send(self._field, data)
             self.signal.send(self)
+        else:
+            raise TypeError("unsupported type for text.set()")
         return self

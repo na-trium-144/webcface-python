@@ -71,10 +71,19 @@ def test_value_get_vec(data):
 
 def test_value_set(data):
     Value(Field(data, self_name, "b")).set(5)
-    assert data.value_store.data_send.get("b", []) == [5]
+    assert data.value_store.data_send.get("b", []) == [5.0]
+
+    Value(Field(data, self_name, "b")).set(True)
+    assert data.value_store.data_send.get("b", []) == [1.0]
 
     Value(Field(data, self_name, "c")).set([2, 3, 4])
-    assert data.value_store.data_send.get("c", []) == [2, 3, 4]
+    assert data.value_store.data_send.get("c", []) == [2.0, 3.0, 4.0]
+
+    Value(Field(data, self_name, "b")).set(5.2)
+    assert data.value_store.data_send.get("b", []) == [5.2]
+
+    Value(Field(data, self_name, "c")).set([2.5, 3.5, 4])
+    assert data.value_store.data_send.get("c", []) == [2.5, 3.5, 4.0]
 
     # objectを渡した時
 
