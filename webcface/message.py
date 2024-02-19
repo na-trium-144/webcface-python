@@ -4,6 +4,7 @@ import datetime
 import msgpack
 import webcface.func_info
 import webcface.view_base
+import webcface.canvas2d_base
 import webcface.field
 import webcface.log_handler
 
@@ -435,6 +436,161 @@ class ViewEntry(MessageBase):
         return self.msg["f"]
 
 
+def c2b_to_c2d(vb: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]) -> dict:
+    """Canvas2dComponentBaseクラスからメッセージに変換"""
+    vd = {}
+    for i, b in vb.items():
+        vd[i] = {
+            "t": b._type,
+            "op": b._origin_pos,
+            "or": b._origin_rot,
+            "c": b._color,
+            "f": b._fill,
+            "s": b._stroke_width,
+            "gt": b._geometry_type,
+            "gp": b._geometry_properties,
+        }
+    return vd
+
+
+def c2d_to_c2b(vd: dict) -> Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]:
+    """メッセージからCanvas2DComponentBaseクラスに変換"""
+    vb = {}
+    for i, d in vd.items():
+        vb[i] = webcface.canvas2d_base.Canvas2DComponentBase(
+            type=d["t"],
+            origin_pos=d["op"],
+            origin_rot=d["or"],
+            color=d["c"],
+            fill=d["f"],
+            stroke_width=d["s"],
+            geometry_type=d["gt"],
+            geometry_properties=d["gp"],
+        )
+    return vb
+
+
+class Canvas2D(MessageBase):
+    kind_def = 4
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(
+        f: str,
+        w: float,
+        h: float,
+        d: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase],
+        l: int,
+    ) -> Canvas2D:
+        return Canvas2D({"f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def width(self) -> float:
+        return self.msg["w"]
+
+    @property
+    def height(self) -> float:
+        return self.msg["h"]
+
+    @property
+    def data(self) -> Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]:
+        return c2d_to_c2b(self.msg["d"])
+
+    @property
+    def length(self) -> int:
+        return self.msg["l"]
+
+
+class Canvas2DReq(MessageBase):
+    kind_def = 44
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str, f: str, i: int) -> Canvas2DReq:
+        return Canvas2DReq({"M": m, "f": f, "i": i})
+
+    @property
+    def member(self) -> str:
+        return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+
+class Canvas2DRes(MessageBase):
+    kind_def = 64
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(
+        i: int,
+        f: str,
+        w: float,
+        h: float,
+        d: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase],
+        l: int,
+    ) -> Canvas2DRes:
+        return Canvas2DRes({"i": i, "f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def width(self) -> float:
+        return self.msg["w"]
+
+    @property
+    def height(self) -> float:
+        return self.msg["h"]
+
+    @property
+    def data_diff(self) -> Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]:
+        return c2d_to_c2b(self.msg["d"])
+
+    @property
+    def length(self) -> int:
+        return self.msg["l"]
+
+
+class Canvas2DEntry(MessageBase):
+    kind_def = 24
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int, f: str) -> Canvas2DEntry:
+        return Canvas2DEntry({"m": m, "f": f})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+
 class FuncInfo(MessageBase):
     kind_def = 84
 
@@ -629,6 +785,8 @@ message_classes_recv = [
     TextEntry,
     ViewRes,
     ViewEntry,
+    Canvas2DRes,
+    Canvas2DEntry,
     FuncInfo,
     Call,
     CallResponse,
