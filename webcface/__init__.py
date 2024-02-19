@@ -7,6 +7,8 @@ from .log import Log
 from .client import Client
 from .func_info import ValType, Arg
 from .view_components import ViewComponentType, ViewColor
+from .transform import Point, Transform
+from .geometries import GeometryType, Geometry
 import importlib.metadata
 
 try:
@@ -27,4 +29,9 @@ __all__ = [
     "ViewComponentType",
     "ViewColor",
     "view_components",
+    "Point",
+    "Transform",
+    "GeometryType",
+    "Geometry",
+    "geometries",
 ]
