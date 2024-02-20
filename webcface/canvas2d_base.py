@@ -1,7 +1,9 @@
 from __future__ import annotations
 from typing import Optional, List
-import webcface.field
-import webcface.client_data
+from enum import IntEnum
+
+class Canvas2DComponentType(IntEnum):
+    GEOMETRY = 0
 
 
 class Canvas2DComponentBase:
@@ -33,3 +35,16 @@ class Canvas2DComponentBase:
         self._stroke_width = stroke_width
         self._geometry_type = geometry_type
         self._geometry_properties = geometry_properties or []
+
+    def __eq__(self, other: object) -> bool:
+        return (
+            isinstance(other, Canvas2DComponentBase)
+            and self._type == other._type
+            and self._origin_pos == other._origin_pos
+            and self._origin_rot == other._origin_rot
+            and self._color == other._color
+            and self._fill == other._fill
+            and self._stroke_width == other._stroke_width
+            and self._geometry_type == other._geometry_type
+            and self._geometry_properties == other._geometry_properties
+        )

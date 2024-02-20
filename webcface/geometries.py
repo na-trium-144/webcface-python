@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List
+from typing import List, Union
 from enum import IntEnum
 import webcface.transform
 
@@ -230,3 +230,8 @@ def sphere(
     if not isinstance(origin, webcface.transform.Point):
         origin = webcface.transform.Point(origin)
     return Sphere(list(origin.pos) + [radius])
+
+
+Geometry2D = Union[Line, Plane, Circle, Polygon]
+
+Geometry3D = Union[Line, Plane, Box, Circle, Cylinder, Sphere, Polygon]
