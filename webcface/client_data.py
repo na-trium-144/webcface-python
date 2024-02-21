@@ -8,6 +8,7 @@ import webcface.field
 import webcface.func_info
 import webcface.view_base
 import webcface.log_handler
+import webcface.canvas2d_base
 
 T = TypeVar("T")
 
@@ -209,6 +210,7 @@ class ClientData:
     text_store: SyncDataStore2[str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
+    canvas2d_store: SyncDataStore2[webcface.view_base.Canvas2DData]
     log_store: SyncDataStore1[List[webcface.log_handler.LogLine]]
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
@@ -234,6 +236,7 @@ class ClientData:
         self.view_store = SyncDataStore2[List[webcface.view_base.ViewComponentBase]](
             name
         )
+        self.canvas2d_store = SyncDataStore2[webcface.canvas2d_base.Canvas2DData](name)
         self.log_store = SyncDataStore1[List[webcface.log_handler.LogLine]](name)
         self.log_store.set_recv(name, [])
         self.log_sent_lines = 0
@@ -297,6 +300,7 @@ class ClientData:
             signal_type == "value_entry"
             or signal_type == "text_entry"
             or signal_type == "view_entry"
+            or signal_type == "canvas2d_entry"
             or signal_type == "func_entry"
             or signal_type == "log_append"
             or signal_type == "sync"
@@ -308,6 +312,7 @@ class ClientData:
             signal_type == "value_change"
             or signal_type == "text_change"
             or signal_type == "view_change"
+            or signal_type == "canvas2d_change"
         ):
             assert member != "" and field != ""
             key = [id(self), signal_type, member, field]

@@ -9,6 +9,7 @@ import webcface.view
 import webcface.func
 import webcface.log
 import webcface.message
+import webcface.canvas2d
 
 
 class Member(webcface.field.Field):
@@ -28,19 +29,31 @@ class Member(webcface.field.Field):
         return self._member
 
     def value(self, field: str) -> webcface.value.Value:
-        """Valueを参照する"""
+        """Valueオブジェクトを生成"""
         return webcface.value.Value(self, field)
 
     def text(self, field: str) -> webcface.text.Text:
-        """Textを参照する"""
+        """Textオブジェクトを生成"""
         return webcface.text.Text(self, field)
 
     def view(self, field: str) -> webcface.view.View:
-        """Viewを参照する"""
+        """Viewオブジェクトを生成"""
         return webcface.view.View(self, field)
 
+    def canvas2d(
+        self,
+        field: str,
+        width: Optional[int | float] = None,
+        height: Optional[int | float] = None,
+    ) -> webcface.canvas2d.Canvas2D:
+        """Canvas2Dオブジェクトを生成
+
+        :arg width, height: Canvas2Dのサイズを指定して初期化する
+        """
+        return webcface.canvas2d.Canvas2D(self, field, width, height)
+
     def log(self) -> webcface.log.Log:
-        """Logを参照する"""
+        """Logオブジェクトを生成"""
         return webcface.log.Log(self)
 
     def func(

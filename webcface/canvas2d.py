@@ -66,13 +66,19 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
 
 
 class Canvas2D(webcface.field.Field):
-    _components: List[webcface.canvas2d_base.Canvas2DComponentBase]
-    _width: float
-    _height: float
+    _c2data: Optional[webcface.canvas2d_base.Canvas2DData]
     _modified: bool
 
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+    def __init__(
+        self,
+        base: webcface.field.Field,
+        field: str = "",
+        width: Optional[int | float] = None,
+        height: Optional[int | float] = None,
+    ) -> None:
         """Canvas2Dを指すクラス
+
+        引数にwidthとheightを渡すとinitされる
 
         このコンストラクタを直接使わず、
         Member.canvas2d(), Member.canvas2d_entries(), Member.on_canvas2d_entry などを使うこと
@@ -82,10 +88,10 @@ class Canvas2D(webcface.field.Field):
         super().__init__(
             base._data, base._member, field if field != "" else base._field
         )
-        self._components = []
+        self._c2data = None
         self._modified = False
-        self._width = 0.0
-        self._height = 0.0
+        if width is not None and height is not None:
+            self.init(width, height)
 
     @property
     def member(self) -> webcface.member.Member:
@@ -129,7 +135,7 @@ class Canvas2D(webcface.field.Field):
         v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
         v2: Optional[List[Canvas2DComponent]] = None
         if v is not None:
-            v2 = [Canvas2DComponent(vb) for vb in v]
+            v2 = [Canvas2DComponent(vb) for vb in v.components]
         return v2
 
     def get(self) -> List[Canvas2DComponent]:
@@ -137,23 +143,15 @@ class Canvas2D(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else []
 
-    def _set(
-        self, components: List[webcface.canvas2d_base.Canvas2DComponentBase]
-    ) -> Canvas2D:
-        self._set_check().canvas2d_store.set_send(self._field, components)
-        self.signal.send(self)
-        return self
-
     def __enter__(self) -> Canvas2D:
-        """with構文の最初で自動でinit()を呼ぶ"""
-        self.init()
+        """with構文の最初でなにもしない"""
         return self
 
     def init(self, width: int | float, height: int | float) -> Canvas2D:
-        """このViewオブジェクトにaddした内容を初期化する"""
-        self._components = []
-        self._width = float(width)
-        self._height = float(height)
+        """このCanvas2Dオブジェクトにaddした内容を初期化する
+        and Canvas2Dのサイズを指定する
+        """
+        self._c2data = webcface.canvas2d_base.Canvas2DData(float(width), float(height))
         self._modified = True
         return self
 
@@ -165,7 +163,8 @@ class Canvas2D(webcface.field.Field):
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified:
-            self._set(self._components)
+            self._set_check().canvas2d_store.set_send(self._field, self._c2data)
+            self.signal.send(self)
             self._modified = False
         return self
 
@@ -179,13 +178,13 @@ class Canvas2D(webcface.field.Field):
     ) -> Canvas2D:
         """コンポーネントを追加
 
-        事前にinit()でサイズを指定していなければエラー
+        初期化時またはinit()で事前にサイズを指定していなければエラー
         """
-        if self._width <= 0 or self._height <= 0:
-            raise ValueError(f"Invalid canvas2d size ({self._width} x {self._height})")
+        if self._c2data is None:
+            raise ValueError("Canvas2D not initialized")
         if origin is None:
             origin = webcface.transform.Transform([0, 0], 0)
-        self._components.append(
+        self._c2data.components.append(
             webcface.canvas2d_base.Canvas2DComponentBase(
                 webcface.canvas2d_base.Canvas2DComponentType.GEOMETRY,
                 list(origin.pos[0:2]),

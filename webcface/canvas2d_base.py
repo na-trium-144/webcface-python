@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional, List
 from enum import IntEnum
 
+
 class Canvas2DComponentType(IntEnum):
     GEOMETRY = 0
 
@@ -48,3 +49,16 @@ class Canvas2DComponentBase:
             and self._geometry_type == other._geometry_type
             and self._geometry_properties == other._geometry_properties
         )
+
+
+class Canvas2DData:
+    components: List[Canvas2DComponentBase]
+    width: float
+    height: float
+
+    def __init__(self, width: float, height: float) -> None:
+        if width <= 0 or height <= 0:
+            raise ValueError(f"Invalid Canvas2D size ({width} x {height})")
+        self.components = []
+        self.width = width
+        self.height = height
