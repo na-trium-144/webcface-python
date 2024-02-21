@@ -6,6 +6,8 @@ import webcface.transform
 __all__ = [
     "GeometryType",
     "Geometry",
+    "Geometry2D",
+    "Geometry3D",
     "Line",
     "line",
     "Polygon",
@@ -48,6 +50,34 @@ class Geometry:
     @property
     def type(self) -> int:
         return self._geometry_type
+
+    @property
+    def as_line(self) -> Line:
+        return Line(self._properties)
+
+    @property
+    def as_plane(self) -> Plane:
+        return Plane(self._properties)
+
+    @property
+    def as_box(self) -> Box:
+        return Box(self._properties)
+
+    @property
+    def as_circle(self) -> Circle:
+        return Circle(self._properties)
+
+    @property
+    def as_cylinder(self) -> Cylinder:
+        return Cylinder(self._properties)
+
+    @property
+    def as_sphere(self) -> Sphere:
+        return Sphere(self._properties)
+
+    @property
+    def as_polygon(self) -> Polygon:
+        return Polygon(self._properties)
 
 
 class Line(Geometry):

@@ -130,7 +130,7 @@ class Canvas2D(webcface.field.Field):
             )
 
     def try_get(self) -> Optional[List[Canvas2DComponent]]:
-        """ViewをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
+        """CanvasをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
         v2: Optional[List[Canvas2DComponent]] = None
@@ -139,9 +139,39 @@ class Canvas2D(webcface.field.Field):
         return v2
 
     def get(self) -> List[Canvas2DComponent]:
-        """Viewをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
+        """Canvasをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
+
+    @property
+    def width(self) -> float:
+        """Canvasのサイズを返す、まだリクエストされてなければ自動でリクエストされる
+
+        init()されている場合はその値を返す"""
+        if self._c2data is not None:
+            return self._c2data.width
+        else:
+            self.request()
+            v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
+            if v is not None:
+                return v.width
+            else:
+                return 0
+
+    @property
+    def height(self) -> float:
+        """Canvasのサイズを返す、まだリクエストされてなければ自動でリクエストされる
+
+        init()されている場合はその値を返す"""
+        if self._c2data is not None:
+            return self._c2data.height
+        else:
+            self.request()
+            v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
+            if v is not None:
+                return v.height
+            else:
+                return 0
 
     def __enter__(self) -> Canvas2D:
         """with構文の最初でなにもしない"""
@@ -162,7 +192,7 @@ class Canvas2D(webcface.field.Field):
     def sync(self) -> Canvas2D:
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
-        if self._modified:
+        if self._modified and self._c2data is not None:
             self._set_check().canvas2d_store.set_send(self._field, self._c2data)
             self.signal.send(self)
             self._modified = False

@@ -122,3 +122,7 @@ class Transform(Point):
             return self._pos == other._pos and self._rot == other._rot
         else:
             return False
+
+
+def identity() -> Transform:
+    return Transform([0, 0, 0], [0, 0, 0])
