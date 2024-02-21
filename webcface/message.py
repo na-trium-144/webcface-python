@@ -591,6 +591,143 @@ class Canvas2DEntry(MessageBase):
         return self.msg["f"]
 
 
+def c3b_to_c3d(vb: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]) -> dict:
+    """Canvas3dComponentBaseクラスからメッセージに変換"""
+    vd = {}
+    for i, b in vb.items():
+        vd[i] = {
+            "t": b._type,
+            "op": b._origin_pos,
+            "or": b._origin_rot,
+            "c": b._color,
+            "gt": b._geometry_type,
+            "gp": b._geometry_properties,
+            "fm": b._field_member,
+            "ff": b._field_field,
+            "a": b._angles,
+        }
+    return vd
+
+
+def c3d_to_c3b(vd: dict) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]:
+    """メッセージからCanvas2DComponentBaseクラスに変換"""
+    vb = {}
+    for i, d in vd.items():
+        vb[i] = webcface.canvas2d_base.Canvas2DComponentBase(
+            type=d["t"],
+            origin_pos=d["op"],
+            origin_rot=d["or"],
+            color=d["c"],
+            geometry_type=d["gt"],
+            geometry_properties=d["gp"],
+            field_member=d["fm"],
+            field_field=d["ff"],
+            angles=d["a"],
+        )
+    return vb
+
+
+class Canvas3D(MessageBase):
+    kind_def = 7
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(
+        f: str,
+        d: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase],
+        l: int,
+    ) -> Canvas3D:
+        return Canvas3D({"f": f, "d": c3b_to_c3d(d), "l": l})
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]:
+        return c3d_to_c3b(self.msg["d"])
+
+    @property
+    def length(self) -> int:
+        return self.msg["l"]
+
+
+class Canvas3DReq(MessageBase):
+    kind_def = 47
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: str, f: str, i: int) -> Canvas3DReq:
+        return Canvas2DReq({"M": m, "f": f, "i": i})
+
+    @property
+    def member(self) -> str:
+        return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+
+class Canvas3DRes(MessageBase):
+    kind_def = 67
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(
+        i: int,
+        f: str,
+        d: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase],
+        l: int,
+    ) -> Canvas3DRes:
+        return Canvas3DRes({"i": i, "f": f, "d": c3b_to_c3d(d), "l": l})
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data_diff(self) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]:
+        return c3d_to_c3b(self.msg["d"])
+
+    @property
+    def length(self) -> int:
+        return self.msg["l"]
+
+
+class Canvas3DEntry(MessageBase):
+    kind_def = 27
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int, f: str) -> Canvas3DEntry:
+        return Canvas2DEntry({"m": m, "f": f})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+
 class FuncInfo(MessageBase):
     kind_def = 84
 
@@ -787,6 +924,8 @@ message_classes_recv = [
     ViewEntry,
     Canvas2DRes,
     Canvas2DEntry,
+    Canvas3DRes,
+    Canvas3DEntry,
     FuncInfo,
     Call,
     CallResponse,
