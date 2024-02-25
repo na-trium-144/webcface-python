@@ -140,6 +140,7 @@ class Client(webcface.member.Member):
 
         接続していない場合、start()を呼び出す。
         """
+        self.start()
         with self._connection_cv:
             while not self.connected:
                 self._connection_cv.wait()
