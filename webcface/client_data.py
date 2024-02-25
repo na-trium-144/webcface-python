@@ -9,6 +9,7 @@ import webcface.func_info
 import webcface.view_base
 import webcface.log_handler
 import webcface.canvas2d_base
+import webcface.canvas3d_base
 
 T = TypeVar("T")
 
@@ -210,7 +211,8 @@ class ClientData:
     text_store: SyncDataStore2[str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
-    canvas2d_store: SyncDataStore2[webcface.view_base.Canvas2DData]
+    canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
+    canvas3d_store: SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase]]
     log_store: SyncDataStore1[List[webcface.log_handler.LogLine]]
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
@@ -237,6 +239,9 @@ class ClientData:
             name
         )
         self.canvas2d_store = SyncDataStore2[webcface.canvas2d_base.Canvas2DData](name)
+        self.canvas3d_store = SyncDataStore2[
+            List[webcface.canvas3d_base.Canvas3DComponentBase]
+        ](name)
         self.log_store = SyncDataStore1[List[webcface.log_handler.LogLine]](name)
         self.log_store.set_recv(name, [])
         self.log_sent_lines = 0
@@ -296,23 +301,25 @@ class ClientData:
         if signal_type == "member_entry":
             assert member == "" and field == ""
             key = [id(self), signal_type]
-        elif (
-            signal_type == "value_entry"
-            or signal_type == "text_entry"
-            or signal_type == "view_entry"
-            or signal_type == "canvas2d_entry"
-            or signal_type == "func_entry"
-            or signal_type == "log_append"
-            or signal_type == "sync"
-            or signal_type == "ping"
+        elif signal_type in (
+            "value_entry",
+            "text_entry",
+            "view_entry",
+            "canvas2d_entry",
+            "canvas3d_entry",
+            "func_entry",
+            "log_append",
+            "sync",
+            "ping",
         ):
             assert member != "" and field == ""
             key = [id(self), signal_type, member]
-        elif (
-            signal_type == "value_change"
-            or signal_type == "text_change"
-            or signal_type == "view_change"
-            or signal_type == "canvas2d_change"
+        elif signal_type in (
+            "value_change",
+            "text_change",
+            "view_change",
+            "canvas2d_change",
+            "canvas3d_change",
         ):
             assert member != "" and field != ""
             key = [id(self), signal_type, member, field]

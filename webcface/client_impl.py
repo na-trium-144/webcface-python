@@ -33,6 +33,9 @@ def on_recv(
                 data.value_store.add_member(m.member_name)
                 data.text_store.add_member(m.member_name)
                 data.func_store.add_member(m.member_name)
+                data.view_store.add_member(m.member_name)
+                data.canvas2d_store.add_member(m.member_name)
+                data.canvas3d_store.add_member(m.member_name)
                 data.member_ids[m.member_name] = m.member_id
                 data.member_lib_name[m.member_id] = m.lib_name
                 data.member_lib_ver[m.member_id] = m.lib_ver
@@ -107,6 +110,28 @@ def on_recv(
                 data.canvas2d_store.set_entry(member, m.field)
                 data.signal("canvas2d_entry", member).send(
                     wcli.member(member).canvas2d(m.field)
+                )
+            if isinstance(m, webcface.message.Canvas3DRes):
+                member, field = data.canvas3d_store.get_req(m.req_id, m.sub_field)
+                c3_prev = data.canvas3d_store.get_recv(member, field)
+                if c3_prev is None:
+                    c3_prev = []
+                    data.canvas3d_store.set_recv(member, field, c3_prev)
+                for i, c3 in m.data_diff.items():
+                    if int(i) >= len(c3_prev):
+                        c3_prev.append(c3)
+                    else:
+                        c3_prev[int(i)] = c3
+                if len(c3_prev) >= m.length:
+                    del c3_prev[m.length :]
+                data.signal("canvas3d_change", member, field).send(
+                    wcli.member(member).canvas3d(field)
+                )
+            if isinstance(m, webcface.message.Canvas3DEntry):
+                member = data.get_member_name_from_id(m.member_id)
+                data.canvas3d_store.set_entry(member, m.field)
+                data.signal("canvas3d_entry", member).send(
+                    wcli.member(member).canvas3d(m.field)
                 )
             if isinstance(m, webcface.message.FuncInfo):
                 member = data.get_member_name_from_id(m.member_id)
@@ -215,6 +240,10 @@ def sync_data_first(
         for m, r in data.canvas2d_store.transfer_req().items():
             for k, i in r.items():
                 msgs.append(webcface.message.Canvas2DReq.new(m, k, i))
+    with data.canvas3d_store.lock:
+        for m, r in data.canvas3d_store.transfer_req().items():
+            for k, i in r.items():
+                msgs.append(webcface.message.Canvas3DReq.new(m, k, i))
     with data.log_store.lock:
         for m, r2 in data.log_store.transfer_req().items():
             msgs.append(webcface.message.LogReq.new(m))
@@ -247,7 +276,6 @@ def sync_data(
                 if i >= len(v_prev) or v_prev[i] != c:
                     v_diff[str(i)] = c
             msgs.append(webcface.message.View.new(k, v_diff, len(v4)))
-
     with data.canvas2d_store.lock:
         canvas2d_send_prev = data.canvas2d_store.get_send_prev(is_first)
         canvas2d_send = data.canvas2d_store.transfer_send(is_first)
@@ -264,7 +292,16 @@ def sync_data(
                     k, v5.width, v5.height, c2_diff, len(v5.components)
                 )
             )
-
+    with data.canvas3d_store.lock:
+        canvas3d_send_prev = data.canvas3d_store.get_send_prev(is_first)
+        canvas3d_send = data.canvas3d_store.transfer_send(is_first)
+        for k, v6 in canvas3d_send.items():
+            c3_prev = canvas3d_send_prev.get(k, [])
+            c3_diff = {}
+            for i, c3 in enumerate(v6):
+                if i >= len(c3_prev) or c3_prev[i] != c3:
+                    c3_diff[str(i)] = c3
+            msgs.append(webcface.message.Canvas3D.new(k, c3_diff, len(v6)))
     with data.log_store.lock:
         log_all = data.log_store.get_recv(data.self_member_name)
         assert log_all is not None
@@ -275,7 +312,6 @@ def sync_data(
         data.log_sent_lines = len(log_all)
         if len(log_send) > 0:
             msgs.append(webcface.message.Log.new(log_send))
-
     with data.func_store.lock:
         for k, v3 in data.func_store.transfer_send(is_first).items():
             if not v3.hidden:
