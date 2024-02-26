@@ -7,17 +7,23 @@ Submodules
 .. toctree::
    :maxdepth: 4
 
+   webcface.canvas2d
+   webcface.canvas2d_base
+   webcface.canvas3d
+   webcface.canvas3d_base
    webcface.client
    webcface.client_data
    webcface.client_impl
    webcface.field
    webcface.func
    webcface.func_info
+   webcface.geometries
    webcface.log
    webcface.log_handler
    webcface.member
    webcface.message
    webcface.text
+   webcface.transform
    webcface.value
    webcface.view
    webcface.view_base

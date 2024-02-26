@@ -1,0 +1,7 @@
+webcface.canvas3d module
+========================
+
+.. automodule:: webcface.canvas3d
+   :members:
+   :undoc-members:
+   :show-inheritance:

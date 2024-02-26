@@ -46,12 +46,17 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="webcface.html">webcface package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="webcface.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html">webcface.canvas2d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d_base.html">webcface.canvas2d_base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html">webcface.canvas3d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d_base.html">webcface.canvas3d_base module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.geometries.html">webcface.geometries module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.member module</a><ul>
@@ -60,6 +65,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
@@ -102,6 +108,35 @@
 <dt class="sig sig-object py" id="webcface.member.Member">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.member.</span></span><span class="sig-name descname"><span class="pre">Member</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/member.html#Member"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.canvas2d">
+<span class="sig-name descname"><span class="pre">canvas2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2D" title="webcface.canvas2d.Canvas2D"><span class="pre">Canvas2D</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.canvas2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.canvas2d" title="Link to this definition"></a></dt>
+<dd><p>Canvas2Dオブジェクトを生成</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>height</strong> (<em>width</em><em>,</em>) – Canvas2Dのサイズを指定して初期化する</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.canvas2d_entries">
+<span class="sig-name descname"><span class="pre">canvas2d_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2D" title="webcface.canvas2d.Canvas2D"><span class="pre">Canvas2D</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.canvas2d_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.canvas2d_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのCanvas2Dをすべて取得する。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.canvas3d">
+<span class="sig-name descname"><span class="pre">canvas3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3D" title="webcface.canvas3d.Canvas3D"><span class="pre">Canvas3D</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.canvas3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.canvas3d" title="Link to this definition"></a></dt>
+<dd><p>Canvas3Dオブジェクトを生成</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.canvas3d_entries">
+<span class="sig-name descname"><span class="pre">canvas3d_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3D" title="webcface.canvas3d.Canvas3D"><span class="pre">Canvas3D</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.canvas3d_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.canvas3d_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのCanvas3Dをすべて取得する。</p>
+</dd></dl>
+
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.func">
 <span class="sig-name descname"><span class="pre">func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="webcface.func.html#webcface.func.AnonymousFunc" title="webcface.func.AnonymousFunc"><span class="pre">AnonymousFunc</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.func" title="Link to this definition"></a></dt>
@@ -146,9 +181,18 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.func_entries">
+<span class="sig-name descname"><span class="pre">func_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.func_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.func_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのFuncをすべて取得する。</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.funcs">
 <span class="sig-name descname"><span class="pre">funcs</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.funcs"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.funcs" title="Link to this definition"></a></dt>
 <dd><p>このメンバーのFuncをすべて取得する。</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.1.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py property">
@@ -168,13 +212,27 @@ pythonクライアントは”python”を返す。</p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.log">
 <span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.log" title="Link to this definition"></a></dt>
-<dd><p>Logを参照する</p>
+<dd><p>Logオブジェクトを生成</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.member.Member.name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.member.Member.name" title="Link to this definition"></a></dt>
 <dd><p>Member名</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_canvas2d_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_canvas2d_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_canvas2d_entry" title="Link to this definition"></a></dt>
+<dd><p>Canvas2Dが追加されたときのイベント</p>
+<p>コールバックの引数にはCanvas2Dオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.member.Member.on_canvas3d_entry">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_canvas3d_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.member.Member.on_canvas3d_entry" title="Link to this definition"></a></dt>
+<dd><p>Canvas3Dが追加されたときのイベント</p>
+<p>コールバックの引数にはCanvas3Dオブジェクトが渡される。</p>
 </dd></dl>
 
 <dl class="py property">
@@ -243,37 +301,64 @@ sync()後通信速度が得られるようになる
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.text">
 <span class="sig-name descname"><span class="pre">text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.text" title="Link to this definition"></a></dt>
-<dd><p>Textを参照する</p>
+<dd><p>Textオブジェクトを生成</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.text_entries">
+<span class="sig-name descname"><span class="pre">text_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.text_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.text_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのTextをすべて取得する。</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.texts">
 <span class="sig-name descname"><span class="pre">texts</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.texts"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.texts" title="Link to this definition"></a></dt>
 <dd><p>このメンバーのTextをすべて取得する。</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.1.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.value">
 <span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.value" title="Link to this definition"></a></dt>
-<dd><p>Valueを参照する</p>
+<dd><p>Valueオブジェクトを生成</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.value_entries">
+<span class="sig-name descname"><span class="pre">value_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.value_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.value_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのValueをすべて取得する。</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.values">
 <span class="sig-name descname"><span class="pre">values</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.values"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.values" title="Link to this definition"></a></dt>
 <dd><p>このメンバーのValueをすべて取得する。</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.1.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.view">
 <span class="sig-name descname"><span class="pre">view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.view" title="Link to this definition"></a></dt>
-<dd><p>Viewを参照する</p>
+<dd><p>Viewオブジェクトを生成</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.view_entries">
+<span class="sig-name descname"><span class="pre">view_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.view_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.view_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのViewをすべて取得する。</p>
 </dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.views">
 <span class="sig-name descname"><span class="pre">views</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.views"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.views" title="Link to this definition"></a></dt>
 <dd><p>このメンバーのViewをすべて取得する。</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version 1.1.</span></p>
+</div>
 </dd></dl>
 
 </dd></dl>

@@ -1,0 +1,7 @@
+webcface.geometries module
+==========================
+
+.. automodule:: webcface.geometries
+   :members:
+   :undoc-members:
+   :show-inheritance:

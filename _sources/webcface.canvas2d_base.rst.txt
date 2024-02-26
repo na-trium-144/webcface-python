@@ -1,0 +1,7 @@
+webcface.canvas2d\_base module
+==============================
+
+.. automodule:: webcface.canvas2d_base
+   :members:
+   :undoc-members:
+   :show-inheritance:

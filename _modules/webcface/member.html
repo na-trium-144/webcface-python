@@ -80,6 +80,8 @@
 <span class="kn">import</span> <span class="nn">webcface.func</span>
 <span class="kn">import</span> <span class="nn">webcface.log</span>
 <span class="kn">import</span> <span class="nn">webcface.message</span>
+<span class="kn">import</span> <span class="nn">webcface.canvas2d</span>
+<span class="kn">import</span> <span class="nn">webcface.canvas3d</span>
 
 
 <div class="viewcode-block" id="Member">
@@ -103,28 +105,50 @@
 <div class="viewcode-block" id="Member.value">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.value">[docs]</a>
     <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">Value</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Valueを参照する&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Valueオブジェクトを生成&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Member.text">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.text">[docs]</a>
     <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Textを参照する&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Textオブジェクトを生成&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Member.view">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.view">[docs]</a>
     <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">View</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewを参照する&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewオブジェクトを生成&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Member.canvas2d">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.canvas2d">[docs]</a>
+    <span class="k">def</span> <span class="nf">canvas2d</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d</span><span class="o">.</span><span class="n">Canvas2D</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas2Dオブジェクトを生成</span>
+
+<span class="sd">        :arg width, height: Canvas2Dのサイズを指定して初期化する</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d</span><span class="o">.</span><span class="n">Canvas2D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Member.canvas3d">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.canvas3d">[docs]</a>
+    <span class="k">def</span> <span class="nf">canvas3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d</span><span class="o">.</span><span class="n">Canvas3D</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas3Dオブジェクトを生成&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d</span><span class="o">.</span><span class="n">Canvas3D</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Member.log">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.log">[docs]</a>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logを参照する&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logオブジェクトを生成&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
 
 
@@ -158,6 +182,16 @@
 <div class="viewcode-block" id="Member.values">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.values">[docs]</a>
     <span class="k">def</span> <span class="nf">values</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">Value</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのValueをすべて取得する。</span>
+
+<span class="sd">        .. deprecated:: 1.1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">value_entries</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Member.value_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.value_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">value_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">Value</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのValueをすべて取得する。&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">value</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">value_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
 
@@ -165,6 +199,16 @@
 <div class="viewcode-block" id="Member.texts">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.texts">[docs]</a>
     <span class="k">def</span> <span class="nf">texts</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのTextをすべて取得する。</span>
+
+<span class="sd">        .. deprecated:: 1.1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">text_entries</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Member.text_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.text_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">text_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのTextをすべて取得する。&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
 
@@ -172,6 +216,16 @@
 <div class="viewcode-block" id="Member.views">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.views">[docs]</a>
     <span class="k">def</span> <span class="nf">views</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">View</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのViewをすべて取得する。</span>
+
+<span class="sd">        .. deprecated:: 1.1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">view_entries</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Member.view_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.view_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">view_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">View</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのViewをすべて取得する。&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">view</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
 
@@ -179,8 +233,36 @@
 <div class="viewcode-block" id="Member.funcs">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.funcs">[docs]</a>
     <span class="k">def</span> <span class="nf">funcs</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのFuncをすべて取得する。</span>
+
+<span class="sd">        .. deprecated:: 1.1</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">func_entries</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Member.func_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.func_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">func_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのFuncをすべて取得する。&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">func</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">func_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Member.canvas2d_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.canvas2d_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">canvas2d_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d</span><span class="o">.</span><span class="n">Canvas2D</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのCanvas2Dをすべて取得する。&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas2d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas2d_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Member.canvas3d_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.canvas3d_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">canvas3d_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d</span><span class="o">.</span><span class="n">Canvas3D</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのCanvas3Dをすべて取得する。&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">canvas3d</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -214,6 +296,22 @@
 <span class="sd">        コールバックの引数にはFuncオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;func_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">on_canvas2d_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas2Dが追加されたときのイベント</span>
+
+<span class="sd">        コールバックの引数にはCanvas2Dオブジェクトが渡される。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;canvas2d_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">on_canvas3d_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas3Dが追加されたときのイベント</span>
+
+<span class="sd">        コールバックの引数にはCanvas3Dオブジェクトが渡される。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;canvas3d_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">on_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>

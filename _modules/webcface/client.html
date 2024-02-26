@@ -221,6 +221,7 @@
 
 <span class="sd">        接続していない場合、start()を呼び出す。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">start</span><span class="p">()</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_cv</span><span class="p">:</span>
             <span class="k">while</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
                 <span class="bp">self</span><span class="o">.</span><span class="n">_connection_cv</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>

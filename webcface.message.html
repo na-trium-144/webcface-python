@@ -46,12 +46,17 @@
 <ul class="current">
 <li class="toctree-l1 current"><a class="reference internal" href="webcface.html">webcface package</a><ul class="current">
 <li class="toctree-l2 current"><a class="reference internal" href="webcface.html#submodules">Submodules</a><ul class="current">
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html">webcface.canvas2d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d_base.html">webcface.canvas2d_base module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html">webcface.canvas3d module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d_base.html">webcface.canvas3d_base module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.geometries.html">webcface.geometries module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
@@ -59,6 +64,14 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Call"><code class="docutils literal notranslate"><span class="pre">Call</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.CallResponse"><code class="docutils literal notranslate"><span class="pre">CallResponse</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.CallResult"><code class="docutils literal notranslate"><span class="pre">CallResult</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas2D"><code class="docutils literal notranslate"><span class="pre">Canvas2D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas2DEntry"><code class="docutils literal notranslate"><span class="pre">Canvas2DEntry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas2DReq"><code class="docutils literal notranslate"><span class="pre">Canvas2DReq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas2DRes"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas3D"><code class="docutils literal notranslate"><span class="pre">Canvas3D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas3DEntry"><code class="docutils literal notranslate"><span class="pre">Canvas3DEntry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas3DReq"><code class="docutils literal notranslate"><span class="pre">Canvas3DReq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas3DRes"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.FuncInfo"><code class="docutils literal notranslate"><span class="pre">FuncInfo</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.LogReq"><code class="docutils literal notranslate"><span class="pre">LogReq</span></code></a></li>
@@ -81,6 +94,10 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.ViewEntry"><code class="docutils literal notranslate"><span class="pre">ViewEntry</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.ViewReq"><code class="docutils literal notranslate"><span class="pre">ViewReq</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.ViewRes"><code class="docutils literal notranslate"><span class="pre">ViewRes</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.c2b_to_c2d"><code class="docutils literal notranslate"><span class="pre">c2b_to_c2d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.c2d_to_c2b"><code class="docutils literal notranslate"><span class="pre">c2d_to_c2b()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.c3b_to_c3d"><code class="docutils literal notranslate"><span class="pre">c3b_to_c3d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.c3d_to_c3b"><code class="docutils literal notranslate"><span class="pre">c3d_to_c3b()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.int_to_time"><code class="docutils literal notranslate"><span class="pre">int_to_time()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.pack"><code class="docutils literal notranslate"><span class="pre">pack()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.time_to_int"><code class="docutils literal notranslate"><span class="pre">time_to_int()</span></code></a></li>
@@ -90,6 +107,7 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
@@ -232,6 +250,274 @@
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.message.CallResult.result">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">result</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.CallResult.result" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas2D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas2D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase" title="webcface.canvas2d_base.Canvas2DComponentBase"><span class="pre">Canvas2DComponentBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.message.Canvas2D.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas2D.field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.height">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#webcface.message.Canvas2D.height" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#webcface.message.Canvas2D.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas2D.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase" title="webcface.canvas2d_base.Canvas2DComponentBase"><span class="pre">Canvas2DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas2D" title="webcface.message.Canvas2D"><span class="pre">Canvas2D</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas2D.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2D.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2D.width">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#webcface.message.Canvas2D.width" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DEntry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas2DEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas2DEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2DEntry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DEntry.field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas2DEntry.field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DEntry.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">24</span></em><a class="headerlink" href="#webcface.message.Canvas2DEntry.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DEntry.member_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas2DEntry.member_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DEntry.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas2DEntry" title="webcface.message.Canvas2DEntry"><span class="pre">Canvas2DEntry</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas2DEntry.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2DEntry.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DReq">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas2DReq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas2DReq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2DReq" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DReq.field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas2DReq.field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DReq.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">44</span></em><a class="headerlink" href="#webcface.message.Canvas2DReq.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DReq.member">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas2DReq.member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DReq.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas2DReq" title="webcface.message.Canvas2DReq"><span class="pre">Canvas2DReq</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas2DReq.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2DReq.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DReq.req_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">req_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas2DReq.req_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas2DRes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas2DRes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2DRes" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.data_diff">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_diff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase" title="webcface.canvas2d_base.Canvas2DComponentBase"><span class="pre">Canvas2DComponentBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.data_diff" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.height">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.height" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">64</span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">w</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase" title="webcface.canvas2d_base.Canvas2DComponentBase"><span class="pre">Canvas2DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas2DRes" title="webcface.message.Canvas2DRes"><span class="pre">Canvas2DRes</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas2DRes.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas2DRes.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.req_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">req_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.req_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.sub_field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sub_field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.sub_field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas2DRes.width">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span></em><a class="headerlink" href="#webcface.message.Canvas2DRes.width" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas3D">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas3D</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas3D"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3D" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3D.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas3d_base.html#webcface.canvas3d_base.Canvas3DComponentBase" title="webcface.canvas3d_base.Canvas3DComponentBase"><span class="pre">Canvas3DComponentBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.message.Canvas3D.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3D.field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas3D.field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas3D.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#webcface.message.Canvas3D.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3D.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas3D.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas3D.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas3d_base.html#webcface.canvas3d_base.Canvas3DComponentBase" title="webcface.canvas3d_base.Canvas3DComponentBase"><span class="pre">Canvas3DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas3D" title="webcface.message.Canvas3D"><span class="pre">Canvas3D</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas3D.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3D.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DEntry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas3DEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas3DEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3DEntry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DEntry.field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas3DEntry.field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DEntry.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">27</span></em><a class="headerlink" href="#webcface.message.Canvas3DEntry.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DEntry.member_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas3DEntry.member_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DEntry.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas3DEntry" title="webcface.message.Canvas3DEntry"><span class="pre">Canvas3DEntry</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas3DEntry.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3DEntry.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DReq">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas3DReq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas3DReq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3DReq" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DReq.field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas3DReq.field" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DReq.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">47</span></em><a class="headerlink" href="#webcface.message.Canvas3DReq.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DReq.member">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas3DReq.member" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DReq.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas3DReq" title="webcface.message.Canvas3DReq"><span class="pre">Canvas3DReq</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas3DReq.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3DReq.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DReq.req_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">req_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas3DReq.req_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Canvas3DRes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Canvas3DRes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3DRes" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes.data_diff">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data_diff</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas3d_base.html#webcface.canvas3d_base.Canvas3DComponentBase" title="webcface.canvas3d_base.Canvas3DComponentBase"><span class="pre">Canvas3DComponentBase</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.message.Canvas3DRes.data_diff" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">67</span></em><a class="headerlink" href="#webcface.message.Canvas3DRes.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes.length">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">length</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas3DRes.length" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">i</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">d</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas3d_base.html#webcface.canvas3d_base.Canvas3DComponentBase" title="webcface.canvas3d_base.Canvas3DComponentBase"><span class="pre">Canvas3DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.Canvas3DRes" title="webcface.message.Canvas3DRes"><span class="pre">Canvas3DRes</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#Canvas3DRes.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Canvas3DRes.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes.req_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">req_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.Canvas3DRes.req_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.Canvas3DRes.sub_field">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sub_field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.Canvas3DRes.sub_field" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -851,6 +1137,30 @@
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">sub_field</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.ViewRes.sub_field" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.message.c2b_to_c2d">
+<span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">c2b_to_c2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase" title="webcface.canvas2d_base.Canvas2DComponentBase"><span class="pre">Canvas2DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/webcface/message.html#c2b_to_c2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.c2b_to_c2d" title="Link to this definition"></a></dt>
+<dd><p>Canvas2dComponentBaseクラスからメッセージに変換</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.message.c2d_to_c2b">
+<span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">c2d_to_c2b</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase" title="webcface.canvas2d_base.Canvas2DComponentBase"><span class="pre">Canvas2DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/message.html#c2d_to_c2b"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.c2d_to_c2b" title="Link to this definition"></a></dt>
+<dd><p>メッセージからCanvas2DComponentBaseクラスに変換</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.message.c3b_to_c3d">
+<span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">c3b_to_c3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vb</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas3d_base.html#webcface.canvas3d_base.Canvas3DComponentBase" title="webcface.canvas3d_base.Canvas3DComponentBase"><span class="pre">Canvas3DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">dict</span></span></span><a class="reference internal" href="_modules/webcface/message.html#c3b_to_c3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.c3b_to_c3d" title="Link to this definition"></a></dt>
+<dd><p>Canvas3dComponentBaseクラスからメッセージに変換</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.message.c3d_to_c3b">
+<span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">c3d_to_c3b</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">vd</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="webcface.canvas3d_base.html#webcface.canvas3d_base.Canvas3DComponentBase" title="webcface.canvas3d_base.Canvas3DComponentBase"><span class="pre">Canvas3DComponentBase</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/message.html#c3d_to_c3b"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.c3d_to_c3b" title="Link to this definition"></a></dt>
+<dd><p>メッセージからCanvas2DComponentBaseクラスに変換</p>
 </dd></dl>
 
 <dl class="py function">
