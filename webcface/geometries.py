@@ -14,6 +14,7 @@ __all__ = [
     "polygon",
     "Plane",
     "plane",
+    "rect",
     "Box",
     "box",
     "Circle",
@@ -57,6 +58,10 @@ class Geometry:
 
     @property
     def as_plane(self) -> Plane:
+        return Plane(self._properties)
+
+    @property
+    def as_rect(self) -> Plane:
         return Plane(self._properties)
 
     @property
@@ -148,6 +153,18 @@ class Plane(Geometry):
     def height(self) -> float:
         return self._properties[7]
 
+    @property
+    def vertex1(self) -> webcface.transform.Point:
+        return webcface.transform.Point(self.origin.pos) - webcface.transform.Point(
+            [self.width / 2, self.height / 2, 0]
+        )
+
+    @property
+    def vertex2(self) -> webcface.transform.Point:
+        return webcface.transform.Point(self.origin.pos) + webcface.transform.Point(
+            [self.width / 2, self.height / 2, 0]
+        )
+
 
 def plane(
     origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
@@ -157,6 +174,22 @@ def plane(
     if not isinstance(origin, webcface.transform.Transform):
         origin = webcface.transform.Transform(origin[0], origin[1])
     return Plane(list(origin.pos) + list(origin.rot) + [width, height])
+
+
+def rect(
+    begin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    end: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+) -> Plane:
+    if not isinstance(begin, webcface.transform.Point):
+        begin = webcface.transform.Point(begin)
+    if not isinstance(end, webcface.transform.Point):
+        end = webcface.transform.Point(end)
+    origin = webcface.transform.Transform(
+        [(b + e) / 2 for b, e in zip(begin.pos, end.pos)], 0
+    )
+    width = abs(begin.pos[0] - end.pos[0])
+    height = abs(begin.pos[1] - end.pos[1])
+    return plane(origin, width, height)
 
 
 class Box(Geometry):

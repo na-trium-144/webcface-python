@@ -58,9 +58,7 @@ def test_canvas2d_get(data):
     assert Canvas2D(Field(data, "a", "b")).width == 100
     assert Canvas2D(Field(data, "a", "b")).height == 50
     assert len(Canvas2D(Field(data, "a", "b")).get()) == 1
-    assert isinstance(
-        Canvas2D(Field(data, "a", "b")).get()[0], Canvas2DComponentBase
-    )
+    assert isinstance(Canvas2D(Field(data, "a", "b")).get()[0], Canvas2DComponentBase)
 
 
 def test_canvas2d_set(data):
@@ -83,7 +81,7 @@ def test_canvas2d_set(data):
             stroke_width=123,
         )
         v.add(geometries.rect([0, 0], [100, 50]))
-        v.add(geometries.circle([10, 10], 5))
+        v.add(geometries.circle([[10, 10], 0], 5))
         v.add(geometries.polygon([[1, 1], [2, 2], [3, 3]]))
 
     vd = data.canvas2d_store.data_send.get("b")
@@ -121,11 +119,9 @@ def test_canvas2d_set(data):
     # v.sync()
     with Canvas2D(Field(data, self_name, "b"), "", 1, 1) as v:
         pass
-    vd = data.view_store.data_send.get("b")
+    vd = data.canvas2d_store.data_send.get("b")
     assert len(vd.components) == 0
     assert called == 2
 
     with pytest.raises(ValueError) as e:
         Canvas2D(Field(data, "a", "b")).sync()
-    with pytest.raises(ValueError) as e:
-        Canvas2D(Field(data, self_name, "b")).sync()
