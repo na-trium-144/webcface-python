@@ -9,6 +9,8 @@ import webcface.view
 import webcface.func
 import webcface.log
 import webcface.message
+import webcface.canvas2d
+import webcface.canvas3d
 
 
 class Member(webcface.field.Field):
@@ -28,19 +30,35 @@ class Member(webcface.field.Field):
         return self._member
 
     def value(self, field: str) -> webcface.value.Value:
-        """Valueを参照する"""
+        """Valueオブジェクトを生成"""
         return webcface.value.Value(self, field)
 
     def text(self, field: str) -> webcface.text.Text:
-        """Textを参照する"""
+        """Textオブジェクトを生成"""
         return webcface.text.Text(self, field)
 
     def view(self, field: str) -> webcface.view.View:
-        """Viewを参照する"""
+        """Viewオブジェクトを生成"""
         return webcface.view.View(self, field)
 
+    def canvas2d(
+        self,
+        field: str,
+        width: Optional[int | float] = None,
+        height: Optional[int | float] = None,
+    ) -> webcface.canvas2d.Canvas2D:
+        """Canvas2Dオブジェクトを生成
+
+        :arg width, height: Canvas2Dのサイズを指定して初期化する
+        """
+        return webcface.canvas2d.Canvas2D(self, field, width, height)
+
+    def canvas3d(self, field: str) -> webcface.canvas3d.Canvas3D:
+        """Canvas3Dオブジェクトを生成"""
+        return webcface.canvas3d.Canvas3D(self, field)
+
     def log(self) -> webcface.log.Log:
-        """Logを参照する"""
+        """Logオブジェクトを生成"""
         return webcface.log.Log(self)
 
     def func(
@@ -68,20 +86,60 @@ class Member(webcface.field.Field):
             return webcface.func.AnonymousFunc(self, arg, **kwargs)
 
     def values(self) -> Iterable[webcface.value.Value]:
+        """このメンバーのValueをすべて取得する。
+
+        .. deprecated:: 1.1
+        """
+        return self.value_entries()
+
+    def value_entries(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。"""
         return map(self.value, self._data_check().value_store.get_entry(self._member))
 
     def texts(self) -> Iterable[webcface.text.Text]:
+        """このメンバーのTextをすべて取得する。
+
+        .. deprecated:: 1.1
+        """
+        return self.text_entries()
+
+    def text_entries(self) -> Iterable[webcface.text.Text]:
         """このメンバーのTextをすべて取得する。"""
         return map(self.text, self._data_check().text_store.get_entry(self._member))
 
     def views(self) -> Iterable[webcface.view.View]:
+        """このメンバーのViewをすべて取得する。
+
+        .. deprecated:: 1.1
+        """
+        return self.view_entries()
+
+    def view_entries(self) -> Iterable[webcface.view.View]:
         """このメンバーのViewをすべて取得する。"""
         return map(self.view, self._data_check().view_store.get_entry(self._member))
 
     def funcs(self) -> Iterable[webcface.func.Func]:
+        """このメンバーのFuncをすべて取得する。
+
+        .. deprecated:: 1.1
+        """
+        return self.func_entries()
+
+    def func_entries(self) -> Iterable[webcface.func.Func]:
         """このメンバーのFuncをすべて取得する。"""
         return map(self.func, self._data_check().func_store.get_entry(self._member))
+
+    def canvas2d_entries(self) -> Iterable[webcface.canvas2d.Canvas2D]:
+        """このメンバーのCanvas2Dをすべて取得する。"""
+        return map(
+            self.canvas2d, self._data_check().canvas2d_store.get_entry(self._member)
+        )
+
+    def canvas3d_entries(self) -> Iterable[webcface.canvas3d.Canvas3D]:
+        """このメンバーのCanvas3Dをすべて取得する。"""
+        return map(
+            self.canvas3d, self._data_check().canvas3d_store.get_entry(self._member)
+        )
 
     @property
     def on_value_entry(self) -> blinker.NamedSignal:
@@ -114,6 +172,22 @@ class Member(webcface.field.Field):
         コールバックの引数にはFuncオブジェクトが渡される。
         """
         return self._data_check().signal("func_entry", self._member)
+
+    @property
+    def on_canvas2d_entry(self) -> blinker.NamedSignal:
+        """Canvas2Dが追加されたときのイベント
+
+        コールバックの引数にはCanvas2Dオブジェクトが渡される。
+        """
+        return self._data_check().signal("canvas2d_entry", self._member)
+
+    @property
+    def on_canvas3d_entry(self) -> blinker.NamedSignal:
+        """Canvas3Dが追加されたときのイベント
+
+        コールバックの引数にはCanvas3Dオブジェクトが渡される。
+        """
+        return self._data_check().signal("canvas3d_entry", self._member)
 
     @property
     def on_sync(self) -> blinker.NamedSignal:
