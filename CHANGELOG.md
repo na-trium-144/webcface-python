@@ -1,3 +1,11 @@
+## [1.1.0] - 2024-02-26
+### Added
+* Canvas2D, Canvas3D (#12)
+### Changed
+* values → value_entries など名前変更
+### Fixed
+* Client.wait_connection()で通信がstartしないのを修正 (#12)
+
 ## [1.0.2] - 2023-12-21
 ### Added
 * `__version__`を追加 (#10)
