@@ -1,5 +1,7 @@
 import threading
 import time
+import logging
+import os
 from typing import Optional, List
 from pytest import fixture
 from webcface.client_data import SyncDataStore2, SyncDataStore1, ClientData
@@ -22,7 +24,18 @@ def s1():
 
 @fixture
 def data():
-    return ClientData(self_name)
+    logger = logging.getLogger(f"webcface_internal")
+    handler = logging.StreamHandler()
+    fmt = logging.Formatter("[%(levelname)s] %(message)s")
+    handler.setFormatter(fmt)
+    logger.addHandler(handler)
+    if "WEBCFACE_TRACE" in os.environ:
+        logger.setLevel(logging.DEBUG)
+    elif "WEBCFACE_VERBOSE" in os.environ:
+        logger.setLevel(logging.INFO)
+    else:
+        logger.setLevel(logging.CRITICAL + 1)
+    return ClientData(self_name, logger)
 
 
 @fixture
@@ -33,8 +46,12 @@ def wcli():
         while not c._closing:
             time.sleep(0.1)
 
+    def close():
+        c._closing = True
+
     c._reconnect_thread = threading.Thread(target=lambda: loop(), daemon=True)
     c._send_thread = threading.Thread(target=lambda: loop(), daemon=True)
+    c.close = close
     c.connected = True
     return c
 
