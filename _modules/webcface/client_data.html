@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_data &mdash; WebCFace-Python 1.1.0  documentation</title>
+  <title>webcface.client_data &mdash; WebCFace-Python 1.1.1  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 1.1.0
+            WebCFace-Python 1.1.1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 1.1.0</a>
+          <a href="../../index.html">WebCFace-Python 1.1.1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,10 +70,11 @@
              
   <h1>Source code for webcface.client_data</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
+<span class="kn">import</span> <span class="nn">logging</span>
 <span class="kn">import</span> <span class="nn">blinker</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.func_info</span>
@@ -95,8 +96,9 @@
     <span class="n">entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span>
     <span class="n">req</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
     <span class="n">lock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span>
+    <span class="n">should_send</span><span class="p">:</span> <span class="n">Callable</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">should_send</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_send</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_send_prev</span> <span class="o">=</span> <span class="p">{}</span>
@@ -104,6 +106,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">entry</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">req</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">should_send</span> <span class="o">=</span> <span class="n">should_send</span> <span class="ow">or</span> <span class="n">SyncDataStore2</span><span class="o">.</span><span class="n">should_send_always</span>
 
 <div class="viewcode-block" id="SyncDataStore2.is_self">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore2.is_self">[docs]</a>
@@ -111,11 +114,39 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span> <span class="o">==</span> <span class="n">member</span></div>
 
 
+<div class="viewcode-block" id="SyncDataStore2.should_send_always">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore2.should_send_always">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">should_send_always</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="SyncDataStore2.should_not_send_twice">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore2.should_not_send_twice">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">should_not_send_twice</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">prev</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="SyncDataStore2.should_send_on_change">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore2.should_send_on_change">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">should_send_on_change</span><span class="p">(</span><span class="n">prev</span><span class="p">,</span> <span class="n">current</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">prev</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">prev</span> <span class="o">!=</span> <span class="n">current</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">True</span>
+        <span class="k">return</span> <span class="kc">False</span></div>
+
+
 <div class="viewcode-block" id="SyncDataStore2.set_send">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore2.set_send">[docs]</a>
     <span class="k">def</span> <span class="nf">set_send</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="n">T</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">data_send</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">should_send</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_recv</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">),</span> <span class="n">data</span>
+            <span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">data_send</span><span class="p">[</span><span class="n">field</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">set_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">,</span> <span class="n">field</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span></div>
 
 
@@ -377,12 +408,19 @@
     <span class="n">ping_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="n">_msg_queue</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">]]</span>
     <span class="n">_msg_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
+    <span class="n">logger_internal</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger_internal</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span> <span class="o">=</span> <span class="n">name</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">value_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]](</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">text_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="nb">str</span><span class="p">](</span><span class="n">name</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">func_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">](</span><span class="n">name</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">value_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]](</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">SyncDataStore2</span><span class="o">.</span><span class="n">should_send_on_change</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="nb">str</span><span class="p">](</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">SyncDataStore2</span><span class="o">.</span><span class="n">should_send_on_change</span>
+        <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">](</span>
+            <span class="n">name</span><span class="p">,</span> <span class="n">SyncDataStore2</span><span class="o">.</span><span class="n">should_not_send_twice</span>
+        <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">view_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">]](</span>
             <span class="n">name</span>
         <span class="p">)</span>
@@ -407,6 +445,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">ping_status</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">logger_internal</span> <span class="o">=</span> <span class="n">logger_internal</span>
 
 <div class="viewcode-block" id="ClientData.queue_msg">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg">[docs]</a>
@@ -420,7 +459,8 @@
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.clear_msg">[docs]</a>
     <span class="k">def</span> <span class="nf">clear_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span> <span class="o">=</span> <span class="p">[]</span></div>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
 
 
 <div class="viewcode-block" id="ClientData.has_msg">
@@ -437,13 +477,23 @@
                 <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
 
 
+<div class="viewcode-block" id="ClientData.wait_empty">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.wait_empty">[docs]</a>
+    <span class="k">def</span> <span class="nf">wait_empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
+            <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">wait</span><span class="p">()</span></div>
+
+
 <div class="viewcode-block" id="ClientData.pop_msg">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.pop_msg">[docs]</a>
     <span class="k">def</span> <span class="nf">pop_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">]]:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span></div>
+            <span class="n">msg</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">msg</span></div>
 
 
 <div class="viewcode-block" id="ClientData.is_self">
