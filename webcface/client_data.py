@@ -3,6 +3,7 @@ from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Call
 import threading
 import json
 import datetime
+import logging
 import blinker
 import webcface.field
 import webcface.func_info
@@ -250,8 +251,9 @@ class ClientData:
     ping_status: dict[int, int]
     _msg_queue: List[List[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
+    logger_internal: logging.Logger
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, logger_internal: logging.Logger) -> None:
         self.self_member_name = name
         self.value_store = SyncDataStore2[List[float]](
             name, SyncDataStore2.should_send_on_change
@@ -286,6 +288,7 @@ class ClientData:
         self.ping_status = {}
         self._msg_queue = []
         self._msg_cv = threading.Condition()
+        self.logger_internal = logger_internal
 
     def queue_msg(self, msgs: List[webcface.message.MessageBase]) -> None:
         with self._msg_cv:

@@ -189,7 +189,7 @@ def on_recv(
                             r._result_ready = True
                         r._cv.notify_all()
                 except IndexError:
-                    logging.getLogger("webcface").error(
+                    data.logger_internal.error(
                         f"error receiving call response id={m.caller_id}"
                     )
             if isinstance(m, webcface.message.CallResult):
@@ -201,7 +201,7 @@ def on_recv(
                         r._result_ready = True
                         r._cv.notify_all()
                 except IndexError:
-                    logging.getLogger("webcface").error(
+                    data.logger_internal.error(
                         f"error receiving call result id={m.caller_id}"
                     )
             if isinstance(m, webcface.message.Log):

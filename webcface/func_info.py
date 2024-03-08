@@ -34,7 +34,6 @@ def get_type_enum(t: type) -> int:
         or t is None
     ):
         return ValType.NONE
-    logging.getLogger("webcface").error("unknown type enum")
     return ValType.STRING
 
 
