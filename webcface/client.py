@@ -5,6 +5,7 @@ from typing import Optional, Iterable
 import logging
 import io
 import os
+import atexit
 import blinker
 import websocket
 import webcface.member
@@ -101,7 +102,7 @@ class Client(webcface.member.Member):
                             self._connection_cv.wait()
                     data.wait_msg()
                 msgs = self._data_check().pop_msg()
-                if msgs is not None and self._ws is not None:
+                if msgs is not None and self._ws is not None and self.connected:
                     try:
                         logging.getLogger("webcface").debug("Sending message")
                         self._ws.send(webcface.message.pack(msgs))
@@ -115,18 +116,28 @@ class Client(webcface.member.Member):
         data = self._data_check()
         data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
-    def __del__(self) -> None:
-        self.close()
-        if self._reconnect_thread.is_alive():
-            self._reconnect_thread.join()
-        if self._send_thread.is_alive():
-            self._send_thread.join()
+        def close_at_exit():
+            logging.getLogger("webcface").debug(
+                "Client close triggered at interpreter termination"
+            )
+            self.close()
+            if self._reconnect_thread.is_alive():
+                self._reconnect_thread.join()
+            if self._send_thread.is_alive():
+                self._send_thread.join()
+
+        atexit.register(close_at_exit)
 
     def close(self) -> None:
-        """接続を切る"""
-        self._closing = True
-        if self._ws is not None:
-            self._ws.close()
+        """接続を切る
+
+        ver1.1.1〜 キューにたまっているデータがすべて送信されるまで待機
+        """
+        if not self._closing:
+            self._data_check().wait_empty()
+            self._closing = True
+            if self._ws is not None:
+                self._ws.close()
 
     def start(self) -> None:
         """サーバーに接続を開始する"""

@@ -295,6 +295,7 @@ class ClientData:
     def clear_msg(self) -> None:
         with self._msg_cv:
             self._msg_queue = []
+            self._msg_cv.notify_all()
 
     def has_msg(self) -> bool:
         return len(self._msg_queue) > 0
@@ -304,11 +305,18 @@ class ClientData:
             while len(self._msg_queue) == 0:
                 self._msg_cv.wait()
 
+    def wait_empty(self) -> None:
+        with self._msg_cv:
+            while len(self._msg_queue) > 0:
+                self._msg_cv.wait()
+
     def pop_msg(self) -> Optional[List[webcface.message.MessageBase]]:
         with self._msg_cv:
             if len(self._msg_queue) == 0:
                 return None
-            return self._msg_queue.pop(0)
+            msg = self._msg_queue.pop(0)
+            self._msg_cv.notify_all()
+            return msg
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member
