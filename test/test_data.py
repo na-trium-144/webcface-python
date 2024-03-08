@@ -73,6 +73,12 @@ def test_value_set(data):
     Value(Field(data, self_name, "b")).set(5)
     assert data.value_store.data_send.get("b", []) == [5.0]
 
+    data.value_store.data_send = {}
+    Value(Field(data, self_name, "b")).set(5)
+    assert "b" not in data.value_store.data_send  # 同じデータを2度送らない
+    Value(Field(data, self_name, "b")).set(50)
+    assert data.value_store.data_send.get("b", []) == [50.0]
+
     Value(Field(data, self_name, "b")).set(True)
     assert data.value_store.data_send.get("b", []) == [1.0]
 
@@ -144,6 +150,12 @@ def test_text_get(data):
 def test_text_set(data):
     Text(Field(data, self_name, "b")).set("c")
     assert data.text_store.data_send.get("b", "") == "c"
+
+    data.text_store.data_send = {}
+    Text(Field(data, self_name, "b")).set("c")
+    assert "b" not in data.text_store.data_send  # 同じデータを2度送らない
+    Text(Field(data, self_name, "b")).set("cc")
+    assert data.text_store.data_send.get("b", "") == "cc"
 
     # objectを渡した時
 

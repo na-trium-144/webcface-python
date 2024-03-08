@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List
+from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Callable
 import threading
 import json
 import datetime
@@ -22,8 +22,9 @@ class SyncDataStore2(Generic[T]):
     entry: Dict[str, List[str]]
     req: Dict[str, Dict[str, int]]
     lock: threading.RLock
+    should_send: Callable
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, should_send: Optional[Callable] = None) -> None:
         self.self_member_name = name
         self.data_send = {}
         self.data_send_prev = {}
@@ -31,13 +32,33 @@ class SyncDataStore2(Generic[T]):
         self.entry = {}
         self.req = {}
         self.lock = threading.RLock()
+        self.should_send = should_send or SyncDataStore2.should_send_always
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member
 
+    @staticmethod
+    def should_send_always(prev, current) -> bool:
+        return True
+
+    @staticmethod
+    def should_not_send_twice(prev, current) -> bool:
+        if prev is None:
+            return True
+        return False
+
+    @staticmethod
+    def should_send_on_change(prev, current) -> bool:
+        if prev is None or prev != current:
+            return True
+        return False
+
     def set_send(self, field: str, data: T) -> None:
         with self.lock:
-            self.data_send[field] = data
+            if self.should_send(
+                self.data_recv.get(self.self_member_name, {}).get(field), data
+            ):
+                self.data_send[field] = data
             self.set_recv(self.self_member_name, field, data)
 
     def set_recv(self, member: str, field: str, data: T) -> None:
@@ -232,9 +253,15 @@ class ClientData:
 
     def __init__(self, name: str) -> None:
         self.self_member_name = name
-        self.value_store = SyncDataStore2[List[float]](name)
-        self.text_store = SyncDataStore2[str](name)
-        self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
+        self.value_store = SyncDataStore2[List[float]](
+            name, SyncDataStore2.should_send_on_change
+        )
+        self.text_store = SyncDataStore2[str](
+            name, SyncDataStore2.should_send_on_change
+        )
+        self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](
+            name, SyncDataStore2.should_not_send_twice
+        )
         self.view_store = SyncDataStore2[List[webcface.view_base.ViewComponentBase]](
             name
         )
