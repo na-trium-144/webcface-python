@@ -1,8 +1,9 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List
+from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Callable
 import threading
 import json
 import datetime
+import logging
 import blinker
 import webcface.field
 import webcface.func_info
@@ -22,8 +23,9 @@ class SyncDataStore2(Generic[T]):
     entry: Dict[str, List[str]]
     req: Dict[str, Dict[str, int]]
     lock: threading.RLock
+    should_send: Callable
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, should_send: Optional[Callable] = None) -> None:
         self.self_member_name = name
         self.data_send = {}
         self.data_send_prev = {}
@@ -31,13 +33,33 @@ class SyncDataStore2(Generic[T]):
         self.entry = {}
         self.req = {}
         self.lock = threading.RLock()
+        self.should_send = should_send or SyncDataStore2.should_send_always
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member
 
+    @staticmethod
+    def should_send_always(prev, current) -> bool:
+        return True
+
+    @staticmethod
+    def should_not_send_twice(prev, current) -> bool:
+        if prev is None:
+            return True
+        return False
+
+    @staticmethod
+    def should_send_on_change(prev, current) -> bool:
+        if prev is None or prev != current:
+            return True
+        return False
+
     def set_send(self, field: str, data: T) -> None:
         with self.lock:
-            self.data_send[field] = data
+            if self.should_send(
+                self.data_recv.get(self.self_member_name, {}).get(field), data
+            ):
+                self.data_send[field] = data
             self.set_recv(self.self_member_name, field, data)
 
     def set_recv(self, member: str, field: str, data: T) -> None:
@@ -229,12 +251,19 @@ class ClientData:
     ping_status: dict[int, int]
     _msg_queue: List[List[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
+    logger_internal: logging.Logger
 
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str, logger_internal: logging.Logger) -> None:
         self.self_member_name = name
-        self.value_store = SyncDataStore2[List[float]](name)
-        self.text_store = SyncDataStore2[str](name)
-        self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](name)
+        self.value_store = SyncDataStore2[List[float]](
+            name, SyncDataStore2.should_send_on_change
+        )
+        self.text_store = SyncDataStore2[str](
+            name, SyncDataStore2.should_send_on_change
+        )
+        self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](
+            name, SyncDataStore2.should_not_send_twice
+        )
         self.view_store = SyncDataStore2[List[webcface.view_base.ViewComponentBase]](
             name
         )
@@ -259,6 +288,7 @@ class ClientData:
         self.ping_status = {}
         self._msg_queue = []
         self._msg_cv = threading.Condition()
+        self.logger_internal = logger_internal
 
     def queue_msg(self, msgs: List[webcface.message.MessageBase]) -> None:
         with self._msg_cv:
@@ -268,6 +298,7 @@ class ClientData:
     def clear_msg(self) -> None:
         with self._msg_cv:
             self._msg_queue = []
+            self._msg_cv.notify_all()
 
     def has_msg(self) -> bool:
         return len(self._msg_queue) > 0
@@ -277,11 +308,18 @@ class ClientData:
             while len(self._msg_queue) == 0:
                 self._msg_cv.wait()
 
+    def wait_empty(self) -> None:
+        with self._msg_cv:
+            while len(self._msg_queue) > 0:
+                self._msg_cv.wait()
+
     def pop_msg(self) -> Optional[List[webcface.message.MessageBase]]:
         with self._msg_cv:
             if len(self._msg_queue) == 0:
                 return None
-            return self._msg_queue.pop(0)
+            msg = self._msg_queue.pop(0)
+            self._msg_cv.notify_all()
+            return msg
 
     def is_self(self, member: str) -> bool:
         return self.self_member_name == member

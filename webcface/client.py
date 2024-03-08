@@ -5,6 +5,7 @@ from typing import Optional, Iterable
 import logging
 import io
 import os
+import atexit
 import blinker
 import websocket
 import webcface.member
@@ -34,17 +35,11 @@ class Client(webcface.member.Member):
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
     ) -> None:
-        super().__init__(
-            webcface.field.Field(webcface.client_data.ClientData(name), name),
-            name,
-        )
-        self._ws = None
-        self.connected = False
-        self._connection_cv = threading.Condition()
-        self._closing = False
-
-        logger = logging.getLogger("webcface")
-        logger.addHandler(logging.StreamHandler())
+        logger = logging.getLogger(f"webcface_internal({name})")
+        handler = logging.StreamHandler()
+        fmt = logging.Formatter("%(name)s [%(levelname)s] %(message)s")
+        handler.setFormatter(fmt)
+        logger.addHandler(handler)
         if "WEBCFACE_TRACE" in os.environ:
             logger.setLevel(logging.DEBUG)
         elif "WEBCFACE_VERBOSE" in os.environ:
@@ -52,26 +47,35 @@ class Client(webcface.member.Member):
         else:
             logger.setLevel(logging.CRITICAL + 1)
 
+        super().__init__(
+            webcface.field.Field(webcface.client_data.ClientData(name, logger), name),
+            name,
+        )
+        self._ws = None
+        self.connected = False
+        self._connection_cv = threading.Condition()
+        self._closing = False
+
+        data = self._data_check()
+
         def on_open(ws):
-            logging.getLogger("webcface").info("WebSocket Open")
+            data.logger_internal.info("WebSocket Open")
             with self._connection_cv:
                 self.connected = True
                 self._connection_cv.notify_all()
 
         def on_message(ws, message: bytes):
-            logging.getLogger("webcface").debug("Received message")
-            data = self._data_check()
+            data.logger_internal.debug("Received message")
             webcface.client_impl.on_recv(self, data, message)
 
         def on_error(ws, error):
-            logging.getLogger("webcface").info(f"WebSocket Error: {error}")
+            data.logger_internal.info(f"WebSocket Error: {error}")
 
         def on_close(ws, close_status_code, close_msg):
-            logging.getLogger("webcface").info("WebSocket Closed")
+            data.logger_internal.info("WebSocket Closed")
             with self._connection_cv:
                 self.connected = False
                 self._connection_cv.notify_all()
-            data = self._data_check()
             data.clear_msg()
             data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
@@ -87,7 +91,7 @@ class Client(webcface.member.Member):
                 try:
                     self._ws.run_forever()
                 except Exception as e:
-                    logging.getLogger("webcface").debug(f"WebSocket Error: {e}")
+                    data.logger_internal.debug(f"WebSocket Error: {e}")
                 time.sleep(1)
 
         self._reconnect_thread = threading.Thread(target=reconnect, daemon=True)
@@ -101,32 +105,39 @@ class Client(webcface.member.Member):
                             self._connection_cv.wait()
                     data.wait_msg()
                 msgs = self._data_check().pop_msg()
-                if msgs is not None and self._ws is not None:
+                if msgs is not None and self._ws is not None and self.connected:
                     try:
-                        logging.getLogger("webcface").debug("Sending message")
+                        data.logger_internal.debug("Sending message")
                         self._ws.send(webcface.message.pack(msgs))
                     except Exception as e:
-                        logging.getLogger("webcface").error(
-                            f"Error Sending message {e}"
-                        )
+                        data.logger_internal.error(f"Error Sending message {e}")
 
         self._send_thread = threading.Thread(target=msg_send, daemon=True)
 
-        data = self._data_check()
         data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
-    def __del__(self) -> None:
-        self.close()
-        if self._reconnect_thread.is_alive():
-            self._reconnect_thread.join()
-        if self._send_thread.is_alive():
-            self._send_thread.join()
+        def close_at_exit():
+            data.logger_internal.debug(
+                "Client close triggered at interpreter termination"
+            )
+            self.close()
+            if self._reconnect_thread.is_alive():
+                self._reconnect_thread.join()
+            if self._send_thread.is_alive():
+                self._send_thread.join()
+
+        atexit.register(close_at_exit)
 
     def close(self) -> None:
-        """接続を切る"""
-        self._closing = True
-        if self._ws is not None:
-            self._ws.close()
+        """接続を切る
+
+        ver1.1.1〜 キューにたまっているデータがすべて送信されるまで待機
+        """
+        if not self._closing:
+            self._data_check().wait_empty()
+            self._closing = True
+            if self._ws is not None:
+                self._ws.close()
 
     def start(self) -> None:
         """サーバーに接続を開始する"""

@@ -57,6 +57,8 @@ def main():
         time.sleep(0.1)
         # 値を更新
         wcli.value("test").set(i)
+        wcli.value("not_frequent").set(i // 10)
+        
         # 文字列を送信
         wcli.text("str").set("hello")
 
