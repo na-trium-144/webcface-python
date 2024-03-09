@@ -93,17 +93,20 @@ class Client(webcface.member.Member):
                 except Exception as e:
                     data.logger_internal.debug(f"WebSocket Error: {e}")
                 time.sleep(1)
+            data.logger_internal.debug(f"reconnect_thread end")
+
 
         self._reconnect_thread = threading.Thread(target=reconnect, daemon=True)
 
         def msg_send():
             data = self._data_check()
-            while not self._closing:
-                while (not self.connected or not data.has_msg()) and not self._closing:
+            while self._reconnect_thread.is_alive():
+                while (
+                    not self.connected or not data.has_msg()
+                ) and self._reconnect_thread.is_alive():
                     with self._connection_cv:
-                        while not self.connected:
-                            self._connection_cv.wait()
-                    data.wait_msg()
+                        self._connection_cv.wait(timeout=1)
+                    data.wait_msg(timeout=1)
                 msgs = self._data_check().pop_msg()
                 if msgs is not None and self._ws is not None and self.connected:
                     try:
@@ -131,11 +134,13 @@ class Client(webcface.member.Member):
     def close(self) -> None:
         """接続を切る
 
-        ver1.1.1〜 キューにたまっているデータがすべて送信されるまで待機
+        * ver1.1.1〜 キューにたまっているデータがすべて送信されるまで待機
+        * ver1.1.2〜 サーバーへの接続に失敗した場合は待機しない
         """
         if not self._closing:
-            self._data_check().wait_empty()
             self._closing = True
+            while self._data_check().has_msg() and self._reconnect_thread.is_alive():
+                self._data_check().wait_empty(timeout=1)
             if self._ws is not None:
                 self._ws.close()
 

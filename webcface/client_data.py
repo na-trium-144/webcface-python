@@ -303,15 +303,17 @@ class ClientData:
     def has_msg(self) -> bool:
         return len(self._msg_queue) > 0
 
-    def wait_msg(self) -> None:
+    def wait_msg(self, timeout: Optional[float] = None) -> None:
         with self._msg_cv:
             while len(self._msg_queue) == 0:
-                self._msg_cv.wait()
+                self._msg_cv.wait(timeout)
 
-    def wait_empty(self) -> None:
+    def wait_empty(self, timeout: Optional[float] = None) -> None:
         with self._msg_cv:
             while len(self._msg_queue) > 0:
-                self._msg_cv.wait()
+                self._msg_cv.wait(timeout)
+                if timeout is not None:
+                    break
 
     def pop_msg(self) -> Optional[List[webcface.message.MessageBase]]:
         with self._msg_cv:
