@@ -92,7 +92,8 @@ class Client(webcface.member.Member):
                     self._ws.run_forever()
                 except Exception as e:
                     data.logger_internal.debug(f"WebSocket Error: {e}")
-                time.sleep(1)
+                if not self._closing:
+                    time.sleep(0.1)
             data.logger_internal.debug(f"reconnect_thread end")
 
 
@@ -104,9 +105,10 @@ class Client(webcface.member.Member):
                 while (
                     not self.connected or not data.has_msg()
                 ) and self._reconnect_thread.is_alive():
-                    with self._connection_cv:
-                        self._connection_cv.wait(timeout=1)
-                    data.wait_msg(timeout=1)
+                    if not self.connected:
+                        with self._connection_cv:
+                            self._connection_cv.wait(timeout=0.1)
+                    data.wait_msg(timeout=0.1)
                 msgs = self._data_check().pop_msg()
                 if msgs is not None and self._ws is not None and self.connected:
                     try:
