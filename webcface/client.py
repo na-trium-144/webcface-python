@@ -13,7 +13,7 @@ import webcface.field
 import webcface.client_data
 import webcface.message
 import webcface.client_impl
-
+import webcface.cffi
 
 class Client(webcface.member.Member):
     """サーバーに接続する
@@ -25,111 +25,37 @@ class Client(webcface.member.Member):
     :arg port: サーバーのポート
     """
 
-    connected: bool
-    _connection_cv: threading.Condition
-    _ws: Optional[websocket.WebSocketApp]
     _closing: bool
-    _reconnect_thread: threading.Thread
-    _send_thread: threading.Thread
+    _wcli: ctypes.c_void_p
 
     def __init__(
         self, name: str = "", host: str = "127.0.0.1", port: int = 7530
     ) -> None:
-        logger = logging.getLogger(f"webcface_internal({name})")
-        handler = logging.StreamHandler()
-        fmt = logging.Formatter("%(name)s [%(levelname)s] %(message)s")
-        handler.setFormatter(fmt)
-        logger.addHandler(handler)
-        if "WEBCFACE_TRACE" in os.environ:
-            logger.setLevel(logging.DEBUG)
-        elif "WEBCFACE_VERBOSE" in os.environ:
-            logger.setLevel(logging.INFO)
-        else:
-            logger.setLevel(logging.CRITICAL + 1)
-
+        # logger = logging.getLogger(f"webcface_internal({name})")
+        # handler = logging.StreamHandler()
+        # fmt = logging.Formatter("%(name)s [%(levelname)s] %(message)s")
+        # handler.setFormatter(fmt)
+        # logger.addHandler(handler)
+        # if "WEBCFACE_TRACE" in os.environ:
+        #     logger.setLevel(logging.DEBUG)
+        # elif "WEBCFACE_VERBOSE" in os.environ:
+        #     logger.setLevel(logging.INFO)
+        # else:
+        #     logger.setLevel(logging.CRITICAL + 1)
+        wcli = webcface.cffi.wcfInitW(name, host, port)
+        data = webcface.client_data.ClientData(name, wcli)
         super().__init__(
-            webcface.field.Field(webcface.client_data.ClientData(name, logger), name),
+            webcface.field.Field(data, name),
             name,
         )
-        self._ws = None
-        self.connected = False
-        self._connection_cv = threading.Condition()
         self._closing = False
-
-        data = self._data_check()
-
-        def on_open(ws):
-            data.logger_internal.info("WebSocket Open")
-            with self._connection_cv:
-                self.connected = True
-                self._connection_cv.notify_all()
-
-        def on_message(ws, message: bytes):
-            data.logger_internal.debug("Received message")
-            webcface.client_impl.on_recv(self, data, message)
-
-        def on_error(ws, error):
-            data.logger_internal.info(f"WebSocket Error: {error}")
-
-        def on_close(ws, close_status_code, close_msg):
-            data.logger_internal.info("WebSocket Closed")
-            with self._connection_cv:
-                self.connected = False
-                self._connection_cv.notify_all()
-            data.clear_msg()
-            data.queue_msg(webcface.client_impl.sync_data_first(self, data))
-
-        def reconnect():
-            while not self._closing:
-                self._ws = websocket.WebSocketApp(
-                    f"ws://{host}:{port}/",
-                    on_open=on_open,
-                    on_message=on_message,
-                    on_error=on_error,
-                    on_close=on_close,
-                )
-                try:
-                    self._ws.run_forever()
-                except Exception as e:
-                    data.logger_internal.debug(f"WebSocket Error: {e}")
-                if not self._closing:
-                    time.sleep(0.1)
-            data.logger_internal.debug(f"reconnect_thread end")
-
-
-        self._reconnect_thread = threading.Thread(target=reconnect, daemon=True)
-
-        def msg_send():
-            data = self._data_check()
-            while self._reconnect_thread.is_alive():
-                while (
-                    not self.connected or not data.has_msg()
-                ) and self._reconnect_thread.is_alive():
-                    if not self.connected:
-                        with self._connection_cv:
-                            self._connection_cv.wait(timeout=0.1)
-                    data.wait_msg(timeout=0.1)
-                msgs = self._data_check().pop_msg()
-                if msgs is not None and self._ws is not None and self.connected:
-                    try:
-                        data.logger_internal.debug("Sending message")
-                        self._ws.send(webcface.message.pack(msgs))
-                    except Exception as e:
-                        data.logger_internal.error(f"Error Sending message {e}")
-
-        self._send_thread = threading.Thread(target=msg_send, daemon=True)
-
-        data.queue_msg(webcface.client_impl.sync_data_first(self, data))
+        self._wcli = wcli
 
         def close_at_exit():
             data.logger_internal.debug(
                 "Client close triggered at interpreter termination"
             )
             self.close()
-            if self._reconnect_thread.is_alive():
-                self._reconnect_thread.join()
-            if self._send_thread.is_alive():
-                self._send_thread.join()
 
         atexit.register(close_at_exit)
 
@@ -141,27 +67,20 @@ class Client(webcface.member.Member):
         """
         if not self._closing:
             self._closing = True
-            while self._data_check().has_msg() and self._reconnect_thread.is_alive():
-                self._data_check().wait_empty(timeout=1)
-            if self._ws is not None:
-                self._ws.close()
+            webcface.cffi.wcfClose(self._wcli)
 
     def start(self) -> None:
         """サーバーに接続を開始する"""
-        if not self._reconnect_thread.is_alive():
-            self._reconnect_thread.start()
-        if not self._send_thread.is_alive():
-            self._send_thread.start()
+        ret = webcface.cffi.wcfStart(self._wcli)
+        if ret != webcface.cffi.WCF_OK:
+            raise RuntimeError("wcfStart failed: " + ret)
 
     def wait_connection(self) -> None:
         """サーバーに接続が成功するまで待機する。
 
         接続していない場合、start()を呼び出す。
         """
-        self.start()
-        with self._connection_cv:
-            while not self.connected:
-                self._connection_cv.wait()
+        raise NotImplementedError()
 
     def sync(self) -> None:
         """送信用にセットしたデータとリクエストデータをすべて送信キューに入れる。
@@ -171,8 +90,9 @@ class Client(webcface.member.Member):
         サーバーに接続していない場合、start()を呼び出す。
         """
         self.start()
-        data = self._data_check()
-        data.queue_msg(webcface.client_impl.sync_data(self, data, False))
+        ret = webcface.cffi.wcfSync(self._wcli)
+        if ret != webcface.cffi.WCF_OK:
+            raise RuntimeError("wcfSync failed: " + ret)
 
     def member(self, member_name) -> webcface.member.Member:
         """他のメンバーにアクセスする"""
@@ -183,7 +103,7 @@ class Client(webcface.member.Member):
 
         自分自身と、無名のmemberを除く。
         """
-        return map(self.member, self._data_check().value_store.get_members())
+        raise NotImplementedError()
 
     @property
     def on_member_entry(self) -> blinker.NamedSignal:
@@ -196,7 +116,8 @@ class Client(webcface.member.Member):
         などとすれば関数を登録できる。
         * または :code:`@client.on_member_entry.connect` をデコレーターとして使う。
         """
-        return self._data_check().signal("member_entry")
+        raise NotImplementedError()
+        # return self._data_check().signal("member_entry")
 
     @property
     def logging_handler(self) -> logging.Handler:
@@ -217,9 +138,11 @@ class Client(webcface.member.Member):
 
         :return: 通常は"webcface"が返る
         """
-        return self._data_check().svr_name
+        raise NotImplementedError()
+        # return self._data_check().svr_name
 
     @property
     def server_version(self) -> str:
         """サーバーのバージョン"""
-        return self._data_check().svr_version
+        raise NotImplementedError()
+        # return self._data_check().svr_version
