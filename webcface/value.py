@@ -4,7 +4,8 @@ import blinker
 import webcface.field
 import webcface.member
 import webcface.message
-
+import webcface.cffi
+import ctypes
 
 class Value(webcface.field.Field):
     def __init__(self, base: webcface.field.Field, field: str = "") -> None:
@@ -37,28 +38,40 @@ class Value(webcface.field.Field):
 
         まだ値をリクエストされてなければ自動でリクエストされる
         """
-        self.request()
-        return self._data_check().signal("value_change", self._member, self._field)
+        raise NotImplementedError()
+        # self.request()
+        # return self._data_check().signal("value_change", self._member, self._field)
 
     def child(self, field: str) -> Value:
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするValue
-        """
+        """「(thisのフィールド名).(子フィールド名)」をフィールド名とするValue"""
         return Value(self, self._field + "." + field)
 
     def request(self) -> None:
         """値の受信をリクエストする"""
-        req = self._data_check().value_store.add_req(self._member, self._field)
-        if req > 0:
-            self._data_check().queue_msg(
-                [webcface.message.ValueReq.new(self._member, self._field, req)]
-            )
+        self.try_get()
 
     def try_get_vec(self) -> Optional[List[float]]:
         """値をlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
-        self.request()
-        return self._data_check().value_store.get_recv(self._member, self._field)
+        buf = (ctypes.c_double * 1)()
+        recv_size = ctypes.POINTER(ctypes.c_int)()
+        ret = webcface.cffi.wcfValueGetVecDW(
+            self._data_check().wcli, self._member, self._field, buf, 1, recv_size
+        )
+        if ret == webcface.cffi.WCF_NOT_FOUND:
+            return None
+        if ret != webcface.cffi.WCF_OK:
+            raise RuntimeError("wcfValueGetVecDW failed: " + ret)
+        if recv_size.contents > 1:
+            buf = (ctypes.c_double * recv_size.contents)()
+            webcface.cffi.wcfValueGetVecDW(
+                self._data_check().wcli,
+                self._member,
+                self._field,
+                buf,
+                recv_size.contents,
+                recv_size,
+            )
+        return [v for v in buf]
 
     def try_get(self) -> Optional[float]:
         """値をfloatまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
@@ -85,14 +98,10 @@ class Value(webcface.field.Field):
     def set(self, data: List[float] | int | float) -> Value:
         """値をセットする"""
         self._set_check()
-        try:
-            data_f = float(data)
-            self._set_check().value_store.set_send(self._field, [data])
-            self.signal.send(self)
-        except TypeError:
-            if isinstance(data, list):
-                self._set_check().value_store.set_send(self._field, data)
-                self.signal.send(self)
-            else:
-                raise TypeError("unsupported data type for value.set()")
+        if not isinstance(data, list):
+            data = [data]
+        buf = (ctypes.c_double * len(data))(*data)
+        ret = webcface.cffi.wcfValueSetVecDW(self._data_check().wcli, self._field, buf, len(data))
+        if ret != webcface.cffi.WCF_OK:
+            raise RuntimeError("wcfValueSetVecDW failed: " + ret)
         return self
