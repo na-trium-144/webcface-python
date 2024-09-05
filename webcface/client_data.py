@@ -254,13 +254,16 @@ class ClientData:
     _msg_first: bool  # syncInitメッセージをqueueに入れたらtrue
     _msg_queue: List[List[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
-    recv_queue: List[List[webcface.message.MessageBase]]
+    recv_queue: List[bytes]
     recv_cv: threading.Condition
     logger_internal: logging.Logger
     self_member_id: Optional[int]
     sync_init_end: bool
+    auto_reconnect: bool
 
-    def __init__(self, name: str, logger_internal: logging.Logger) -> None:
+    def __init__(
+        self, name: str, logger_internal: logging.Logger, auto_reconnect: bool
+    ) -> None:
         self.self_member_name = name
         self.value_store = SyncDataStore2[List[float]](
             name, SyncDataStore2.should_send_on_change
@@ -303,6 +306,7 @@ class ClientData:
         self.logger_internal = logger_internal
         self.self_member_id = None
         self.sync_init_end = False
+        self.auto_reconnect = auto_reconnect
 
     def queue_first(self) -> None:
         with self._msg_cv:
@@ -310,15 +314,13 @@ class ClientData:
             self._msg_first = True
 
     def queue_msg_always(self, msgs: List[webcface.message.MessageBase]) -> None:
-        """メッセージをキューに入れる
-        """
+        """メッセージをキューに入れる"""
         with self._msg_cv:
             self._msg_queue.append(msgs)
             self._msg_cv.notify_all()
 
     def queue_msg_online(self, msgs: List[webcface.message.MessageBase]) -> bool:
-        """接続できていればキューに入れtrueを返す
-        """
+        """接続できていればキューに入れtrueを返す"""
         with self._connection_cv:
             if self.connected:
                 with self._msg_cv:

@@ -23,6 +23,7 @@ class Client(webcface.member.Member):
     :arg name: 名前
     :arg host: サーバーのアドレス
     :arg port: サーバーのポート
+    :arg auto_reconnect: (ver2.0〜) 通信が切断された時に自動で再接続する。(デフォルト: True)
     """
 
     _ws: Optional[websocket.WebSocketApp]
@@ -31,7 +32,11 @@ class Client(webcface.member.Member):
     _send_thread: threading.Thread
 
     def __init__(
-        self, name: str = "", host: str = "127.0.0.1", port: int = 7530
+        self,
+        name: str = "",
+        host: str = "127.0.0.1",
+        port: int = 7530,
+        auto_reconnect: bool = True,
     ) -> None:
         logger = logging.getLogger(f"webcface_internal({name})")
         handler = logging.StreamHandler()
@@ -46,7 +51,9 @@ class Client(webcface.member.Member):
             logger.setLevel(logging.CRITICAL + 1)
 
         super().__init__(
-            webcface.field.Field(webcface.client_data.ClientData(name, logger), name),
+            webcface.field.Field(
+                webcface.client_data.ClientData(name, logger, auto_reconnect), name
+            ),
             name,
         )
         self._ws = None
@@ -68,7 +75,7 @@ class Client(webcface.member.Member):
             data.logger_internal.debug("Received message")
             # webcface.client_impl.on_recv(self, data, message)
             with data.recv_cv:
-                data.recv_queue.append(webcface.message.unpack(message))
+                data.recv_queue.append(message)
 
         def on_error(ws, error):
             data.logger_internal.info(f"WebSocket Error: {error}")
@@ -96,10 +103,11 @@ class Client(webcface.member.Member):
                     self._ws.run_forever()
                 except Exception as e:
                     data.logger_internal.debug(f"WebSocket Error: {e}")
+                if not data.auto_reconnect:
+                    break
                 if not self._closing:
                     time.sleep(0.1)
             data.logger_internal.debug(f"reconnect_thread end")
-
 
         self._reconnect_thread = threading.Thread(target=reconnect, daemon=True)
 
@@ -165,18 +173,39 @@ class Client(webcface.member.Member):
         self.start()
         data = self._data_check()
         while not data.connected or not data.sync_init_end:
-            with data._connection_cv:
-                if not data.connected:
+            if not data.connected:
+                with data._connection_cv:
                     self._data_check()._connection_cv.wait()
-                else:
-                    self.loop_sync()
+            else:
+                if len(data.recv_queue) == 0:
+                    with data.recv_cv:
+                        data.recv_cv.wait(timeout=None)
+                self.sync(timeout=0)
 
-    def sync(self) -> None:
-        """送信用にセットしたデータとリクエストデータをすべて送信キューに入れる。
+    @property
+    def connected(self) -> bool:
+        """サーバーに接続できていればtrue
 
-        実際に送信をするのは別スレッドであり、この関数はブロックしない。
+        ver2.0からプロパティ
+        """
+        return self._data_check().connected
 
-        サーバーに接続していない場合、start()を呼び出す。
+    def sync(self, timeout: Optional[float] = 0) -> None:
+        """送信用にセットしたデータをすべて送信キューに入れ、受信したデータを処理する
+
+        * 実際に送信をするのは別スレッドであり、この関数はブロックしない。
+        * サーバーに接続していない場合、start()を呼び出す。
+        * ver2.0〜: 受信したデータがあれば各種コールバックをこのスレッドで呼び出し、
+        それがすべて完了するまでこの関数はブロックされる。
+        * ver2.0〜: timeoutが正の場合、データを受信してもしなくても
+        timeout 経過するまでは繰り返しsync()を再試行する。
+        timeout=0 または負の値なら再試行せず即座にreturnする。
+        (デフォルト、ver1.1までのsync()と同じ)
+        * timeout がNoneの場合、close()するまで無制限に待機する。
+        * autoReconnectがfalseでサーバーに接続できてない場合はreturnする。
+        (deadlock回避)
+
+        :param timeout: (ver2.0〜) sync()を再試行するタイムアウト (秒単位の実数、またはNone)
         """
         self.start()
         data = self._data_check()
@@ -184,9 +213,25 @@ class Client(webcface.member.Member):
             data.queue_msg_always(webcface.client_impl.sync_data(data, False))
         else:
             data.queue_first()
-        
+        start_ns = time.thread_time_ns()
+        timeout_ns = round(timeout * 1e9) if timeout is not None else None
+        while (
+            not self._closing
+            and (data.connected or data.auto_reconnect)
+            and (timeout_ns is None or time.thread_time_ns() - start_ns < timeout_ns)
+        ):
+            with data.recv_cv:
+                if len(data.recv_queue) == 0:
+                    timeout_now = None
+                    if timeout_ns is not None:
+                        timeout_now = (
+                            timeout_ns - (time.thread_time_ns() - start_ns)
+                        ) / 1e9
+                    data.recv_cv.wait(timeout=timeout_now)
+                for msg in data.recv_queue:
+                    webcface.client_impl.on_recv(self, data, msg)
 
-    def member(self, member_name) -> webcface.member.Member:
+    def member(self, member_name: str) -> webcface.member.Member:
         """他のメンバーにアクセスする"""
         return webcface.member.Member(self, member_name)
 
