@@ -217,11 +217,11 @@ def on_recv(
 
 
 def sync_data_first(
-    wcli: "webcface.client.Client", data: webcface.client_data.ClientData
+    data: webcface.client_data.ClientData
 ) -> List[webcface.message.MessageBase]:
     msgs: List[webcface.message.MessageBase] = []
     msgs.append(
-        webcface.message.SyncInit.new(wcli.name, "python", webcface.__version__)
+        webcface.message.SyncInit.new(data.self_member_name, "python", webcface.__version__)
     )
 
     with data.value_store.lock:
@@ -248,12 +248,11 @@ def sync_data_first(
         for m, r2 in data.log_store.transfer_req().items():
             msgs.append(webcface.message.LogReq.new(m))
 
-    msgs.extend(sync_data(wcli, data, True))
+    msgs.extend(sync_data(data, True))
     return msgs
 
 
 def sync_data(
-    wcli: "webcface.client.Client",
     data: webcface.client_data.ClientData,
     is_first: bool,
 ) -> List[webcface.message.MessageBase]:

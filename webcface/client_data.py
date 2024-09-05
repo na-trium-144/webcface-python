@@ -249,9 +249,16 @@ class ClientData:
     svr_version: str
     ping_status_req: bool
     ping_status: dict[int, int]
+    connected: bool
+    _connection_cv: threading.Condition
+    _msg_first: bool  # syncInitメッセージをqueueに入れたらtrue
     _msg_queue: List[List[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
+    recv_queue: List[List[webcface.message.MessageBase]]
+    recv_cv: threading.Condition
     logger_internal: logging.Logger
+    self_member_id: Optional[int]
+    sync_init_end: bool
 
     def __init__(self, name: str, logger_internal: logging.Logger) -> None:
         self.self_member_name = name
@@ -286,18 +293,44 @@ class ClientData:
         self.svr_version = ""
         self.ping_status_req = False
         self.ping_status = {}
+        self.connected = False
+        self._connection_cv = threading.Condition()
+        self._msg_first = False
         self._msg_queue = []
         self._msg_cv = threading.Condition()
+        self.recv_queue = []
+        self.recv_cv = threading.Condition()
         self.logger_internal = logger_internal
+        self.self_member_id = None
+        self.sync_init_end = False
 
-    def queue_msg(self, msgs: List[webcface.message.MessageBase]) -> None:
+    def queue_first(self) -> None:
+        with self._msg_cv:
+            self._msg_queue.insert(0, webcface.client_impl.sync_data_first(self))
+            self._msg_first = True
+
+    def queue_msg_always(self, msgs: List[webcface.message.MessageBase]) -> None:
+        """メッセージをキューに入れる
+        """
         with self._msg_cv:
             self._msg_queue.append(msgs)
             self._msg_cv.notify_all()
 
+    def queue_msg_online(self, msgs: List[webcface.message.MessageBase]) -> bool:
+        """接続できていればキューに入れtrueを返す
+        """
+        with self._connection_cv:
+            if self.connected:
+                with self._msg_cv:
+                    self._msg_queue.append(msgs)
+                    self._msg_cv.notify_all()
+                return True
+            return False
+
     def clear_msg(self) -> None:
         with self._msg_cv:
             self._msg_queue = []
+            self._msg_first = False
             self._msg_cv.notify_all()
 
     def has_msg(self) -> bool:

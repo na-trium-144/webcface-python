@@ -25,8 +25,6 @@ class Client(webcface.member.Member):
     :arg port: サーバーのポート
     """
 
-    connected: bool
-    _connection_cv: threading.Condition
     _ws: Optional[websocket.WebSocketApp]
     _closing: bool
     _reconnect_thread: threading.Thread
@@ -52,32 +50,38 @@ class Client(webcface.member.Member):
             name,
         )
         self._ws = None
-        self.connected = False
-        self._connection_cv = threading.Condition()
         self._closing = False
 
         data = self._data_check()
 
         def on_open(ws):
             data.logger_internal.info("WebSocket Open")
-            with self._connection_cv:
-                self.connected = True
-                self._connection_cv.notify_all()
+            # syncInitメッセージを準備してなければqueueの先頭に入れる
+            if not data._msg_first:
+                data.queue_first()
+            # 接続完了 send_threadが動き始める
+            with data._connection_cv:
+                data.connected = True
+                data._connection_cv.notify_all()
 
         def on_message(ws, message: bytes):
             data.logger_internal.debug("Received message")
-            webcface.client_impl.on_recv(self, data, message)
+            # webcface.client_impl.on_recv(self, data, message)
+            with data.recv_cv:
+                data.recv_queue.append(webcface.message.unpack(message))
 
         def on_error(ws, error):
             data.logger_internal.info(f"WebSocket Error: {error}")
 
         def on_close(ws, close_status_code, close_msg):
             data.logger_internal.info("WebSocket Closed")
-            with self._connection_cv:
-                self.connected = False
-                self._connection_cv.notify_all()
+            with data._connection_cv:
+                data.connected = False
+                data._connection_cv.notify_all()
             data.clear_msg()
-            data.queue_msg(webcface.client_impl.sync_data_first(self, data))
+            data.self_member_id = None
+            data.sync_init_end = False
+            # data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
         def reconnect():
             while not self._closing:
@@ -103,11 +107,11 @@ class Client(webcface.member.Member):
             data = self._data_check()
             while self._reconnect_thread.is_alive():
                 while (
-                    not self.connected or not data.has_msg()
+                    not data.connected or not data.has_msg()
                 ) and self._reconnect_thread.is_alive():
-                    if not self.connected:
-                        with self._connection_cv:
-                            self._connection_cv.wait(timeout=0.1)
+                    if not data.connected:
+                        with data._connection_cv:
+                            data._connection_cv.wait(timeout=0.1)
                     data.wait_msg(timeout=0.1)
                 msgs = self._data_check().pop_msg()
                 if msgs is not None and self._ws is not None and self.connected:
@@ -119,7 +123,7 @@ class Client(webcface.member.Member):
 
         self._send_thread = threading.Thread(target=msg_send, daemon=True)
 
-        data.queue_msg(webcface.client_impl.sync_data_first(self, data))
+        # data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
         def close_at_exit():
             data.logger_internal.debug(
@@ -159,9 +163,13 @@ class Client(webcface.member.Member):
         接続していない場合、start()を呼び出す。
         """
         self.start()
-        with self._connection_cv:
-            while not self.connected:
-                self._connection_cv.wait()
+        data = self._data_check()
+        while not data.connected or not data.sync_init_end:
+            with data._connection_cv:
+                if not data.connected:
+                    self._data_check()._connection_cv.wait()
+                else:
+                    self.loop_sync()
 
     def sync(self) -> None:
         """送信用にセットしたデータとリクエストデータをすべて送信キューに入れる。
@@ -172,7 +180,11 @@ class Client(webcface.member.Member):
         """
         self.start()
         data = self._data_check()
-        data.queue_msg(webcface.client_impl.sync_data(self, data, False))
+        if data._msg_first:
+            data.queue_msg_always(webcface.client_impl.sync_data(data, False))
+        else:
+            data.queue_first()
+        
 
     def member(self, member_name) -> webcface.member.Member:
         """他のメンバーにアクセスする"""
