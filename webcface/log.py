@@ -37,7 +37,7 @@ class Log(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().log_store.add_req(self._member)
         if req:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_online(
                 [webcface.message.LogReq.new(self._member)]
             )
 
@@ -57,3 +57,12 @@ class Log(webcface.field.Field):
         リクエスト状態はクリアしない"""
         self._data_check().log_store.set_recv(self._member, [])
         return self
+
+    def exists(self) -> bool:
+        """このメンバーがログを1行以上出力していればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._data_check().log_store.get_entry(self._member) is True

@@ -57,6 +57,13 @@ class Func(webcface.field.Field):
             raise ValueError("Func not set")
         return func_info
 
+    def exists(self) -> bool:
+        """このFuncの情報が存在すればtrue
+        (ver2.0〜)
+
+        """
+        return self._field in self._data_check().func_store.get_entry(self._member)
+
     def set(
         self,
         func: Callable,
@@ -157,7 +164,7 @@ class Func(webcface.field.Field):
 
             threading.Thread(target=target).start()
         else:
-            self._data_check().queue_msg(
+            if not self._data_check().queue_msg_online(
                 [
                     webcface.message.Call.new(
                         r._caller_id,
@@ -167,7 +174,12 @@ class Func(webcface.field.Field):
                         list(args),
                     )
                 ]
-            )
+            ):
+                r._started = False
+                r._started_ready = True
+                r._result_is_error = True
+                r._result_ready = True
+                r._cv.notify_all()
         return r
 
     def __call__(self, *args) -> float | bool | str | Callable:

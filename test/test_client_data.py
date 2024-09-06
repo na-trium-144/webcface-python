@@ -188,7 +188,15 @@ def test_get_member(data):
 
 
 def test_queue_msg(data):
-    data.queue_msg([webcface.message.Ping.new()])
+    data.queue_msg_always([webcface.message.Ping.new()])
+    assert len(data._msg_queue) == 1
+
+def test_queue_msg_online(data):
+    data.connected = False
+    assert data.queue_msg_online([webcface.message.Ping.new()]) is False
+    assert len(data._msg_queue) == 0
+    data.connected = True
+    assert data.queue_msg_online([webcface.message.Ping.new()]) is True
     assert len(data._msg_queue) == 1
 
 

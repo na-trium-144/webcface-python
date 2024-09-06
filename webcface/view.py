@@ -189,7 +189,7 @@ class View(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().view_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_online(
                 [webcface.message.ViewReq.new(self._member, self._field, req)]
             )
 
@@ -206,6 +206,15 @@ class View(webcface.field.Field):
         """Viewをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
+
+    def exists(self) -> bool:
+        """このフィールドにデータが存在すればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._field in self._data_check().view_store.get_entry(self._member)
 
     def set(self, components: List[ViewComponent | str | bool | float | int]) -> View:
         """Viewのリストをセットする"""

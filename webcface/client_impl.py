@@ -23,7 +23,7 @@ def on_recv(
                 data.self_member_id = m.member_id
                 data.sync_init_end = True
             if isinstance(m, webcface.message.Ping):
-                data.queue_msg([webcface.message.Ping.new()])
+                data.queue_msg_always([webcface.message.Ping.new()])
             if isinstance(m, webcface.message.PingStatus):
                 data.ping_status = m.status
                 for member2 in wcli.members():
@@ -149,7 +149,7 @@ def on_recv(
                 if func_info is not None:
 
                     def do_call():
-                        data.queue_msg(
+                        data.queue_msg_always(
                             [
                                 webcface.message.CallResponse.new(
                                     m.caller_id, m.caller_member_id, True
@@ -162,7 +162,7 @@ def on_recv(
                         except Exception as e:
                             is_error = True
                             result = str(e)
-                        data.queue_msg(
+                        data.queue_msg_always(
                             [
                                 webcface.message.CallResult.new(
                                     m.caller_id,
@@ -175,7 +175,7 @@ def on_recv(
 
                     threading.Thread(target=do_call).start()
                 else:
-                    data.queue_msg(
+                    data.queue_msg_always(
                         [
                             webcface.message.CallResponse.new(
                                 m.caller_id, m.caller_member_id, False

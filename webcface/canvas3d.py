@@ -117,7 +117,7 @@ class Canvas3D(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().canvas3d_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_online(
                 [webcface.message.Canvas3DReq.new(self._member, self._field, req)]
             )
 
@@ -134,6 +134,15 @@ class Canvas3D(webcface.field.Field):
         """Canvasをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
+
+    def exists(self) -> bool:
+        """このフィールドにデータが存在すればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._field in self._data_check().canvas3d_store.get_entry(self._member)
 
     def __enter__(self) -> Canvas3D:
         """with構文の最初でinit"""

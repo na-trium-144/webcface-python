@@ -235,22 +235,30 @@ class Member(webcface.field.Field):
     def ping_status(self) -> Optional[int]:
         """通信速度を調べる
 
-        初回の呼び出しで通信速度データをリクエストし、
+        通信速度データをリクエストしていなければリクエストし、
         sync()後通信速度が得られるようになる
-        :return: 初回→ None, 2回目以降(取得できれば)→ pingの往復時間 (ms)
+        :return: データがなければ None, 受信していれば pingの往復時間 (ms)
         """
-        if not self._data_check().ping_status_req:
-            self._data_check().ping_status_req = True
-            self._data_check().queue_msg([webcface.message.PingStatusReq.new()])
+        self.request_ping_status()
         return self._data_check().ping_status.get(
             self._data_check().get_member_id_from_name(self._member), None
         )
+
+    def request_ping_status(self) -> None:
+        """通信速度データをリクエストする
+        (ver2.0〜)
+        """
+        if not self._data_check().ping_status_req:
+            self._data_check().ping_status_req = True
+            self._data_check().queue_msg_online([webcface.message.PingStatusReq.new()])
 
     @property
     def on_ping(self) -> blinker.NamedSignal:
         """通信速度データが更新されたときのイベント
 
+        通信速度データをリクエストしていなければリクエストする
+
         コールバックの引数にはMemberオブジェクトが渡される。
         """
-        self.ping_status
+        self.request_ping_status()
         return self._data_check().signal("ping", self._member)

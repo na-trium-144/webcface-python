@@ -50,7 +50,7 @@ class Text(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().text_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_online(
                 [webcface.message.TextReq.new(self._member, self._field, req)]
             )
 
@@ -63,6 +63,15 @@ class Text(webcface.field.Field):
         """文字列をstrで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else ""
+
+    def exists(self) -> bool:
+        """このフィールドにデータが存在すればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._field in self._data_check().text_store.get_entry(self._member)
 
     def __str__(self) -> str:
         """printしたときなど
