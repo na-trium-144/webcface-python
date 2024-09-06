@@ -62,15 +62,15 @@ class SyncInit(MessageBase):
         return self.msg["a"]
 
 
-class SvrVersion(MessageBase):
+class SyncInitEnd(MessageBase):
     kind_def = 88
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(n: str, v: str) -> SvrVersion:
-        return SvrVersion({"n": n, "v": v})
+    def new(n: str, v: str, m: int, h: str) -> SyncInitEnd:
+        return SyncInitEnd({"n": n, "v": v, "m": m, "h": h})
 
     @property
     def svr_name(self) -> str:
@@ -79,6 +79,14 @@ class SvrVersion(MessageBase):
     @property
     def ver(self) -> str:
         return self.msg["v"]
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def hostname(self) -> str:
+        return self.msg["h"]
 
 
 class Ping(MessageBase):
@@ -909,10 +917,25 @@ class LogReq(MessageBase):
         return self.msg["M"]
 
 
+class LogEntry(MessageBase):
+    kind_def = 92
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int) -> LogEntry:
+        return LogEntry({"m": m})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+
 # 受信する可能性のあるメッセージのリスト
 message_classes_recv = [
     SyncInit,
-    SvrVersion,
+    SyncInitEnd,
     Ping,
     PingStatus,
     Sync,
@@ -931,6 +954,7 @@ message_classes_recv = [
     CallResponse,
     CallResult,
     Log,
+    LogEntry,
 ]
 
 

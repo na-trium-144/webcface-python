@@ -16,9 +16,12 @@ def on_recv(
     sync_members: List[str] = []
     if len(message) > 0:
         for m in webcface.message.unpack(message):
-            if isinstance(m, webcface.message.SvrVersion):
+            if isinstance(m, webcface.message.SyncInitEnd):
                 data.svr_name = m.svr_name
                 data.svr_version = m.ver
+                data.svr_hostname = m.hostname
+                data.self_member_id = m.member_id
+                data.sync_init_end = True
             if isinstance(m, webcface.message.Ping):
                 data.queue_msg([webcface.message.Ping.new()])
             if isinstance(m, webcface.message.PingStatus):
@@ -36,6 +39,7 @@ def on_recv(
                 data.view_store.add_member(m.member_name)
                 data.canvas2d_store.add_member(m.member_name)
                 data.canvas3d_store.add_member(m.member_name)
+                data.log_store.clear_entry(m.member_name)
                 data.member_ids[m.member_name] = m.member_id
                 data.member_lib_name[m.member_id] = m.lib_name
                 data.member_lib_ver[m.member_id] = m.lib_ver
@@ -204,6 +208,9 @@ def on_recv(
                     data.logger_internal.error(
                         f"error receiving call result id={m.caller_id}"
                     )
+            if isinstance(m, webcface.message.LogEntry):
+                member = data.get_member_name_from_id(m.member_id)
+                data.log_store.set_entry(member)
             if isinstance(m, webcface.message.Log):
                 member = data.get_member_name_from_id(m.member_id)
                 log_s = data.log_store.get_recv(member)

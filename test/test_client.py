@@ -38,9 +38,12 @@ def test_sync(wcli):
 
 
 def test_server_version(wcli):
-    send_back(wcli, [SvrVersion.new("a", "1")])
+    send_back(wcli, [SyncInitEnd.new("a", "1", 10, "b")])
     assert wcli.server_name == "a"
     assert wcli.server_version == "1"
+    assert wcli.self_member_id == 10
+    assert wcli.sync_init_end is True
+    assert wcli.server_hostname == "b"
 
 
 def test_ping(wcli):

@@ -161,12 +161,14 @@ class SyncDataStore1(Generic[T]):
     self_member_name: str
     data_recv: Dict[str, T]
     req: Dict[str, bool]
+    entry: List[str]
     lock: threading.RLock
 
     def __init__(self, name: str) -> None:
         self.self_member_name = name
         self.data_recv = {}
         self.req = {}
+        self.entry = []
         self.lock = threading.RLock()
 
     def is_self(self, member: str) -> bool:
@@ -193,6 +195,20 @@ class SyncDataStore1(Generic[T]):
                 self.req[member] = False
                 return True
             return False
+
+    def set_entry(self, member: str) -> None:
+        with self.lock:
+            if member not in self.entry:
+                self.entry.append(member)
+
+    def clear_entry(self, member: str) -> None:
+        with self.lock:
+            if member in self.entry:
+                self.entry.remove(member)
+
+    def get_entry(self, member: str) -> bool:
+        with self.lock:
+            return member in self.entry
 
     def transfer_req(self) -> Dict[str, bool]:
         with self.lock:
@@ -247,6 +263,7 @@ class ClientData:
     member_remote_addr: Dict[int, str]
     svr_name: str
     svr_version: str
+    svr_hostname: str
     ping_status_req: bool
     ping_status: dict[int, int]
     connected: bool
@@ -294,6 +311,7 @@ class ClientData:
         self.member_remote_addr = {}
         self.svr_name = ""
         self.svr_version = ""
+        self.svr_hostname = ""
         self.ping_status_req = False
         self.ping_status = {}
         self.connected = False
