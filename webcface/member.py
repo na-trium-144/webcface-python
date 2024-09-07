@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Callable, Optional, Iterable
 import datetime
-import blinker
 import webcface.field
 import webcface.value
 import webcface.text
@@ -141,61 +140,54 @@ class Member(webcface.field.Field):
             self.canvas3d, self._data_check().canvas3d_store.get_entry(self._member)
         )
 
-    @property
-    def on_value_entry(self) -> blinker.NamedSignal:
+    def on_value_entry(self, func: Callable) -> None:
         """Valueが追加されたときのイベント
 
         コールバックの引数にはValueオブジェクトが渡される。
         """
-        return self._data_check().signal("value_entry", self._member)
+        self._data_check().on_value_entry[self._member] = func
 
-    @property
-    def on_text_entry(self) -> blinker.NamedSignal:
+    def on_text_entry(self, func: Callable) -> None:
         """Textが追加されたときのイベント
 
         コールバックの引数にはTextオブジェクトが渡される。
         """
-        return self._data_check().signal("text_entry", self._member)
+        self._data_check().on_text_entry[self._member] = func
 
-    @property
-    def on_view_entry(self) -> blinker.NamedSignal:
+    def on_view_entry(self, func: Callable) -> None:
         """Viewが追加されたときのイベント
 
         コールバックの引数にはViewオブジェクトが渡される。
         """
-        return self._data_check().signal("view_entry", self._member)
+        self._data_check().on_view_entry[self._member] = func
 
-    @property
-    def on_func_entry(self) -> blinker.NamedSignal:
+    def on_func_entry(self, func: Callable) -> None:
         """Funcが追加されたときのイベント
 
         コールバックの引数にはFuncオブジェクトが渡される。
         """
-        return self._data_check().signal("func_entry", self._member)
+        self._data_check().on_func_entry[self._member] = func
 
-    @property
-    def on_canvas2d_entry(self) -> blinker.NamedSignal:
+    def on_canvas2d_entry(self, func: Callable) -> None:
         """Canvas2Dが追加されたときのイベント
 
         コールバックの引数にはCanvas2Dオブジェクトが渡される。
         """
-        return self._data_check().signal("canvas2d_entry", self._member)
+        self._data_check().on_canvas2d_entry[self._member] = func
 
-    @property
-    def on_canvas3d_entry(self) -> blinker.NamedSignal:
+    def on_canvas3d_entry(self, func: Callable) -> None:
         """Canvas3Dが追加されたときのイベント
 
         コールバックの引数にはCanvas3Dオブジェクトが渡される。
         """
-        return self._data_check().signal("canvas3d_entry", self._member)
+        self._data_check().on_canvas3d_entry[self._member] = func
 
-    @property
-    def on_sync(self) -> blinker.NamedSignal:
+    def on_sync(self, func: Callable) -> None:
         """Memberがsyncしたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。
         """
-        return self._data_check().signal("sync", self._member)
+        self._data_check().on_sync[self._member] = func
 
     @property
     def sync_time(self) -> datetime.datetime:
@@ -252,8 +244,7 @@ class Member(webcface.field.Field):
             self._data_check().ping_status_req = True
             self._data_check().queue_msg_online([webcface.message.PingStatusReq.new()])
 
-    @property
-    def on_ping(self) -> blinker.NamedSignal:
+    def on_ping(self, func: Callable) -> None:
         """通信速度データが更新されたときのイベント
 
         通信速度データをリクエストしていなければリクエストする
@@ -261,4 +252,4 @@ class Member(webcface.field.Field):
         コールバックの引数にはMemberオブジェクトが渡される。
         """
         self.request_ping_status()
-        return self._data_check().signal("ping", self._member)
+        self._data_check().on_ping[self._member] = func

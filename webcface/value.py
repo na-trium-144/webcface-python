@@ -1,6 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List
-import blinker
+from typing import Optional, List, Callable
 import webcface.field
 import webcface.member
 import webcface.message
@@ -29,16 +28,16 @@ class Value(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    @property
-    def signal(self) -> blinker.NamedSignal:
+    def on_change(self, func: Callable) -> None:
         """値が変化したときのイベント
+        (ver2.0〜)
 
         コールバックの引数にはValueオブジェクトが渡される。
 
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        return self._data_check().signal("value_change", self._member, self._field)
+        self._data_check().on_value_change[self._member][self._field] = func
 
     def child(self, field: str) -> Value:
         """子フィールドを返す

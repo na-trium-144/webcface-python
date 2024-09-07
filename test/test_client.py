@@ -57,7 +57,7 @@ def test_ping(wcli):
         nonlocal called
         called += 1
 
-    wcli.member("a").on_ping.connect(callback)
+    wcli.member("a").on_ping(callback)
     assert check_sent(wcli, PingStatusReq)
 
     send_back(wcli, [SyncInit.new_full("a", 10, "", "", ""), PingStatus.new({10: 15})])
@@ -72,7 +72,7 @@ def test_entry(wcli):
         nonlocal called
         called += 1
 
-    wcli.on_member_entry.connect(callback)
+    wcli.on_member_entry(callback)
     send_back(wcli, [SyncInit.new_full("a", 10, "b", "1", "12345")])
     assert called == 1
     called = 0
@@ -86,7 +86,7 @@ def test_entry(wcli):
     assert m.remote_addr == "12345"
 
     assert m.value("b").exists() is False
-    m.on_value_entry.connect(callback)
+    m.on_value_entry(callback)
     send_back(wcli, [ValueEntry.new(10, "b")])
     assert called == 1
     called = 0
@@ -95,7 +95,7 @@ def test_entry(wcli):
     assert m.value("b").exists() is True
 
     assert m.view("b").exists() is False
-    m.on_view_entry.connect(callback)
+    m.on_view_entry(callback)
     send_back(wcli, [ViewEntry.new(10, "b")])
     assert called == 1
     called = 0
@@ -104,7 +104,7 @@ def test_entry(wcli):
     assert m.view("b").exists() is True
 
     assert m.text("b").exists() is False
-    m.on_text_entry.connect(callback)
+    m.on_text_entry(callback)
     send_back(wcli, [TextEntry.new(10, "b")])
     assert called == 1
     called = 0
@@ -113,7 +113,7 @@ def test_entry(wcli):
     assert m.text("b").exists() is True
 
     assert m.func("b").exists() is False
-    m.on_func_entry.connect(callback)
+    m.on_func_entry(callback)
     send_back(
         wcli,
         [
@@ -141,7 +141,7 @@ def test_entry(wcli):
     send_back(wcli, [LogEntry.new(10)])
     assert m.log().exists() is True
 
-    m.on_sync.connect(callback)
+    m.on_sync(callback)
     send_back(wcli, [Sync.new_full(10, 0)])
     assert called == 1
     called = 0
@@ -163,7 +163,7 @@ def test_value_req(wcli):
         nonlocal called
         called += 1
 
-    wcli.member("a").value("b").signal.connect(callback)
+    wcli.member("a").value("b").on_change(callback)
     m = check_sent(wcli, ValueReq)
     assert isinstance(m, ValueReq)
     assert m.member == "a"
@@ -192,7 +192,7 @@ def test_text_req(wcli):
         nonlocal called
         called += 1
 
-    wcli.member("a").text("b").signal.connect(callback)
+    wcli.member("a").text("b").on_change(callback)
     m = check_sent(wcli, TextReq)
     assert isinstance(m, TextReq)
     assert m.member == "a"
@@ -272,7 +272,7 @@ def test_view_req(wcli):
         nonlocal called
         called += 1
 
-    wcli.member("a").view("b").signal.connect(callback)
+    wcli.member("a").view("b").on_change(callback)
     m = check_sent(wcli, ViewReq)
     assert isinstance(m, ViewReq)
     assert m.member == "a"
@@ -348,7 +348,7 @@ def test_log_req(wcli):
         nonlocal called
         called += 1
 
-    wcli.member("a").log().signal.connect(callback)
+    wcli.member("a").log().on_change(callback)
     m = check_sent(wcli, LogReq)
     assert isinstance(m, LogReq)
     assert m.member_name == "a"

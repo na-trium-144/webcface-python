@@ -1,12 +1,11 @@
 import threading
 import multiprocessing
 import time
-from typing import Optional, Iterable
+from typing import Optional, Iterable, Callable
 import logging
 import io
 import os
 import atexit
-import blinker
 import websocket
 import webcface.member
 import webcface.field
@@ -243,18 +242,18 @@ class Client(webcface.member.Member):
         """
         return map(self.member, self._data_check().value_store.get_members())
 
-    @property
-    def on_member_entry(self) -> blinker.NamedSignal:
+    def on_member_entry(self, func: Callable) -> None:
         """Memberが追加されたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。
 
+        ver2.0〜:
         * 呼び出したいコールバック関数をfuncとして
-        :code:`client.on_member_entry.connect(func)`
+        :code:`client.on_member_entry(func)`
         などとすれば関数を登録できる。
-        * または :code:`@client.on_member_entry.connect` をデコレーターとして使う。
+        * または :code:`@client.on_member_entry` をデコレーターとして使う。
         """
-        return self._data_check().signal("member_entry")
+        self._data_check().on_member_entry = func
 
     @property
     def logging_handler(self) -> logging.Handler:

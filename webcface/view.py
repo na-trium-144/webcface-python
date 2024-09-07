@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import Optional, Callable, List
+from typing import Optional, Callable, List, Callable
 from copy import deepcopy
-import blinker
 import webcface.field
 import webcface.view_base
 import webcface.view_components
@@ -167,16 +166,16 @@ class View(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    @property
-    def signal(self) -> blinker.NamedSignal:
+    def on_change(self, func: Callable) -> None:
         """値が変化したときのイベント
+        (ver2.0〜)
 
         コールバックの引数にはViewオブジェクトが渡される。
 
-        まだリクエストされてなければ自動でリクエストする。
+        まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        return self._data_check().signal("view_change", self._member, self._field)
+        self._data_check().on_view_change[self._member][self._field] = func
 
     def child(self, field: str) -> View:
         """子フィールドを返す

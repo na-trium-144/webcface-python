@@ -4,7 +4,6 @@ import threading
 import json
 import datetime
 import logging
-import blinker
 import webcface.field
 import webcface.func_info
 import webcface.view_base
@@ -277,6 +276,21 @@ class ClientData:
     self_member_id: Optional[int]
     sync_init_end: bool
     auto_reconnect: bool
+    on_member_entry: Optional[Callable]
+    on_ping: Dict[str, Callable]
+    on_value_entry: Dict[str, Callable]
+    on_text_entry: Dict[str, Callable]
+    on_view_entry: Dict[str, Callable]
+    on_func_entry: Dict[str, Callable]
+    on_canvas2d_entry: Dict[str, Callable]
+    on_canvas3d_entry: Dict[str, Callable]
+    on_sync: Dict[str, Callable]
+    on_value_change: Dict[str, Dict[str, Callable]]
+    on_text_change: Dict[str, Dict[str, Callable]]
+    on_view_change: Dict[str, Dict[str, Callable]]
+    on_canvas2d_change: Dict[str, Dict[str, Callable]]
+    on_canvas3d_change: Dict[str, Dict[str, Callable]]
+    on_log_change: Dict[str, Callable]
 
     def __init__(
         self, name: str, logger_internal: logging.Logger, auto_reconnect: bool
@@ -325,6 +339,21 @@ class ClientData:
         self.self_member_id = None
         self.sync_init_end = False
         self.auto_reconnect = auto_reconnect
+        self.on_member_entry = None
+        self.on_ping = {}
+        self.on_value_entry = {}
+        self.on_view_entry = {}
+        self.on_text_entry = {}
+        self.on_func_entry = {}
+        self.on_canvas2d_entry = {}
+        self.on_canvas3d_entry = {}
+        self.on_sync = {}
+        self.on_value_change = {}
+        self.on_text_change = {}
+        self.on_view_change = {}
+        self.on_canvas2d_change = {}
+        self.on_canvas3d_change = {}
+        self.on_log_change = {}
 
     def queue_first(self) -> None:
         with self._msg_cv:
@@ -387,35 +416,3 @@ class ClientData:
 
     def get_member_id_from_name(self, name: str) -> int:
         return self.member_ids.get(name, 0)
-
-    def signal(
-        self, signal_type: str, member: str = "", field: str = ""
-    ) -> blinker.NamedSignal:
-        if signal_type == "member_entry":
-            assert member == "" and field == ""
-            key = [id(self), signal_type]
-        elif signal_type in (
-            "value_entry",
-            "text_entry",
-            "view_entry",
-            "canvas2d_entry",
-            "canvas3d_entry",
-            "func_entry",
-            "log_append",
-            "sync",
-            "ping",
-        ):
-            assert member != "" and field == ""
-            key = [id(self), signal_type, member]
-        elif signal_type in (
-            "value_change",
-            "text_change",
-            "view_change",
-            "canvas2d_change",
-            "canvas3d_change",
-        ):
-            assert member != "" and field != ""
-            key = [id(self), signal_type, member, field]
-        else:
-            raise ValueError("invalid signal type " + signal_type)
-        return blinker.signal(json.dumps(key))
