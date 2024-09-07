@@ -30,6 +30,7 @@ def test_sync(wcli):
     m = check_sent(wcli, Sync)
     assert isinstance(m, Sync)
     clear_sent(wcli)
+    wcli._data_check()._msg_first = True
 
     wcli.sync()
     assert check_sent(wcli, SyncInit) is None
@@ -41,8 +42,8 @@ def test_server_version(wcli):
     send_back(wcli, [SyncInitEnd.new("a", "1", 10, "b")])
     assert wcli.server_name == "a"
     assert wcli.server_version == "1"
-    assert wcli.self_member_id == 10
-    assert wcli.sync_init_end is True
+    assert wcli._data_check().self_member_id == 10
+    assert wcli._data_check().sync_init_end is True
     assert wcli.server_hostname == "b"
 
 
@@ -84,27 +85,34 @@ def test_entry(wcli):
     assert m.lib_version == "1"
     assert m.remote_addr == "12345"
 
+    assert m.value("b").exists() is False
     m.on_value_entry.connect(callback)
     send_back(wcli, [ValueEntry.new(10, "b")])
     assert called == 1
     called = 0
     assert len(list(m.values())) == 1
     assert list(m.values())[0].name == "b"
+    assert m.value("b").exists() is True
 
+    assert m.view("b").exists() is False
     m.on_view_entry.connect(callback)
     send_back(wcli, [ViewEntry.new(10, "b")])
     assert called == 1
     called = 0
     assert len(list(m.views())) == 1
     assert list(m.views())[0].name == "b"
+    assert m.view("b").exists() is True
 
+    assert m.text("b").exists() is False
     m.on_text_entry.connect(callback)
     send_back(wcli, [TextEntry.new(10, "b")])
     assert called == 1
     called = 0
     assert len(list(m.texts())) == 1
     assert list(m.texts())[0].name == "b"
+    assert m.text("b").exists() is True
 
+    assert m.func("b").exists() is False
     m.on_func_entry.connect(callback)
     send_back(
         wcli,
@@ -127,6 +135,11 @@ def test_entry(wcli):
     assert list(m.funcs())[0].name == "b"
     assert m.func("b").return_type == webcface.func_info.ValType.INT
     assert len(m.func("b").args) == 1
+    assert m.func("b").exists() is True
+
+    assert m.log().exists() is False
+    send_back(wcli, [LogEntry.new(10)])
+    assert m.log().exists() is True
 
     m.on_sync.connect(callback)
     send_back(wcli, [Sync.new_full(10, 0)])
@@ -223,6 +236,7 @@ def test_view_send(wcli):
     assert m_vc(2).on_click.member.name == "x"
     assert m_vc(2).on_click.name == "y"
     clear_sent(wcli)
+    wcli._data_check()._msg_first = True
 
     wcli._data_check().view_store.set_send(
         "a",
@@ -316,6 +330,7 @@ def test_log_send(wcli):
     assert m.log[1].level == 1
     assert m.log[1].message == "b"
     clear_sent(wcli)
+    wcli._data_check()._msg_first = True
 
     ls.append(LogLine(2, datetime.datetime.now(), "c"))
     wcli.sync()

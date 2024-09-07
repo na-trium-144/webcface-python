@@ -215,11 +215,7 @@ class Client(webcface.member.Member):
             data.queue_first()
         start_ns = time.thread_time_ns()
         timeout_ns = round(timeout * 1e9) if timeout is not None else None
-        while (
-            not self._closing
-            and (data.connected or data.auto_reconnect)
-            and (timeout_ns is None or time.thread_time_ns() - start_ns < timeout_ns)
-        ):
+        while not self._closing and (data.connected or data.auto_reconnect):
             with data.recv_cv:
                 if len(data.recv_queue) == 0:
                     timeout_now = None
@@ -230,6 +226,11 @@ class Client(webcface.member.Member):
                     data.recv_cv.wait(timeout=timeout_now)
                 for msg in data.recv_queue:
                     webcface.client_impl.on_recv(self, data, msg)
+            if (
+                timeout_ns is not None
+                and time.thread_time_ns() - start_ns >= timeout_ns
+            ):
+                break
 
     def member(self, member_name: str) -> webcface.member.Member:
         """他のメンバーにアクセスする"""
@@ -280,3 +281,10 @@ class Client(webcface.member.Member):
     def server_version(self) -> str:
         """サーバーのバージョン"""
         return self._data_check().svr_version
+
+    @property
+    def server_hostname(self) -> str:
+        """サーバーのホスト名
+        (ver2.0〜)
+        """
+        return self._data_check().svr_hostname
