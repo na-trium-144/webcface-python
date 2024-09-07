@@ -27,7 +27,9 @@ def on_recv(
             if isinstance(m, webcface.message.PingStatus):
                 data.ping_status = m.status
                 for member2 in wcli.members():
-                    data.signal("ping", member2.name).send(member2)
+                    on_ping = data.on_ping.get(member2.name)
+                    if on_ping is not None:
+                        on_ping(member2)
             if isinstance(m, webcface.message.Sync):
                 member = data.get_member_name_from_id(m.member_id)
                 data.sync_time_store.set_recv(member, m.time)
@@ -44,31 +46,32 @@ def on_recv(
                 data.member_lib_name[m.member_id] = m.lib_name
                 data.member_lib_ver[m.member_id] = m.lib_ver
                 data.member_remote_addr[m.member_id] = m.addr
-                data.signal("member_entry").send(wcli.member(m.member_name))
+                if data.on_member_entry is not None:
+                    data.on_member_entry(wcli.member(m.member_name))
             if isinstance(m, webcface.message.ValueRes):
                 member, field = data.value_store.get_req(m.req_id, m.sub_field)
                 data.value_store.set_recv(member, field, m.data)
-                data.signal("value_change", member, field).send(
-                    wcli.member(member).value(field)
-                )
+                on_change = data.on_value_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).value(field))
             if isinstance(m, webcface.message.ValueEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.value_store.set_entry(member, m.field)
-                data.signal("value_entry", member).send(
-                    wcli.member(member).value(m.field)
-                )
+                on_entry = data.on_value_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).value(m.field))
             if isinstance(m, webcface.message.TextRes):
                 member, field = data.text_store.get_req(m.req_id, m.sub_field)
                 data.text_store.set_recv(member, field, m.data)
-                data.signal("text_change", member, field).send(
-                    wcli.member(member).text(field)
-                )
+                on_change = data.on_text_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).text(field))
             if isinstance(m, webcface.message.TextEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.text_store.set_entry(member, m.field)
-                data.signal("text_entry", member).send(
-                    wcli.member(member).text(m.field)
-                )
+                on_entry = data.on_text_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).text(m.field))
             if isinstance(m, webcface.message.ViewRes):
                 member, field = data.view_store.get_req(m.req_id, m.sub_field)
                 v_prev = data.view_store.get_recv(member, field)
@@ -82,15 +85,15 @@ def on_recv(
                         v_prev[int(i)] = c
                 if len(v_prev) >= m.length:
                     del v_prev[m.length :]
-                data.signal("view_change", member, field).send(
-                    wcli.member(member).view(field)
-                )
+                on_change = data.on_view_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).view(field))
             if isinstance(m, webcface.message.ViewEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.view_store.set_entry(member, m.field)
-                data.signal("view_entry", member).send(
-                    wcli.member(member).view(m.field)
-                )
+                on_entry = data.on_view_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).view(m.field))
             if isinstance(m, webcface.message.Canvas2DRes):
                 member, field = data.canvas2d_store.get_req(m.req_id, m.sub_field)
                 c2_prev = data.canvas2d_store.get_recv(member, field)
@@ -106,15 +109,15 @@ def on_recv(
                         c2_prev.components[int(i)] = c2
                 if len(c2_prev.components) >= m.length:
                     del c2_prev.components[m.length :]
-                data.signal("canvas2d_change", member, field).send(
-                    wcli.member(member).canvas2d(field)
-                )
+                on_change = data.on_canvas2d_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).canvas2d(field))
             if isinstance(m, webcface.message.Canvas2DEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.canvas2d_store.set_entry(member, m.field)
-                data.signal("canvas2d_entry", member).send(
-                    wcli.member(member).canvas2d(m.field)
-                )
+                on_entry = data.on_canvas2d_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).canvas2d(m.field))
             if isinstance(m, webcface.message.Canvas3DRes):
                 member, field = data.canvas3d_store.get_req(m.req_id, m.sub_field)
                 c3_prev = data.canvas3d_store.get_recv(member, field)
@@ -128,22 +131,22 @@ def on_recv(
                         c3_prev[int(i)] = c3
                 if len(c3_prev) >= m.length:
                     del c3_prev[m.length :]
-                data.signal("canvas3d_change", member, field).send(
-                    wcli.member(member).canvas3d(field)
-                )
+                on_change = data.on_canvas3d_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).canvas3d(field))
             if isinstance(m, webcface.message.Canvas3DEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.canvas3d_store.set_entry(member, m.field)
-                data.signal("canvas3d_entry", member).send(
-                    wcli.member(member).canvas3d(m.field)
-                )
+                on_entry = data.on_canvas3d_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).canvas3d(m.field))
             if isinstance(m, webcface.message.FuncInfo):
                 member = data.get_member_name_from_id(m.member_id)
                 data.func_store.set_entry(member, m.field)
                 data.func_store.set_recv(member, m.field, m.func_info)
-                data.signal("func_entry", member).send(
-                    wcli.member(member).func(m.field)
-                )
+                on_entry = data.on_func_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).func(m.field))
             if isinstance(m, webcface.message.Call):
                 func_info = data.func_store.get_recv(data.self_member_name, m.field)
                 if func_info is not None:
@@ -218,9 +221,13 @@ def on_recv(
                     log_s = []
                     data.log_store.set_recv(member, log_s)
                 log_s.extend(m.log)
-                data.signal("log_append", member).send(wcli.member(member).log())
+                on_change = data.on_log_change.get(member)
+                if on_change is not None:
+                    on_change(wcli.member(member).log())
         for member in sync_members:
-            data.signal("sync", member).send(wcli.member(member))
+            on_sync = data.on_sync.get(member)
+            if on_sync is not None:
+                on_sync(wcli.member(member))
 
 
 def sync_data_first(

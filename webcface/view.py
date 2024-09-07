@@ -15,7 +15,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
     @staticmethod
     def from_base(
         base: webcface.view_base.ViewComponentBase,
-        data: Optional[webcface.client_data.ClientData]
+        data: Optional[webcface.client_data.ClientData],
     ) -> ViewComponent:
         vc = ViewComponent(
             base._type,
@@ -175,7 +175,10 @@ class View(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        self._data_check().on_view_change[self._member][self._field] = func
+        data = self._data_check()
+        if self._member not in data.on_view_change:
+            data.on_view_change[self._member] = {}
+        data.on_view_change[self._member][self._field] = func
 
     def child(self, field: str) -> View:
         """子フィールドを返す
@@ -233,8 +236,11 @@ class View(webcface.field.Field):
                 data2.append(webcface.view_components.text(str(c)))
         for i, c in enumerate(data2):
             data2[i] = c.lock_tmp(self._set_check(), f"{self._field}_f{i}")
-        self._set_check().view_store.set_send(self._field, list(data2))
-        self.signal.send(self)
+        data = self._set_check()
+        data.view_store.set_send(self._field, list(data2))
+        on_change = data.on_view_change.get(self._member, {}).get(self._field)
+        if on_change is not None:
+            on_change(self)
         return self
 
     def __enter__(self) -> View:

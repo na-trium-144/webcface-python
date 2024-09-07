@@ -111,7 +111,10 @@ class Canvas2D(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        self._data_check().on_canvas2d_change[self._member][self._field] = func
+        data = self._data_check()
+        if self._member not in data.on_canvas2d_change:
+            data.on_canvas2d_change[self._member] = {}
+        data.on_canvas2d_change[self._member][self._field] = func
 
     def child(self, field: str) -> Canvas2D:
         """子フィールドを返す
@@ -202,8 +205,12 @@ class Canvas2D(webcface.field.Field):
         self._set_check()
         if self._modified and self._c2data is not None:
             self._set_check().canvas2d_store.set_send(self._field, self._c2data)
-            self.signal.send(self)
             self._modified = False
+        on_change = (
+            self._data_check().on_canvas2d_change.get(self._member, {}).get(self._field)
+        )
+        if on_change is not None:
+            on_change(self)
         return self
 
     def add(

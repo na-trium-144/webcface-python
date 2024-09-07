@@ -36,7 +36,10 @@ class Text(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        self._data_check().on_text_change[self._member][self._field] = func
+        data = self._data_check()
+        if self._member not in data.on_text_change:
+            data.on_text_change[self._member] = {}
+        data.on_text_change[self._member][self._field] = func
 
     def child(self, field: str) -> Text:
         """子フィールドを返す
@@ -83,7 +86,11 @@ class Text(webcface.field.Field):
         """値をセットする"""
         if isinstance(data, str):
             self._set_check().text_store.set_send(self._field, data)
-            self.signal.send(self)
         else:
             raise TypeError("unsupported type for text.set()")
+        on_change = (
+            self._data_check().on_text_change.get(self._member, {}).get(self._field)
+        )
+        if on_change is not None:
+            on_change(self)
         return self

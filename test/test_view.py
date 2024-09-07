@@ -71,7 +71,7 @@ def test_view_set(data):
             nonlocal called
             called += 1
 
-        v.signal.connect(callback)
+        v.on_change(callback)
         v.add("a\n").add(1)
         v.add(
             view.text("aaa", text_color=ViewColor.YELLOW, bg_color=ViewColor.GREEN),

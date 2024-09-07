@@ -121,70 +121,70 @@ def test_on_value_entry(data):
     called = 0
 
     # python3.8ではデコレーターに直接書けない
-    decorator = Member(Field(data, "a")).on_value_entry.connect
+    decorator = Member(Field(data, "a")).on_value_entry
 
     @decorator
     def a(a):
         nonlocal called
         called += 1
 
-    data.signal("value_entry", "a").send()
+    data.on_value_entry["a"](Member(Field(data, "a")))
     assert called == 1
 
 
 def test_on_text_entry(data):
     called = 0
 
-    decorator = Member(Field(data, "a")).on_text_entry.connect
+    decorator = Member(Field(data, "a")).on_text_entry
 
     @decorator
     def a(a):
         nonlocal called
         called += 1
 
-    data.signal("text_entry", "a").send()
+    data.on_text_entry["a"](Member(Field(data, "a")))
     assert called == 1
 
 
 def test_on_func_entry(data):
     called = 0
 
-    decorator = Member(Field(data, "a")).on_func_entry.connect
+    decorator = Member(Field(data, "a")).on_func_entry
 
     @decorator
     def a(a):
         nonlocal called
         called += 1
 
-    data.signal("func_entry", "a").send()
+    data.on_func_entry["a"](Member(Field(data, "a")))
     assert called == 1
 
 
 def test_on_view_entry(data):
     called = 0
 
-    decorator = Member(Field(data, "a")).on_view_entry.connect
+    decorator = Member(Field(data, "a")).on_view_entry
 
     @decorator
     def a(a):
         nonlocal called
         called += 1
 
-    data.signal("view_entry", "a").send()
+    data.on_view_entry["a"](Member(Field(data, "a")))
     assert called == 1
 
 
 def test_on_sync(data):
     called = 0
 
-    decorator = Member(Field(data, "a")).on_sync.connect
+    decorator = Member(Field(data, "a")).on_sync
 
     @decorator
     def a(a):
         nonlocal called
         called += 1
 
-    data.signal("sync", "a").send()
+    data.on_sync["a"](Member(Field(data, "a")))
     assert called == 1
 
 
@@ -216,7 +216,7 @@ def test_ping_status(data):
 def test_on_ping(data):
     called = 0
 
-    decorator = Member(Field(data, "a")).on_ping.connect
+    decorator = Member(Field(data, "a")).on_ping
 
     @decorator
     def a(a):
@@ -225,5 +225,5 @@ def test_on_ping(data):
 
     assert data.ping_status_req is True
 
-    data.signal("ping", "a").send()
+    data.on_ping["a"](Member(Field(data, "a")))
     assert called == 1
