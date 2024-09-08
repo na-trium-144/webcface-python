@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Optional, List, Callable
+import datetime
 import webcface.field
 import webcface.member
 import webcface.log_handler
@@ -65,3 +66,20 @@ class Log(webcface.field.Field):
         リクエストもしない。
         """
         return self._data_check().log_store.get_entry(self._member) is True
+
+    def append(
+        self,
+        level: int,
+        message: str,
+        time: datetime.datetime = datetime.datetime.now(),
+    ) -> None:
+        """ログをwebcfaceに送信する
+        (ver2.0〜)
+
+        コンソールなどには出力されない
+        """
+        data = self._set_check()
+        with data.log_store.lock:
+            ls = data.log_store.get_recv(self._member)
+            assert ls is not None
+            ls.append(webcface.log_handler.LogLine(level, time, message))
