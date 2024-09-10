@@ -36,6 +36,10 @@ class Member(webcface.field.Field):
         """Textオブジェクトを生成"""
         return webcface.text.Text(self, field)
 
+    def variant(self, field: str) -> webcface.text.Variant:
+        """Variantオブジェクトを生成 (ver2.0〜)"""
+        return webcface.text.Variant(self, field)
+
     def view(self, field: str) -> webcface.view.View:
         """Viewオブジェクトを生成"""
         return webcface.view.View(self, field)

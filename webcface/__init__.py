@@ -1,6 +1,6 @@
 from .member import Member
 from .value import Value
-from .text import Text
+from .text import Text, Variant, InputRef
 from .func import Func
 from .view import View
 from .log import Log
@@ -20,6 +20,8 @@ __all__ = [
     "Member",
     "Value",
     "Text",
+    "Variant",
+    "InputRef",
     "Func",
     "View",
     "Log",

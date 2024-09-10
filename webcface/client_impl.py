@@ -65,7 +65,7 @@ def on_recv(
                 data.text_store.set_recv(member, field, m.data)
                 on_change = data.on_text_change.get(member, {}).get(field)
                 if on_change is not None:
-                    on_change(wcli.member(member).text(field))
+                    on_change(wcli.member(member).variant(field))
             if isinstance(m, webcface.message.TextEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.text_store.set_entry(member, m.field)

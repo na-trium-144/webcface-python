@@ -245,7 +245,7 @@ class FuncResultStore:
 class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[List[float]]
-    text_store: SyncDataStore2[str]
+    text_store: SyncDataStore2[float | bool | str]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
     canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
@@ -299,7 +299,7 @@ class ClientData:
         self.value_store = SyncDataStore2[List[float]](
             name, SyncDataStore2.should_send_on_change
         )
-        self.text_store = SyncDataStore2[str](
+        self.text_store = SyncDataStore2[float | bool | str](
             name, SyncDataStore2.should_send_on_change
         )
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](
