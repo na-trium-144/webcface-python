@@ -221,6 +221,11 @@ def on_recv(
                     log_s = []
                     data.log_store.set_recv(member, log_s)
                 log_s.extend(m.log)
+                if (
+                    webcface.Log.keep_lines >= 0
+                    and len(log_s) > webcface.Log.keep_lines
+                ):
+                    del log_s[: -webcface.Log.keep_lines]
                 on_change = data.on_log_change.get(member)
                 if on_change is not None:
                     on_change(wcli.member(member).log())
@@ -231,11 +236,13 @@ def on_recv(
 
 
 def sync_data_first(
-    data: webcface.client_data.ClientData
+    data: webcface.client_data.ClientData,
 ) -> List[webcface.message.MessageBase]:
     msgs: List[webcface.message.MessageBase] = []
     msgs.append(
-        webcface.message.SyncInit.new(data.self_member_name, "python", webcface.__version__)
+        webcface.message.SyncInit.new(
+            data.self_member_name, "python", webcface.__version__
+        )
     )
 
     with data.value_store.lock:

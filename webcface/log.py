@@ -7,6 +7,8 @@ import webcface.log_handler
 
 
 class Log(webcface.field.Field):
+    keep_lines: int = 1000
+
     def __init__(self, base: webcface.field.Field) -> None:
         """Logを指すクラス
 

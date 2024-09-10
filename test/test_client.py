@@ -385,6 +385,23 @@ def test_log_req(wcli):
     assert called == 2
     assert len(wcli._data_check().log_store.get_recv("a")) == 3
 
+    webcface.Log.keep_lines = 2
+    send_back(
+        wcli,
+        [
+            Log.new_full(
+                10,
+                [
+                    LogLine(3, datetime.datetime.now(), "d"),
+                ],
+            )
+        ],
+    )
+    assert called == 3
+    assert len(wcli._data_check().log_store.get_recv("a")) == 2
+    assert wcli._data_check().log_store.get_recv("a")[0].level == 2
+    assert wcli._data_check().log_store.get_recv("a")[1].level == 3
+
 
 def test_func_info(wcli):
     f = wcli.func("a").set(
