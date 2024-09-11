@@ -198,6 +198,35 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return None
 
     @property
+    def on_change(self) -> Optional[webcface.func.Func]:
+        """値が変化したときに呼び出す関数
+        (ver2.0〜)
+
+        run_asyncの引数に変更後の値を入れて呼び出すことで、inputの値を変更する
+
+        内部実装はon_clickと共通になっている
+        """
+        return self.on_click
+
+    @property
+    def bind(self) -> Optional[webcface.text.Variant]:
+        """inputの現在の値を取得
+        (ver2.0〜)
+
+        viewを作成したときにbindしたかon_changeをセットしたかに関わらず、
+        値の変更はbindではなくon_changeから行う
+        """
+        if self._text_ref is not None:
+            if self._data is None:
+                raise RuntimeError("internal data not set")
+            return webcface.text.Variant(
+                webcface.field.Field(
+                    self._data, self._text_ref._member, self._text_ref._field
+                )
+            )
+        return None
+
+    @property
     def text_color(self) -> int:
         """文字の色
 
@@ -212,6 +241,34 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         ViewColor Enumを使う
         """
         return self._bg_color
+
+    @property
+    def min(self) -> Optional[float]:
+        """inputの最小値
+        (ver2.0〜)
+        """
+        return self._min
+
+    @property
+    def max(self) -> Optional[float]:
+        """inputの最大値
+        (ver2.0〜)
+        """
+        return self._max
+
+    @property
+    def step(self) -> Optional[float]:
+        """inputの刻み幅
+        (ver2.0〜)
+        """
+        return self._step
+
+    @property
+    def option(self) -> List[float | bool | str]:
+        """inputの選択肢
+        (ver2.0〜)
+        """
+        return self._option
 
 
 class View(webcface.field.Field):
