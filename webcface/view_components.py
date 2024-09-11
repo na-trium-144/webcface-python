@@ -64,50 +64,64 @@ def button(
     )
 
 
-def text_input(**kwargs) -> webcface.view.ViewComponent:
+def text_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """textInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.TEXT_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.TEXT_INPUT, text=text, **kwargs
+    )
 
 
-def decimal_input(**kwargs) -> webcface.view.ViewComponent:
+def decimal_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """decimalInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.DECIMAL_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.DECIMAL_INPUT, text=text, **kwargs
+    )
 
 
-def number_input(**kwargs) -> webcface.view.ViewComponent:
+def number_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """numberInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.NUMBER_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.NUMBER_INPUT, text=text, **kwargs
+    )
 
 
-def toggle_input(**kwargs) -> webcface.view.ViewComponent:
+def toggle_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """toggleInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.TOGGLE_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.TOGGLE_INPUT, text=text, **kwargs
+    )
 
 
-def select_input(**kwargs) -> webcface.view.ViewComponent:
+def select_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """selectInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.SELECT_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.SELECT_INPUT, text=text, **kwargs
+    )
 
 
-def slider_input(**kwargs) -> webcface.view.ViewComponent:
+def slider_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """sliderInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.SLIDER_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.SLIDER_INPUT, text=text, **kwargs
+    )
 
 
-def check_input(**kwargs) -> webcface.view.ViewComponent:
+def check_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     """checkInputコンポーネント
     (ver2.0〜)
     """
-    return webcface.view.ViewComponent(type=ViewComponentType.CHECK_INPUT, **kwargs)
+    return webcface.view.ViewComponent(
+        type=ViewComponentType.CHECK_INPUT, text=text, **kwargs
+    )

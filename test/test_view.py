@@ -7,6 +7,7 @@ import webcface.view_components as view
 from webcface.func import Func, AnonymousFunc
 from webcface.field import Field
 from webcface.member import Member
+from webcface.text import InputRef
 
 
 def test_view_member(data):
@@ -83,6 +84,17 @@ def test_view_set(data):
             view.button("a2", AnonymousFunc(None, lambda: 2)),
             view.button("a3", lambda: 3),
         )
+        ref1 = InputRef()
+        ref2 = InputRef()
+        v.add(view.decimal_input("i", bind=ref1, init=123, min=1, max=1000))
+        v.add(view.select_input("i2", bind=ref2, option=["a", "b", "c"]))
+        called_ref3 = 0
+        def on_change_ref3(val):
+            nonlocal called_ref3
+            called_ref3 += 1
+            assert val == "aaa"
+        v.add(view.text_input("i3", on_change=on_change_ref3))
+
         # v.sync()
 
     vd = data.view_store.data_send.get("b", [])
@@ -115,6 +127,32 @@ def test_view_set(data):
     assert vd[8]._text == "a3"
     assert vd[8]._on_click_func._member == self_name
     assert vd[8]._on_click_func._field != ""
+
+    assert vd[9]._type == ViewComponentType.DECIMAL_INPUT
+    assert vd[9]._text == "i"
+    assert vd[9]._on_click_func._member == self_name
+    assert vd[9]._on_click_func._field != ""
+    assert float(ref1.get()) == 123
+    Func(Field(data, self_name, vd[9]._on_click_func._field)).run(10)
+    assert float(ref1.get()) == 10
+    assert vd[9]._min == 1
+    assert vd[9]._max == 1000
+
+    assert vd[10]._type == ViewComponentType.SELECT_INPUT
+    assert vd[10]._text == "i2"
+    assert vd[10]._on_click_func._member == self_name
+    assert vd[10]._on_click_func._field != ""
+    assert len(vd[10]._option) == 3
+    Func(Field(data, self_name, vd[10]._on_click_func._field)).run("a")
+    assert ref2.get() == "a"
+
+    assert vd[11]._type == ViewComponentType.TEXT_INPUT
+    assert vd[11]._text == "i3"
+    assert vd[11]._on_click_func._member == self_name
+    assert vd[11]._on_click_func._field != ""
+    Func(Field(data, self_name, vd[11]._on_click_func._field)).run("aaa")
+    assert called_ref3 == 1
+
     assert called == 1
 
     # v.init()
