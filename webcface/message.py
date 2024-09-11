@@ -326,8 +326,14 @@ def vb_to_vd(vb: Dict[str, webcface.view_base.ViewComponentBase]) -> dict:
             "x": b._text,
             "L": None if b._on_click_func is None else b._on_click_func._member,
             "l": None if b._on_click_func is None else b._on_click_func._field,
+            "R": None if b._text_ref is None else b._text_ref._member,
+            "r": None if b._text_ref is None else b._text_ref._field,
             "c": b._text_color,
             "b": b._bg_color,
+            "im": b._min,
+            "ix": b._max,
+            "is": b._step,
+            "io": b._option,
         }
     return vd
 
@@ -341,11 +347,20 @@ def vd_to_vb(vd: dict) -> Dict[str, webcface.view_base.ViewComponentBase]:
             text=d["x"],
             on_click=(
                 None
-                if d["L"] is None or d["l"] is None
+                if d.get("L") is None or d.get("l") is None
                 else webcface.field.FieldBase(d["L"], d["l"])
+            ),
+            text_ref=(
+                None
+                if d.get("R") is None or d.get("r") is None
+                else webcface.field.FieldBase(d["R"], d["r"])
             ),
             text_color=d["c"],
             bg_color=d["b"],
+            min=d.get("im"),
+            max=d.get("ix"),
+            step=d.get("is"),
+            option=d.get("io"),
         )
     return vb
 

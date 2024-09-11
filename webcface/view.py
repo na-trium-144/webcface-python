@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional, Callable, List, Callable
 from copy import deepcopy
 import webcface.field
+import webcface.text
 import webcface.view_base
 import webcface.view_components
 import webcface.client_data
@@ -11,6 +12,8 @@ import webcface.func
 class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: Optional[webcface.client_data.ClientData]
     _on_click_func_tmp: Optional[webcface.func.AnonymousFunc]
+    _bind_tmp: Optional[webcface.text.InputRef]
+    _init: Optional[float | bool | str]
 
     @staticmethod
     def from_base(
@@ -18,12 +21,17 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         data: Optional[webcface.client_data.ClientData],
     ) -> ViewComponent:
         vc = ViewComponent(
-            base._type,
-            base._text,
-            base._on_click_func,
-            base._text_color,
-            base._bg_color,
+            type=base._type,
+            text=base._text,
+            on_click=base._on_click_func,
+            text_color=base._text_color,
+            bg_color=base._bg_color,
+            min=base._min,
+            max=base._max,
+            step=base._step,
+            option=base._option,
         )
+        vc._text_ref = base._text_ref
         vc._data = data
         return vc
 
@@ -34,6 +42,13 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         on_click: Optional[webcface.field.FieldBase | Callable] = None,
         text_color: int = 0,
         bg_color: int = 0,
+        on_change: Optional[webcface.func.Func | Callable] = None,
+        bind: Optional[webcface.text.InputRef] = None,
+        min: Optional[float] = None,
+        max: Optional[float] = None,
+        step: Optional[float] = None,
+        option: Optional[List[float | bool | str]] = None,
+        init: Optional[float | bool | str] = None,
     ) -> None:
         """コンポーネントを作成
 
@@ -42,11 +57,51 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         :arg on_click: クリック時に実行する関数
         :arg text_color: 文字の色 (ViewColorのEnumを使う)
         :arg bg_color: 背景の色 (ViewColorのEnumを使う)
+        :arg on_change: (ver2.0〜) Inputの値が変更されたときに実行する関数
+        :arg bind: (ver2.0〜) Inputの値をバインドするInputRef
+            (on_changeとbindはどちらか片方のみを指定すること)
+        :arg min: (ver2.0〜) Inputの最小値/最小文字数
+        :arg max: (ver2.0〜) Inputの最大値/最大文字数
+        :arg step: (ver2.0〜) Inputの刻み幅
+        :arg option: (ver2.0〜) Inputの選択肢
         """
-        super().__init__(type, text, None, text_color, bg_color)
+        super().__init__(
+            type, text, None, None, text_color, bg_color, min, max, step, option
+        )
         self._data = None
         self._on_click_func = None
+        self._text_ref = None
         self._on_click_func_tmp = None
+        self._init = init
+        if on_change is not None:
+            if isinstance(on_change, webcface.func.Func):
+                bind_new = webcface.text.InputRef()
+
+                def on_change_impl(val: float | bool | str):
+                    if bind_new._state is not None:
+                        bind_new._state.set(val)
+                    return on_change.run(val)
+
+                bind = bind_new
+                on_click = on_change_impl
+            elif callable(on_change):
+                bind_new = webcface.text.InputRef()
+
+                def on_change_impl(val: float | bool | str):
+                    if bind_new._state is not None:
+                        bind_new._state.set(val)
+                    return on_change(val)
+
+                bind = bind_new
+                on_click = on_change_impl
+        elif bind is not None:
+
+            def on_change_impl(val: float | bool | str):
+                if bind._state is not None:
+                    bind._state.set(val)
+
+            on_click = on_change_impl
+        self._bind_tmp = bind
         if isinstance(on_click, webcface.func.AnonymousFunc):
             self._on_click_func_tmp = on_click
         elif isinstance(on_click, webcface.field.FieldBase):
@@ -67,6 +122,14 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             self._on_click_func_tmp.lock_to(on_click)
             on_click.hidden = True
             self._on_click_func = on_click
+        if self._bind_tmp is not None:
+            text_ref = webcface.text.Variant(
+                webcface.field.Field(data, data.self_member_name), field_id
+            )
+            self._bind_tmp._state = text_ref
+            self._text_ref = text_ref
+            if self._init is not None and text_ref.try_get() is None:
+                text_ref.set(self._init)
         self._data = data
         return self
 
@@ -88,8 +151,21 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
                     and self._on_click_func._field == other._on_click_func._field
                 )
             )
+            and (
+                (self._text_ref is None and other._text_ref is None)
+                or (
+                    self._text_ref is not None
+                    and other._text_ref is not None
+                    and self._text_ref._member == other._text_ref._member
+                    and self._text_ref._field == other._text_ref._field
+                )
+            )
             and self._text_color == other._text_color
             and self._bg_color == other._bg_color
+            and self._min == other._min
+            and self._max == other._max
+            and self._step == other._step
+            and self._option == other._option
         )
 
     def __ne__(self, other) -> bool:
