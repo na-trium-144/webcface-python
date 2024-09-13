@@ -636,7 +636,7 @@ def c3d_to_c3b(vd: dict) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBa
     """メッセージからCanvas2DComponentBaseクラスに変換"""
     vb = {}
     for i, d in vd.items():
-        vb[i] = webcface.canvas2d_base.Canvas2DComponentBase(
+        vb[i] = webcface.canvas3d_base.Canvas3DComponentBase(
             type=d["t"],
             origin_pos=d["op"],
             origin_rot=d["or"],
@@ -685,7 +685,7 @@ class Canvas3DReq(MessageBase):
 
     @staticmethod
     def new(m: str, f: str, i: int) -> Canvas3DReq:
-        return Canvas2DReq({"M": m, "f": f, "i": i})
+        return Canvas3DReq({"M": m, "f": f, "i": i})
 
     @property
     def member(self) -> str:
@@ -740,7 +740,7 @@ class Canvas3DEntry(MessageBase):
 
     @staticmethod
     def new(m: int, f: str) -> Canvas3DEntry:
-        return Canvas2DEntry({"m": m, "f": f})
+        return Canvas3DEntry({"m": m, "f": f})
 
     @property
     def member_id(self) -> int:
@@ -799,7 +799,7 @@ class FuncInfo(MessageBase):
                     option=a["o"],
                 )
             )
-        return webcface.func_info.FuncInfo(None, self.msg["r"], args, False)
+        return webcface.func_info.FuncInfo(None, self.msg["r"], args)
 
 
 class Call(MessageBase):

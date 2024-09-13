@@ -4,7 +4,7 @@ from webcface.view import View, ViewComponent
 from webcface.view_components import ViewComponentType, ViewColor
 from webcface.view_base import ViewComponentBase
 import webcface.view_components as view
-from webcface.func import Func, AnonymousFunc
+from webcface.func import Func
 from webcface.field import Field
 from webcface.member import Member
 from webcface.text import InputRef
@@ -80,8 +80,6 @@ def test_view_set(data):
         )
         v.add(
             view.button("f", Func(Field(data, self_name, "f")), bg_color=ViewColor.RED),
-            view.button("a", AnonymousFunc(Field(data, self_name, "a"), lambda: 1)),
-            view.button("a2", AnonymousFunc(None, lambda: 2)),
             view.button("a3", lambda: 3),
         )
         ref1 = InputRef()
@@ -116,41 +114,33 @@ def test_view_set(data):
     assert vd[5]._on_click_func._field == "f"
     assert vd[5]._bg_color == ViewColor.RED
     assert vd[6]._type == ViewComponentType.BUTTON
-    assert vd[6]._text == "a"
+    assert vd[6]._text == "a3"
     assert vd[6]._on_click_func._member == self_name
-    assert vd[6]._on_click_func._field != "a"
-    assert vd[7]._type == ViewComponentType.BUTTON
-    assert vd[7]._text == "a2"
+    assert vd[6]._on_click_func._field != ""
+
+    assert vd[7]._type == ViewComponentType.DECIMAL_INPUT
+    assert vd[7]._text == "i"
     assert vd[7]._on_click_func._member == self_name
     assert vd[7]._on_click_func._field != ""
-    assert vd[8]._type == ViewComponentType.BUTTON
-    assert vd[8]._text == "a3"
+    assert float(ref1.get()) == 123
+    Func(Field(data, self_name, vd[7]._on_click_func._field)).run(10)
+    assert float(ref1.get()) == 10
+    assert vd[7]._min == 1
+    assert vd[7]._max == 1000
+
+    assert vd[8]._type == ViewComponentType.SELECT_INPUT
+    assert vd[8]._text == "i2"
     assert vd[8]._on_click_func._member == self_name
     assert vd[8]._on_click_func._field != ""
-
-    assert vd[9]._type == ViewComponentType.DECIMAL_INPUT
-    assert vd[9]._text == "i"
-    assert vd[9]._on_click_func._member == self_name
-    assert vd[9]._on_click_func._field != ""
-    assert float(ref1.get()) == 123
-    Func(Field(data, self_name, vd[9]._on_click_func._field)).run(10)
-    assert float(ref1.get()) == 10
-    assert vd[9]._min == 1
-    assert vd[9]._max == 1000
-
-    assert vd[10]._type == ViewComponentType.SELECT_INPUT
-    assert vd[10]._text == "i2"
-    assert vd[10]._on_click_func._member == self_name
-    assert vd[10]._on_click_func._field != ""
-    assert len(vd[10]._option) == 3
-    Func(Field(data, self_name, vd[10]._on_click_func._field)).run("a")
+    assert len(vd[8]._option) == 3
+    Func(Field(data, self_name, vd[8]._on_click_func._field)).run("a")
     assert ref2.get() == "a"
 
-    assert vd[11]._type == ViewComponentType.TEXT_INPUT
-    assert vd[11]._text == "i3"
-    assert vd[11]._on_click_func._member == self_name
-    assert vd[11]._on_click_func._field != ""
-    Func(Field(data, self_name, vd[11]._on_click_func._field)).run("aaa")
+    assert vd[9]._type == ViewComponentType.TEXT_INPUT
+    assert vd[9]._text == "i3"
+    assert vd[9]._on_click_func._member == self_name
+    assert vd[9]._on_click_func._field != ""
+    Func(Field(data, self_name, vd[9]._on_click_func._field)).run("aaa")
     assert called_ref3 == 1
 
     assert called == 1

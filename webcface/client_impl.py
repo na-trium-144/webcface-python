@@ -334,7 +334,7 @@ def sync_data(
             msgs.append(webcface.message.Log.new(log_send))
     with data.func_store.lock:
         for k, v3 in data.func_store.transfer_send(is_first).items():
-            if not v3.hidden:
+            if not k.startswith("."):
                 msgs.append(webcface.message.FuncInfo.new(k, v3))
 
     return msgs

@@ -124,7 +124,6 @@ def test_entry(wcli):
                     None,
                     webcface.func_info.ValType.INT,
                     [webcface.func_info.Arg()],
-                    False,
                 ),
             )
         ],

@@ -52,7 +52,7 @@ def new_line() -> webcface.view.ViewComponent:
 
 def button(
     text: str,
-    on_click: webcface.func.Func | webcface.func.AnonymousFunc | Callable,
+    on_click: webcface.func.Func | Callable,
     **kwargs,
 ) -> webcface.view.ViewComponent:
     """buttonコンポーネント

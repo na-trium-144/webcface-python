@@ -65,28 +65,23 @@ class Member(webcface.field.Field):
         return webcface.log.Log(self)
 
     def func(
-        self, arg: Optional[str | Callable] = None, **kwargs
-    ) -> webcface.func.Func | webcface.func.AnonymousFunc:
-        """FuncオブジェクトまたはAnonymousオブジェクトを生成
+        self, arg: str = "", **kwargs
+    ) -> webcface.func.Func:
+        """Funcオブジェクトを生成
 
         #. member.func(arg: str)
             * 指定した名前のFuncオブジェクトを生成・参照する。
-        #. member.func(arg: Callable, [**kwargs])
-            * Funcの名前を決めずに一時的なFuncオブジェクト(AnonymoudFuncオブジェクト)を作成し、関数をセットする。
         #. @member.func(arg: str, [**kwargs])
             * デコレータとして使い、デコレートした関数を指定した名前でセットする。
             * デコレート後、関数は元のまま返す。
         #. @member.func([**kwargs])
             * 3と同じだが、名前はデコレートした関数から自動で取得される。
+        #. member.func(arg: Callable, [**kwargs])
+            * これはver2.0で削除。
 
-        2,3,4について、関数のセットに関しては Func.set() を参照。
-
-        :return: 1→ Func, 2→ AnonymousFunc
+        2, 3 の場合のkwargsは Func.set() を参照。
         """
-        if isinstance(arg, str):
-            return webcface.func.Func(self, arg, **kwargs)
-        else:
-            return webcface.func.AnonymousFunc(self, arg, **kwargs)
+        return webcface.func.Func(self, arg, **kwargs)
 
     def values(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。

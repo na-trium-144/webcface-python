@@ -11,7 +11,6 @@ import webcface.func_info
 class Func(webcface.field.Field):
     _return_type: Optional[int | type]
     _args: Optional[List[webcface.func_info.Arg]]
-    _hidden: Optional[bool]
 
     def __init__(
         self,
@@ -19,7 +18,6 @@ class Func(webcface.field.Field):
         field: str = "",
         return_type: Optional[int | type] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
-        hidden: Optional[bool] = None,
     ) -> None:
         """Funcを指すクラス
 
@@ -36,7 +34,6 @@ class Func(webcface.field.Field):
             )
         self._return_type = return_type
         self._args = args
-        self._hidden = hidden
 
     @property
     def member(self) -> webcface.member.Member:
@@ -69,7 +66,6 @@ class Func(webcface.field.Field):
         func: Callable,
         return_type: Optional[int | type] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
-        hidden: Optional[bool] = None,
     ) -> Func:
         """関数からFuncInfoを構築しセットする
 
@@ -78,31 +74,13 @@ class Func(webcface.field.Field):
         :arg func: 登録したい関数
         :arg return_type: 関数の戻り値 (ValTypeのEnumまたはtypeクラス)
         :arg args: 関数の引数の情報
-        :arg hidden: Trueにすると関数を他のMemberから隠す
         """
         if return_type is not None:
             self._return_type = return_type
         if args is not None:
             self._args = args
-        if hidden is not None:
-            self._hidden = hidden
-        self._set_info(
-            webcface.func_info.FuncInfo(
-                func, self._return_type, self._args, self._hidden
-            )
-        )
+        self._set_info(webcface.func_info.FuncInfo(func, self._return_type, self._args))
         return self
-
-    @property
-    def hidden(self) -> bool:
-        return self._get_info().hidden
-
-    @hidden.setter
-    def hidden(self, h: bool) -> None:
-        """関数の登録後にhidden属性を変更する"""
-        info = self._get_info()
-        info.hidden = h
-        self._set_info(info)
 
     def free(self) -> Func:
         """関数の設定を削除"""
@@ -189,11 +167,9 @@ class Func(webcface.field.Field):
         それ以外の場合、run()する
         """
         if len(args) == 1 and callable(args[0]):
-            if isinstance(self, AnonymousFunc):
-                target = Func(self, args[0].__name__, self._return_type, self._args)
-            else:
-                target = self
-            target.set(args[0])
+            if self._field == "":
+                self._field = args[0].__name__
+            self.set(args[0])
             return args[0]
         else:
             return self.run(*args)
@@ -210,48 +186,3 @@ class Func(webcface.field.Field):
     def args(self) -> List[webcface.func_info.Arg]:
         """引数の情報を返す"""
         return deepcopy(self._get_info().args)
-
-
-class AnonymousFunc(Func):
-    field_id = 0
-
-    @staticmethod
-    def field_name_tmp() -> str:
-        AnonymousFunc.field_id += 1
-        return f".tmp{AnonymousFunc.field_id}"
-
-    _base_init: bool
-    _func: Optional[Callable]
-
-    def __init__(
-        self,
-        base: Optional[webcface.field.Field],
-        callback: Optional[Callable],
-        **kwargs,
-    ) -> None:
-        """名前を指定せず先に関数を登録するFuncクラス
-
-        詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
-        """
-        if base is not None:
-            super().__init__(base, AnonymousFunc.field_name_tmp(), **kwargs)
-            if callback is not None:
-                self.set(callback, hidden=True)
-            self._base_init = True
-        else:
-            super().__init__(None, "", **kwargs)
-            self._base_init = False
-            self._func = callback
-
-    def lock_to(self, target: Func) -> None:
-        """target に関数を移動"""
-        if not self._base_init:
-            if self._func is None:
-                raise ValueError("func not set")
-            self._data = target._data
-            self._member = target._member
-            self._field = AnonymousFunc.field_name_tmp()
-            self.set(self._func, hidden=True)
-        target._set_info(self._get_info())
-        target.hidden = False
-        self.free()

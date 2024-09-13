@@ -3,7 +3,7 @@ import datetime
 import pytest
 from webcface.value import Value
 from webcface.text import Text
-from webcface.func import Func, AnonymousFunc
+from webcface.func import Func
 from webcface.func_info import ValType, Arg
 from webcface.field import Field
 from webcface.view import View
@@ -37,9 +37,9 @@ def test_func(data):
     assert f1.name == "b"
 
     f2 = m.func()
-    assert isinstance(f2, AnonymousFunc)
+    assert isinstance(f2, Func)
     assert f2.member.name == self_name
-    assert f2.name.startswith(".")
+    assert f2.name == ""
 
     @m.func()
     def f3(a: int, b: float) -> int:

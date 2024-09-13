@@ -11,7 +11,7 @@ import webcface.func
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: Optional[webcface.client_data.ClientData]
-    _on_click_func_tmp: Optional[webcface.func.AnonymousFunc]
+    _on_click_func_tmp: Optional[Callable]
     _bind_tmp: Optional[webcface.text.InputRef]
     _init: Optional[float | bool | str]
 
@@ -102,25 +102,24 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
             on_click = on_change_impl
         self._bind_tmp = bind
-        if isinstance(on_click, webcface.func.AnonymousFunc):
-            self._on_click_func_tmp = on_click
-        elif isinstance(on_click, webcface.field.FieldBase):
+        if isinstance(on_click, webcface.field.FieldBase):
             self._on_click_func = on_click
         elif callable(on_click):
-            self._on_click_func_tmp = webcface.func.AnonymousFunc(None, on_click)
+            self._on_click_func_tmp = on_click
         if isinstance(on_click, webcface.field.Field) and on_click._data is not None:
             self._data = on_click._data
+        if isinstance(on_change, webcface.field.Field) and on_change._data is not None:
+            self._data = on_change._data
 
     def lock_tmp(
         self, data: webcface.client_data.ClientData, field_id: str
     ) -> ViewComponent:
-        """AnonymousFuncをFuncオブジェクトにlockする"""
+        """on_clickをFuncオブジェクトにlockする"""
         if self._on_click_func_tmp is not None:
             on_click = webcface.func.Func(
                 webcface.field.Field(data, data.self_member_name), field_id
             )
-            self._on_click_func_tmp.lock_to(on_click)
-            on_click.hidden = True
+            on_click.set(self._on_click_func_tmp)
             self._on_click_func = on_click
         if self._bind_tmp is not None:
             text_ref = webcface.text.Variant(
