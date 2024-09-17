@@ -184,14 +184,18 @@ class FuncNotFoundError(RuntimeError):
         super().__init__(f'member("{base._member}").func("{base._field}") is not set')
 
 
-class AsyncFuncResult:
-    """非同期で実行した関数の実行結果を表す。"""
+class Promise:
+    """非同期で実行した関数の実行結果を表す。
+
+    ver2.0〜 AsyncFuncResultからPromiseに名前変更
+    """
+
     _caller_id: int
     _caller: str
-    _started: bool
-    _started_ready: bool
+    _reached: bool
+    _found: bool
+    _finished: bool
     _result: float | bool | str
-    _result_ready: bool
     _result_is_error: bool
     _cv: threading.Condition
     _base: webcface.field.Field
@@ -205,10 +209,10 @@ class AsyncFuncResult:
         self._caller_id = caller_id
         self._caller = caller
         self._base = base
-        self._started = False
-        self._started_ready = False
+        self._reached = False
+        self._found = False
+        self._finished = False
         self._result = ""
-        self._result_ready = False
         self._result_is_error = False
         self._cv = threading.Condition()
 
@@ -227,24 +231,66 @@ class AsyncFuncResult:
         """関数が開始したらTrue, 存在しなければFalse
 
         Falseの場合自動でresultにもFuncNotFoundErrorが入る
+
+        .. deprecated:: ver2.0
         """
-        with self._cv:
-            while not self._started_ready:
-                self._cv.wait()
-        return self._started
+        self.wait_reach()
+        return self.found
 
     @property
     def started_ready(self) -> bool:
-        """startedが取得可能であればTrue"""
-        return self._started_ready
+        """startedが取得可能であればTrue
+
+        .. deprecated:: ver2.0
+            (reached と同じ)
+        """
+        return self.reached
+
+    @property
+    def reached(self) -> bool:
+        """関数呼び出しのメッセージが相手のクライアントに到達したらTrue
+        (ver2.0〜)
+        """
+        return self._reached
+
+    @property
+    def found(self) -> bool:
+        """呼び出した関数がリモートに存在するか(=実行が開始されたか)を返す
+        (ver2.0〜)
+        """
+        return self._found
+
+    def wait_reach(self, timeout: Optional[float] = None) -> Promise:
+        """リモートに呼び出しメッセージが到達するまで待機
+        (ver2.0〜)
+
+        * reached がtrueになるまで待機する。
+        * * on_reached
+        * にコールバックが設定されている場合そのコールバックの完了も待機する。
+        * * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        * 呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        * この関数を使用して待機している間に Client.sync()
+        * が呼ばれていないとデッドロックしてしまうので注意。
+
+        :param timeout: 待機するタイムアウト (秒)
+        """
+        with self._cv:
+            while not self._reached:
+                self._cv.wait(timeout)
+        return self
 
     @property
     def result(self) -> float | bool | str:
-        """実行結果または例外"""
+        """実行結果または例外
+
+        結果が返ってくるまで待機する。
+
+        .. deprecated:: ver2.0
+        """
         with self._cv:
-            while not self._result_ready:
+            while not self._finished:
                 self._cv.wait()
-        if not self._started:
+        if not self._found:
             raise FuncNotFoundError(self._base)
         if self._result_is_error:
             raise RuntimeError(self._result)
@@ -252,5 +298,63 @@ class AsyncFuncResult:
 
     @property
     def result_ready(self) -> bool:
-        """resultが取得可能であればTrue"""
-        return self._result_ready
+        """resultが取得可能であればTrue
+
+        .. deprecated:: ver2.0
+            (finished と同じ)
+        """
+        return self._finished
+
+    @property
+    def finished(self) -> bool:
+        """関数の実行が完了したかどうかを返す
+        (ver2.0〜)
+        """
+        return self._finished
+
+    @property
+    def is_error(self) -> bool:
+        """関数がエラーになったかどうかを返す
+        (ver2.0〜)
+        """
+        return self._result_is_error
+
+    @property
+    def response(self) -> float | bool | str:
+        """関数の実行が完了した場合その戻り値を返す
+        (ver2.0〜)
+        """
+        if self._result_is_error:
+            return ""
+        return self._result
+
+    @property
+    def rejection(self) -> str:
+        """関数の実行がエラーになった場合そのエラーメッセージを返す
+        (ver2.0〜)
+        """
+        if self._result_is_error:
+            return str(self._result)
+        return ""
+
+    def wait_finish(self, timeout: Optional[float] = None) -> Promise:
+        """関数の実行が完了するまで待機
+        (ver2.0〜)
+
+        * finished がtrueになるまで待機する。
+        * * on_finished
+        * にコールバックが設定されている場合そのコールバックの完了も待機する。
+        * * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        * 呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        * この関数を使用して待機している間に Client.sync()
+        * が呼ばれていないとデッドロックしてしまうので注意。
+
+        :param timeout: 待機するタイムアウト (秒)
+        """
+        with self._cv:
+            while not self._finished:
+                self._cv.wait(timeout)
+        return self
+
+
+AsyncFuncResult = Promise
