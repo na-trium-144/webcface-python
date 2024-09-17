@@ -191,6 +191,7 @@ def test_queue_msg(data):
     data.queue_msg_always([webcface.message.Ping.new()])
     assert len(data._msg_queue) == 1
 
+
 def test_queue_msg_online(data):
     data.connected = False
     assert data.queue_msg_online([webcface.message.Ping.new()]) is False
@@ -198,6 +199,14 @@ def test_queue_msg_online(data):
     data.connected = True
     assert data.queue_msg_online([webcface.message.Ping.new()]) is True
     assert len(data._msg_queue) == 1
+
+
+def test_queue_msg_req(data):
+    assert data.queue_msg_req([webcface.message.Ping.new()]) is False
+    assert len(data._msg_queue) == 0
+    data.queue_first()
+    assert data.queue_msg_req([webcface.message.Ping.new()]) is True
+    assert len(data._msg_queue) == 2
 
 
 def test_clear_msg(data):

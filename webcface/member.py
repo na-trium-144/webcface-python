@@ -241,7 +241,7 @@ class Member(webcface.field.Field):
         """
         if not self._data_check().ping_status_req:
             self._data_check().ping_status_req = True
-            self._data_check().queue_msg_online([webcface.message.PingStatusReq.new()])
+            self._data_check().queue_msg_req([webcface.message.PingStatusReq.new()])
 
     def on_ping(self, func: Callable) -> None:
         """通信速度データが更新されたときのイベント

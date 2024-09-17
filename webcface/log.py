@@ -39,7 +39,7 @@ class Log(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().log_store.add_req(self._member)
         if req:
-            self._data_check().queue_msg_online(
+            self._data_check().queue_msg_req(
                 [webcface.message.LogReq.new(self._member)]
             )
 

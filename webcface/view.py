@@ -323,7 +323,7 @@ class View(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().view_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg_online(
+            self._data_check().queue_msg_req(
                 [webcface.message.ViewReq.new(self._member, self._field, req)]
             )
 

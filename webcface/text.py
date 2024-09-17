@@ -48,7 +48,7 @@ class Variant(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().text_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg_online(
+            self._data_check().queue_msg_req(
                 [webcface.message.TextReq.new(self._member, self._field, req)]
             )
 

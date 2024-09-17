@@ -376,6 +376,15 @@ class ClientData:
                 return True
             return False
 
+    def queue_msg_req(self, msgs: List[webcface.message.MessageBase]) -> bool:
+        """msg_firstが空でなければキューに入れtrueを返す"""
+        with self._msg_cv:
+            if self._msg_first:
+                self._msg_queue.append(msgs)
+                self._msg_cv.notify_all()
+                return True
+            return False
+
     def clear_msg(self) -> None:
         with self._msg_cv:
             self._msg_queue = []
