@@ -119,7 +119,7 @@ class Arg:
 class FuncInfo:
     return_type: int
     args: List[Arg]
-    func_impl: Optional[Callable]
+    func_impl: Callable
 
     def __init__(
         self,
@@ -127,7 +127,6 @@ class FuncInfo:
         return_type: Optional[int | type],
         args: Optional[List[Arg]],
     ) -> None:
-        self.func_impl = func
         if args is None:
             self.args = []
         else:
@@ -156,9 +155,25 @@ class FuncInfo:
         else:
             raise ValueError()
 
-    def run(self, args) -> float | bool | str:
+        def func_impl(p: Promise, args) -> None:
+            if func is None:
+                p._set_finish("func is None", is_error=True)
+            else:
+                try:
+                    p._set_finish(func(*args), is_error=False)
+                except Exception as e:
+                    p._set_finish(str(e), is_error=True)
+
+        self.func_impl = func_impl
+
+    def run(self, p: Promise, args) -> None:
         if len(args) != len(self.args):
-            raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
+            # raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
+            p._set_finish(
+                f"requires {len(self.args)} arguments but got {len(args)}",
+                is_error=True,
+            )
+            return
         new_args: List[int | float | bool | str] = []
         for i, a in enumerate(args):
             if self.args[i].type == ValType.INT:
@@ -171,12 +186,7 @@ class FuncInfo:
                 new_args.append(str(a))
             else:
                 new_args.append(a)
-        ret = None
-        if self.func_impl is not None:
-            ret = self.func_impl(*new_args)
-        if ret is None:
-            ret = ""
-        return ret
+        self.func_impl(p, new_args)
 
 
 class FuncNotFoundError(RuntimeError):
@@ -197,6 +207,10 @@ class Promise:
     _finished: bool
     _result: float | bool | str
     _result_is_error: bool
+    _on_reach: Optional[Callable]
+    _reach_event_done: bool
+    _on_finish: Optional[Callable]
+    _finish_event_done: bool
     _cv: threading.Condition
     _base: webcface.field.Field
 
@@ -214,6 +228,10 @@ class Promise:
         self._finished = False
         self._result = ""
         self._result_is_error = False
+        self._on_reach = None
+        self._on_finish = None
+        self._reach_event_done = False
+        self._finish_event_done = False
         self._cv = threading.Condition()
 
     @property
@@ -265,12 +283,12 @@ class Promise:
         (ver2.0〜)
 
         * reached がtrueになるまで待機する。
-        * * on_reached
-        * にコールバックが設定されている場合そのコールバックの完了も待機する。
-        * * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
-        * 呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
-        * この関数を使用して待機している間に Client.sync()
-        * が呼ばれていないとデッドロックしてしまうので注意。
+        * on_reached
+        にコールバックが設定されている場合そのコールバックの完了も待機する。
+        * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        この関数を使用して待機している間に Client.sync()
+        が呼ばれていないとデッドロックしてしまうので注意。
 
         :param timeout: 待機するタイムアウト (秒)
         """
@@ -342,12 +360,12 @@ class Promise:
         (ver2.0〜)
 
         * finished がtrueになるまで待機する。
-        * * on_finished
-        * にコールバックが設定されている場合そのコールバックの完了も待機する。
-        * * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
-        * 呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
-        * この関数を使用して待機している間に Client.sync()
-        * が呼ばれていないとデッドロックしてしまうので注意。
+        * on_finished
+        にコールバックが設定されている場合そのコールバックの完了も待機する。
+        * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        この関数を使用して待機している間に Client.sync()
+        が呼ばれていないとデッドロックしてしまうので注意。
 
         :param timeout: 待機するタイムアウト (秒)
         """
@@ -355,6 +373,71 @@ class Promise:
             while not self._finished:
                 self._cv.wait(timeout)
         return self
+
+    def on_reach(self, func: Callable) -> Promise:
+        """リモートに呼び出しメッセージが到達したときに呼び出すコールバックを設定
+        (ver2.0〜)
+
+        * コールバックの引数にはこのPromiseが渡される。
+        * すでにreachedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
+        """
+        with self._cv:
+            if not self._reach_event_done:
+                self._on_reach = func
+                if self._reached:
+                    func(self)
+                    self._reach_event_done = True
+        return self
+
+    def on_finish(self, func: Callable) -> Promise:
+        """関数の実行が完了したときに呼び出すコールバックを設定
+        (ver2.0〜)
+
+        * コールバックの引数にはこのPromiseが渡される。
+        * すでにfinishedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
+        """
+        run_func = False
+        with self._cv:
+            if not self._finish_event_done:
+                self._on_finish = func
+                if self._finished:
+                    self._finish_event_done = True
+                    run_func = True
+        if run_func:
+            func(self)
+        return self
+
+    def _set_reach(self, found: bool) -> None:
+        run_reach_func: Optional[Callable] = None
+        with self._cv:
+            self._reached = True
+            self._found = found
+            if not self._reach_event_done and self._on_reach is not None:
+                self._reach_event_done = True
+                run_reach_func = self._on_reach
+        if run_reach_func is not None:
+            run_reach_func(self)
+        with self._cv:
+            self._cv.notify_all()
+        if not found:
+            self._set_finish(
+                f'member("{self._base._member}").func("{self._base._field}") is not set',
+                is_error=True,
+            )
+
+    def _set_finish(self, result: float | bool | str, is_error: bool) -> None:
+        run_finish_func: Optional[Callable] = None
+        with self._cv:
+            self._finished = True
+            self._result_is_error = is_error
+            self._result = result
+            if not self._finish_event_done and self._on_finish is not None:
+                self._finish_event_done = True
+                run_finish_func = self._on_finish
+        if run_finish_func is not None:
+            run_finish_func(self)
+        with self._cv:
+            self._cv.notify_all()
 
 
 AsyncFuncResult = Promise

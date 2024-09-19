@@ -86,22 +86,28 @@ def test_func_run(data):
 
     called = 0
     ret = Func(Field(data, self_name, "a")).run_async(123.45, 123.45, "a", True)
-    assert ret.started
-    assert ret.result == 123.45
+    assert ret.reached
+    assert ret.found
+    assert ret.finished
+    assert not ret.is_error
+    assert ret.response == 123.45
     assert ret.member.name == self_name
     assert ret.name == "a"
     assert called == 1
 
-    with pytest.raises(TypeError) as e:
+    with pytest.raises(RuntimeError) as e:
         Func(Field(data, self_name, "a")).run()
     ret = Func(Field(data, self_name, "a")).run_async()
-    assert ret.started
-    with pytest.raises(RuntimeError) as e:
-        ret.result
+    assert ret.reached
+    assert ret.found
+    assert ret.is_error
+    assert ret.rejection != ""
 
     with pytest.raises(FuncNotFoundError) as e:
         Func(Field(data, self_name, "b")).run()
     ret = Func(Field(data, self_name, "b")).run_async()
-    assert not ret.started
-    with pytest.raises(FuncNotFoundError) as e:
-        ret.result
+    assert ret.reached
+    assert not ret.found
+    assert ret.finished
+    assert ret.is_error
+    assert ret.rejection != ""

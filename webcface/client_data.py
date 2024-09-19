@@ -221,7 +221,7 @@ class SyncDataStore1(Generic[T]):
 
 
 class FuncResultStore:
-    results: List[webcface.func_info.AsyncFuncResult]
+    results: List[Optional[webcface.func_info.Promise]]
     lock: threading.Lock
 
     def __init__(self):
@@ -230,16 +230,24 @@ class FuncResultStore:
 
     def add_result(
         self, caller: str, base: webcface.field.Field
-    ) -> webcface.func_info.AsyncFuncResult:
+    ) -> webcface.func_info.Promise:
         with self.lock:
             caller_id = len(self.results)
-            r = webcface.func_info.AsyncFuncResult(caller_id, caller, base)
+            r = webcface.func_info.Promise(caller_id, caller, base)
             self.results.append(r)
             return r
 
-    def get_result(self, caller_id: int) -> webcface.func_info.AsyncFuncResult:
+    def get_result(self, caller_id: int) -> webcface.func_info.Promise:
         with self.lock:
-            return self.results[caller_id]
+            r = self.results[caller_id]
+            if r is None:
+                raise IndexError()
+            return r
+
+    def del_result(self, caller_id: int) -> None:
+        with self.lock:
+            if caller_id < len(self.results):
+                self.results[caller_id] = None
 
 
 class ClientData:

@@ -69,7 +69,9 @@ class Func(webcface.field.Field):
     ) -> Func:
         """関数からFuncInfoを構築しセットする
 
-        関数にアノテーションがついている場合はreturn_typeとargs内のtypeは不要
+        * 関数にアノテーションがついている場合はreturn_typeとargs内のtypeは不要
+        * (ver2.0〜) set()でセットした関数は Client.sync() のスレッドでそのまま呼び出され、
+        この関数が完了するまで他のデータの受信はブロックされる。
 
         :arg func: 登録したい関数
         :arg return_type: 関数の戻り値 (ValTypeのEnumまたはtypeクラス)
@@ -90,57 +92,41 @@ class Func(webcface.field.Field):
     def run(self, *args) -> float | bool | str:
         """関数を実行する (同期)
 
-        selfの関数の場合、このスレッドで直接実行する
+        * selfの関数の場合、このスレッドで直接実行する
         例外が発生した場合そのままraise, 関数が存在しない場合 FuncNotFoundError
         をraiseする
-
-        リモートの場合、関数呼び出しを送信し結果が返ってくるまで待機
+        * リモートの場合、関数呼び出しを送信し結果が返ってくるまで待機
         例外が発生した場合 RuntimeError, 関数が存在しない場合 FuncNotFoundError
         をthrowする
+        * (ver2.0〜) Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        この関数を使用して待機している間に Client.sync()
+        が呼ばれていないとデッドロックしてしまうので注意。
         """
-        if self._data_check().is_self(self._member):
-            func_info = self._data_check().func_store.get_recv(
-                self._member, self._field
-            )
-            if func_info is None:
-                raise webcface.func_info.FuncNotFoundError(self)
-            res = func_info.run(args)
-            return res
-        else:
-            return self.run_async(*args).result
+        ret = self.run_async(*args)
+        ret.wait_finish()
+        if not ret.found:
+            raise webcface.func_info.FuncNotFoundError(self)
+        if ret.is_error:
+            raise RuntimeError(ret.rejection)
+        return ret.response
 
-    def run_async(self, *args) -> webcface.func_info.AsyncFuncResult:
+    def run_async(self, *args) -> webcface.func_info.Promise:
         """関数を実行する (非同期)
 
-        戻り値やエラー、例外はAsyncFuncResultから取得する
+        * 戻り値やエラー、例外はPromiseから取得する
         """
         r = self._data_check().func_result_store.add_result("", self)
         if self._data_check().is_self(self._member):
-
-            def target():
-                with r._cv:
-                    func_info = self._data_check().func_store.get_recv(
-                        self._member, self._field
-                    )
-                    if func_info is None:
-                        r._started = False
-                        r._started_ready = True
-                        r._result_is_error = True
-                        r._result_ready = True
-                    else:
-                        r._started = True
-                        r._started_ready = True
-                        try:
-                            res = func_info.run(args)
-                            r._result = res
-                            r._result_ready = True
-                        except Exception as e:
-                            r._result = str(e)
-                            r._result_is_error = True
-                            r._result_ready = True
-                    r._cv.notify_all()
-
-            threading.Thread(target=target).start()
+            with r._cv:
+                func_info = self._data_check().func_store.get_recv(
+                    self._member, self._field
+                )
+                if func_info is None:
+                    r._set_reach(False)
+                else:
+                    r._set_reach(True)
+                    func_info.run(r, args)
         else:
             if not self._data_check().queue_msg_online(
                 [
@@ -153,11 +139,7 @@ class Func(webcface.field.Field):
                     )
                 ]
             ):
-                r._started = False
-                r._started_ready = True
-                r._result_is_error = True
-                r._result_ready = True
-                r._cv.notify_all()
+                r._set_reach(False)
         return r
 
     def __call__(self, *args) -> float | bool | str | Callable:

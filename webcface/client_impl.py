@@ -150,33 +150,33 @@ def on_recv(
             if isinstance(m, webcface.message.Call):
                 func_info = data.func_store.get_recv(data.self_member_name, m.field)
                 if func_info is not None:
+                    data.queue_msg_always(
+                        [
+                            webcface.message.CallResponse.new(
+                                m.caller_id, m.caller_member_id, True
+                            )
+                        ]
+                    )
+                    r = webcface.func_info.Promise(
+                        m.caller_id,
+                        "",
+                        webcface.field.Field(data, data.self_member_name, m.field),
+                    )
+                    func_info.run(r, m.args)
 
-                    def do_call():
-                        data.queue_msg_always(
-                            [
-                                webcface.message.CallResponse.new(
-                                    m.caller_id, m.caller_member_id, True
-                                )
-                            ]
-                        )
-                        try:
-                            result = func_info.run(m.args)
-                            is_error = False
-                        except Exception as e:
-                            is_error = True
-                            result = str(e)
+                    @r.on_finish
+                    def on_finish(r: webcface.func_info.Promise):
                         data.queue_msg_always(
                             [
                                 webcface.message.CallResult.new(
                                     m.caller_id,
                                     m.caller_member_id,
-                                    is_error,
-                                    result,
+                                    r.is_error,
+                                    r.rejection if r.is_error else r.response,
                                 )
                             ]
                         )
 
-                    threading.Thread(target=do_call).start()
                 else:
                     data.queue_msg_always(
                         [
@@ -188,13 +188,9 @@ def on_recv(
             if isinstance(m, webcface.message.CallResponse):
                 try:
                     r = data.func_result_store.get_result(m.caller_id)
-                    with r._cv:
-                        r._started = m.started
-                        r._started_ready = True
-                        if not m.started:
-                            r._result_is_error = True
-                            r._result_ready = True
-                        r._cv.notify_all()
+                    r._set_reach(m.started)
+                    if not m.started:
+                        data.func_result_store.del_result(m.caller_id)
                 except IndexError:
                     data.logger_internal.error(
                         f"error receiving call response id={m.caller_id}"
@@ -202,11 +198,8 @@ def on_recv(
             if isinstance(m, webcface.message.CallResult):
                 try:
                     r = data.func_result_store.get_result(m.caller_id)
-                    with r._cv:
-                        r._result_is_error = m.is_error
-                        r._result = m.result
-                        r._result_ready = True
-                        r._cv.notify_all()
+                    r._set_finish(m.result, m.is_error)
+                    data.func_result_store.del_result(m.caller_id)
                 except IndexError:
                     data.logger_internal.error(
                         f"error receiving call result id={m.caller_id}"
