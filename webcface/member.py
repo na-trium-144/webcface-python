@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, Iterable
+from typing import Callable, Optional, Iterable, SupportsFloat
 import datetime
 import webcface.field
 import webcface.value
@@ -47,8 +47,8 @@ class Member(webcface.field.Field):
     def canvas2d(
         self,
         field: str,
-        width: Optional[int | float] = None,
-        height: Optional[int | float] = None,
+        width: Optional[SupportsFloat] = None,
+        height: Optional[SupportsFloat] = None,
     ) -> webcface.canvas2d.Canvas2D:
         """Canvas2Dオブジェクトを生成
 

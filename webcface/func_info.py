@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, List
+from typing import Callable, Optional, List, SupportsFloat
 from enum import IntEnum
 from copy import deepcopy
 import inspect
@@ -49,20 +49,32 @@ class Arg:
         self,
         name: str = "",
         type: int | type = ValType.NONE,
-        min: Optional[float] = None,
-        max: Optional[float] = None,
-        init: Optional[float | bool | str] = None,
-        option: List[float | str] = [],
+        min: Optional[SupportsFloat] = None,
+        max: Optional[SupportsFloat] = None,
+        init: Optional[SupportsFloat | bool | str] = None,
+        option: List[SupportsFloat | str] = [],
     ) -> None:
         self._name = name
         if isinstance(type, int):
             self._type = type
         else:
             self._type = get_type_enum(type)
-        self._min = min
-        self._max = max
-        self._init = init
-        self._option = deepcopy(option)
+        self._min = None if min is None else float(min)
+        self._max = None if max is None else float(max)
+        if init is None:
+            self._init = None
+        elif isinstance(init, bool):
+            self._init = init
+        elif isinstance(init, SupportsFloat):
+            self._init = float(init)
+        else:
+            self._init = str(init)
+        self._option = []
+        for op in option:
+            if isinstance(op, SupportsFloat):
+                self._option.append(float(op))
+            else:
+                self._option.append(str(op))
 
     def merge_config(self, a: Arg) -> Arg:
         if a._name != "":
@@ -161,7 +173,15 @@ class FuncInfo:
                 p._set_finish("func is None", is_error=True)
             else:
                 try:
-                    p._set_finish(func(*args), is_error=False)
+                    ret = func(*args)
+                    if ret is None:
+                        p._set_finish("", is_error=False)
+                    elif isinstance(ret, bool):
+                        p._set_finish(ret, is_error=False)
+                    elif isinstance(ret, SupportsFloat):
+                        p._set_finish(float(ret), is_error = False)
+                    else:
+                        p._set_finish(str(ret), is_error=False)
                 except Exception as e:
                     p._set_finish(str(e), is_error=True)
 
@@ -180,7 +200,7 @@ class FuncInfo:
                 is_error=True,
             )
             return
-        new_args: List[int | float | bool | str] = []
+        new_args: List[float | bool | str] = []
         for i, a in enumerate(args):
             if self.args[i].type == ValType.INT:
                 new_args.append(int(float(a)))

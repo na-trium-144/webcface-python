@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Callable, List
+from typing import Optional, Callable, List, SupportsFloat
 from copy import deepcopy
 import webcface.field
 import webcface.canvas2d_base
@@ -72,8 +72,8 @@ class Canvas2D(webcface.field.Field):
         self,
         base: webcface.field.Field,
         field: str = "",
-        width: Optional[int | float] = None,
-        height: Optional[int | float] = None,
+        width: Optional[SupportsFloat] = None,
+        height: Optional[SupportsFloat] = None,
     ) -> None:
         """Canvas2Dを指すクラス
 
@@ -188,7 +188,7 @@ class Canvas2D(webcface.field.Field):
         """with構文の最初でなにもしない"""
         return self
 
-    def init(self, width: int | float, height: int | float) -> Canvas2D:
+    def init(self, width: SupportsFloat, height: SupportsFloat) -> Canvas2D:
         """このCanvas2Dオブジェクトにaddした内容を初期化する
         and Canvas2Dのサイズを指定する
         """
@@ -219,7 +219,7 @@ class Canvas2D(webcface.field.Field):
         origin: Optional[webcface.transform.Transform] = None,
         color: int = webcface.view_components.ViewColor.INHERIT,
         fill: int = webcface.view_components.ViewColor.INHERIT,
-        stroke_width: int | float = 1,
+        stroke_width: SupportsFloat = 1,
     ) -> Canvas2D:
         """コンポーネントを追加
 
@@ -236,7 +236,7 @@ class Canvas2D(webcface.field.Field):
                 origin.rot[0],
                 color,
                 fill,
-                stroke_width,
+                float(stroke_width),
                 geometry.type,
                 geometry._properties,
             )

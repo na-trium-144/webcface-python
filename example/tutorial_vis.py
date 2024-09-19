@@ -1,4 +1,4 @@
-from webcface import Client, Arg, view_components
+from webcface import Client, Arg, view_components, InputRef
 import sys
 import time
 
@@ -42,15 +42,15 @@ while True:
         v.add("i = ", i, "\n")
         # ↑ v.add("i = ") と v.add(i) をするのと同じ
         v.add(view_components.button("hoge", hoge))  # ボタン
-        # ref_str = InputRef()
-        # v.add(view_components.text_input("str", bind=ref_str))  # 文字列入力
-        # v.add(
-        #     view_components.button(
-        #         "print",
-        #         # クリックすると、入力した文字列を表示
-        #         lambda: print(f"str = {ref_str.as_str()}"),
-        #     )
-        # )
+        ref_str = InputRef()
+        v.add(view_components.text_input("str", bind=ref_str))  # 文字列入力
+        v.add(
+            view_components.button(
+                "print",
+                # クリックすると、入力した文字列を表示
+                lambda: print(f"str = {str(ref_str.get())}"),
+            )
+        )
         v.add("\n")
     # withを抜けると、ここまでにvに追加したものがwcliに反映される
 

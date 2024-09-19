@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List, Callable
+from typing import Optional, List, Callable, SupportsFloat
 import webcface.field
 import webcface.member
 import webcface.message
@@ -93,17 +93,15 @@ class Value(webcface.field.Field):
         """
         return f'<member("{self.member.name}").value("{self.name}") = {self.try_get_vec()}>'
 
-    def set(self, data: List[float] | int | float) -> Value:
+    def set(self, data: List[SupportsFloat] | SupportsFloat) -> Value:
         """値をセットする"""
         self._set_check()
-        try:
-            data_f = float(data)
-            self._set_check().value_store.set_send(self._field, [data_f])
-        except TypeError:
-            if isinstance(data, list):
-                self._set_check().value_store.set_send(self._field, data)
-            else:
-                raise TypeError("unsupported data type for value.set()")
+        if isinstance(data, SupportsFloat):
+            self._set_check().value_store.set_send(self._field, [float(data)])
+        elif isinstance(data, list):
+            self._set_check().value_store.set_send(self._field, [float(v) for v in data])
+        else:
+            raise TypeError("unsupported data type for value.set(): " + str(data))
         on_change = (
             self._data_check().on_value_change.get(self._member, {}).get(self._field)
         )

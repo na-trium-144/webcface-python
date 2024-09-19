@@ -75,6 +75,7 @@ class Client(webcface.member.Member):
             # webcface.client_impl.on_recv(self, data, message)
             with data.recv_cv:
                 data.recv_queue.append(message)
+                data.recv_cv.notify_all()
 
         def on_error(ws, error):
             data.logger_internal.info(f"WebSocket Error: {error}")
@@ -225,6 +226,7 @@ class Client(webcface.member.Member):
                     data.recv_cv.wait(timeout=timeout_now)
                 for msg in data.recv_queue:
                     webcface.client_impl.on_recv(self, data, msg)
+                data.recv_queue = []
             if (
                 timeout_ns is not None
                 and time.thread_time_ns() - start_ns >= timeout_ns

@@ -406,6 +406,8 @@ class ClientData:
         with self._msg_cv:
             while len(self._msg_queue) == 0:
                 self._msg_cv.wait(timeout)
+                if timeout is not None:
+                    break
 
     def wait_empty(self, timeout: Optional[float] = None) -> None:
         with self._msg_cv:

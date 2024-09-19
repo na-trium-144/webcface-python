@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Callable
+from typing import Optional, Callable, SupportsFloat
 import webcface.field
 import webcface.member
 
@@ -80,9 +80,15 @@ class Variant(webcface.field.Field):
             f'<member("{self.member.name}").variant("{self.name}") = {self.try_get()}>'
         )
 
-    def set(self, data: float | bool | str) -> Variant:
+    def set(self, data: SupportsFloat | bool | str) -> Variant:
         """値をセットする"""
-        self._set_check().text_store.set_send(self._field, data)
+        if isinstance(data, bool):
+            data2: float | bool | str = data
+        elif isinstance(data, SupportsFloat):
+            data2 = float(data)
+        else:
+            data2 = str(data)
+        self._set_check().text_store.set_send(self._field, data2)
         on_change = (
             self._data_check().on_text_change.get(self._member, {}).get(self._field)
         )

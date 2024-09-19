@@ -1,22 +1,15 @@
 from __future__ import annotations
-from typing import List, Tuple, Union
-
-try:
-    import numpy as np
-
-    Numeric = Union[int, float, np.number]
-except ImportError:
-    Numeric = Union[int, float]
+from typing import List, Tuple, Union, SupportsFloat
 
 ConvertibleToPoint = Union[
-    List[Numeric],
-    Tuple[Numeric, Numeric],
-    Tuple[Numeric, Numeric, Numeric],
+    List[SupportsFloat],
+    Tuple[SupportsFloat, SupportsFloat],
+    Tuple[SupportsFloat, SupportsFloat, SupportsFloat],
 ]
 ConvertibleToRotation = Union[
-    Numeric,
-    List[Numeric],
-    Tuple[Numeric, Numeric, Numeric],
+    SupportsFloat,
+    List[SupportsFloat],
+    Tuple[SupportsFloat, SupportsFloat, SupportsFloat],
 ]
 ConvertibleToTransform = Tuple[ConvertibleToPoint, ConvertibleToRotation]
 
@@ -81,7 +74,7 @@ class Point:
             return self
         return NotImplemented
 
-    def __sub__(self, other: point) -> Point:
+    def __sub__(self, other: Point) -> Point:
         if isinstance(other, Point):
             return Point([a - b for a, b in zip(self.pos, other.pos)])
         return NotImplemented
@@ -98,20 +91,20 @@ class Point:
     def __pos__(self) -> Point:
         return Point(self.pos)
 
-    def __mul__(self, other: Numeric) -> Point:
+    def __mul__(self, other: SupportsFloat) -> Point:
         return Point([a * float(other) for a in self.pos])
 
-    def __rmul__(self, other: Numeric) -> Point:
+    def __rmul__(self, other: SupportsFloat) -> Point:
         return Point([a * float(other) for a in self.pos])
 
-    def __imul__(self, other: Numeric) -> Point:
+    def __imul__(self, other: SupportsFloat) -> Point:
         self._pos = [a * float(other) for a in self.pos]
         return self
 
-    def __div__(self, other: Numeric) -> Point:
+    def __div__(self, other: SupportsFloat) -> Point:
         return Point([a / float(other) for a in self.pos])
 
-    def __idiv__(self, other: Numeric) -> Point:
+    def __idiv__(self, other: SupportsFloat) -> Point:
         self._pos = [a / float(other) for a in self.pos]
         return self
 
@@ -154,7 +147,7 @@ class Transform(Point):
 
         :arg new_rot: 座標 2次元の場合 :code:`float`, 3次元の場合 :code:`[float, float, float]` など
         """
-        if type(new_rot) is int or type(new_rot) is float:
+        if isinstance(new_rot, SupportsFloat):
             self._rot = (float(new_rot), 0.0, 0.0)
         elif len(new_rot) == 3:
             self._rot = (float(new_rot[0]), float(new_rot[1]), float(new_rot[2]))

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Callable, List, Callable
+from typing import Optional, Callable, List, Callable, SupportsFloat
 from copy import deepcopy
 import webcface.field
 import webcface.text
@@ -44,11 +44,11 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         bg_color: int = 0,
         on_change: Optional[webcface.func.Func | Callable] = None,
         bind: Optional[webcface.text.InputRef] = None,
-        min: Optional[float] = None,
-        max: Optional[float] = None,
-        step: Optional[float] = None,
-        option: Optional[List[float | bool | str]] = None,
-        init: Optional[float | bool | str] = None,
+        min: Optional[SupportsFloat] = None,
+        max: Optional[SupportsFloat] = None,
+        step: Optional[SupportsFloat] = None,
+        option: Optional[List[SupportsFloat | bool | str]] = None,
+        init: Optional[SupportsFloat | bool | str] = None,
     ) -> None:
         """コンポーネントを作成
 
@@ -65,14 +65,39 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         :arg step: (ver2.0〜) Inputの刻み幅
         :arg option: (ver2.0〜) Inputの選択肢
         """
+        option2: List[str | bool | float] = []
+        if option is not None:
+            for op in option:
+                if isinstance(op, bool):
+                    option2.append(op)
+                elif isinstance(init, SupportsFloat):
+                    option2.append(float(op))
+                else:
+                    option2.append(str(op))
         super().__init__(
-            type, text, None, None, text_color, bg_color, min, max, step, option
+            type,
+            text,
+            None,
+            None,
+            text_color,
+            bg_color,
+            None if min is None else float(min),
+            None if max is None else float(max),
+            None if step is None else float(step),
+            option2,
         )
         self._data = None
         self._on_click_func = None
         self._text_ref = None
         self._on_click_func_tmp = None
-        self._init = init
+        if init is None:
+            self._init = None
+        elif isinstance(init, bool):
+            self._init = init
+        elif isinstance(init, SupportsFloat):
+            self._init = float(init)
+        else:
+            self._init = str(init)
         if on_change is not None:
             if isinstance(on_change, webcface.func.Func):
                 bind_new = webcface.text.InputRef()
@@ -350,7 +375,7 @@ class View(webcface.field.Field):
         """
         return self._field in self._data_check().view_store.get_entry(self._member)
 
-    def set(self, components: List[ViewComponent | str | bool | float | int]) -> View:
+    def set(self, components: List[ViewComponent | str | bool | SupportsFloat]) -> View:
         """Viewのリストをセットする"""
         data2 = []
         for c in components:
@@ -398,7 +423,7 @@ class View(webcface.field.Field):
             self._modified = False
         return self
 
-    def add(self, *args: ViewComponent | str | bool | float | int) -> View:
+    def add(self, *args: ViewComponent | str | bool | SupportsFloat) -> View:
         """コンポーネントを追加
 
         Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする
