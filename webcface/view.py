@@ -367,7 +367,7 @@ class View(webcface.field.Field):
             else:
                 data2.append(webcface.view_components.text(str(c)))
         for i, c in enumerate(data2):
-            data2[i] = c.lock_tmp(self._set_check(), f"{self._field}_f{i}")
+            data2[i] = c.lock_tmp(self._set_check(), f"..v{self._field}.{i}")
         data = self._set_check()
         data.view_store.set_send(self._field, list(data2))
         on_change = data.on_view_change.get(self._member, {}).get(self._field)
