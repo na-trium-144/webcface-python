@@ -84,6 +84,32 @@ class Func(webcface.field.Field):
         self._set_info(webcface.func_info.FuncInfo(func, self._return_type, self._args))
         return self
 
+    def set_async(
+        self,
+        func: Callable,
+        return_type: Optional[int | type] = None,
+        args: Optional[List[webcface.func_info.Arg]] = None,
+    ) -> Func:
+        """関数からFuncInfoを構築しセットする
+        (ver2.0〜)
+
+        * setAsync()でセットした場合、他クライアントから呼び出されたとき新しいスレッドを建てて実行される。
+
+        :arg func: 登録したい関数
+        :arg return_type: 関数の戻り値 (ValTypeのEnumまたはtypeクラス)
+        :arg args: 関数の引数の情報
+        """
+        if return_type is not None:
+            self._return_type = return_type
+        if args is not None:
+            self._args = args
+        self._set_info(
+            webcface.func_info.FuncInfo(
+                func, self._return_type, self._args, in_thread=True
+            )
+        )
+        return self
+
     def free(self) -> Func:
         """関数の設定を削除"""
         self._data_check().func_store.unset_recv(self._member, self._field)

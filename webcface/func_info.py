@@ -126,6 +126,7 @@ class FuncInfo:
         func: Optional[Callable],
         return_type: Optional[int | type],
         args: Optional[List[Arg]],
+        in_thread: bool = False,
     ) -> None:
         if args is None:
             self.args = []
@@ -164,7 +165,12 @@ class FuncInfo:
                 except Exception as e:
                     p._set_finish(str(e), is_error=True)
 
-        self.func_impl = func_impl
+        if in_thread:
+            self.func_impl = lambda p, args: threading.Thread(
+                target=func_impl, args=(p, args), daemon=True
+            )
+        else:
+            self.func_impl = func_impl
 
     def run(self, p: Promise, args) -> None:
         if len(args) != len(self.args):
