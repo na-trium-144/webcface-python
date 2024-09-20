@@ -23,7 +23,7 @@ class Variant(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    def on_change(self, func: Callable) -> None:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
         (ver2.0〜)
 
@@ -36,6 +36,7 @@ class Variant(webcface.field.Field):
         if self._member not in data.on_text_change:
             data.on_text_change[self._member] = {}
         data.on_text_change[self._member][self._field] = func
+        return func
 
     def child(self, field: str) -> Variant:
         """子フィールドを返す
@@ -108,7 +109,7 @@ class Text(Variant):
         """
         super().__init__(base, field)
 
-    def on_change(self, func: Callable) -> None:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
         (ver2.0〜)
 
@@ -117,6 +118,7 @@ class Text(Variant):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         super().on_change(lambda var: func(Text(var)))
+        return func
 
     def child(self, field: str) -> Text:
         """子フィールドを返す

@@ -94,7 +94,7 @@ class Canvas3D(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    def on_change(self, func: Callable) -> None:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
         (ver2.0〜)
 
@@ -107,6 +107,7 @@ class Canvas3D(webcface.field.Field):
         if self._member not in data.on_canvas3d_change:
             data.on_canvas3d_change[self._member] = {}
         data.on_canvas3d_change[self._member][self._field] = func
+        return func
 
     def child(self, field: str) -> Canvas3D:
         """子フィールドを返す

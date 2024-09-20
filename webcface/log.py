@@ -24,7 +24,7 @@ class Log(webcface.field.Field):
         """Memberを返す"""
         return webcface.member.Member(self)
 
-    def on_change(self, func: Callable) -> None:
+    def on_change(self, func: Callable) -> Callable:
         """logが追加されたときのイベント
         (ver2.0〜)
 
@@ -34,6 +34,7 @@ class Log(webcface.field.Field):
         """
         self.request()
         self._data_check().on_log_change[self._member] = func
+        return func
 
     def request(self) -> None:
         """値の受信をリクエストする"""

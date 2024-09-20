@@ -139,54 +139,61 @@ class Member(webcface.field.Field):
             self.canvas3d, self._data_check().canvas3d_store.get_entry(self._member)
         )
 
-    def on_value_entry(self, func: Callable) -> None:
+    def on_value_entry(self, func: Callable) -> Callable:
         """Valueが追加されたときのイベント
 
         コールバックの引数にはValueオブジェクトが渡される。
         """
         self._data_check().on_value_entry[self._member] = func
+        return func
 
-    def on_text_entry(self, func: Callable) -> None:
+    def on_text_entry(self, func: Callable) -> Callable:
         """Textが追加されたときのイベント
 
         コールバックの引数にはTextオブジェクトが渡される。
         """
         self._data_check().on_text_entry[self._member] = func
+        return func
 
-    def on_view_entry(self, func: Callable) -> None:
+    def on_view_entry(self, func: Callable) -> Callable:
         """Viewが追加されたときのイベント
 
         コールバックの引数にはViewオブジェクトが渡される。
         """
         self._data_check().on_view_entry[self._member] = func
+        return func
 
-    def on_func_entry(self, func: Callable) -> None:
+    def on_func_entry(self, func: Callable) -> Callable:
         """Funcが追加されたときのイベント
 
         コールバックの引数にはFuncオブジェクトが渡される。
         """
         self._data_check().on_func_entry[self._member] = func
+        return func
 
-    def on_canvas2d_entry(self, func: Callable) -> None:
+    def on_canvas2d_entry(self, func: Callable) -> Callable:
         """Canvas2Dが追加されたときのイベント
 
         コールバックの引数にはCanvas2Dオブジェクトが渡される。
         """
         self._data_check().on_canvas2d_entry[self._member] = func
+        return func
 
-    def on_canvas3d_entry(self, func: Callable) -> None:
+    def on_canvas3d_entry(self, func: Callable) -> Callable:
         """Canvas3Dが追加されたときのイベント
 
         コールバックの引数にはCanvas3Dオブジェクトが渡される。
         """
         self._data_check().on_canvas3d_entry[self._member] = func
+        return func
 
-    def on_sync(self, func: Callable) -> None:
+    def on_sync(self, func: Callable) -> Callable:
         """Memberがsyncしたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。
         """
         self._data_check().on_sync[self._member] = func
+        return func
 
     @property
     def sync_time(self) -> datetime.datetime:
@@ -243,7 +250,7 @@ class Member(webcface.field.Field):
             self._data_check().ping_status_req = True
             self._data_check().queue_msg_req([webcface.message.PingStatusReq.new()])
 
-    def on_ping(self, func: Callable) -> None:
+    def on_ping(self, func: Callable) -> Callable:
         """通信速度データが更新されたときのイベント
 
         通信速度データをリクエストしていなければリクエストする
@@ -252,3 +259,4 @@ class Member(webcface.field.Field):
         """
         self.request_ping_status()
         self._data_check().on_ping[self._member] = func
+        return func

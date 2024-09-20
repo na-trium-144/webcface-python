@@ -244,7 +244,7 @@ class Client(webcface.member.Member):
         """
         return map(self.member, self._data_check().value_store.get_members())
 
-    def on_member_entry(self, func: Callable) -> None:
+    def on_member_entry(self, func: Callable) -> Callable:
         """Memberが追加されたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。
@@ -256,6 +256,7 @@ class Client(webcface.member.Member):
         * または :code:`@client.on_member_entry` をデコレーターとして使う。
         """
         self._data_check().on_member_entry = func
+        return func
 
     @property
     def logging_handler(self) -> logging.Handler:

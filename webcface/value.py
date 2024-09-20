@@ -28,7 +28,7 @@ class Value(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    def on_change(self, func: Callable) -> None:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
         (ver2.0〜)
 
@@ -41,6 +41,7 @@ class Value(webcface.field.Field):
         if self._member not in data.on_value_change:
             data.on_value_change[self._member] = {}
         data.on_value_change[self._member][self._field] = func
+        return func
 
     def child(self, field: str) -> Value:
         """子フィールドを返す
@@ -99,7 +100,9 @@ class Value(webcface.field.Field):
         if isinstance(data, SupportsFloat):
             self._set_check().value_store.set_send(self._field, [float(data)])
         elif isinstance(data, list):
-            self._set_check().value_store.set_send(self._field, [float(v) for v in data])
+            self._set_check().value_store.set_send(
+                self._field, [float(v) for v in data]
+            )
         else:
             raise TypeError("unsupported data type for value.set(): " + str(data))
         on_change = (
