@@ -57,6 +57,7 @@ def test_ping(wcli):
         nonlocal called
         called += 1
 
+    wcli._data_check()._msg_first = True
     wcli.member("a").on_ping(callback)
     assert check_sent(wcli, PingStatusReq)
 
@@ -162,6 +163,7 @@ def test_value_req(wcli):
         nonlocal called
         called += 1
 
+    wcli._data_check()._msg_first = True
     wcli.member("a").value("b").on_change(callback)
     m = check_sent(wcli, ValueReq)
     assert isinstance(m, ValueReq)
@@ -191,6 +193,7 @@ def test_text_req(wcli):
         nonlocal called
         called += 1
 
+    wcli._data_check()._msg_first = True
     wcli.member("a").text("b").on_change(callback)
     m = check_sent(wcli, TextReq)
     assert isinstance(m, TextReq)
@@ -271,6 +274,7 @@ def test_view_req(wcli):
         nonlocal called
         called += 1
 
+    wcli._data_check()._msg_first = True
     wcli.member("a").view("b").on_change(callback)
     m = check_sent(wcli, ViewReq)
     assert isinstance(m, ViewReq)
@@ -347,6 +351,7 @@ def test_log_req(wcli):
         nonlocal called
         called += 1
 
+    wcli._data_check()._msg_first = True
     wcli.member("a").log().on_change(callback)
     m = check_sent(wcli, LogReq)
     assert isinstance(m, LogReq)
@@ -408,6 +413,7 @@ def test_func_info(wcli):
         return_type=ValType.INT,
         args=[Arg("a", type=ValType.INT, init=3)],
     )
+    wcli._data_check()._msg_first = True
     wcli.sync()
     m = check_sent(wcli, FuncInfo)
     assert isinstance(m, FuncInfo)
