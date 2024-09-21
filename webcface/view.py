@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Callable, List, Callable, SupportsFloat
+from typing import Optional, Callable, List, Callable, SupportsFloat, Union
 from copy import deepcopy
 import webcface.field
 import webcface.text
@@ -13,7 +13,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: Optional[webcface.client_data.ClientData]
     _on_click_func_tmp: Optional[Callable]
     _bind_tmp: Optional[webcface.text.InputRef]
-    _init: Optional[float | bool | str]
+    _init: Optional[Union[float, bool, str]]
 
     @staticmethod
     def from_base(
@@ -39,16 +39,16 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         self,
         type: int = 0,
         text: str = "",
-        on_click: Optional[webcface.field.FieldBase | Callable] = None,
+        on_click: Optional[Union[webcface.field.FieldBase, Callable]] = None,
         text_color: int = 0,
         bg_color: int = 0,
-        on_change: Optional[webcface.func.Func | Callable] = None,
+        on_change: Optional[Union[webcface.func.Func, Callable]] = None,
         bind: Optional[webcface.text.InputRef] = None,
         min: Optional[SupportsFloat] = None,
         max: Optional[SupportsFloat] = None,
         step: Optional[SupportsFloat] = None,
-        option: Optional[List[SupportsFloat | bool | str]] = None,
-        init: Optional[SupportsFloat | bool | str] = None,
+        option: Optional[List[Union[SupportsFloat, bool, str]]] = None,
+        init: Optional[Union[SupportsFloat, bool, str]] = None,
     ) -> None:
         """コンポーネントを作成
 
@@ -65,7 +65,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         :arg step: (ver2.0〜) Inputの刻み幅
         :arg option: (ver2.0〜) Inputの選択肢
         """
-        option2: List[str | bool | float] = []
+        option2: List[Union[str, bool, float]] = []
         if option is not None:
             for op in option:
                 if isinstance(op, bool):
@@ -102,7 +102,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             if isinstance(on_change, webcface.func.Func):
                 bind_new = webcface.text.InputRef()
 
-                def on_change_impl(val: float | bool | str):
+                def on_change_impl(val: Union[float, bool, str]):
                     if bind_new._state is not None:
                         bind_new._state.set(val)
                     return on_change.run(val)
@@ -112,7 +112,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             elif callable(on_change):
                 bind_new = webcface.text.InputRef()
 
-                def on_change_impl(val: float | bool | str):
+                def on_change_impl(val: Union[float, bool, str]):
                     if bind_new._state is not None:
                         bind_new._state.set(val)
                     return on_change(val)
@@ -121,7 +121,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
                 on_click = on_change_impl
         elif bind is not None:
 
-            def on_change_impl(val: float | bool | str):
+            def on_change_impl(val: Union[float, bool, str]):
                 if bind._state is not None:
                     bind._state.set(val)
 
@@ -288,7 +288,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return self._step
 
     @property
-    def option(self) -> List[float | bool | str]:
+    def option(self) -> List[Union[float, bool, str]]:
         """inputの選択肢
         (ver2.0〜)
         """
@@ -296,7 +296,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
 
 class View(webcface.field.Field):
-    _components: List[ViewComponent | str | bool | float | int]
+    _components: List[Union[ViewComponent, str, bool, float, int]]
     _modified: bool
 
     def __init__(self, base: webcface.field.Field, field: str = "") -> None:
@@ -376,7 +376,9 @@ class View(webcface.field.Field):
         """
         return self._field in self._data_check().view_store.get_entry(self._member)
 
-    def set(self, components: List[ViewComponent | str | bool | SupportsFloat]) -> View:
+    def set(
+        self, components: List[Union[ViewComponent, str, bool, SupportsFloat]]
+    ) -> View:
         """Viewのリストをセットする"""
         data2 = []
         for c in components:
@@ -424,7 +426,7 @@ class View(webcface.field.Field):
             self._modified = False
         return self
 
-    def add(self, *args: ViewComponent | str | bool | SupportsFloat) -> View:
+    def add(self, *args: Union[ViewComponent, str, bool, SupportsFloat]) -> View:
         """コンポーネントを追加
 
         Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする

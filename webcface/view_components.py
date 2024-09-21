@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable
+from typing import Callable, Union
 from enum import IntEnum
 import webcface.view
 import webcface.func
@@ -52,7 +52,7 @@ def new_line() -> webcface.view.ViewComponent:
 
 def button(
     text: str,
-    on_click: webcface.func.Func | Callable,
+    on_click: Union[webcface.func.Func, Callable],
     **kwargs,
 ) -> webcface.view.ViewComponent:
     """buttonコンポーネント

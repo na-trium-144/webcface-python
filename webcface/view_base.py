@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List
+from typing import Optional, List, Union
 import webcface.field
 import webcface.client_data
 
@@ -14,7 +14,7 @@ class ViewComponentBase:
     _min: Optional[float]
     _max: Optional[float]
     _step: Optional[float]
-    _option: List[float | bool | str]
+    _option: List[Union[float, bool, str]]
 
     def __init__(
         self,
@@ -27,7 +27,7 @@ class ViewComponentBase:
         min: Optional[float] = None,
         max: Optional[float] = None,
         step: Optional[float] = None,
-        option: Optional[List[float | bool | str]] = None,
+        option: Optional[List[Union[float, bool, str]]] = None,
     ) -> None:
         self._type = type
         self._text = text

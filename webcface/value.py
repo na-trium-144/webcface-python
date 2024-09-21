@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List, Callable, SupportsFloat
+from typing import Optional, List, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
 import webcface.message
@@ -94,7 +94,7 @@ class Value(webcface.field.Field):
         """
         return f'<member("{self.member.name}").value("{self.name}") = {self.try_get_vec()}>'
 
-    def set(self, data: List[SupportsFloat] | SupportsFloat) -> Value:
+    def set(self, data: Union[List[SupportsFloat], SupportsFloat]) -> Value:
         """値をセットする"""
         self._set_check()
         if isinstance(data, SupportsFloat):

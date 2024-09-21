@@ -100,8 +100,8 @@ class Line(Geometry):
 
 
 def line(
-    begin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    end: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    begin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    end: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
 ) -> Line:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -124,7 +124,7 @@ class Polygon(Geometry):
 
 
 def polygon(
-    points: List[webcface.transform.Point | webcface.transform.ConvertibleToPoint],
+    points: List[Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]],
 ) -> Polygon:
     props: List[float] = []
     for p in points:
@@ -167,7 +167,7 @@ class Plane(Geometry):
 
 
 def plane(
-    origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
+    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
     width: SupportsFloat,
     height: SupportsFloat,
 ) -> Plane:
@@ -177,8 +177,8 @@ def plane(
 
 
 def rect(
-    begin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    end: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    begin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    end: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
 ) -> Plane:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -207,8 +207,8 @@ class Box(Geometry):
 
 
 def box(
-    vertex1: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    vertex2: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    vertex1: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    vertex2: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
 ) -> Box:
     if not isinstance(vertex1, webcface.transform.Point):
         vertex1 = webcface.transform.Point(vertex1)
@@ -234,7 +234,7 @@ class Circle(Geometry):
 
 
 def circle(
-    origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
+    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
     radius: SupportsFloat,
 ) -> Circle:
     if not isinstance(origin, webcface.transform.Transform):
@@ -263,7 +263,7 @@ class Cylinder(Geometry):
 
 
 def cylinder(
-    origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
+    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
     radius: SupportsFloat,
     length: SupportsFloat,
 ) -> Cylinder:
@@ -287,7 +287,7 @@ class Sphere(Geometry):
 
 
 def sphere(
-    origin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    origin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
     radius: SupportsFloat,
 ) -> Sphere:
     if not isinstance(origin, webcface.transform.Point):

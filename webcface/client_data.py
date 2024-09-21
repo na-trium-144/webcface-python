@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Callable
+from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Union
 import threading
-import json
 import datetime
 import logging
 import webcface.field
@@ -253,7 +252,7 @@ class FuncResultStore:
 class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[List[float]]
-    text_store: SyncDataStore2[float | bool | str]
+    text_store: SyncDataStore2[Union[float, bool, str]]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
     canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
@@ -307,7 +306,7 @@ class ClientData:
         self.value_store = SyncDataStore2[List[float]](
             name, SyncDataStore2.should_send_on_change
         )
-        self.text_store = SyncDataStore2[float | bool | str](
+        self.text_store = SyncDataStore2[Union[float, bool, str]](
             name, SyncDataStore2.should_send_on_change
         )
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](

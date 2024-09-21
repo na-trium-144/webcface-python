@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, List, SupportsFloat
+from typing import Callable, Optional, List, SupportsFloat, Union
 from enum import IntEnum
 from copy import deepcopy
 import inspect
@@ -42,17 +42,17 @@ class Arg:
     _type: int
     _min: Optional[float]
     _max: Optional[float]
-    _init: Optional[float | bool | str]
-    _option: List[float | str]
+    _init: Optional[Union[float, bool, str]]
+    _option: List[Union[float, str]]
 
     def __init__(
         self,
         name: str = "",
-        type: int | type = ValType.NONE,
+        type: Union[int, type] = ValType.NONE,
         min: Optional[SupportsFloat] = None,
         max: Optional[SupportsFloat] = None,
-        init: Optional[SupportsFloat | bool | str] = None,
-        option: List[SupportsFloat | str] = [],
+        init: Optional[Union[SupportsFloat, bool, str]] = None,
+        option: List[Union[SupportsFloat, str]] = [],
     ) -> None:
         self._name = name
         if isinstance(type, int):
@@ -112,7 +112,7 @@ class Arg:
         return self._type
 
     @property
-    def init(self) -> Optional[float | bool | str]:
+    def init(self) -> Optional[Union[float, bool, str]]:
         return self._init
 
     @property
@@ -124,7 +124,7 @@ class Arg:
         return self._min
 
     @property
-    def option(self) -> List[float | str]:
+    def option(self) -> List[Union[float, str]]:
         return self._option
 
 
@@ -136,7 +136,7 @@ class FuncInfo:
     def __init__(
         self,
         func: Optional[Callable],
-        return_type: Optional[int | type],
+        return_type: Optional[Union[int, type]],
         args: Optional[List[Arg]],
         in_thread: bool = False,
     ) -> None:
@@ -200,7 +200,7 @@ class FuncInfo:
                 is_error=True,
             )
             return
-        new_args: List[float | bool | str] = []
+        new_args: List[Union[float, bool, str]] = []
         for i, a in enumerate(args):
             if self.args[i].type == ValType.INT:
                 new_args.append(int(float(a)))
@@ -231,7 +231,7 @@ class Promise:
     _reached: bool
     _found: bool
     _finished: bool
-    _result: float | bool | str
+    _result: Union[float, bool, str]
     _result_is_error: bool
     _on_reach: Optional[Callable]
     _reach_event_done: bool
@@ -324,7 +324,7 @@ class Promise:
         return self
 
     @property
-    def result(self) -> float | bool | str:
+    def result(self) -> Union[float, bool, str]:
         """実行結果または例外
 
         結果が返ってくるまで待機する。
@@ -364,7 +364,7 @@ class Promise:
         return self._result_is_error
 
     @property
-    def response(self) -> float | bool | str:
+    def response(self) -> Union[float, bool, str]:
         """関数の実行が完了した場合その戻り値を返す
         (ver2.0〜)
         """
@@ -451,7 +451,7 @@ class Promise:
                 is_error=True,
             )
 
-    def _set_finish(self, result: float | bool | str, is_error: bool) -> None:
+    def _set_finish(self, result: Union[float, bool, str], is_error: bool) -> None:
         run_finish_func: Optional[Callable] = None
         with self._cv:
             self._finished = True

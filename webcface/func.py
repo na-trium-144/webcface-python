@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Callable, Optional, List
+from typing import Callable, Optional, List, Union
 from copy import deepcopy
 import threading
 import sys
@@ -9,14 +9,14 @@ import webcface.func_info
 
 
 class Func(webcface.field.Field):
-    _return_type: Optional[int | type]
+    _return_type: Optional[Union[int, type]]
     _args: Optional[List[webcface.func_info.Arg]]
 
     def __init__(
         self,
         base: Optional[webcface.field.Field],
         field: str = "",
-        return_type: Optional[int | type] = None,
+        return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
     ) -> None:
         """Funcを指すクラス
@@ -64,7 +64,7 @@ class Func(webcface.field.Field):
     def set(
         self,
         func: Callable,
-        return_type: Optional[int | type] = None,
+        return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
     ) -> Func:
         """関数からFuncInfoを構築しセットする
@@ -87,7 +87,7 @@ class Func(webcface.field.Field):
     def set_async(
         self,
         func: Callable,
-        return_type: Optional[int | type] = None,
+        return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
     ) -> Func:
         """関数からFuncInfoを構築しセットする
@@ -115,7 +115,7 @@ class Func(webcface.field.Field):
         self._data_check().func_store.unset_recv(self._member, self._field)
         return self
 
-    def run(self, *args) -> float | bool | str:
+    def run(self, *args) -> Union[float, bool, str]:
         """関数を実行する (同期)
 
         * selfの関数の場合、このスレッドで直接実行する
@@ -168,7 +168,7 @@ class Func(webcface.field.Field):
                 r._set_reach(False)
         return r
 
-    def __call__(self, *args) -> float | bool | str | Callable:
+    def __call__(self, *args) -> Union[float, bool, str, Callable]:
         """引数にCallableを1つだけ渡した場合、set()してそのCallableを返す
         (Funcをデコレータとして使う場合の処理)
 

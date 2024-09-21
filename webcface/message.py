@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, List
+from typing import Dict, List, Union
 import datetime
 import msgpack
 import webcface.func_info
@@ -809,7 +809,7 @@ class Call(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, r: int, f: str, a: List[float | bool | str]) -> Call:
+    def new(i: int, c: int, r: int, f: str, a: List[Union[float, bool, str]]) -> Call:
         return Call({"i": i, "c": c, "r": r, "f": f, "a": a})
 
     @property
@@ -829,7 +829,7 @@ class Call(MessageBase):
         return self.msg["f"]
 
     @property
-    def args(self) -> List[float | bool | str]:
+    def args(self) -> List[Union[float, bool, str]]:
         return self.msg["a"]
 
 
@@ -863,7 +863,7 @@ class CallResult(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, e: bool, r: float | bool | str) -> CallResult:
+    def new(i: int, c: int, e: bool, r: Union[float, bool, str]) -> CallResult:
         return CallResult({"i": i, "c": c, "e": e, "r": r})
 
     @property
@@ -879,7 +879,7 @@ class CallResult(MessageBase):
         return self.msg["e"]
 
     @property
-    def result(self) -> float | bool | str:
+    def result(self) -> Union[float, bool, str]:
         return self.msg["r"]
 
 
@@ -974,7 +974,7 @@ message_classes_recv = [
 
 
 def pack(msgs: List[MessageBase]) -> bytes:
-    send_msgs: List[int | dict] = []
+    send_msgs: List[Union[int, dict]] = []
     for m in msgs:
         send_msgs.append(m.kind)
         send_msgs.append(m.msg)

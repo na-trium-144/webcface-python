@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Optional, Callable, SupportsFloat
+from typing import Optional, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
 
@@ -53,12 +53,12 @@ class Variant(webcface.field.Field):
                 [webcface.message.TextReq.new(self._member, self._field, req)]
             )
 
-    def try_get(self) -> Optional[float | bool | str]:
+    def try_get(self) -> Optional[Union[float, bool, str]]:
         """データまたはNoneを返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         return self._data_check().text_store.get_recv(self._member, self._field)
 
-    def get(self) -> float | bool | str:
+    def get(self) -> Union[float, bool, str]:
         """データを返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else ""
@@ -81,10 +81,10 @@ class Variant(webcface.field.Field):
             f'<member("{self.member.name}").variant("{self.name}") = {self.try_get()}>'
         )
 
-    def set(self, data: SupportsFloat | bool | str) -> Variant:
+    def set(self, data: Union[SupportsFloat, bool, str]) -> Variant:
         """値をセットする"""
         if isinstance(data, bool):
-            data2: float | bool | str = data
+            data2: Union[float, bool, str] = data
         elif isinstance(data, SupportsFloat):
             data2 = float(data)
         else:
@@ -150,7 +150,7 @@ class InputRef:
     def __init__(self) -> None:
         self._state = None
 
-    def get(self) -> float | bool | str:
+    def get(self) -> Union[float, bool, str]:
         """値を返す"""
         if self._state is None:
             return ""
