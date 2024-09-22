@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.view module &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.view module &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -84,7 +84,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 1.1.3</a>
+          <a href="index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -111,7 +111,7 @@
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.view.View.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.add" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.add" title="Link to this definition"></a></dt>
 <dd><p>コンポーネントを追加</p>
 <p>Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする</p>
 </dd></dl>
@@ -125,6 +125,15 @@
 <dd class="field-odd"><p>「(thisのフィールド名).(子フィールド名)」をフィールド名とするView</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.view.View.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/view.html#View.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.exists" title="Link to this definition"></a></dt>
+<dd><p>このフィールドにデータが存在すればtrue
+(ver2.0〜)</p>
+<p>try_get() などとは違って、実際のデータを受信しない。
+リクエストもしない。</p>
 </dd></dl>
 
 <dl class="py method">
@@ -152,6 +161,15 @@
 </dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="webcface.view.View.on_change">
+<span class="sig-name descname"><span class="pre">on_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/view.html#View.on_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.on_change" title="Link to this definition"></a></dt>
+<dd><p>値が変化したときのイベント
+(ver2.0〜)</p>
+<p>コールバックの引数にはViewオブジェクトが渡される。</p>
+<p>まだ値をリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="webcface.view.View.request">
 <span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/view.html#View.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.request" title="Link to this definition"></a></dt>
 <dd><p>値の受信をリクエストする</p>
@@ -159,16 +177,8 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.view.View.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.set" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.View.set" title="Link to this definition"></a></dt>
 <dd><p>Viewのリストをセットする</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="webcface.view.View.signal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.view.View.signal" title="Link to this definition"></a></dt>
-<dd><p>値が変化したときのイベント</p>
-<p>コールバックの引数にはViewオブジェクトが渡される。</p>
-<p>まだリクエストされてなければ自動でリクエストする。</p>
 </dd></dl>
 
 <dl class="py method">
@@ -187,13 +197,22 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.view.ViewComponent">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.view.</span></span><span class="sig-name descname"><span class="pre">ViewComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_click</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.FieldBase" title="webcface.field.FieldBase"><span class="pre">FieldBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bg_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view.html#ViewComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.ViewComponent" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.view.</span></span><span class="sig-name descname"><span class="pre">ViewComponent</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_click</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.FieldBase" title="webcface.field.FieldBase"><span class="pre">FieldBase</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">text_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bg_color</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">on_change</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">bind</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.text.html#webcface.text.InputRef" title="webcface.text.InputRef"><span class="pre">InputRef</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">min</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">max</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">step</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">option</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">init</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view.html#ViewComponent"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.ViewComponent" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentBase" title="webcface.view_base.ViewComponentBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">ViewComponentBase</span></code></a></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.view.ViewComponent.bg_color">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bg_color</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.view.ViewComponent.bg_color" title="Link to this definition"></a></dt>
 <dd><p>背景の色</p>
 <p>ViewColor Enumを使う</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.view.ViewComponent.bind">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">bind</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.text.html#webcface.text.Variant" title="webcface.text.Variant"><span class="pre">Variant</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.view.ViewComponent.bind" title="Link to this definition"></a></dt>
+<dd><p>inputの現在の値を取得
+(ver2.0〜)</p>
+<p>viewを作成したときにbindしたかon_changeをセットしたかに関わらず、
+値の変更はbindではなくon_changeから行う</p>
 </dd></dl>
 
 <dl class="py method">
@@ -204,13 +223,50 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.view.ViewComponent.lock_tmp">
 <span class="sig-name descname"><span class="pre">lock_tmp</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#ViewComponent.lock_tmp"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.view.ViewComponent.lock_tmp" title="Link to this definition"></a></dt>
-<dd><p>AnonymousFuncをFuncオブジェクトにlockする</p>
+<dd><p>on_clickをFuncオブジェクトにlockする</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.view.ViewComponent.max">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">max</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.view.ViewComponent.max" title="Link to this definition"></a></dt>
+<dd><p>inputの最大値
+(ver2.0〜)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.view.ViewComponent.min">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">min</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.view.ViewComponent.min" title="Link to this definition"></a></dt>
+<dd><p>inputの最小値
+(ver2.0〜)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.view.ViewComponent.on_change">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.view.ViewComponent.on_change" title="Link to this definition"></a></dt>
+<dd><p>値が変化したときに呼び出す関数
+(ver2.0〜)</p>
+<p>run_asyncの引数に変更後の値を入れて呼び出すことで、inputの値を変更する</p>
+<p>内部実装はon_clickと共通になっている</p>
 </dd></dl>
 
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.view.ViewComponent.on_click">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">on_click</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.view.ViewComponent.on_click" title="Link to this definition"></a></dt>
 <dd><p>クリックしたときに呼び出す関数</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.view.ViewComponent.option">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">option</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.view.ViewComponent.option" title="Link to this definition"></a></dt>
+<dd><p>inputの選択肢
+(ver2.0〜)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.view.ViewComponent.step">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">step</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.view.ViewComponent.step" title="Link to this definition"></a></dt>
+<dd><p>inputの刻み幅
+(ver2.0〜)</p>
 </dd></dl>
 
 <dl class="py property">

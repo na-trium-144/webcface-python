@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.view_base &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.view_base &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 1.1.3</a>
+          <a href="../../index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,9 +70,10 @@
              
   <h1>Source code for webcface.view_base</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.client_data</span>
+
 
 <div class="viewcode-block" id="ViewComponentBase">
 <a class="viewcode-back" href="../../webcface.view_base.html#webcface.view_base.ViewComponentBase">[docs]</a>
@@ -80,23 +81,37 @@
     <span class="n">_type</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">_text</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">_on_click_func</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">FieldBase</span><span class="p">]</span>
+    <span class="n">_text_ref</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">FieldBase</span><span class="p">]</span>
     <span class="n">_text_color</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">_bg_color</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">_step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">_option</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="nb">type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
         <span class="n">on_click</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">FieldBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">text_ref</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">FieldBase</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">text_color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">bg_color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="nb">min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">=</span> <span class="nb">type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">=</span> <span class="n">text</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="o">=</span> <span class="n">text_ref</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_text_color</span> <span class="o">=</span> <span class="n">text_color</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_bg_color</span> <span class="o">=</span> <span class="n">bg_color</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_bg_color</span> <span class="o">=</span> <span class="n">bg_color</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">=</span> <span class="nb">min</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">=</span> <span class="nb">max</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">=</span> <span class="n">step</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_option</span> <span class="o">=</span> <span class="n">option</span> <span class="ow">or</span> <span class="p">[]</span></div>
 
 </pre></div>
 

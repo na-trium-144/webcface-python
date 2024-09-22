@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.member &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.member &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 1.1.3</a>
+          <a href="../../index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,9 +70,8 @@
              
   <h1>Source code for webcface.member</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">SupportsFloat</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">blinker</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.value</span>
 <span class="kn">import</span> <span class="nn">webcface.text</span>
@@ -116,6 +115,13 @@
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Member.variant">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.variant">[docs]</a>
+    <span class="k">def</span> <span class="nf">variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Variant</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Variantオブジェクトを生成 (ver2.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
+
+
 <div class="viewcode-block" id="Member.view">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.view">[docs]</a>
     <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">View</span><span class="p">:</span>
@@ -128,8 +134,8 @@
     <span class="k">def</span> <span class="nf">canvas2d</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d</span><span class="o">.</span><span class="n">Canvas2D</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas2Dオブジェクトを生成</span>
 
@@ -155,28 +161,23 @@
 <div class="viewcode-block" id="Member.func">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.func">[docs]</a>
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span> <span class="o">|</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">AnonymousFunc</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;FuncオブジェクトまたはAnonymousオブジェクトを生成</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Funcオブジェクトを生成</span>
 
 <span class="sd">        #. member.func(arg: str)</span>
 <span class="sd">            * 指定した名前のFuncオブジェクトを生成・参照する。</span>
-<span class="sd">        #. member.func(arg: Callable, [**kwargs])</span>
-<span class="sd">            * Funcの名前を決めずに一時的なFuncオブジェクト(AnonymoudFuncオブジェクト)を作成し、関数をセットする。</span>
 <span class="sd">        #. @member.func(arg: str, [**kwargs])</span>
 <span class="sd">            * デコレータとして使い、デコレートした関数を指定した名前でセットする。</span>
 <span class="sd">            * デコレート後、関数は元のまま返す。</span>
 <span class="sd">        #. @member.func([**kwargs])</span>
 <span class="sd">            * 3と同じだが、名前はデコレートした関数から自動で取得される。</span>
+<span class="sd">        #. member.func(arg: Callable, [**kwargs])</span>
+<span class="sd">            * これはver2.0で削除。</span>
 
-<span class="sd">        2,3,4について、関数のセットに関しては Func.set() を参照。</span>
-
-<span class="sd">        :return: 1→ Func, 2→ AnonymousFunc</span>
+<span class="sd">        2, 3 の場合のkwargsは Func.set() を参照。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-            <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">AnonymousFunc</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Member.values">
@@ -265,61 +266,82 @@
         <span class="p">)</span></div>
 
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_value_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+<div class="viewcode-block" id="Member.on_value_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_value_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_value_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Valueが追加されたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはValueオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;value_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_value_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_text_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Member.on_text_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_text_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_text_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Textが追加されたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはTextオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;text_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_text_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_view_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Member.on_view_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_view_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_view_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewが追加されたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはViewオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;view_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_view_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_func_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Member.on_func_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_func_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_func_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Funcが追加されたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはFuncオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;func_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_func_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_canvas2d_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Member.on_canvas2d_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_canvas2d_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_canvas2d_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas2Dが追加されたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはCanvas2Dオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;canvas2d_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_canvas2d_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_canvas3d_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Member.on_canvas3d_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_canvas3d_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_canvas3d_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas3Dが追加されたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはCanvas3Dオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;canvas3d_entry&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_canvas3d_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+
+<div class="viewcode-block" id="Member.on_sync">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_sync">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_sync</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Memberがsyncしたときのイベント</span>
 
 <span class="sd">        コールバックの引数にはMemberオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;sync&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_sync</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
+
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">sync_time</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">:</span>
@@ -359,25 +381,39 @@
     <span class="k">def</span> <span class="nf">ping_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;通信速度を調べる</span>
 
-<span class="sd">        初回の呼び出しで通信速度データをリクエストし、</span>
+<span class="sd">        通信速度データをリクエストしていなければリクエストし、</span>
 <span class="sd">        sync()後通信速度が得られるようになる</span>
-<span class="sd">        :return: 初回→ None, 2回目以降(取得できれば)→ pingの往復時間 (ms)</span>
+<span class="sd">        :return: データがなければ None, 受信していれば pingの往復時間 (ms)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">ping_status_req</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">ping_status_req</span> <span class="o">=</span> <span class="kc">True</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg</span><span class="p">([</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">PingStatusReq</span><span class="o">.</span><span class="n">new</span><span class="p">()])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_ping_status</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">ping_status</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">get_member_id_from_name</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">),</span> <span class="kc">None</span>
         <span class="p">)</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">on_ping</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+<div class="viewcode-block" id="Member.request_ping_status">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.request_ping_status">[docs]</a>
+    <span class="k">def</span> <span class="nf">request_ping_status</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;通信速度データをリクエストする</span>
+<span class="sd">        (ver2.0〜)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">ping_status_req</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">ping_status_req</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">([</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">PingStatusReq</span><span class="o">.</span><span class="n">new</span><span class="p">()])</span></div>
+
+
+<div class="viewcode-block" id="Member.on_ping">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_ping">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_ping</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;通信速度データが更新されたときのイベント</span>
+
+<span class="sd">        通信速度データをリクエストしていなければリクエストする</span>
 
 <span class="sd">        コールバックの引数にはMemberオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">ping_status</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;ping&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">request_ping_status</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_ping</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
+</div>
 
 </pre></div>
 

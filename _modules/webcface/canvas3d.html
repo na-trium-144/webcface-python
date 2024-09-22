@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.canvas3d &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.canvas3d &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 1.1.3</a>
+          <a href="../../index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -72,7 +72,6 @@
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">import</span> <span class="nn">blinker</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas3d_base</span>
 <span class="kn">import</span> <span class="nn">webcface.geometries</span>
@@ -171,16 +170,23 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;field名を返す&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span>
 
-    <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">signal</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
+<div class="viewcode-block" id="Canvas3D.on_change">
+<a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.on_change">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_change</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;値が変化したときのイベント</span>
+<span class="sd">        (ver2.0〜)</span>
 
-<span class="sd">        コールバックの引数にはViewオブジェクトが渡される。</span>
+<span class="sd">        コールバックの引数にはCanvas3Dオブジェクトが渡される。</span>
 
-<span class="sd">        まだリクエストされてなければ自動でリクエストする。</span>
+<span class="sd">        まだ値をリクエストされてなければ自動でリクエストされる</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="s2">&quot;canvas3d_change&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">on_canvas3d_change</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">on_canvas3d_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">on_canvas3d_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
+
 
 <div class="viewcode-block" id="Canvas3D.child">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.child">[docs]</a>
@@ -198,7 +204,7 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;値の受信をリクエストする&quot;&quot;&quot;</span>
         <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
                 <span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">Canvas3DReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">req</span><span class="p">)]</span>
             <span class="p">)</span></div>
 
@@ -221,6 +227,18 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvasをlistで返す、まだリクエストされてなければ自動でリクエストされる&quot;&quot;&quot;</span>
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">try_get</span><span class="p">()</span>
         <span class="k">return</span> <span class="n">v</span> <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="k">else</span> <span class="p">[]</span></div>
+
+
+<div class="viewcode-block" id="Canvas3D.exists">
+<a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.exists">[docs]</a>
+    <span class="k">def</span> <span class="nf">exists</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このフィールドにデータが存在すればtrue</span>
+<span class="sd">        (ver2.0〜)</span>
+
+<span class="sd">        try_get() などとは違って、実際のデータを受信しない。</span>
+<span class="sd">        リクエストもしない。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
@@ -248,8 +266,12 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">signal</span><span class="o">.</span><span class="n">send</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="n">on_change</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_canvas3d_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">on_change</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 

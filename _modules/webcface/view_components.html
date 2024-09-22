@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.view_components &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.view_components &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 1.1.3</a>
+          <a href="../../index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,7 +70,7 @@
              
   <h1>Source code for webcface.view_components</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
 <span class="kn">import</span> <span class="nn">webcface.view</span>
 <span class="kn">import</span> <span class="nn">webcface.func</span>
@@ -83,7 +83,14 @@
 <span class="k">class</span> <span class="nc">ViewComponentType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
     <span class="n">TEXT</span> <span class="o">=</span> <span class="mi">0</span>
     <span class="n">NEW_LINE</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="n">BUTTON</span> <span class="o">=</span> <span class="mi">2</span></div>
+    <span class="n">BUTTON</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">TEXT_INPUT</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">DECIMAL_INPUT</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">NUMBER_INPUT</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">TOGGLE_INPUT</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">SELECT_INPUT</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">SLIDER_INPUT</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">CHECK_INPUT</span> <span class="o">=</span> <span class="mi">9</span></div>
 
 
 
@@ -121,10 +128,7 @@
 <div class="viewcode-block" id="new_line">
 <a class="viewcode-back" href="../../webcface.view_components.html#webcface.new_line">[docs]</a>
 <span class="k">def</span> <span class="nf">new_line</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;newLineコンポーネント</span>
-
-<span class="sd">    kwargsに指定したプロパティはViewComponentのコンストラクタに渡される</span>
-<span class="sd">    &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;newLineコンポーネント&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span><span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">NEW_LINE</span><span class="p">)</span></div>
 
 
@@ -133,7 +137,7 @@
 <a class="viewcode-back" href="../../webcface.view_components.html#webcface.button">[docs]</a>
 <span class="k">def</span> <span class="nf">button</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">on_click</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span> <span class="o">|</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">AnonymousFunc</span> <span class="o">|</span> <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">on_click</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">,</span> <span class="n">Callable</span><span class="p">],</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;buttonコンポーネント</span>
@@ -144,6 +148,69 @@
         <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="n">on_click</span><span class="o">=</span><span class="n">on_click</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
     <span class="p">)</span></div>
 
+
+
+<span class="k">def</span> <span class="nf">text_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;textInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">TEXT_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">decimal_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;decimalInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">DECIMAL_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">number_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;numberInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">NUMBER_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">toggle_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;toggleInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">TOGGLE_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">select_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;selectInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">SELECT_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">slider_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;sliderInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">SLIDER_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">check_input</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;checkInputコンポーネント</span>
+<span class="sd">    (ver2.0〜)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">type</span><span class="o">=</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">CHECK_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
 </pre></div>
 
            </div>

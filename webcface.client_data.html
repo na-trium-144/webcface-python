@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_data module &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.client_data module &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -86,7 +86,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 1.1.3</a>
+          <a href="index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -109,8 +109,13 @@
 <span id="webcface-client-data-module"></span><h1>webcface.client_data module<a class="headerlink" href="#module-webcface.client_data" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.client_data.ClientData">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.client_data.</span></span><span class="sig-name descname"><span class="pre">ClientData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger_internal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.client_data.</span></span><span class="sig-name descname"><span class="pre">ClientData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">logger_internal</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Logger</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">auto_reconnect</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.auto_reconnect">
+<span class="sig-name descname"><span class="pre">auto_reconnect</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#webcface.client_data.ClientData.auto_reconnect" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.ClientData.canvas2d_store">
 <span class="sig-name descname"><span class="pre">canvas2d_store</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#webcface.client_data.SyncDataStore2" title="webcface.client_data.SyncDataStore2"><span class="pre">SyncDataStore2</span></a><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DData" title="webcface.canvas2d_base.Canvas2DData"><span class="pre">Canvas2DData</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.canvas2d_store" title="Link to this definition"></a></dt>
@@ -124,6 +129,11 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.client_data.ClientData.clear_msg">
 <span class="sig-name descname"><span class="pre">clear_msg</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.clear_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.clear_msg" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.connected">
+<span class="sig-name descname"><span class="pre">connected</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#webcface.client_data.ClientData.connected" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -202,6 +212,81 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_canvas2d_change">
+<span class="sig-name descname"><span class="pre">on_canvas2d_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_canvas2d_change" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_canvas2d_entry">
+<span class="sig-name descname"><span class="pre">on_canvas2d_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_canvas2d_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_canvas3d_change">
+<span class="sig-name descname"><span class="pre">on_canvas3d_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_canvas3d_change" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_canvas3d_entry">
+<span class="sig-name descname"><span class="pre">on_canvas3d_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_canvas3d_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_func_entry">
+<span class="sig-name descname"><span class="pre">on_func_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_func_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_log_change">
+<span class="sig-name descname"><span class="pre">on_log_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_log_change" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_member_entry">
+<span class="sig-name descname"><span class="pre">on_member_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_member_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_ping">
+<span class="sig-name descname"><span class="pre">on_ping</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_ping" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_sync">
+<span class="sig-name descname"><span class="pre">on_sync</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_sync" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_text_change">
+<span class="sig-name descname"><span class="pre">on_text_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_text_change" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_text_entry">
+<span class="sig-name descname"><span class="pre">on_text_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_text_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_value_change">
+<span class="sig-name descname"><span class="pre">on_value_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_value_change" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_value_entry">
+<span class="sig-name descname"><span class="pre">on_value_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_value_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_view_change">
+<span class="sig-name descname"><span class="pre">on_view_change</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_view_change" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.on_view_entry">
+<span class="sig-name descname"><span class="pre">on_view_entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Callable</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.on_view_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.ClientData.ping_status">
 <span class="sig-name descname"><span class="pre">ping_status</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.ping_status" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -217,8 +302,41 @@
 <dd></dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="webcface.client_data.ClientData.queue_msg">
-<span class="sig-name descname"><span class="pre">queue_msg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.message.html#webcface.message.MessageBase" title="webcface.message.MessageBase"><span class="pre">MessageBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.queue_msg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.queue_msg" title="Link to this definition"></a></dt>
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.queue_first">
+<span class="sig-name descname"><span class="pre">queue_first</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.queue_first"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.queue_first" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.queue_msg_always">
+<span class="sig-name descname"><span class="pre">queue_msg_always</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.message.html#webcface.message.MessageBase" title="webcface.message.MessageBase"><span class="pre">MessageBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.queue_msg_always"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.queue_msg_always" title="Link to this definition"></a></dt>
+<dd><p>メッセージをキューに入れる</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.queue_msg_online">
+<span class="sig-name descname"><span class="pre">queue_msg_online</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.message.html#webcface.message.MessageBase" title="webcface.message.MessageBase"><span class="pre">MessageBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.queue_msg_online"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.queue_msg_online" title="Link to this definition"></a></dt>
+<dd><p>接続できていればキューに入れtrueを返す</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.queue_msg_req">
+<span class="sig-name descname"><span class="pre">queue_msg_req</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msgs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.message.html#webcface.message.MessageBase" title="webcface.message.MessageBase"><span class="pre">MessageBase</span></a><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.queue_msg_req"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.queue_msg_req" title="Link to this definition"></a></dt>
+<dd><p>msg_firstが空でなければキューに入れtrueを返す</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.recv_cv">
+<span class="sig-name descname"><span class="pre">recv_cv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Condition</span></em><a class="headerlink" href="#webcface.client_data.ClientData.recv_cv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.recv_queue">
+<span class="sig-name descname"><span class="pre">recv_queue</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">bytes</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.recv_queue" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.self_member_id">
+<span class="sig-name descname"><span class="pre">self_member_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></em><a class="headerlink" href="#webcface.client_data.ClientData.self_member_id" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -226,9 +344,9 @@
 <span class="sig-name descname"><span class="pre">self_member_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.client_data.ClientData.self_member_name" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="webcface.client_data.ClientData.signal">
-<span class="sig-name descname"><span class="pre">signal</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">signal_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">NamedSignal</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#ClientData.signal"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.ClientData.signal" title="Link to this definition"></a></dt>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.svr_hostname">
+<span class="sig-name descname"><span class="pre">svr_hostname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.client_data.ClientData.svr_hostname" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -242,13 +360,18 @@
 <dd></dd></dl>
 
 <dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.ClientData.sync_init_end">
+<span class="sig-name descname"><span class="pre">sync_init_end</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bool</span></em><a class="headerlink" href="#webcface.client_data.ClientData.sync_init_end" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.ClientData.sync_time_store">
 <span class="sig-name descname"><span class="pre">sync_time_store</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#webcface.client_data.SyncDataStore1" title="webcface.client_data.SyncDataStore1"><span class="pre">SyncDataStore1</span></a><span class="p"><span class="pre">[</span></span><span class="pre">datetime</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.sync_time_store" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.ClientData.text_store">
-<span class="sig-name descname"><span class="pre">text_store</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#webcface.client_data.SyncDataStore2" title="webcface.client_data.SyncDataStore2"><span class="pre">SyncDataStore2</span></a><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.text_store" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">text_store</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="#webcface.client_data.SyncDataStore2" title="webcface.client_data.SyncDataStore2"><span class="pre">SyncDataStore2</span></a><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.ClientData.text_store" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -279,12 +402,17 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.client_data.FuncResultStore.add_result">
-<span class="sig-name descname"><span class="pre">add_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func_info.html#webcface.func_info.AsyncFuncResult" title="webcface.func_info.AsyncFuncResult"><span class="pre">AsyncFuncResult</span></a></span></span><a class="reference internal" href="_modules/webcface/client_data.html#FuncResultStore.add_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.FuncResultStore.add_result" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">add_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func_info.html#webcface.func_info.Promise" title="webcface.func_info.Promise"><span class="pre">Promise</span></a></span></span><a class="reference internal" href="_modules/webcface/client_data.html#FuncResultStore.add_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.FuncResultStore.add_result" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.FuncResultStore.del_result">
+<span class="sig-name descname"><span class="pre">del_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#FuncResultStore.del_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.FuncResultStore.del_result" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.client_data.FuncResultStore.get_result">
-<span class="sig-name descname"><span class="pre">get_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func_info.html#webcface.func_info.AsyncFuncResult" title="webcface.func_info.AsyncFuncResult"><span class="pre">AsyncFuncResult</span></a></span></span><a class="reference internal" href="_modules/webcface/client_data.html#FuncResultStore.get_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.FuncResultStore.get_result" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">get_result</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func_info.html#webcface.func_info.Promise" title="webcface.func_info.Promise"><span class="pre">Promise</span></a></span></span><a class="reference internal" href="_modules/webcface/client_data.html#FuncResultStore.get_result"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.FuncResultStore.get_result" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py attribute">
@@ -294,7 +422,7 @@
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.FuncResultStore.results">
-<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func_info.html#webcface.func_info.AsyncFuncResult" title="webcface.func_info.AsyncFuncResult"><span class="pre">AsyncFuncResult</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.FuncResultStore.results" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">results</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func_info.html#webcface.func_info.Promise" title="webcface.func_info.Promise"><span class="pre">Promise</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.FuncResultStore.results" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -309,6 +437,11 @@
 <dd></dd></dl>
 
 <dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.clear_entry">
+<span class="sig-name descname"><span class="pre">clear_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#SyncDataStore1.clear_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.SyncDataStore1.clear_entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
 <dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.clear_req">
 <span class="sig-name descname"><span class="pre">clear_req</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#SyncDataStore1.clear_req"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.SyncDataStore1.clear_req" title="Link to this definition"></a></dt>
 <dd></dd></dl>
@@ -316,6 +449,16 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.data_recv">
 <span class="sig-name descname"><span class="pre">data_recv</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">T</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.SyncDataStore1.data_recv" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.entry">
+<span class="sig-name descname"><span class="pre">entry</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.client_data.SyncDataStore1.entry" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.get_entry">
+<span class="sig-name descname"><span class="pre">get_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#SyncDataStore1.get_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.SyncDataStore1.get_entry" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">
@@ -341,6 +484,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.self_member_name">
 <span class="sig-name descname"><span class="pre">self_member_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.client_data.SyncDataStore1.self_member_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.client_data.SyncDataStore1.set_entry">
+<span class="sig-name descname"><span class="pre">set_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/client_data.html#SyncDataStore1.set_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.client_data.SyncDataStore1.set_entry" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 <dl class="py method">

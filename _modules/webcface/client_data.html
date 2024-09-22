@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_data &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.client_data &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 1.1.3</a>
+          <a href="../../index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -70,12 +70,10 @@
              
   <h1>Source code for webcface.client_data</h1><div class="highlight"><pre>
 <span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">threading</span>
-<span class="kn">import</span> <span class="nn">json</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
-<span class="kn">import</span> <span class="nn">blinker</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.func_info</span>
 <span class="kn">import</span> <span class="nn">webcface.view_base</span>
@@ -288,12 +286,14 @@
     <span class="n">self_member_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">data_recv</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">T</span><span class="p">]</span>
     <span class="n">req</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]</span>
+    <span class="n">entry</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
     <span class="n">lock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">data_recv</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">req</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">entry</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">lock</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">RLock</span><span class="p">()</span>
 
 <div class="viewcode-block" id="SyncDataStore1.is_self">
@@ -336,6 +336,29 @@
             <span class="k">return</span> <span class="kc">False</span></div>
 
 
+<div class="viewcode-block" id="SyncDataStore1.set_entry">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore1.set_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">set_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">member</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SyncDataStore1.clear_entry">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore1.clear_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">clear_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">entry</span><span class="o">.</span><span class="n">remove</span><span class="p">(</span><span class="n">member</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="SyncDataStore1.get_entry">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore1.get_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">return</span> <span class="n">member</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">entry</span></div>
+
+
 <div class="viewcode-block" id="SyncDataStore1.transfer_req">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.SyncDataStore1.transfer_req">[docs]</a>
     <span class="k">def</span> <span class="nf">transfer_req</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">]:</span>
@@ -354,7 +377,7 @@
 <div class="viewcode-block" id="FuncResultStore">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore">[docs]</a>
 <span class="k">class</span> <span class="nc">FuncResultStore</span><span class="p">:</span>
-    <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">AsyncFuncResult</span><span class="p">]</span>
+    <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">]]</span>
     <span class="n">lock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -365,19 +388,30 @@
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore.add_result">[docs]</a>
     <span class="k">def</span> <span class="nf">add_result</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span> <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">AsyncFuncResult</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="n">caller_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">AsyncFuncResult</span><span class="p">(</span><span class="n">caller_id</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">(</span><span class="n">caller_id</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
             <span class="k">return</span> <span class="n">r</span></div>
 
 
 <div class="viewcode-block" id="FuncResultStore.get_result">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore.get_result">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">AsyncFuncResult</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">caller_id</span><span class="p">]</span></div>
+            <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">caller_id</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">IndexError</span><span class="p">()</span>
+            <span class="k">return</span> <span class="n">r</span></div>
+
+
+<div class="viewcode-block" id="FuncResultStore.del_result">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore.del_result">[docs]</a>
+    <span class="k">def</span> <span class="nf">del_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+            <span class="k">if</span> <span class="n">caller_id</span> <span class="o">&lt;</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">caller_id</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span></div>
 </div>
 
 
@@ -387,7 +421,7 @@
 <span class="k">class</span> <span class="nc">ClientData</span><span class="p">:</span>
     <span class="n">self_member_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">value_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
-    <span class="n">text_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+    <span class="n">text_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
     <span class="n">func_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">]</span>
     <span class="n">view_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">]]</span>
     <span class="n">canvas2d_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DData</span><span class="p">]</span>
@@ -404,18 +438,44 @@
     <span class="n">member_remote_addr</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">svr_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">svr_version</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">svr_hostname</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">ping_status_req</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">ping_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">_connection_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
+    <span class="n">_msg_first</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># syncInitメッセージをqueueに入れたらtrue</span>
     <span class="n">_msg_queue</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">]]</span>
     <span class="n">_msg_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
+    <span class="n">recv_queue</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
+    <span class="n">recv_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
     <span class="n">logger_internal</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span>
+    <span class="n">self_member_id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">sync_init_end</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">auto_reconnect</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="n">on_member_entry</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_ping</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_value_entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_text_entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_view_entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_func_entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_canvas2d_entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_canvas3d_entry</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_sync</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+    <span class="n">on_value_change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
+    <span class="n">on_text_change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
+    <span class="n">on_view_change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
+    <span class="n">on_canvas2d_change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
+    <span class="n">on_canvas3d_change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span>
+    <span class="n">on_log_change</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger_internal</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">logger_internal</span><span class="p">:</span> <span class="n">logging</span><span class="o">.</span><span class="n">Logger</span><span class="p">,</span> <span class="n">auto_reconnect</span><span class="p">:</span> <span class="nb">bool</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">self_member_name</span> <span class="o">=</span> <span class="n">name</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">value_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]](</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">SyncDataStore2</span><span class="o">.</span><span class="n">should_send_on_change</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">text_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="nb">str</span><span class="p">](</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">text_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]](</span>
             <span class="n">name</span><span class="p">,</span> <span class="n">SyncDataStore2</span><span class="o">.</span><span class="n">should_send_on_change</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">](</span>
@@ -441,18 +501,76 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">member_remote_addr</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">svr_name</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">svr_version</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">svr_hostname</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ping_status_req</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">ping_status</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">connected</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_connection_cv</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_msg_first</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recv_queue</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">recv_cv</span> <span class="o">=</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">logger_internal</span> <span class="o">=</span> <span class="n">logger_internal</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">self_member_id</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">sync_init_end</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">auto_reconnect</span> <span class="o">=</span> <span class="n">auto_reconnect</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_member_entry</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_ping</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_value_entry</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_view_entry</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_text_entry</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_func_entry</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_canvas2d_entry</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_canvas3d_entry</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_sync</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_value_change</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_text_change</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_view_change</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_canvas2d_change</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_canvas3d_change</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">on_log_change</span> <span class="o">=</span> <span class="p">{}</span>
 
-<div class="viewcode-block" id="ClientData.queue_msg">
-<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg">[docs]</a>
-    <span class="k">def</span> <span class="nf">queue_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="ClientData.queue_first">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_first">[docs]</a>
+    <span class="k">def</span> <span class="nf">queue_first</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">client_impl</span><span class="o">.</span><span class="n">sync_data_first</span><span class="p">(</span><span class="bp">self</span><span class="p">))</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_first</span> <span class="o">=</span> <span class="kc">True</span></div>
+
+
+<div class="viewcode-block" id="ClientData.queue_msg_always">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg_always">[docs]</a>
+    <span class="k">def</span> <span class="nf">queue_msg_always</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;メッセージをキューに入れる&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msgs</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="ClientData.queue_msg_online">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg_online">[docs]</a>
+    <span class="k">def</span> <span class="nf">queue_msg_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;接続できていればキューに入れtrueを返す&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_cv</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
+                <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msgs</span><span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="ClientData.queue_msg_req">
+<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg_req">[docs]</a>
+    <span class="k">def</span> <span class="nf">queue_msg_req</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;msg_firstが空でなければキューに入れtrueを返す&quot;&quot;&quot;</span>
+        <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_first</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msgs</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span>
+                <span class="k">return</span> <span class="kc">True</span>
+            <span class="k">return</span> <span class="kc">False</span></div>
 
 
 <div class="viewcode-block" id="ClientData.clear_msg">
@@ -460,6 +578,7 @@
     <span class="k">def</span> <span class="nf">clear_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_msg_first</span> <span class="o">=</span> <span class="kc">False</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">notify_all</span><span class="p">()</span></div>
 
 
@@ -474,7 +593,9 @@
     <span class="k">def</span> <span class="nf">wait_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">timeout</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="k">while</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-                <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span></div>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="o">.</span><span class="n">wait</span><span class="p">(</span><span class="n">timeout</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">timeout</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="k">break</span></div>
 
 
 <div class="viewcode-block" id="ClientData.wait_empty">
@@ -517,41 +638,6 @@
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.get_member_id_from_name">[docs]</a>
     <span class="k">def</span> <span class="nf">get_member_id_from_name</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">member_ids</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span></div>
-
-
-<div class="viewcode-block" id="ClientData.signal">
-<a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.signal">[docs]</a>
-    <span class="k">def</span> <span class="nf">signal</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">signal_type</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">member</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">blinker</span><span class="o">.</span><span class="n">NamedSignal</span><span class="p">:</span>
-        <span class="k">if</span> <span class="n">signal_type</span> <span class="o">==</span> <span class="s2">&quot;member_entry&quot;</span><span class="p">:</span>
-            <span class="k">assert</span> <span class="n">member</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">signal_type</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">signal_type</span> <span class="ow">in</span> <span class="p">(</span>
-            <span class="s2">&quot;value_entry&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;text_entry&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;view_entry&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;canvas2d_entry&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;canvas3d_entry&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;func_entry&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;log_append&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;sync&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;ping&quot;</span><span class="p">,</span>
-        <span class="p">):</span>
-            <span class="k">assert</span> <span class="n">member</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">field</span> <span class="o">==</span> <span class="s2">&quot;&quot;</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">signal_type</span><span class="p">,</span> <span class="n">member</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">signal_type</span> <span class="ow">in</span> <span class="p">(</span>
-            <span class="s2">&quot;value_change&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;text_change&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;view_change&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;canvas2d_change&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;canvas3d_change&quot;</span><span class="p">,</span>
-        <span class="p">):</span>
-            <span class="k">assert</span> <span class="n">member</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="ow">and</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span>
-            <span class="n">key</span> <span class="o">=</span> <span class="p">[</span><span class="nb">id</span><span class="p">(</span><span class="bp">self</span><span class="p">),</span> <span class="n">signal_type</span><span class="p">,</span> <span class="n">member</span><span class="p">,</span> <span class="n">field</span><span class="p">]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid signal type &quot;</span> <span class="o">+</span> <span class="n">signal_type</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">blinker</span><span class="o">.</span><span class="n">signal</span><span class="p">(</span><span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">key</span><span class="p">))</span></div>
 </div>
 
 </pre></div>

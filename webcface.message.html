@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.message module &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.message module &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -74,14 +74,15 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Canvas3DRes"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.FuncInfo"><code class="docutils literal notranslate"><span class="pre">FuncInfo</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.LogEntry"><code class="docutils literal notranslate"><span class="pre">LogEntry</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.LogReq"><code class="docutils literal notranslate"><span class="pre">LogReq</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.MessageBase"><code class="docutils literal notranslate"><span class="pre">MessageBase</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Ping"><code class="docutils literal notranslate"><span class="pre">Ping</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.PingStatus"><code class="docutils literal notranslate"><span class="pre">PingStatus</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.PingStatusReq"><code class="docutils literal notranslate"><span class="pre">PingStatusReq</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#webcface.message.SvrVersion"><code class="docutils literal notranslate"><span class="pre">SvrVersion</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Sync"><code class="docutils literal notranslate"><span class="pre">Sync</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.SyncInit"><code class="docutils literal notranslate"><span class="pre">SyncInit</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.message.SyncInitEnd"><code class="docutils literal notranslate"><span class="pre">SyncInitEnd</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.TextEntry"><code class="docutils literal notranslate"><span class="pre">TextEntry</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.message.TextReq"><code class="docutils literal notranslate"><span class="pre">TextReq</span></code></a></li>
@@ -125,7 +126,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 1.1.3</a>
+          <a href="index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -590,6 +591,27 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.LogEntry">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">LogEntry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#LogEntry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.LogEntry" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.LogEntry.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">92</span></em><a class="headerlink" href="#webcface.message.LogEntry.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.LogEntry.member_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.LogEntry.member_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.LogEntry.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.LogEntry" title="webcface.message.LogEntry"><span class="pre">LogEntry</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#LogEntry.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.LogEntry.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.message.LogReq">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">LogReq</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#LogReq"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.LogReq" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
@@ -685,32 +707,6 @@
 </dd></dl>
 
 <dl class="py class">
-<dt class="sig sig-object py" id="webcface.message.SvrVersion">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">SvrVersion</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#SvrVersion"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.SvrVersion" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
-<dl class="py attribute">
-<dt class="sig sig-object py" id="webcface.message.SvrVersion.kind_def">
-<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">88</span></em><a class="headerlink" href="#webcface.message.SvrVersion.kind_def" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="webcface.message.SvrVersion.new">
-<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.SvrVersion" title="webcface.message.SvrVersion"><span class="pre">SvrVersion</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#SvrVersion.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.SvrVersion.new" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="webcface.message.SvrVersion.svr_name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">svr_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.SvrVersion.svr_name" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="webcface.message.SvrVersion.ver">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ver</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.SvrVersion.ver" title="Link to this definition"></a></dt>
-<dd></dd></dl>
-
-</dd></dl>
-
-<dl class="py class">
 <dt class="sig sig-object py" id="webcface.message.Sync">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">Sync</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#Sync"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.Sync" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
@@ -783,6 +779,42 @@
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.message.SyncInit.new_full">
 <em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new_full</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">M</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">l</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">a</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.SyncInit" title="webcface.message.SyncInit"><span class="pre">SyncInit</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#SyncInit.new_full"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.SyncInit.new_full" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.message.</span></span><span class="sig-name descname"><span class="pre">SyncInitEnd</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">msg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">dict</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/message.html#SyncInitEnd"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.SyncInitEnd" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="#webcface.message.MessageBase" title="webcface.message.MessageBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">MessageBase</span></code></a></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd.hostname">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">hostname</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.SyncInitEnd.hostname" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd.kind_def">
+<span class="sig-name descname"><span class="pre">kind_def</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">88</span></em><a class="headerlink" href="#webcface.message.SyncInitEnd.kind_def" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd.member_id">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member_id</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.message.SyncInitEnd.member_id" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd.new">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">new</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">n</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">v</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">m</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">h</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.message.SyncInitEnd" title="webcface.message.SyncInitEnd"><span class="pre">SyncInitEnd</span></a></span></span><a class="reference internal" href="_modules/webcface/message.html#SyncInitEnd.new"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.message.SyncInitEnd.new" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd.svr_name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">svr_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.SyncInitEnd.svr_name" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.message.SyncInitEnd.ver">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">ver</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.message.SyncInitEnd.ver" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>

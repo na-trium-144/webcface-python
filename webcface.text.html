@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.text module &mdash; WebCFace-Python 1.1.3  documentation</title>
+  <title>webcface.text module &mdash; WebCFace-Python 2.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 1.1.3
+            WebCFace-Python 2.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -62,7 +62,9 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.text module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.text.InputRef"><code class="docutils literal notranslate"><span class="pre">InputRef</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.text.Text"><code class="docutils literal notranslate"><span class="pre">Text</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.text.Variant"><code class="docutils literal notranslate"><span class="pre">Variant</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a></li>
@@ -83,7 +85,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 1.1.3</a>
+          <a href="index.html">WebCFace-Python 2.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -105,9 +107,21 @@
   <section id="module-webcface.text">
 <span id="webcface-text-module"></span><h1>webcface.text module<a class="headerlink" href="#module-webcface.text" title="Link to this heading"></a></h1>
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.text.InputRef">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.text.</span></span><span class="sig-name descname"><span class="pre">InputRef</span></span><a class="reference internal" href="_modules/webcface/text.html#InputRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.InputRef" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.InputRef.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="_modules/webcface/text.html#InputRef.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.InputRef.get" title="Link to this definition"></a></dt>
+<dd><p>値を返す</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.text.Text">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.text.</span></span><span class="sig-name descname"><span class="pre">Text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/text.html#Text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Text" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
+<dd><p>Bases: <a class="reference internal" href="#webcface.text.Variant" title="webcface.text.Variant"><code class="xref py py-class docutils literal notranslate"><span class="pre">Variant</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.text.Text.child">
 <span class="sig-name descname"><span class="pre">child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a></span></span><a class="reference internal" href="_modules/webcface/text.html#Text.child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Text.child" title="Link to this definition"></a></dt>
@@ -125,34 +139,11 @@
 <dd><p>文字列をstrで返す、まだリクエストされてなければ自動でリクエストされる</p>
 </dd></dl>
 
-<dl class="py property">
-<dt class="sig sig-object py" id="webcface.text.Text.member">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a></em><a class="headerlink" href="#webcface.text.Text.member" title="Link to this definition"></a></dt>
-<dd><p>Memberを返す</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="webcface.text.Text.name">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.text.Text.name" title="Link to this definition"></a></dt>
-<dd><p>field名を返す</p>
-</dd></dl>
-
 <dl class="py method">
-<dt class="sig sig-object py" id="webcface.text.Text.request">
-<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Text.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Text.request" title="Link to this definition"></a></dt>
-<dd><p>値の受信をリクエストする</p>
-</dd></dl>
-
-<dl class="py method">
-<dt class="sig sig-object py" id="webcface.text.Text.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a></span></span><a class="reference internal" href="_modules/webcface/text.html#Text.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Text.set" title="Link to this definition"></a></dt>
-<dd><p>値をセットする</p>
-</dd></dl>
-
-<dl class="py property">
-<dt class="sig sig-object py" id="webcface.text.Text.signal">
-<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">signal</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">NamedSignal</span></em><a class="headerlink" href="#webcface.text.Text.signal" title="Link to this definition"></a></dt>
-<dd><p>値が変化したときのイベント</p>
+<dt class="sig sig-object py" id="webcface.text.Text.on_change">
+<span class="sig-name descname"><span class="pre">on_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Text.on_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Text.on_change" title="Link to this definition"></a></dt>
+<dd><p>値が変化したときのイベント
+(ver2.0〜)</p>
 <p>コールバックの引数にはTextオブジェクトが渡される。</p>
 <p>まだ値をリクエストされてなければ自動でリクエストされる</p>
 </dd></dl>
@@ -161,6 +152,77 @@
 <dt class="sig sig-object py" id="webcface.text.Text.try_get">
 <span class="sig-name descname"><span class="pre">try_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Text.try_get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Text.try_get" title="Link to this definition"></a></dt>
 <dd><p>文字列をstrまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.text.Variant">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.text.</span></span><span class="sig-name descname"><span class="pre">Variant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/text.html#Variant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.child">
+<span class="sig-name descname"><span class="pre">child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.text.Variant" title="webcface.text.Variant"><span class="pre">Variant</span></a></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.child" title="Link to this definition"></a></dt>
+<dd><p>子フィールドを返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>「(thisのフィールド名).(子フィールド名)」をフィールド名とするText</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.exists" title="Link to this definition"></a></dt>
+<dd><p>このフィールドにデータが存在すればtrue
+(ver2.0〜)</p>
+<p>try_get() などとは違って、実際のデータを受信しない。
+リクエストもしない。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.get" title="Link to this definition"></a></dt>
+<dd><p>データを返す、まだリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.text.Variant.member">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a></em><a class="headerlink" href="#webcface.text.Variant.member" title="Link to this definition"></a></dt>
+<dd><p>Memberを返す</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.text.Variant.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.text.Variant.name" title="Link to this definition"></a></dt>
+<dd><p>field名を返す</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.on_change">
+<span class="sig-name descname"><span class="pre">on_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.on_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.on_change" title="Link to this definition"></a></dt>
+<dd><p>値が変化したときのイベント
+(ver2.0〜)</p>
+<p>コールバックの引数にはVariantオブジェクトが渡される。</p>
+<p>まだ値をリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.request">
+<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.request" title="Link to this definition"></a></dt>
+<dd><p>値の受信をリクエストする</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.text.Variant" title="webcface.text.Variant"><span class="pre">Variant</span></a></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.set" title="Link to this definition"></a></dt>
+<dd><p>値をセットする</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.text.Variant.try_get">
+<span class="sig-name descname"><span class="pre">try_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/text.html#Variant.try_get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.text.Variant.try_get" title="Link to this definition"></a></dt>
+<dd><p>データまたはNoneを返す、まだリクエストされてなければ自動でリクエストされる</p>
 </dd></dl>
 
 </dd></dl>
