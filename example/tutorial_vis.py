@@ -2,26 +2,27 @@ from webcface import Client, Arg, view_components, InputRef
 import sys
 import time
 
+wcli = Client("tutorial")
 
+
+@wcli.func("hoge")
 def hoge() -> int:
     print("Function hoge started")
     return 42
 
 
-def fuga(a: int, b: str) -> int:
-    print(f"Function fuga({a}, {b}) started")
-    return a
-
-
-wcli = Client("tutorial")
-wcli.func("hoge").set(hoge)
-wcli.func("fuga").set(
-    fuga,
+@wcli.func(
+    "fuga",
     args=[
         Arg(init=100),
         Arg(option=["foo", "bar", "baz"]),
     ],
 )
+def fuga(a: int, b: str) -> int:
+    print(f"Function fuga({a}, {b}) started")
+    return a
+
+
 sys.stdout = wcli.logging_io
 wcli.wait_connection()
 

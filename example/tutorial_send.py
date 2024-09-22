@@ -1,6 +1,21 @@
 from webcface import Client
+import time
 
 wcli = Client("tutorial-send")
+
+
+@wcli.func("hoge")
+def hoge() -> int:
+    print("Function hoge started")
+    return 42
+
+
+@wcli.func("fuga")
+def fuga(a: int, b: str) -> int:
+    print(f"Function fuga({a}, {b}) started")
+    return a
+
+
 wcli.wait_connection()
 
 print("Hello, World! (sender)")
@@ -11,3 +26,7 @@ wcli.value("data").set(100)
 wcli.text("message").set("Hello, World! (sender)")
 
 wcli.sync()  # データを送信します
+
+while True:
+    wcli.sync()
+    time.sleep(1)
