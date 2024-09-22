@@ -1,3 +1,34 @@
+## [2.0.0] - 2024-09-22
+### Changed
+(#31: C++版クライアントver2.0に対応した更新です)
+* 受信処理をClient.sync()を呼んだスレッドで行うようにした
+* Func.set()でセットした関数はrecv()と同じスレッドでそのまま呼ばれるように仕様変更
+    * その代わりとして Func.set_async() 追加
+* Client.sync() にtimeout引数追加
+* Clientコンストラクタにauto_reconnect引数追加
+* AsyncFuncResult → Promise
+    * Promise.started, result をdeprecatedにした
+    * Promise.reached, found, on_reach, wait_reach, finished, response, rejection, on_finish, wait_finish 追加
+* サーバーに接続していない間各種リクエストや関数呼び出しを送らないようにした
+    * Func.run_async()時に未接続なら即座に呼び出しは失敗するようになった
+* イベント処理にblinkerライブラリを使わないようにした
+    * イベントのコールバック設定の関数がすべて仕様変更しました (connect() がなくなったので)
+* AnonymousFunc クラス削除
+* Func.hidden 削除
+* floatを受け取るAPIのほとんどをSupportsFloat型に変更
+    * numpyの数値型なども自動的にfloatに変換されるようにしました
+### Added
+* Client.on_ping(), ping_status がClient自身にも使えるようになった
+* Client.wait_connection() はSyncInitEndが完了するまで待機するようにした
+* Client.server_hostname 追加
+* Member.request_ping_status()
+* Variant, InputRef
+* view_components に各種input とそのプロパティ
+* 各種Field型にexists()追加
+* LogEntryメッセージ対応
+* Log.append()
+* Log.keep_lines
+
 ## [1.1.3] - 2024-05-24
 ### Fixed
 * Client.sync() を呼んでも最速で1秒おきにしかデータが送信されなかったのを修正 (#23)
