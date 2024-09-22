@@ -101,7 +101,7 @@ def test_value_set(data):
         nonlocal called
         called += 1
 
-    Value(Field(data, self_name, "b")).signal.connect(callback)
+    Value(Field(data, self_name, "b")).on_change(callback)
     Value(Field(data, self_name, "b")).set(1)
     assert called == 1
 
@@ -167,7 +167,7 @@ def test_text_set(data):
         nonlocal called
         called += 1
 
-    Text(Field(data, self_name, "b")).signal.connect(callback)
+    Text(Field(data, self_name, "b")).on_change(callback)
     Text(Field(data, self_name, "b")).set("c")
     assert called == 1
 

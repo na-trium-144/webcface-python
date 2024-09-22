@@ -1,7 +1,6 @@
 from __future__ import annotations
 from typing import Optional, Callable, List
 from copy import deepcopy
-import blinker
 import webcface.field
 import webcface.canvas3d_base
 import webcface.geometries
@@ -95,16 +94,20 @@ class Canvas3D(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    @property
-    def signal(self) -> blinker.NamedSignal:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
+        (ver2.0〜)
 
-        コールバックの引数にはViewオブジェクトが渡される。
+        コールバックの引数にはCanvas3Dオブジェクトが渡される。
 
-        まだリクエストされてなければ自動でリクエストする。
+        まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        return self._data_check().signal("canvas3d_change", self._member, self._field)
+        data = self._data_check()
+        if self._member not in data.on_canvas3d_change:
+            data.on_canvas3d_change[self._member] = {}
+        data.on_canvas3d_change[self._member][self._field] = func
+        return func
 
     def child(self, field: str) -> Canvas3D:
         """子フィールドを返す
@@ -117,7 +120,7 @@ class Canvas3D(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().canvas3d_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_req(
                 [webcface.message.Canvas3DReq.new(self._member, self._field, req)]
             )
 
@@ -134,6 +137,15 @@ class Canvas3D(webcface.field.Field):
         """Canvasをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
+
+    def exists(self) -> bool:
+        """このフィールドにデータが存在すればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._field in self._data_check().canvas3d_store.get_entry(self._member)
 
     def __enter__(self) -> Canvas3D:
         """with構文の最初でinit"""
@@ -155,8 +167,12 @@ class Canvas3D(webcface.field.Field):
         self._set_check()
         if self._modified and self._c3data is not None:
             self._set_check().canvas3d_store.set_send(self._field, self._c3data)
-            self.signal.send(self)
             self._modified = False
+        on_change = (
+            self._data_check().on_canvas3d_change.get(self._member, {}).get(self._field)
+        )
+        if on_change is not None:
+            on_change(self)
         return self
 
     def add(self, *args, **kwargs) -> Canvas3D:

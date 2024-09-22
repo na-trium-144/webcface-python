@@ -35,7 +35,7 @@ def data():
         logger.setLevel(logging.INFO)
     else:
         logger.setLevel(logging.CRITICAL + 1)
-    return ClientData(self_name, logger)
+    return ClientData(self_name, logger, True)
 
 
 @fixture
@@ -52,7 +52,8 @@ def wcli():
     c._reconnect_thread = threading.Thread(target=lambda: loop(), daemon=True)
     c._send_thread = threading.Thread(target=lambda: loop(), daemon=True)
     c.close = close
-    c.connected = True
+    # c.connected = True
+    c._data_check().connected = True
     return c
 
 

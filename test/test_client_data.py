@@ -143,6 +143,23 @@ def test_s1_clear_req(s1):
     assert s1.clear_req(self_name) is False
 
 
+def test_s1_set_entry(s1):
+    s1.set_entry("a")
+    assert s1.entry == ["a"]
+
+
+def test_s1_clear_entry(s1):
+    s1.entry = ["a"]
+    s1.clear_entry("a")
+    assert s1.entry == []
+
+
+def test_s1_get_entry(s1):
+    s1.entry = ["a"]
+    assert s1.get_entry("a") is True
+    assert s1.get_entry("b") is False
+
+
 def test_s1_transfre_req(s1):
     s1.req = {"a": True, "b": True}
 
@@ -171,8 +188,25 @@ def test_get_member(data):
 
 
 def test_queue_msg(data):
-    data.queue_msg([webcface.message.Ping.new()])
+    data.queue_msg_always([webcface.message.Ping.new()])
     assert len(data._msg_queue) == 1
+
+
+def test_queue_msg_online(data):
+    data.connected = False
+    assert data.queue_msg_online([webcface.message.Ping.new()]) is False
+    assert len(data._msg_queue) == 0
+    data.connected = True
+    assert data.queue_msg_online([webcface.message.Ping.new()]) is True
+    assert len(data._msg_queue) == 1
+
+
+def test_queue_msg_req(data):
+    assert data.queue_msg_req([webcface.message.Ping.new()]) is False
+    assert len(data._msg_queue) == 0
+    data.queue_first()
+    assert data.queue_msg_req([webcface.message.Ping.new()]) is True
+    assert len(data._msg_queue) == 2
 
 
 def test_clear_msg(data):

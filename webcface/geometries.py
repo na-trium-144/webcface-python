@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import List, Union
+from typing import List, Union, SupportsFloat
 from enum import IntEnum
 import webcface.transform
 
@@ -43,7 +43,7 @@ class Geometry:
     _properties: List[float]
 
     def __init__(
-        self, geometry_type: int, properties: List[webcface.transform.Numeric]
+        self, geometry_type: int, properties: List[SupportsFloat]
     ) -> None:
         self._geometry_type = geometry_type
         self._properties = [float(p) for p in properties]
@@ -86,7 +86,7 @@ class Geometry:
 
 
 class Line(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) == 6
         super().__init__(GeometryType.LINE, properties)
 
@@ -100,8 +100,8 @@ class Line(Geometry):
 
 
 def line(
-    begin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    end: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    begin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    end: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
 ) -> Line:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -111,7 +111,7 @@ def line(
 
 
 class Polygon(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) > 0 and len(properties) % 3 == 0
         super().__init__(GeometryType.POLYGON, properties)
 
@@ -124,7 +124,7 @@ class Polygon(Geometry):
 
 
 def polygon(
-    points: List[webcface.transform.Point | webcface.transform.ConvertibleToPoint],
+    points: List[Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]],
 ) -> Polygon:
     props: List[float] = []
     for p in points:
@@ -135,7 +135,7 @@ def polygon(
 
 
 class Plane(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) == 8
         super().__init__(GeometryType.PLANE, properties)
 
@@ -167,9 +167,9 @@ class Plane(Geometry):
 
 
 def plane(
-    origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
-    width: webcface.transform.Numeric,
-    height: webcface.transform.Numeric,
+    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
+    width: SupportsFloat,
+    height: SupportsFloat,
 ) -> Plane:
     if not isinstance(origin, webcface.transform.Transform):
         origin = webcface.transform.Transform(origin[0], origin[1])
@@ -177,8 +177,8 @@ def plane(
 
 
 def rect(
-    begin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    end: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    begin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    end: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
 ) -> Plane:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -193,7 +193,7 @@ def rect(
 
 
 class Box(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) == 6
         super().__init__(GeometryType.BOX, properties)
 
@@ -207,8 +207,8 @@ class Box(Geometry):
 
 
 def box(
-    vertex1: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    vertex2: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
+    vertex1: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    vertex2: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
 ) -> Box:
     if not isinstance(vertex1, webcface.transform.Point):
         vertex1 = webcface.transform.Point(vertex1)
@@ -218,7 +218,7 @@ def box(
 
 
 class Circle(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) == 7
         super().__init__(GeometryType.CIRCLE, properties)
 
@@ -234,8 +234,8 @@ class Circle(Geometry):
 
 
 def circle(
-    origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
-    radius: webcface.transform.Numeric,
+    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
+    radius: SupportsFloat,
 ) -> Circle:
     if not isinstance(origin, webcface.transform.Transform):
         origin = webcface.transform.Transform(origin[0], origin[1])
@@ -243,7 +243,7 @@ def circle(
 
 
 class Cylinder(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) == 8
         super().__init__(GeometryType.CYLINDER, properties)
 
@@ -263,9 +263,9 @@ class Cylinder(Geometry):
 
 
 def cylinder(
-    origin: webcface.transform.Transform | webcface.transform.ConvertibleToTransform,
-    radius: webcface.transform.Numeric,
-    length: webcface.transform.Numeric,
+    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
+    radius: SupportsFloat,
+    length: SupportsFloat,
 ) -> Cylinder:
     if not isinstance(origin, webcface.transform.Transform):
         origin = webcface.transform.Transform(origin[0], origin[1])
@@ -273,7 +273,7 @@ def cylinder(
 
 
 class Sphere(Geometry):
-    def __init__(self, properties: List[webcface.transform.Numeric]) -> None:
+    def __init__(self, properties: List[SupportsFloat]) -> None:
         assert len(properties) == 4
         super().__init__(GeometryType.SPHERE, properties)
 
@@ -287,8 +287,8 @@ class Sphere(Geometry):
 
 
 def sphere(
-    origin: webcface.transform.Point | webcface.transform.ConvertibleToPoint,
-    radius: webcface.transform.Numeric,
+    origin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    radius: SupportsFloat,
 ) -> Sphere:
     if not isinstance(origin, webcface.transform.Point):
         origin = webcface.transform.Point(origin)

@@ -38,3 +38,10 @@ def test_log_clear(data):
     data.log_store.data_recv["a"] = [LogLine(0, datetime.datetime.now(), "")]
     Log(Field(data, "a")).clear()
     assert len(data.log_store.data_recv["a"]) == 0
+
+
+def test_log_append(data):
+    Log(Field(data, self_name)).append(1, "a")
+    assert len(data.log_store.data_recv[self_name]) == 1
+    assert data.log_store.data_recv[self_name][0].level == 1
+    assert data.log_store.data_recv[self_name][0].message == "a"

@@ -16,15 +16,20 @@ def on_recv(
     sync_members: List[str] = []
     if len(message) > 0:
         for m in webcface.message.unpack(message):
-            if isinstance(m, webcface.message.SvrVersion):
+            if isinstance(m, webcface.message.SyncInitEnd):
                 data.svr_name = m.svr_name
                 data.svr_version = m.ver
+                data.svr_hostname = m.hostname
+                data.self_member_id = m.member_id
+                data.sync_init_end = True
             if isinstance(m, webcface.message.Ping):
-                data.queue_msg([webcface.message.Ping.new()])
+                data.queue_msg_always([webcface.message.Ping.new()])
             if isinstance(m, webcface.message.PingStatus):
                 data.ping_status = m.status
                 for member2 in wcli.members():
-                    data.signal("ping", member2.name).send(member2)
+                    on_ping = data.on_ping.get(member2.name)
+                    if on_ping is not None:
+                        on_ping(member2)
             if isinstance(m, webcface.message.Sync):
                 member = data.get_member_name_from_id(m.member_id)
                 data.sync_time_store.set_recv(member, m.time)
@@ -36,35 +41,37 @@ def on_recv(
                 data.view_store.add_member(m.member_name)
                 data.canvas2d_store.add_member(m.member_name)
                 data.canvas3d_store.add_member(m.member_name)
+                data.log_store.clear_entry(m.member_name)
                 data.member_ids[m.member_name] = m.member_id
                 data.member_lib_name[m.member_id] = m.lib_name
                 data.member_lib_ver[m.member_id] = m.lib_ver
                 data.member_remote_addr[m.member_id] = m.addr
-                data.signal("member_entry").send(wcli.member(m.member_name))
+                if data.on_member_entry is not None:
+                    data.on_member_entry(wcli.member(m.member_name))
             if isinstance(m, webcface.message.ValueRes):
                 member, field = data.value_store.get_req(m.req_id, m.sub_field)
                 data.value_store.set_recv(member, field, m.data)
-                data.signal("value_change", member, field).send(
-                    wcli.member(member).value(field)
-                )
+                on_change = data.on_value_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).value(field))
             if isinstance(m, webcface.message.ValueEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.value_store.set_entry(member, m.field)
-                data.signal("value_entry", member).send(
-                    wcli.member(member).value(m.field)
-                )
+                on_entry = data.on_value_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).value(m.field))
             if isinstance(m, webcface.message.TextRes):
                 member, field = data.text_store.get_req(m.req_id, m.sub_field)
                 data.text_store.set_recv(member, field, m.data)
-                data.signal("text_change", member, field).send(
-                    wcli.member(member).text(field)
-                )
+                on_change = data.on_text_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).variant(field))
             if isinstance(m, webcface.message.TextEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.text_store.set_entry(member, m.field)
-                data.signal("text_entry", member).send(
-                    wcli.member(member).text(m.field)
-                )
+                on_entry = data.on_text_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).text(m.field))
             if isinstance(m, webcface.message.ViewRes):
                 member, field = data.view_store.get_req(m.req_id, m.sub_field)
                 v_prev = data.view_store.get_recv(member, field)
@@ -78,15 +85,15 @@ def on_recv(
                         v_prev[int(i)] = c
                 if len(v_prev) >= m.length:
                     del v_prev[m.length :]
-                data.signal("view_change", member, field).send(
-                    wcli.member(member).view(field)
-                )
+                on_change = data.on_view_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).view(field))
             if isinstance(m, webcface.message.ViewEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.view_store.set_entry(member, m.field)
-                data.signal("view_entry", member).send(
-                    wcli.member(member).view(m.field)
-                )
+                on_entry = data.on_view_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).view(m.field))
             if isinstance(m, webcface.message.Canvas2DRes):
                 member, field = data.canvas2d_store.get_req(m.req_id, m.sub_field)
                 c2_prev = data.canvas2d_store.get_recv(member, field)
@@ -102,15 +109,15 @@ def on_recv(
                         c2_prev.components[int(i)] = c2
                 if len(c2_prev.components) >= m.length:
                     del c2_prev.components[m.length :]
-                data.signal("canvas2d_change", member, field).send(
-                    wcli.member(member).canvas2d(field)
-                )
+                on_change = data.on_canvas2d_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).canvas2d(field))
             if isinstance(m, webcface.message.Canvas2DEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.canvas2d_store.set_entry(member, m.field)
-                data.signal("canvas2d_entry", member).send(
-                    wcli.member(member).canvas2d(m.field)
-                )
+                on_entry = data.on_canvas2d_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).canvas2d(m.field))
             if isinstance(m, webcface.message.Canvas3DRes):
                 member, field = data.canvas3d_store.get_req(m.req_id, m.sub_field)
                 c3_prev = data.canvas3d_store.get_recv(member, field)
@@ -124,54 +131,54 @@ def on_recv(
                         c3_prev[int(i)] = c3
                 if len(c3_prev) >= m.length:
                     del c3_prev[m.length :]
-                data.signal("canvas3d_change", member, field).send(
-                    wcli.member(member).canvas3d(field)
-                )
+                on_change = data.on_canvas3d_change.get(member, {}).get(field)
+                if on_change is not None:
+                    on_change(wcli.member(member).canvas3d(field))
             if isinstance(m, webcface.message.Canvas3DEntry):
                 member = data.get_member_name_from_id(m.member_id)
                 data.canvas3d_store.set_entry(member, m.field)
-                data.signal("canvas3d_entry", member).send(
-                    wcli.member(member).canvas3d(m.field)
-                )
+                on_entry = data.on_canvas3d_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).canvas3d(m.field))
             if isinstance(m, webcface.message.FuncInfo):
                 member = data.get_member_name_from_id(m.member_id)
                 data.func_store.set_entry(member, m.field)
                 data.func_store.set_recv(member, m.field, m.func_info)
-                data.signal("func_entry", member).send(
-                    wcli.member(member).func(m.field)
-                )
+                on_entry = data.on_func_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).func(m.field))
             if isinstance(m, webcface.message.Call):
                 func_info = data.func_store.get_recv(data.self_member_name, m.field)
                 if func_info is not None:
+                    data.queue_msg_always(
+                        [
+                            webcface.message.CallResponse.new(
+                                m.caller_id, m.caller_member_id, True
+                            )
+                        ]
+                    )
+                    r = webcface.func_info.Promise(
+                        m.caller_id,
+                        "",
+                        webcface.field.Field(data, data.self_member_name, m.field),
+                    )
+                    func_info.run(r, m.args)
 
-                    def do_call():
-                        data.queue_msg(
-                            [
-                                webcface.message.CallResponse.new(
-                                    m.caller_id, m.caller_member_id, True
-                                )
-                            ]
-                        )
-                        try:
-                            result = func_info.run(m.args)
-                            is_error = False
-                        except Exception as e:
-                            is_error = True
-                            result = str(e)
-                        data.queue_msg(
+                    @r.on_finish
+                    def on_finish(r: webcface.func_info.Promise):
+                        data.queue_msg_always(
                             [
                                 webcface.message.CallResult.new(
                                     m.caller_id,
                                     m.caller_member_id,
-                                    is_error,
-                                    result,
+                                    r.is_error,
+                                    r.rejection if r.is_error else r.response,
                                 )
                             ]
                         )
 
-                    threading.Thread(target=do_call).start()
                 else:
-                    data.queue_msg(
+                    data.queue_msg_always(
                         [
                             webcface.message.CallResponse.new(
                                 m.caller_id, m.caller_member_id, False
@@ -181,13 +188,9 @@ def on_recv(
             if isinstance(m, webcface.message.CallResponse):
                 try:
                     r = data.func_result_store.get_result(m.caller_id)
-                    with r._cv:
-                        r._started = m.started
-                        r._started_ready = True
-                        if not m.started:
-                            r._result_is_error = True
-                            r._result_ready = True
-                        r._cv.notify_all()
+                    r._set_reach(m.started)
+                    if not m.started:
+                        data.func_result_store.del_result(m.caller_id)
                 except IndexError:
                     data.logger_internal.error(
                         f"error receiving call response id={m.caller_id}"
@@ -195,15 +198,15 @@ def on_recv(
             if isinstance(m, webcface.message.CallResult):
                 try:
                     r = data.func_result_store.get_result(m.caller_id)
-                    with r._cv:
-                        r._result_is_error = m.is_error
-                        r._result = m.result
-                        r._result_ready = True
-                        r._cv.notify_all()
+                    r._set_finish(m.result, m.is_error)
+                    data.func_result_store.del_result(m.caller_id)
                 except IndexError:
                     data.logger_internal.error(
                         f"error receiving call result id={m.caller_id}"
                     )
+            if isinstance(m, webcface.message.LogEntry):
+                member = data.get_member_name_from_id(m.member_id)
+                data.log_store.set_entry(member)
             if isinstance(m, webcface.message.Log):
                 member = data.get_member_name_from_id(m.member_id)
                 log_s = data.log_store.get_recv(member)
@@ -211,17 +214,28 @@ def on_recv(
                     log_s = []
                     data.log_store.set_recv(member, log_s)
                 log_s.extend(m.log)
-                data.signal("log_append", member).send(wcli.member(member).log())
+                if (
+                    webcface.Log.keep_lines >= 0
+                    and len(log_s) > webcface.Log.keep_lines
+                ):
+                    del log_s[: -webcface.Log.keep_lines]
+                on_change = data.on_log_change.get(member)
+                if on_change is not None:
+                    on_change(wcli.member(member).log())
         for member in sync_members:
-            data.signal("sync", member).send(wcli.member(member))
+            on_sync = data.on_sync.get(member)
+            if on_sync is not None:
+                on_sync(wcli.member(member))
 
 
 def sync_data_first(
-    wcli: "webcface.client.Client", data: webcface.client_data.ClientData
+    data: webcface.client_data.ClientData,
 ) -> List[webcface.message.MessageBase]:
     msgs: List[webcface.message.MessageBase] = []
     msgs.append(
-        webcface.message.SyncInit.new(wcli.name, "python", webcface.__version__)
+        webcface.message.SyncInit.new(
+            data.self_member_name, "python", webcface.__version__
+        )
     )
 
     with data.value_store.lock:
@@ -248,12 +262,11 @@ def sync_data_first(
         for m, r2 in data.log_store.transfer_req().items():
             msgs.append(webcface.message.LogReq.new(m))
 
-    msgs.extend(sync_data(wcli, data, True))
+    msgs.extend(sync_data(data, True))
     return msgs
 
 
 def sync_data(
-    wcli: "webcface.client.Client",
     data: webcface.client_data.ClientData,
     is_first: bool,
 ) -> List[webcface.message.MessageBase]:
@@ -314,7 +327,7 @@ def sync_data(
             msgs.append(webcface.message.Log.new(log_send))
     with data.func_store.lock:
         for k, v3 in data.func_store.transfer_send(is_first).items():
-            if not v3.hidden:
+            if not k.startswith("."):
                 msgs.append(webcface.message.FuncInfo.new(k, v3))
 
     return msgs

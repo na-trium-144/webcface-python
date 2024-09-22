@@ -1,6 +1,5 @@
 from __future__ import annotations
-from typing import Optional, List
-import blinker
+from typing import Optional, List, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
 import webcface.message
@@ -29,16 +28,20 @@ class Value(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    @property
-    def signal(self) -> blinker.NamedSignal:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
+        (ver2.0〜)
 
         コールバックの引数にはValueオブジェクトが渡される。
 
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        return self._data_check().signal("value_change", self._member, self._field)
+        data = self._data_check()
+        if self._member not in data.on_value_change:
+            data.on_value_change[self._member] = {}
+        data.on_value_change[self._member][self._field] = func
+        return func
 
     def child(self, field: str) -> Value:
         """子フィールドを返す
@@ -51,7 +54,7 @@ class Value(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().value_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_req(
                 [webcface.message.ValueReq.new(self._member, self._field, req)]
             )
 
@@ -75,6 +78,15 @@ class Value(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else 0
 
+    def exists(self) -> bool:
+        """このフィールドにデータが存在すればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._field in self._data_check().value_store.get_entry(self._member)
+
     def __str__(self) -> str:
         """printしたときなど
 
@@ -82,17 +94,20 @@ class Value(webcface.field.Field):
         """
         return f'<member("{self.member.name}").value("{self.name}") = {self.try_get_vec()}>'
 
-    def set(self, data: List[float] | int | float) -> Value:
+    def set(self, data: Union[List[SupportsFloat], SupportsFloat]) -> Value:
         """値をセットする"""
         self._set_check()
-        try:
-            data_f = float(data)
-            self._set_check().value_store.set_send(self._field, [data])
-            self.signal.send(self)
-        except TypeError:
-            if isinstance(data, list):
-                self._set_check().value_store.set_send(self._field, data)
-                self.signal.send(self)
-            else:
-                raise TypeError("unsupported data type for value.set()")
+        if isinstance(data, SupportsFloat):
+            self._set_check().value_store.set_send(self._field, [float(data)])
+        elif isinstance(data, list):
+            self._set_check().value_store.set_send(
+                self._field, [float(v) for v in data]
+            )
+        else:
+            raise TypeError("unsupported data type for value.set(): " + str(data))
+        on_change = (
+            self._data_check().on_value_change.get(self._member, {}).get(self._field)
+        )
+        if on_change is not None:
+            on_change(self)
         return self

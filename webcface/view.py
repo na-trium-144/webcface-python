@@ -1,8 +1,8 @@
 from __future__ import annotations
-from typing import Optional, Callable, List
+from typing import Optional, Callable, List, Callable, SupportsFloat, Union
 from copy import deepcopy
-import blinker
 import webcface.field
+import webcface.text
 import webcface.view_base
 import webcface.view_components
 import webcface.client_data
@@ -11,20 +11,27 @@ import webcface.func
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: Optional[webcface.client_data.ClientData]
-    _on_click_func_tmp: Optional[webcface.func.AnonymousFunc]
+    _on_click_func_tmp: Optional[Callable]
+    _bind_tmp: Optional[webcface.text.InputRef]
+    _init: Optional[Union[float, bool, str]]
 
     @staticmethod
     def from_base(
         base: webcface.view_base.ViewComponentBase,
-        data: Optional[webcface.client_data.ClientData]
+        data: Optional[webcface.client_data.ClientData],
     ) -> ViewComponent:
         vc = ViewComponent(
-            base._type,
-            base._text,
-            base._on_click_func,
-            base._text_color,
-            base._bg_color,
+            type=base._type,
+            text=base._text,
+            on_click=base._on_click_func,
+            text_color=base._text_color,
+            bg_color=base._bg_color,
+            min=base._min,
+            max=base._max,
+            step=base._step,
+            option=base._option,
         )
+        vc._text_ref = base._text_ref
         vc._data = data
         return vc
 
@@ -32,9 +39,16 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         self,
         type: int = 0,
         text: str = "",
-        on_click: Optional[webcface.field.FieldBase | Callable] = None,
+        on_click: Optional[Union[webcface.field.FieldBase, Callable]] = None,
         text_color: int = 0,
         bg_color: int = 0,
+        on_change: Optional[Union[webcface.func.Func, Callable]] = None,
+        bind: Optional[webcface.text.InputRef] = None,
+        min: Optional[SupportsFloat] = None,
+        max: Optional[SupportsFloat] = None,
+        step: Optional[SupportsFloat] = None,
+        option: Optional[List[Union[SupportsFloat, bool, str]]] = None,
+        init: Optional[Union[SupportsFloat, bool, str]] = None,
     ) -> None:
         """コンポーネントを作成
 
@@ -43,31 +57,103 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         :arg on_click: クリック時に実行する関数
         :arg text_color: 文字の色 (ViewColorのEnumを使う)
         :arg bg_color: 背景の色 (ViewColorのEnumを使う)
+        :arg on_change: (ver2.0〜) Inputの値が変更されたときに実行する関数
+        :arg bind: (ver2.0〜) Inputの値をバインドするInputRef
+            (on_changeとbindはどちらか片方のみを指定すること)
+        :arg min: (ver2.0〜) Inputの最小値/最小文字数
+        :arg max: (ver2.0〜) Inputの最大値/最大文字数
+        :arg step: (ver2.0〜) Inputの刻み幅
+        :arg option: (ver2.0〜) Inputの選択肢
         """
-        super().__init__(type, text, None, text_color, bg_color)
+        option2: List[Union[str, bool, float]] = []
+        if option is not None:
+            for op in option:
+                if isinstance(op, bool):
+                    option2.append(op)
+                elif isinstance(init, SupportsFloat):
+                    option2.append(float(op))
+                else:
+                    option2.append(str(op))
+        super().__init__(
+            type,
+            text,
+            None,
+            None,
+            text_color,
+            bg_color,
+            None if min is None else float(min),
+            None if max is None else float(max),
+            None if step is None else float(step),
+            option2,
+        )
         self._data = None
         self._on_click_func = None
+        self._text_ref = None
         self._on_click_func_tmp = None
-        if isinstance(on_click, webcface.func.AnonymousFunc):
-            self._on_click_func_tmp = on_click
-        elif isinstance(on_click, webcface.field.FieldBase):
+        if init is None:
+            self._init = None
+        elif isinstance(init, bool):
+            self._init = init
+        elif isinstance(init, SupportsFloat):
+            self._init = float(init)
+        else:
+            self._init = str(init)
+        if on_change is not None:
+            if isinstance(on_change, webcface.func.Func):
+                bind_new = webcface.text.InputRef()
+
+                def on_change_impl(val: Union[float, bool, str]):
+                    if bind_new._state is not None:
+                        bind_new._state.set(val)
+                    return on_change.run(val)
+
+                bind = bind_new
+                on_click = on_change_impl
+            elif callable(on_change):
+                bind_new = webcface.text.InputRef()
+
+                def on_change_impl(val: Union[float, bool, str]):
+                    if bind_new._state is not None:
+                        bind_new._state.set(val)
+                    return on_change(val)
+
+                bind = bind_new
+                on_click = on_change_impl
+        elif bind is not None:
+
+            def on_change_impl(val: Union[float, bool, str]):
+                if bind._state is not None:
+                    bind._state.set(val)
+
+            on_click = on_change_impl
+        self._bind_tmp = bind
+        if isinstance(on_click, webcface.field.FieldBase):
             self._on_click_func = on_click
         elif callable(on_click):
-            self._on_click_func_tmp = webcface.func.AnonymousFunc(None, on_click)
+            self._on_click_func_tmp = on_click
         if isinstance(on_click, webcface.field.Field) and on_click._data is not None:
             self._data = on_click._data
+        if isinstance(on_change, webcface.field.Field) and on_change._data is not None:
+            self._data = on_change._data
 
     def lock_tmp(
         self, data: webcface.client_data.ClientData, field_id: str
     ) -> ViewComponent:
-        """AnonymousFuncをFuncオブジェクトにlockする"""
+        """on_clickをFuncオブジェクトにlockする"""
         if self._on_click_func_tmp is not None:
             on_click = webcface.func.Func(
                 webcface.field.Field(data, data.self_member_name), field_id
             )
-            self._on_click_func_tmp.lock_to(on_click)
-            on_click.hidden = True
+            on_click.set(self._on_click_func_tmp)
             self._on_click_func = on_click
+        if self._bind_tmp is not None:
+            text_ref = webcface.text.Variant(
+                webcface.field.Field(data, data.self_member_name), field_id
+            )
+            self._bind_tmp._state = text_ref
+            self._text_ref = text_ref
+            if self._init is not None and text_ref.try_get() is None:
+                text_ref.set(self._init)
         self._data = data
         return self
 
@@ -89,8 +175,21 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
                     and self._on_click_func._field == other._on_click_func._field
                 )
             )
+            and (
+                (self._text_ref is None and other._text_ref is None)
+                or (
+                    self._text_ref is not None
+                    and other._text_ref is not None
+                    and self._text_ref._member == other._text_ref._member
+                    and self._text_ref._field == other._text_ref._field
+                )
+            )
             and self._text_color == other._text_color
             and self._bg_color == other._bg_color
+            and self._min == other._min
+            and self._max == other._max
+            and self._step == other._step
+            and self._option == other._option
         )
 
     def __ne__(self, other) -> bool:
@@ -123,6 +222,35 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return None
 
     @property
+    def on_change(self) -> Optional[webcface.func.Func]:
+        """値が変化したときに呼び出す関数
+        (ver2.0〜)
+
+        run_asyncの引数に変更後の値を入れて呼び出すことで、inputの値を変更する
+
+        内部実装はon_clickと共通になっている
+        """
+        return self.on_click
+
+    @property
+    def bind(self) -> Optional[webcface.text.Variant]:
+        """inputの現在の値を取得
+        (ver2.0〜)
+
+        viewを作成したときにbindしたかon_changeをセットしたかに関わらず、
+        値の変更はbindではなくon_changeから行う
+        """
+        if self._text_ref is not None:
+            if self._data is None:
+                raise RuntimeError("internal data not set")
+            return webcface.text.Variant(
+                webcface.field.Field(
+                    self._data, self._text_ref._member, self._text_ref._field
+                )
+            )
+        return None
+
+    @property
     def text_color(self) -> int:
         """文字の色
 
@@ -138,9 +266,37 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         """
         return self._bg_color
 
+    @property
+    def min(self) -> Optional[float]:
+        """inputの最小値
+        (ver2.0〜)
+        """
+        return self._min
+
+    @property
+    def max(self) -> Optional[float]:
+        """inputの最大値
+        (ver2.0〜)
+        """
+        return self._max
+
+    @property
+    def step(self) -> Optional[float]:
+        """inputの刻み幅
+        (ver2.0〜)
+        """
+        return self._step
+
+    @property
+    def option(self) -> List[Union[float, bool, str]]:
+        """inputの選択肢
+        (ver2.0〜)
+        """
+        return self._option
+
 
 class View(webcface.field.Field):
-    _components: List[ViewComponent | str | bool | float | int]
+    _components: List[Union[ViewComponent, str, bool, float, int]]
     _modified: bool
 
     def __init__(self, base: webcface.field.Field, field: str = "") -> None:
@@ -167,16 +323,20 @@ class View(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    @property
-    def signal(self) -> blinker.NamedSignal:
+    def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
+        (ver2.0〜)
 
         コールバックの引数にはViewオブジェクトが渡される。
 
-        まだリクエストされてなければ自動でリクエストする。
+        まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        return self._data_check().signal("view_change", self._member, self._field)
+        data = self._data_check()
+        if self._member not in data.on_view_change:
+            data.on_view_change[self._member] = {}
+        data.on_view_change[self._member][self._field] = func
+        return func
 
     def child(self, field: str) -> View:
         """子フィールドを返す
@@ -189,7 +349,7 @@ class View(webcface.field.Field):
         """値の受信をリクエストする"""
         req = self._data_check().view_store.add_req(self._member, self._field)
         if req > 0:
-            self._data_check().queue_msg(
+            self._data_check().queue_msg_req(
                 [webcface.message.ViewReq.new(self._member, self._field, req)]
             )
 
@@ -207,7 +367,18 @@ class View(webcface.field.Field):
         v = self.try_get()
         return v if v is not None else []
 
-    def set(self, components: List[ViewComponent | str | bool | float | int]) -> View:
+    def exists(self) -> bool:
+        """このフィールドにデータが存在すればtrue
+        (ver2.0〜)
+
+        try_get() などとは違って、実際のデータを受信しない。
+        リクエストもしない。
+        """
+        return self._field in self._data_check().view_store.get_entry(self._member)
+
+    def set(
+        self, components: List[Union[ViewComponent, str, bool, SupportsFloat]]
+    ) -> View:
         """Viewのリストをセットする"""
         data2 = []
         for c in components:
@@ -224,9 +395,12 @@ class View(webcface.field.Field):
             else:
                 data2.append(webcface.view_components.text(str(c)))
         for i, c in enumerate(data2):
-            data2[i] = c.lock_tmp(self._set_check(), f"{self._field}_f{i}")
-        self._set_check().view_store.set_send(self._field, list(data2))
-        self.signal.send(self)
+            data2[i] = c.lock_tmp(self._set_check(), f"..v{self._field}.{i}")
+        data = self._set_check()
+        data.view_store.set_send(self._field, list(data2))
+        on_change = data.on_view_change.get(self._member, {}).get(self._field)
+        if on_change is not None:
+            on_change(self)
         return self
 
     def __enter__(self) -> View:
@@ -252,7 +426,7 @@ class View(webcface.field.Field):
             self._modified = False
         return self
 
-    def add(self, *args: ViewComponent | str | bool | float | int) -> View:
+    def add(self, *args: Union[ViewComponent, str, bool, SupportsFloat]) -> View:
         """コンポーネントを追加
 
         Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする

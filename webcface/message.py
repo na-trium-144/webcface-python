@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, List
+from typing import Dict, List, Union
 import datetime
 import msgpack
 import webcface.func_info
@@ -62,15 +62,15 @@ class SyncInit(MessageBase):
         return self.msg["a"]
 
 
-class SvrVersion(MessageBase):
+class SyncInitEnd(MessageBase):
     kind_def = 88
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(n: str, v: str) -> SvrVersion:
-        return SvrVersion({"n": n, "v": v})
+    def new(n: str, v: str, m: int, h: str) -> SyncInitEnd:
+        return SyncInitEnd({"n": n, "v": v, "m": m, "h": h})
 
     @property
     def svr_name(self) -> str:
@@ -79,6 +79,14 @@ class SvrVersion(MessageBase):
     @property
     def ver(self) -> str:
         return self.msg["v"]
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def hostname(self) -> str:
+        return self.msg["h"]
 
 
 class Ping(MessageBase):
@@ -318,8 +326,14 @@ def vb_to_vd(vb: Dict[str, webcface.view_base.ViewComponentBase]) -> dict:
             "x": b._text,
             "L": None if b._on_click_func is None else b._on_click_func._member,
             "l": None if b._on_click_func is None else b._on_click_func._field,
+            "R": None if b._text_ref is None else b._text_ref._member,
+            "r": None if b._text_ref is None else b._text_ref._field,
             "c": b._text_color,
             "b": b._bg_color,
+            "im": b._min,
+            "ix": b._max,
+            "is": b._step,
+            "io": b._option,
         }
     return vd
 
@@ -333,11 +347,20 @@ def vd_to_vb(vd: dict) -> Dict[str, webcface.view_base.ViewComponentBase]:
             text=d["x"],
             on_click=(
                 None
-                if d["L"] is None or d["l"] is None
+                if d.get("L") is None or d.get("l") is None
                 else webcface.field.FieldBase(d["L"], d["l"])
+            ),
+            text_ref=(
+                None
+                if d.get("R") is None or d.get("r") is None
+                else webcface.field.FieldBase(d["R"], d["r"])
             ),
             text_color=d["c"],
             bg_color=d["b"],
+            min=d.get("im"),
+            max=d.get("ix"),
+            step=d.get("is"),
+            option=d.get("io"),
         )
     return vb
 
@@ -613,7 +636,7 @@ def c3d_to_c3b(vd: dict) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBa
     """メッセージからCanvas2DComponentBaseクラスに変換"""
     vb = {}
     for i, d in vd.items():
-        vb[i] = webcface.canvas2d_base.Canvas2DComponentBase(
+        vb[i] = webcface.canvas3d_base.Canvas3DComponentBase(
             type=d["t"],
             origin_pos=d["op"],
             origin_rot=d["or"],
@@ -662,7 +685,7 @@ class Canvas3DReq(MessageBase):
 
     @staticmethod
     def new(m: str, f: str, i: int) -> Canvas3DReq:
-        return Canvas2DReq({"M": m, "f": f, "i": i})
+        return Canvas3DReq({"M": m, "f": f, "i": i})
 
     @property
     def member(self) -> str:
@@ -717,7 +740,7 @@ class Canvas3DEntry(MessageBase):
 
     @staticmethod
     def new(m: int, f: str) -> Canvas3DEntry:
-        return Canvas2DEntry({"m": m, "f": f})
+        return Canvas3DEntry({"m": m, "f": f})
 
     @property
     def member_id(self) -> int:
@@ -776,7 +799,7 @@ class FuncInfo(MessageBase):
                     option=a["o"],
                 )
             )
-        return webcface.func_info.FuncInfo(None, self.msg["r"], args, False)
+        return webcface.func_info.FuncInfo(None, self.msg["r"], args)
 
 
 class Call(MessageBase):
@@ -786,7 +809,7 @@ class Call(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, r: int, f: str, a: List[float | bool | str]) -> Call:
+    def new(i: int, c: int, r: int, f: str, a: List[Union[float, bool, str]]) -> Call:
         return Call({"i": i, "c": c, "r": r, "f": f, "a": a})
 
     @property
@@ -806,7 +829,7 @@ class Call(MessageBase):
         return self.msg["f"]
 
     @property
-    def args(self) -> List[float | bool | str]:
+    def args(self) -> List[Union[float, bool, str]]:
         return self.msg["a"]
 
 
@@ -840,7 +863,7 @@ class CallResult(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, e: bool, r: float | bool | str) -> CallResult:
+    def new(i: int, c: int, e: bool, r: Union[float, bool, str]) -> CallResult:
         return CallResult({"i": i, "c": c, "e": e, "r": r})
 
     @property
@@ -856,7 +879,7 @@ class CallResult(MessageBase):
         return self.msg["e"]
 
     @property
-    def result(self) -> float | bool | str:
+    def result(self) -> Union[float, bool, str]:
         return self.msg["r"]
 
 
@@ -909,10 +932,25 @@ class LogReq(MessageBase):
         return self.msg["M"]
 
 
+class LogEntry(MessageBase):
+    kind_def = 92
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int) -> LogEntry:
+        return LogEntry({"m": m})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+
 # 受信する可能性のあるメッセージのリスト
 message_classes_recv = [
     SyncInit,
-    SvrVersion,
+    SyncInitEnd,
     Ping,
     PingStatus,
     Sync,
@@ -931,11 +969,12 @@ message_classes_recv = [
     CallResponse,
     CallResult,
     Log,
+    LogEntry,
 ]
 
 
 def pack(msgs: List[MessageBase]) -> bytes:
-    send_msgs: List[int | dict] = []
+    send_msgs: List[Union[int, dict]] = []
     for m in msgs:
         send_msgs.append(m.kind)
         send_msgs.append(m.msg)

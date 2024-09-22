@@ -1,7 +1,6 @@
 from __future__ import annotations
-from typing import Callable, Optional, Iterable
+from typing import Callable, Optional, Iterable, SupportsFloat
 import datetime
-import blinker
 import webcface.field
 import webcface.value
 import webcface.text
@@ -37,6 +36,10 @@ class Member(webcface.field.Field):
         """Textオブジェクトを生成"""
         return webcface.text.Text(self, field)
 
+    def variant(self, field: str) -> webcface.text.Variant:
+        """Variantオブジェクトを生成 (ver2.0〜)"""
+        return webcface.text.Variant(self, field)
+
     def view(self, field: str) -> webcface.view.View:
         """Viewオブジェクトを生成"""
         return webcface.view.View(self, field)
@@ -44,8 +47,8 @@ class Member(webcface.field.Field):
     def canvas2d(
         self,
         field: str,
-        width: Optional[int | float] = None,
-        height: Optional[int | float] = None,
+        width: Optional[SupportsFloat] = None,
+        height: Optional[SupportsFloat] = None,
     ) -> webcface.canvas2d.Canvas2D:
         """Canvas2Dオブジェクトを生成
 
@@ -62,28 +65,23 @@ class Member(webcface.field.Field):
         return webcface.log.Log(self)
 
     def func(
-        self, arg: Optional[str | Callable] = None, **kwargs
-    ) -> webcface.func.Func | webcface.func.AnonymousFunc:
-        """FuncオブジェクトまたはAnonymousオブジェクトを生成
+        self, arg: str = "", **kwargs
+    ) -> webcface.func.Func:
+        """Funcオブジェクトを生成
 
         #. member.func(arg: str)
             * 指定した名前のFuncオブジェクトを生成・参照する。
-        #. member.func(arg: Callable, [**kwargs])
-            * Funcの名前を決めずに一時的なFuncオブジェクト(AnonymoudFuncオブジェクト)を作成し、関数をセットする。
         #. @member.func(arg: str, [**kwargs])
             * デコレータとして使い、デコレートした関数を指定した名前でセットする。
             * デコレート後、関数は元のまま返す。
         #. @member.func([**kwargs])
             * 3と同じだが、名前はデコレートした関数から自動で取得される。
+        #. member.func(arg: Callable, [**kwargs])
+            * これはver2.0で削除。
 
-        2,3,4について、関数のセットに関しては Func.set() を参照。
-
-        :return: 1→ Func, 2→ AnonymousFunc
+        2, 3 の場合のkwargsは Func.set() を参照。
         """
-        if isinstance(arg, str):
-            return webcface.func.Func(self, arg, **kwargs)
-        else:
-            return webcface.func.AnonymousFunc(self, arg, **kwargs)
+        return webcface.func.Func(self, arg, **kwargs)
 
     def values(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。
@@ -141,61 +139,61 @@ class Member(webcface.field.Field):
             self.canvas3d, self._data_check().canvas3d_store.get_entry(self._member)
         )
 
-    @property
-    def on_value_entry(self) -> blinker.NamedSignal:
+    def on_value_entry(self, func: Callable) -> Callable:
         """Valueが追加されたときのイベント
 
         コールバックの引数にはValueオブジェクトが渡される。
         """
-        return self._data_check().signal("value_entry", self._member)
+        self._data_check().on_value_entry[self._member] = func
+        return func
 
-    @property
-    def on_text_entry(self) -> blinker.NamedSignal:
+    def on_text_entry(self, func: Callable) -> Callable:
         """Textが追加されたときのイベント
 
         コールバックの引数にはTextオブジェクトが渡される。
         """
-        return self._data_check().signal("text_entry", self._member)
+        self._data_check().on_text_entry[self._member] = func
+        return func
 
-    @property
-    def on_view_entry(self) -> blinker.NamedSignal:
+    def on_view_entry(self, func: Callable) -> Callable:
         """Viewが追加されたときのイベント
 
         コールバックの引数にはViewオブジェクトが渡される。
         """
-        return self._data_check().signal("view_entry", self._member)
+        self._data_check().on_view_entry[self._member] = func
+        return func
 
-    @property
-    def on_func_entry(self) -> blinker.NamedSignal:
+    def on_func_entry(self, func: Callable) -> Callable:
         """Funcが追加されたときのイベント
 
         コールバックの引数にはFuncオブジェクトが渡される。
         """
-        return self._data_check().signal("func_entry", self._member)
+        self._data_check().on_func_entry[self._member] = func
+        return func
 
-    @property
-    def on_canvas2d_entry(self) -> blinker.NamedSignal:
+    def on_canvas2d_entry(self, func: Callable) -> Callable:
         """Canvas2Dが追加されたときのイベント
 
         コールバックの引数にはCanvas2Dオブジェクトが渡される。
         """
-        return self._data_check().signal("canvas2d_entry", self._member)
+        self._data_check().on_canvas2d_entry[self._member] = func
+        return func
 
-    @property
-    def on_canvas3d_entry(self) -> blinker.NamedSignal:
+    def on_canvas3d_entry(self, func: Callable) -> Callable:
         """Canvas3Dが追加されたときのイベント
 
         コールバックの引数にはCanvas3Dオブジェクトが渡される。
         """
-        return self._data_check().signal("canvas3d_entry", self._member)
+        self._data_check().on_canvas3d_entry[self._member] = func
+        return func
 
-    @property
-    def on_sync(self) -> blinker.NamedSignal:
+    def on_sync(self, func: Callable) -> Callable:
         """Memberがsyncしたときのイベント
 
         コールバックの引数にはMemberオブジェクトが渡される。
         """
-        return self._data_check().signal("sync", self._member)
+        self._data_check().on_sync[self._member] = func
+        return func
 
     @property
     def sync_time(self) -> datetime.datetime:
@@ -235,22 +233,30 @@ class Member(webcface.field.Field):
     def ping_status(self) -> Optional[int]:
         """通信速度を調べる
 
-        初回の呼び出しで通信速度データをリクエストし、
+        通信速度データをリクエストしていなければリクエストし、
         sync()後通信速度が得られるようになる
-        :return: 初回→ None, 2回目以降(取得できれば)→ pingの往復時間 (ms)
+        :return: データがなければ None, 受信していれば pingの往復時間 (ms)
         """
-        if not self._data_check().ping_status_req:
-            self._data_check().ping_status_req = True
-            self._data_check().queue_msg([webcface.message.PingStatusReq.new()])
+        self.request_ping_status()
         return self._data_check().ping_status.get(
             self._data_check().get_member_id_from_name(self._member), None
         )
 
-    @property
-    def on_ping(self) -> blinker.NamedSignal:
+    def request_ping_status(self) -> None:
+        """通信速度データをリクエストする
+        (ver2.0〜)
+        """
+        if not self._data_check().ping_status_req:
+            self._data_check().ping_status_req = True
+            self._data_check().queue_msg_req([webcface.message.PingStatusReq.new()])
+
+    def on_ping(self, func: Callable) -> Callable:
         """通信速度データが更新されたときのイベント
+
+        通信速度データをリクエストしていなければリクエストする
 
         コールバックの引数にはMemberオブジェクトが渡される。
         """
-        self.ping_status
-        return self._data_check().signal("ping", self._member)
+        self.request_ping_status()
+        self._data_check().on_ping[self._member] = func
+        return func

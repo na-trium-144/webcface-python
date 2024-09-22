@@ -1,10 +1,8 @@
 from __future__ import annotations
-from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Callable
+from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Union
 import threading
-import json
 import datetime
 import logging
-import blinker
 import webcface.field
 import webcface.func_info
 import webcface.view_base
@@ -161,12 +159,14 @@ class SyncDataStore1(Generic[T]):
     self_member_name: str
     data_recv: Dict[str, T]
     req: Dict[str, bool]
+    entry: List[str]
     lock: threading.RLock
 
     def __init__(self, name: str) -> None:
         self.self_member_name = name
         self.data_recv = {}
         self.req = {}
+        self.entry = []
         self.lock = threading.RLock()
 
     def is_self(self, member: str) -> bool:
@@ -194,6 +194,20 @@ class SyncDataStore1(Generic[T]):
                 return True
             return False
 
+    def set_entry(self, member: str) -> None:
+        with self.lock:
+            if member not in self.entry:
+                self.entry.append(member)
+
+    def clear_entry(self, member: str) -> None:
+        with self.lock:
+            if member in self.entry:
+                self.entry.remove(member)
+
+    def get_entry(self, member: str) -> bool:
+        with self.lock:
+            return member in self.entry
+
     def transfer_req(self) -> Dict[str, bool]:
         with self.lock:
             # if is_first:
@@ -206,7 +220,7 @@ class SyncDataStore1(Generic[T]):
 
 
 class FuncResultStore:
-    results: List[webcface.func_info.AsyncFuncResult]
+    results: List[Optional[webcface.func_info.Promise]]
     lock: threading.Lock
 
     def __init__(self):
@@ -215,22 +229,30 @@ class FuncResultStore:
 
     def add_result(
         self, caller: str, base: webcface.field.Field
-    ) -> webcface.func_info.AsyncFuncResult:
+    ) -> webcface.func_info.Promise:
         with self.lock:
             caller_id = len(self.results)
-            r = webcface.func_info.AsyncFuncResult(caller_id, caller, base)
+            r = webcface.func_info.Promise(caller_id, caller, base)
             self.results.append(r)
             return r
 
-    def get_result(self, caller_id: int) -> webcface.func_info.AsyncFuncResult:
+    def get_result(self, caller_id: int) -> webcface.func_info.Promise:
         with self.lock:
-            return self.results[caller_id]
+            r = self.results[caller_id]
+            if r is None:
+                raise IndexError()
+            return r
+
+    def del_result(self, caller_id: int) -> None:
+        with self.lock:
+            if caller_id < len(self.results):
+                self.results[caller_id] = None
 
 
 class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[List[float]]
-    text_store: SyncDataStore2[str]
+    text_store: SyncDataStore2[Union[float, bool, str]]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
     canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
@@ -247,18 +269,44 @@ class ClientData:
     member_remote_addr: Dict[int, str]
     svr_name: str
     svr_version: str
+    svr_hostname: str
     ping_status_req: bool
     ping_status: dict[int, int]
+    connected: bool
+    _connection_cv: threading.Condition
+    _msg_first: bool  # syncInitメッセージをqueueに入れたらtrue
     _msg_queue: List[List[webcface.message.MessageBase]]
     _msg_cv: threading.Condition
+    recv_queue: List[bytes]
+    recv_cv: threading.Condition
     logger_internal: logging.Logger
+    self_member_id: Optional[int]
+    sync_init_end: bool
+    auto_reconnect: bool
+    on_member_entry: Optional[Callable]
+    on_ping: Dict[str, Callable]
+    on_value_entry: Dict[str, Callable]
+    on_text_entry: Dict[str, Callable]
+    on_view_entry: Dict[str, Callable]
+    on_func_entry: Dict[str, Callable]
+    on_canvas2d_entry: Dict[str, Callable]
+    on_canvas3d_entry: Dict[str, Callable]
+    on_sync: Dict[str, Callable]
+    on_value_change: Dict[str, Dict[str, Callable]]
+    on_text_change: Dict[str, Dict[str, Callable]]
+    on_view_change: Dict[str, Dict[str, Callable]]
+    on_canvas2d_change: Dict[str, Dict[str, Callable]]
+    on_canvas3d_change: Dict[str, Dict[str, Callable]]
+    on_log_change: Dict[str, Callable]
 
-    def __init__(self, name: str, logger_internal: logging.Logger) -> None:
+    def __init__(
+        self, name: str, logger_internal: logging.Logger, auto_reconnect: bool
+    ) -> None:
         self.self_member_name = name
         self.value_store = SyncDataStore2[List[float]](
             name, SyncDataStore2.should_send_on_change
         )
-        self.text_store = SyncDataStore2[str](
+        self.text_store = SyncDataStore2[Union[float, bool, str]](
             name, SyncDataStore2.should_send_on_change
         )
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](
@@ -284,20 +332,70 @@ class ClientData:
         self.member_remote_addr = {}
         self.svr_name = ""
         self.svr_version = ""
+        self.svr_hostname = ""
         self.ping_status_req = False
         self.ping_status = {}
+        self.connected = False
+        self._connection_cv = threading.Condition()
+        self._msg_first = False
         self._msg_queue = []
         self._msg_cv = threading.Condition()
+        self.recv_queue = []
+        self.recv_cv = threading.Condition()
         self.logger_internal = logger_internal
+        self.self_member_id = None
+        self.sync_init_end = False
+        self.auto_reconnect = auto_reconnect
+        self.on_member_entry = None
+        self.on_ping = {}
+        self.on_value_entry = {}
+        self.on_view_entry = {}
+        self.on_text_entry = {}
+        self.on_func_entry = {}
+        self.on_canvas2d_entry = {}
+        self.on_canvas3d_entry = {}
+        self.on_sync = {}
+        self.on_value_change = {}
+        self.on_text_change = {}
+        self.on_view_change = {}
+        self.on_canvas2d_change = {}
+        self.on_canvas3d_change = {}
+        self.on_log_change = {}
 
-    def queue_msg(self, msgs: List[webcface.message.MessageBase]) -> None:
+    def queue_first(self) -> None:
+        with self._msg_cv:
+            self._msg_queue.insert(0, webcface.client_impl.sync_data_first(self))
+            self._msg_first = True
+
+    def queue_msg_always(self, msgs: List[webcface.message.MessageBase]) -> None:
+        """メッセージをキューに入れる"""
         with self._msg_cv:
             self._msg_queue.append(msgs)
             self._msg_cv.notify_all()
 
+    def queue_msg_online(self, msgs: List[webcface.message.MessageBase]) -> bool:
+        """接続できていればキューに入れtrueを返す"""
+        with self._connection_cv:
+            if self.connected:
+                with self._msg_cv:
+                    self._msg_queue.append(msgs)
+                    self._msg_cv.notify_all()
+                return True
+            return False
+
+    def queue_msg_req(self, msgs: List[webcface.message.MessageBase]) -> bool:
+        """msg_firstが空でなければキューに入れtrueを返す"""
+        with self._msg_cv:
+            if self._msg_first:
+                self._msg_queue.append(msgs)
+                self._msg_cv.notify_all()
+                return True
+            return False
+
     def clear_msg(self) -> None:
         with self._msg_cv:
             self._msg_queue = []
+            self._msg_first = False
             self._msg_cv.notify_all()
 
     def has_msg(self) -> bool:
@@ -307,6 +405,8 @@ class ClientData:
         with self._msg_cv:
             while len(self._msg_queue) == 0:
                 self._msg_cv.wait(timeout)
+                if timeout is not None:
+                    break
 
     def wait_empty(self, timeout: Optional[float] = None) -> None:
         with self._msg_cv:
@@ -334,35 +434,3 @@ class ClientData:
 
     def get_member_id_from_name(self, name: str) -> int:
         return self.member_ids.get(name, 0)
-
-    def signal(
-        self, signal_type: str, member: str = "", field: str = ""
-    ) -> blinker.NamedSignal:
-        if signal_type == "member_entry":
-            assert member == "" and field == ""
-            key = [id(self), signal_type]
-        elif signal_type in (
-            "value_entry",
-            "text_entry",
-            "view_entry",
-            "canvas2d_entry",
-            "canvas3d_entry",
-            "func_entry",
-            "log_append",
-            "sync",
-            "ping",
-        ):
-            assert member != "" and field == ""
-            key = [id(self), signal_type, member]
-        elif signal_type in (
-            "value_change",
-            "text_change",
-            "view_change",
-            "canvas2d_change",
-            "canvas3d_change",
-        ):
-            assert member != "" and field != ""
-            key = [id(self), signal_type, member, field]
-        else:
-            raise ValueError("invalid signal type " + signal_type)
-        return blinker.signal(json.dumps(key))

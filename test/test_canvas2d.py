@@ -71,7 +71,7 @@ def test_canvas2d_set(data):
             nonlocal called
             called += 1
 
-        v.signal.connect(callback)
+        v.on_change(callback)
 
         v.add(
             geometries.line([0, 0], [100, 50]),
