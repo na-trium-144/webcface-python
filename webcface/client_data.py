@@ -257,11 +257,10 @@ class ClientData:
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
     canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
     canvas3d_store: SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase]]
-    log_store: SyncDataStore1[List[webcface.log_handler.LogLine]]
+    log_store: SyncDataStore2[webcface.log_handler.LogData]
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
     logging_handler: webcface.log_handler.Handler
-    log_sent_lines: int
     logging_io: webcface.log_handler.LogWriteIO
     member_ids: Dict[str, int]
     member_lib_name: Dict[int, str]
@@ -291,6 +290,7 @@ class ClientData:
     on_func_entry: Dict[str, Callable]
     on_canvas2d_entry: Dict[str, Callable]
     on_canvas3d_entry: Dict[str, Callable]
+    on_log_entry: Dict[str, Callable]
     on_sync: Dict[str, Callable]
     on_value_change: Dict[str, Dict[str, Callable]]
     on_text_change: Dict[str, Dict[str, Callable]]
@@ -319,9 +319,7 @@ class ClientData:
         self.canvas3d_store = SyncDataStore2[
             List[webcface.canvas3d_base.Canvas3DComponentBase]
         ](name)
-        self.log_store = SyncDataStore1[List[webcface.log_handler.LogLine]](name)
-        self.log_store.set_recv(name, [])
-        self.log_sent_lines = 0
+        self.log_store = SyncDataStore2[webcface.log_handler.LogData](name)
         self.sync_time_store = SyncDataStore1[datetime.datetime](name)
         self.func_result_store = FuncResultStore()
         self.logging_handler = webcface.log_handler.Handler(self)
@@ -354,6 +352,7 @@ class ClientData:
         self.on_func_entry = {}
         self.on_canvas2d_entry = {}
         self.on_canvas3d_entry = {}
+        self.on_log_entry = {}
         self.on_sync = {}
         self.on_value_change = {}
         self.on_text_change = {}

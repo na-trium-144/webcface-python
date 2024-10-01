@@ -60,13 +60,14 @@ class Member(webcface.field.Field):
         """Canvas3Dオブジェクトを生成"""
         return webcface.canvas3d.Canvas3D(self, field)
 
-    def log(self) -> webcface.log.Log:
-        """Logオブジェクトを生成"""
-        return webcface.log.Log(self)
+    def log(self, field: str = "default") -> webcface.log.Log:
+        """Logオブジェクトを生成
 
-    def func(
-        self, arg: str = "", **kwargs
-    ) -> webcface.func.Func:
+        :arg field: (ver2.1〜) Logの名前を指定可能(省略すると"default")
+        """
+        return webcface.log.Log(self, field)
+
+    def func(self, arg: str = "", **kwargs) -> webcface.func.Func:
         """Funcオブジェクトを生成
 
         #. member.func(arg: str)
@@ -139,6 +140,10 @@ class Member(webcface.field.Field):
             self.canvas3d, self._data_check().canvas3d_store.get_entry(self._member)
         )
 
+    def log_entries(self) -> Iterable[webcface.log.Log]:
+        """このメンバーのLogをすべて取得する。(ver2.1〜)"""
+        return map(self.log, self._data_check().log_store.get_entry(self._member))
+
     def on_value_entry(self, func: Callable) -> Callable:
         """Valueが追加されたときのイベント
 
@@ -185,6 +190,14 @@ class Member(webcface.field.Field):
         コールバックの引数にはCanvas3Dオブジェクトが渡される。
         """
         self._data_check().on_canvas3d_entry[self._member] = func
+        return func
+
+    def on_log_entry(self, func: Callable) -> Callable:
+        """Logが追加されたときのイベント(ver2.1〜)
+
+        コールバックの引数にはLogオブジェクトが渡される。
+        """
+        self._data_check().on_log_entry[self._member] = func
         return func
 
     def on_sync(self, func: Callable) -> Callable:

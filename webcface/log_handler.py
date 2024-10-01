@@ -1,10 +1,19 @@
 from __future__ import annotations
 import io
-from typing import Iterable
+from typing import Iterable, List
 import sys
 import logging
 import datetime
 import webcface.client_data
+
+
+class LogData:
+    data: List[LogLine]
+    sent_lines: int
+
+    def __init__(self) -> None:
+        self.data = []
+        self.sent_lines = 0
 
 
 class LogLine:
