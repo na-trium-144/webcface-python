@@ -1,5 +1,7 @@
 from __future__ import annotations
 from typing import Optional, List, Callable
+import logging
+import io
 import datetime
 import webcface.field
 import webcface.member
@@ -101,3 +103,19 @@ class Log(webcface.field.Field):
                 log_data = webcface.log_handler.LogData()
             log_data.data.append(webcface.log_handler.LogLine(level, time, message))
             data.log_store.set_send(self._field, log_data)
+
+    @property
+    def handler(self) -> logging.Handler:
+        """webcfaceに出力するloggingのHandler
+        (ver2.1〜)
+
+        :return: logger.addHandler にセットして使う
+        """
+        return webcface.log_handler.Handler(self._data_check(), self._field)
+
+    @property
+    def io(self) -> io.TextIOBase:
+        """webcfaceとstderrに出力するio
+        (ver2.1〜)
+        """
+        return webcface.log_handler.LogWriteIO(self._data_check(), self._field)

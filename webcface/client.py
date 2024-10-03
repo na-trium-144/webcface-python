@@ -262,14 +262,19 @@ class Client(webcface.member.Member):
     def logging_handler(self) -> logging.Handler:
         """webcfaceに出力するloggingのHandler
 
+        (ver2.1〜: Log名は "default", log().handler と同じ)
+
         :return: logger.addHandler にセットして使う
         """
-        return self._data_check().logging_handler
+        return webcface.log_handler.Handler(self._data_check(), "default")
 
     @property
     def logging_io(self) -> io.TextIOBase:
-        """webcfaceとstderrに出力するio"""
-        return self._data_check().logging_io
+        """webcfaceとstderrに出力するio
+
+        (ver2.1〜: Log名は "default", log().io と同じ)
+        """
+        return webcface.log_handler.LogWriteIO(self._data_check(), "default")
 
     @property
     def server_name(self) -> str:

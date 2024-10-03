@@ -260,8 +260,6 @@ class ClientData:
     log_store: SyncDataStore2[webcface.log_handler.LogData]
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
-    logging_handler: webcface.log_handler.Handler
-    logging_io: webcface.log_handler.LogWriteIO
     member_ids: Dict[str, int]
     member_lib_name: Dict[int, str]
     member_lib_ver: Dict[int, str]
@@ -322,8 +320,6 @@ class ClientData:
         self.log_store = SyncDataStore2[webcface.log_handler.LogData](name)
         self.sync_time_store = SyncDataStore1[datetime.datetime](name)
         self.func_result_store = FuncResultStore()
-        self.logging_handler = webcface.log_handler.Handler(self)
-        self.logging_io = webcface.log_handler.LogWriteIO(self)
         self.member_ids = {}
         self.member_lib_name = {}
         self.member_lib_ver = {}
