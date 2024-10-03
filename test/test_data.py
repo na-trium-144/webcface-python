@@ -6,7 +6,7 @@ from webcface.text import Text
 from webcface.log import Log
 from webcface.field import Field
 from webcface.member import Member
-from webcface.log_handler import LogLine
+from webcface.log_handler import LogLine, LogData
 
 
 def test_value_member(data):
@@ -176,37 +176,43 @@ def test_text_set(data):
 
 
 def test_log_member(data):
-    assert isinstance(Log(Field(data, "a")).member, Member)
-    assert Log(Field(data, "a")).member.name == "a"
+    assert isinstance(Log(Field(data, "a"), "b").member, Member)
+    assert Log(Field(data, "a"), "b").member.name == "a"
 
 
 def text_log_try_get(data):
-    assert Log(Field(data, "a")).try_get() is None
-    assert data.log_store.req.get("a", False) is True
+    assert Log(Field(data, "a"), "b").try_get() is None
+    assert data.log_store.req.get("a", {}).get("b")
 
-    Log(Field(data, self_name)).try_get()
+    Log(Field(data, self_name), "b").try_get()
     assert self_name not in data.log_store.req
 
-    data.log_store.data_recv["a"] = [LogLine(1, datetime.datetime.now(), "a")]
-    assert len(Log(Field(data, "a")).try_get()) == 1
-    assert Log(Field(data, "a")).try_get()[0].level == 1
-    assert Log(Field(data, "a")).try_get()[0].message == "a"
+    log_data = LogData()
+    log_data.data = [LogLine(1, datetime.datetime.now(), "a")]
+    data.log_store.data_recv["a"] = {"b": log_data}
+    assert len(Log(Field(data, "a"), "b").try_get()) == 1
+    assert Log(Field(data, "a"), "b").try_get()[0].level == 1
+    assert Log(Field(data, "a"), "b").try_get()[0].message == "a"
 
 
 def test_log_get(data):
-    assert Log(Field(data, "a")).get() == []
-    assert data.log_store.req.get("a", False) is True
+    assert Log(Field(data, "a"), "b").get() == []
+    assert data.log_store.req.get("a", {}).get("b") == 1
 
-    Log(Field(data, self_name)).get()
+    Log(Field(data, self_name), "b").get()
     assert self_name not in data.log_store.req
 
-    data.log_store.data_recv["a"] = [LogLine(1, datetime.datetime.now(), "a")]
-    assert len(Log(Field(data, "a")).get()) == 1
-    assert Log(Field(data, "a")).get()[0].level == 1
-    assert Log(Field(data, "a")).get()[0].message == "a"
+    log_data = LogData()
+    log_data.data = [LogLine(1, datetime.datetime.now(), "a")]
+    data.log_store.data_recv["a"] = {"b": log_data}
+    assert len(Log(Field(data, "a"), "b").get()) == 1
+    assert Log(Field(data, "a"), "b").get()[0].level == 1
+    assert Log(Field(data, "a"), "b").get()[0].message == "a"
 
 
 def test_log_clear(data):
-    data.log_store.data_recv["a"] = [LogLine(1, datetime.datetime.now(), "a")]
-    Log(Field(data, "a")).clear()
-    assert data.log_store.data_recv["a"] == []
+    log_data = LogData()
+    log_data.data = [LogLine(1, datetime.datetime.now(), "a")]
+    data.log_store.data_recv["a"] = {"b": log_data}
+    Log(Field(data, "a"), "b").clear()
+    assert len(data.log_store.data_recv["a"]["b"].data) == 0

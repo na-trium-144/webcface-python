@@ -369,8 +369,9 @@ def test_log_req(wcli):
         wcli,
         [
             SyncInit.new_full("a", 10, "", "", ""),
-            Log.new(
-                "b",
+            LogRes.new(
+                1,
+                "",
                 [
                     LogLine(0, datetime.datetime.now(), "a" * 100000),
                     LogLine(1, datetime.datetime.now(), "b"),
@@ -379,15 +380,16 @@ def test_log_req(wcli):
         ],
     )
     assert called == 1
-    assert len(wcli._data_check().log_store.get_recv("a")) == 2
-    assert wcli._data_check().log_store.get_recv("a")[0].level == 0
-    assert wcli._data_check().log_store.get_recv("a")[0].message == "a" * 100000
+    assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 2
+    assert wcli._data_check().log_store.get_recv("a", "b").data[0].level == 0
+    assert wcli._data_check().log_store.get_recv("a", "b").data[0].message == "a" * 100000
 
     send_back(
         wcli,
         [
-            Log.new(
-                "b",
+            LogRes.new(
+                1,
+                "",
                 [
                     LogLine(2, datetime.datetime.now(), "c"),
                 ],
@@ -395,14 +397,15 @@ def test_log_req(wcli):
         ],
     )
     assert called == 2
-    assert len(wcli._data_check().log_store.get_recv("a")) == 3
+    assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 3
 
     webcface.Log.keep_lines = 2
     send_back(
         wcli,
         [
-            Log.new(
-                "b",
+            LogRes.new(
+                1,
+                "",
                 [
                     LogLine(3, datetime.datetime.now(), "d"),
                 ],
@@ -410,9 +413,9 @@ def test_log_req(wcli):
         ],
     )
     assert called == 3
-    assert len(wcli._data_check().log_store.get_recv("a")) == 2
-    assert wcli._data_check().log_store.get_recv("a")[0].level == 2
-    assert wcli._data_check().log_store.get_recv("a")[1].level == 3
+    assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 2
+    assert wcli._data_check().log_store.get_recv("a", "b").data[0].level == 2
+    assert wcli._data_check().log_store.get_recv("a", "b").data[1].level == 3
 
 
 def test_func_info(wcli):
