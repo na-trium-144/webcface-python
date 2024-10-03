@@ -158,6 +158,7 @@
 </li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="webcface.log_handler.html#webcface.log_handler.Handler"><code class="docutils literal notranslate"><span class="pre">Handler</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.log_handler.html#webcface.log_handler.LogData"><code class="docutils literal notranslate"><span class="pre">LogData</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.log_handler.html#webcface.log_handler.LogLine"><code class="docutils literal notranslate"><span class="pre">LogLine</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.log_handler.html#webcface.log_handler.LogWriteIO"><code class="docutils literal notranslate"><span class="pre">LogWriteIO</span></code></a></li>
 </ul>
@@ -182,6 +183,7 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.LogEntry"><code class="docutils literal notranslate"><span class="pre">LogEntry</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.LogReq"><code class="docutils literal notranslate"><span class="pre">LogReq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.LogRes"><code class="docutils literal notranslate"><span class="pre">LogRes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.MessageBase"><code class="docutils literal notranslate"><span class="pre">MessageBase</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.Ping"><code class="docutils literal notranslate"><span class="pre">Ping</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.PingStatus"><code class="docutils literal notranslate"><span class="pre">PingStatus</span></code></a></li>
@@ -206,6 +208,8 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.c3b_to_c3d"><code class="docutils literal notranslate"><span class="pre">c3b_to_c3d()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.c3d_to_c3b"><code class="docutils literal notranslate"><span class="pre">c3d_to_c3b()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.int_to_time"><code class="docutils literal notranslate"><span class="pre">int_to_time()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.logline2msg"><code class="docutils literal notranslate"><span class="pre">logline2msg()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.msg2logline"><code class="docutils literal notranslate"><span class="pre">msg2logline()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.pack"><code class="docutils literal notranslate"><span class="pre">pack()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.time_to_int"><code class="docutils literal notranslate"><span class="pre">time_to_int()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.unpack"><code class="docutils literal notranslate"><span class="pre">unpack()</span></code></a></li>
@@ -321,8 +325,11 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.clear"><code class="docutils literal notranslate"><span class="pre">Log.clear()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.exists"><code class="docutils literal notranslate"><span class="pre">Log.exists()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.get"><code class="docutils literal notranslate"><span class="pre">Log.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.handler"><code class="docutils literal notranslate"><span class="pre">Log.handler</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.io"><code class="docutils literal notranslate"><span class="pre">Log.io</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.keep_lines"><code class="docutils literal notranslate"><span class="pre">Log.keep_lines</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.member"><code class="docutils literal notranslate"><span class="pre">Log.member</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.name"><code class="docutils literal notranslate"><span class="pre">Log.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.on_change"><code class="docutils literal notranslate"><span class="pre">Log.on_change()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.request"><code class="docutils literal notranslate"><span class="pre">Log.request()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Log.try_get"><code class="docutils literal notranslate"><span class="pre">Log.try_get()</span></code></a></li>
@@ -339,10 +346,12 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.lib_name"><code class="docutils literal notranslate"><span class="pre">Member.lib_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.lib_version"><code class="docutils literal notranslate"><span class="pre">Member.lib_version</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.log"><code class="docutils literal notranslate"><span class="pre">Member.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.log_entries"><code class="docutils literal notranslate"><span class="pre">Member.log_entries()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.name"><code class="docutils literal notranslate"><span class="pre">Member.name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_canvas2d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas2d_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_canvas3d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas3d_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_func_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_func_entry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_log_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_log_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_ping"><code class="docutils literal notranslate"><span class="pre">Member.on_ping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_sync"><code class="docutils literal notranslate"><span class="pre">Member.on_sync()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_text_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_text_entry()</span></code></a></li>

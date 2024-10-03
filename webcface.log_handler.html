@@ -60,6 +60,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.log_handler module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.log_handler.Handler"><code class="docutils literal notranslate"><span class="pre">Handler</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.log_handler.LogData"><code class="docutils literal notranslate"><span class="pre">LogData</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.log_handler.LogLine"><code class="docutils literal notranslate"><span class="pre">LogLine</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.log_handler.LogWriteIO"><code class="docutils literal notranslate"><span class="pre">LogWriteIO</span></code></a></li>
 </ul>
@@ -108,7 +109,7 @@
 <span id="webcface-log-handler-module"></span><h1>webcface.log_handler module<a class="headerlink" href="#module-webcface.log_handler" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.log_handler.Handler">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log_handler.</span></span><span class="sig-name descname"><span class="pre">Handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/log_handler.html#Handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log_handler.Handler" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log_handler.</span></span><span class="sig-name descname"><span class="pre">Handler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/log_handler.html#Handler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log_handler.Handler" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">Handler</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.log_handler.Handler.emit">
@@ -118,9 +119,20 @@
 raises a NotImplementedError.</p>
 </dd></dl>
 
-<dl class="py method">
-<dt class="sig sig-object py" id="webcface.log_handler.Handler.write">
-<span class="sig-name descname"><span class="pre">write</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">line</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.log_handler.LogLine" title="webcface.log_handler.LogLine"><span class="pre">LogLine</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log_handler.html#Handler.write"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log_handler.Handler.write" title="Link to this definition"></a></dt>
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.log_handler.LogData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log_handler.</span></span><span class="sig-name descname"><span class="pre">LogData</span></span><a class="reference internal" href="_modules/webcface/log_handler.html#LogData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log_handler.LogData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.log_handler.LogData.data">
+<span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#webcface.log_handler.LogLine" title="webcface.log_handler.LogLine"><span class="pre">LogLine</span></a><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.log_handler.LogData.data" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.log_handler.LogData.sent_lines">
+<span class="sig-name descname"><span class="pre">sent_lines</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.log_handler.LogData.sent_lines" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -148,7 +160,7 @@ raises a NotImplementedError.</p>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.log_handler.LogWriteIO">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log_handler.</span></span><span class="sig-name descname"><span class="pre">LogWriteIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/log_handler.html#LogWriteIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log_handler.LogWriteIO" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log_handler.</span></span><span class="sig-name descname"><span class="pre">LogWriteIO</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">name</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/log_handler.html#LogWriteIO"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log_handler.LogWriteIO" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">TextIOBase</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.log_handler.LogWriteIO.isatty">

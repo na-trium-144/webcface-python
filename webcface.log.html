@@ -106,11 +106,11 @@
 <span id="webcface-log-module"></span><h1>webcface.log module<a class="headerlink" href="#module-webcface.log" title="Link to this heading"></a></h1>
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.log.Log">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log.</span></span><span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/log.html#Log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log.Log" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.log.</span></span><span class="sig-name descname"><span class="pre">Log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/log.html#Log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log.Log" title="Link to this definition"></a></dt>
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.log.Log.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">9,</span> <span class="pre">22,</span> <span class="pre">9,</span> <span class="pre">4,</span> <span class="pre">20,</span> <span class="pre">633651)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log.Log.append" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">10,</span> <span class="pre">3,</span> <span class="pre">7,</span> <span class="pre">40,</span> <span class="pre">8,</span> <span class="pre">549885)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.log.Log.append" title="Link to this definition"></a></dt>
 <dd><p>ログをwebcfaceに送信する
 (ver2.0〜)</p>
 <p>コンソールなどには出力されない</p>
@@ -138,6 +138,25 @@
 <dd><p>ログをlistで返す、まだリクエストされてなければ自動でリクエストされる</p>
 </dd></dl>
 
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.log.Log.handler">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">handler</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Handler</span></em><a class="headerlink" href="#webcface.log.Log.handler" title="Link to this definition"></a></dt>
+<dd><p>webcfaceに出力するloggingのHandler
+(ver2.1〜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>logger.addHandler にセットして使う</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.log.Log.io">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">io</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">TextIOBase</span></em><a class="headerlink" href="#webcface.log.Log.io" title="Link to this definition"></a></dt>
+<dd><p>webcfaceとstderrに出力するio
+(ver2.1〜)</p>
+</dd></dl>
+
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.log.Log.keep_lines">
 <span class="sig-name descname"><span class="pre">keep_lines</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1000</span></em><a class="headerlink" href="#webcface.log.Log.keep_lines" title="Link to this definition"></a></dt>
@@ -147,6 +166,12 @@
 <dt class="sig sig-object py" id="webcface.log.Log.member">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a></em><a class="headerlink" href="#webcface.log.Log.member" title="Link to this definition"></a></dt>
 <dd><p>Memberを返す</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.log.Log.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.log.Log.name" title="Link to this definition"></a></dt>
+<dd><p>field名を返す(ver2.1〜)</p>
 </dd></dl>
 
 <dl class="py method">

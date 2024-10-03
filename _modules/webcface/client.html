@@ -356,14 +356,19 @@
     <span class="k">def</span> <span class="nf">logging_handler</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">logging</span><span class="o">.</span><span class="n">Handler</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;webcfaceに出力するloggingのHandler</span>
 
+<span class="sd">        (ver2.1〜: Log名は &quot;default&quot;, log().handler と同じ)</span>
+
 <span class="sd">        :return: logger.addHandler にセットして使う</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">logging_handler</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">Handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">(),</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">logging_io</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">TextIOBase</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;webcfaceとstderrに出力するio&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">logging_io</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;webcfaceとstderrに出力するio</span>
+
+<span class="sd">        (ver2.1〜: Log名は &quot;default&quot;, log().io と同じ)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogWriteIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">(),</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">server_name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>

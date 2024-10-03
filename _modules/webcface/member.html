@@ -153,16 +153,17 @@
 
 <div class="viewcode-block" id="Member.log">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.log">[docs]</a>
-    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logオブジェクトを生成&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span></div>
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logオブジェクトを生成</span>
+
+<span class="sd">        :arg field: (ver2.1〜) Logの名前を指定可能(省略すると&quot;default&quot;)</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Member.func">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.func">[docs]</a>
-    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Funcオブジェクトを生成</span>
 
 <span class="sd">        #. member.func(arg: str)</span>
@@ -266,6 +267,13 @@
         <span class="p">)</span></div>
 
 
+<div class="viewcode-block" id="Member.log_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.log_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">log_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterable</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log</span><span class="o">.</span><span class="n">Log</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのLogをすべて取得する。(ver2.1〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">log</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="Member.on_value_entry">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_value_entry">[docs]</a>
     <span class="k">def</span> <span class="nf">on_value_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
@@ -329,6 +337,17 @@
 <span class="sd">        コールバックの引数にはCanvas3Dオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_canvas3d_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
+
+
+<div class="viewcode-block" id="Member.on_log_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_log_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_log_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Logが追加されたときのイベント(ver2.1〜)</span>
+
+<span class="sd">        コールバックの引数にはLogオブジェクトが渡される。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_log_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">return</span> <span class="n">func</span></div>
 
 

@@ -206,8 +206,19 @@ pythonクライアントは”python”を返す。</p>
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.member.Member.log">
-<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.log" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.log" title="Link to this definition"></a></dt>
 <dd><p>Logオブジェクトを生成</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field</strong> – (ver2.1〜) Logの名前を指定可能(省略すると”default”)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.log_entries">
+<span class="sig-name descname"><span class="pre">log_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.log_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.log_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのLogをすべて取得する。(ver2.1〜)</p>
 </dd></dl>
 
 <dl class="py property">
@@ -235,6 +246,13 @@ pythonクライアントは”python”を返す。</p>
 <span class="sig-name descname"><span class="pre">on_func_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.on_func_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.on_func_entry" title="Link to this definition"></a></dt>
 <dd><p>Funcが追加されたときのイベント</p>
 <p>コールバックの引数にはFuncオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.member.Member.on_log_entry">
+<span class="sig-name descname"><span class="pre">on_log_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.on_log_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.member.Member.on_log_entry" title="Link to this definition"></a></dt>
+<dd><p>Logが追加されたときのイベント(ver2.1〜)</p>
+<p>コールバックの引数にはLogオブジェクトが渡される。</p>
 </dd></dl>
 
 <dl class="py method">
