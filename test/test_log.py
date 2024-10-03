@@ -2,46 +2,52 @@ from conftest import self_name
 import datetime
 import pytest
 from webcface.log import Log
-from webcface.log_handler import LogLine
+from webcface.log_handler import LogLine, LogData
 from webcface.field import Field
 from webcface.member import Member
 
 
 def test_log_member(data):
-    assert isinstance(Log(Field(data, "a")).member, Member)
-    assert Log(Field(data, "a")).member.name == "a"
+    assert isinstance(Log(Field(data, "a"), "b").member, Member)
+    assert Log(Field(data, "a"), "b").member.name == "a"
 
 
 def test_log_try_get(data):
-    assert Log(Field(data, "a")).try_get() is None
-    assert data.log_store.req.get("a", False)
+    assert Log(Field(data, "a"), "b").try_get() is None
+    assert data.log_store.req.get("a", {}).get("b")
 
-    Log(Field(data, self_name)).try_get()
+    Log(Field(data, self_name), "b").try_get()
     assert self_name not in data.log_store.req
 
-    data.log_store.data_recv["a"] = [LogLine(0, datetime.datetime.now(), "")]
-    assert len(Log(Field(data, "a")).try_get()) == 1
+    log_data = LogData()
+    log_data.data = [LogLine(1, datetime.datetime.now(), "a")]
+    data.log_store.data_recv["a"] = {"b": log_data}
+    assert len(Log(Field(data, "a"), "b").try_get()) == 1
 
 
 def test_log_get(data):
-    assert Log(Field(data, "a")).get() == []
-    assert data.log_store.req.get("a", False)
+    assert Log(Field(data, "a"), "b").get() == []
+    assert data.log_store.req.get("a", {}).get("b")
 
-    Log(Field(data, self_name)).get()
+    Log(Field(data, self_name), "b").get()
     assert self_name not in data.log_store.req
 
-    data.log_store.data_recv["a"] = [LogLine(0, datetime.datetime.now(), "")]
-    assert len(Log(Field(data, "a")).get()) == 1
+    log_data = LogData()
+    log_data.data = [LogLine(1, datetime.datetime.now(), "a")]
+    data.log_store.data_recv["a"] = {"b": log_data}
+    assert len(Log(Field(data, "a"), "b").get()) == 1
 
 
 def test_log_clear(data):
-    data.log_store.data_recv["a"] = [LogLine(0, datetime.datetime.now(), "")]
-    Log(Field(data, "a")).clear()
-    assert len(data.log_store.data_recv["a"]) == 0
+    log_data = LogData()
+    log_data.data = [LogLine(1, datetime.datetime.now(), "a")]
+    data.log_store.data_recv["a"] = {"b": log_data}
+    Log(Field(data, "a"), "b").clear()
+    assert len(data.log_store.data_recv["a"]["b"].data) == 0
 
 
 def test_log_append(data):
-    Log(Field(data, self_name)).append(1, "a")
-    assert len(data.log_store.data_recv[self_name]) == 1
-    assert data.log_store.data_recv[self_name][0].level == 1
-    assert data.log_store.data_recv[self_name][0].message == "a"
+    Log(Field(data, self_name), "b").append(1, "a")
+    assert len(data.log_store.data_recv[self_name]["b"].data) == 1
+    assert data.log_store.data_recv[self_name]["b"].data[0].level == 1
+    assert data.log_store.data_recv[self_name]["b"].data[0].message == "a"

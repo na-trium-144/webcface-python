@@ -883,68 +883,109 @@ class CallResult(MessageBase):
         return self.msg["r"]
 
 
+def msg2logline(lm: List[Dict]) -> List[webcface.log_handler.LogLine]:
+    return [
+        webcface.log_handler.LogLine(l["v"], int_to_time(l["t"]), l["m"]) for l in lm
+    ]
+
+
+def logline2msg(lls: List[webcface.log_handler.LogLine]) -> List[Dict]:
+    return [{"v": ll.level, "t": time_to_int(ll.time), "m": ll.message} for ll in lls]
+
+
 class Log(MessageBase):
-    kind_def = 85
+    kind_def = 8
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(lls: List[webcface.log_handler.LogLine]) -> Log:
-        return Log.new_full(0, lls)
-
-    @staticmethod
-    def new_full(m: int, lls: List[webcface.log_handler.LogLine]) -> Log:
+    def new(f: str, lls: List[webcface.log_handler.LogLine]) -> Log:
         return Log(
             {
-                "m": m,
-                "l": [
-                    {"v": ll.level, "t": time_to_int(ll.time), "m": ll.message}
-                    for ll in lls
-                ],
+                "f": f,
+                "l": logline2msg(lls),
             }
         )
 
     @property
-    def member_id(self) -> int:
-        return self.msg["m"]
+    def field(self) -> str:
+        return self.msg["f"]
 
     @property
     def log(self) -> List[webcface.log_handler.LogLine]:
-        return [
-            webcface.log_handler.LogLine(l["v"], int_to_time(l["t"]), l["m"])
-            for l in self.msg["l"]
-        ]
+        return msg2logline(self.msg["l"])
+
+
+class LogRes(MessageBase):
+    kind_def = 68
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, f: str, lls: List[webcface.log_handler.LogLine]) -> LogRes:
+        return LogRes(
+            {
+                "i": i,
+                "f": f,
+                "l": logline2msg(lls),
+            }
+        )
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def log(self) -> List[webcface.log_handler.LogLine]:
+        return msg2logline(self.msg["l"])
 
 
 class LogReq(MessageBase):
-    kind_def = 86
+    kind_def = 48
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str) -> LogReq:
-        return LogReq({"M": m})
+    def new(m: str, f: str, i: int) -> LogReq:
+        return LogReq({"M": m, "f": f, "i": i})
 
     @property
-    def member_name(self) -> str:
+    def member(self) -> str:
         return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
 
 
 class LogEntry(MessageBase):
-    kind_def = 92
+    kind_def = 28
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int) -> LogEntry:
-        return LogEntry({"m": m})
+    def new(m: int, f: str) -> LogEntry:
+        return LogEntry({"m": m, "f": f})
 
     @property
     def member_id(self) -> int:
         return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
 
 
 # 受信する可能性のあるメッセージのリスト
@@ -968,8 +1009,8 @@ message_classes_recv = [
     Call,
     CallResponse,
     CallResult,
-    Log,
     LogEntry,
+    LogRes,
 ]
 
 

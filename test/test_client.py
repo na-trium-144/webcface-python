@@ -9,7 +9,7 @@ from webcface.field import Field
 from webcface.func import Func
 from webcface.func_info import Arg, ValType, FuncNotFoundError
 from webcface.view import ViewComponent
-from webcface.log_handler import LogLine
+from webcface.log_handler import LogLine, LogData
 import webcface.func_info
 import webcface.view_components
 
@@ -137,9 +137,9 @@ def test_entry(wcli):
     assert len(m.func("b").args) == 1
     assert m.func("b").exists() is True
 
-    assert m.log().exists() is False
-    send_back(wcli, [LogEntry.new(10)])
-    assert m.log().exists() is True
+    assert m.log("b").exists() is False
+    send_back(wcli, [LogEntry.new(10, "b")])
+    assert m.log("b").exists() is True
 
     m.on_sync(callback)
     send_back(wcli, [Sync.new_full(10, 0)])
@@ -319,29 +319,35 @@ def test_view_req(wcli):
 
 
 def test_log_send(wcli):
-    ls = [
+    ls = LogData()
+    ls.data = [
         LogLine(0, datetime.datetime.now(), "a" * 100000),
         LogLine(1, datetime.datetime.now(), "b"),
     ]
-    wcli._data_check().log_store.set_recv(self_name, ls)
+    wcli._data_check().log_store.set_send("hoge", ls)
     wcli.sync()
     m = check_sent(wcli, Log)
     assert isinstance(m, Log)
+    assert m.field == "hoge"
     assert len(m.log) == 2
     assert m.log[0].level == 0
     assert m.log[0].message == "a" * 100000
     assert m.log[1].level == 1
     assert m.log[1].message == "b"
+    assert ls.sent_lines == 2
     clear_sent(wcli)
     wcli._data_check()._msg_first = True
 
-    ls.append(LogLine(2, datetime.datetime.now(), "c"))
+    ls.data.append(LogLine(2, datetime.datetime.now(), "c"))
+    wcli._data_check().log_store.set_send("hoge", ls)
     wcli.sync()
     m = check_sent(wcli, Log)
     assert isinstance(m, Log)
+    assert m.field == "hoge"
     assert len(m.log) == 1
     assert m.log[0].level == 2
     assert m.log[0].message == "c"
+    assert ls.sent_lines == 3
 
 
 def test_log_req(wcli):
@@ -352,17 +358,20 @@ def test_log_req(wcli):
         called += 1
 
     wcli._data_check()._msg_first = True
-    wcli.member("a").log().on_change(callback)
+    wcli.member("a").log("b").on_change(callback)
     m = check_sent(wcli, LogReq)
     assert isinstance(m, LogReq)
-    assert m.member_name == "a"
+    assert m.member == "a"
+    assert m.field == "b"
+    assert m.req_id == 1
 
     send_back(
         wcli,
         [
             SyncInit.new_full("a", 10, "", "", ""),
-            Log.new_full(
-                10,
+            LogRes.new(
+                1,
+                "",
                 [
                     LogLine(0, datetime.datetime.now(), "a" * 100000),
                     LogLine(1, datetime.datetime.now(), "b"),
@@ -371,15 +380,16 @@ def test_log_req(wcli):
         ],
     )
     assert called == 1
-    assert len(wcli._data_check().log_store.get_recv("a")) == 2
-    assert wcli._data_check().log_store.get_recv("a")[0].level == 0
-    assert wcli._data_check().log_store.get_recv("a")[0].message == "a" * 100000
+    assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 2
+    assert wcli._data_check().log_store.get_recv("a", "b").data[0].level == 0
+    assert wcli._data_check().log_store.get_recv("a", "b").data[0].message == "a" * 100000
 
     send_back(
         wcli,
         [
-            Log.new_full(
-                10,
+            LogRes.new(
+                1,
+                "",
                 [
                     LogLine(2, datetime.datetime.now(), "c"),
                 ],
@@ -387,14 +397,15 @@ def test_log_req(wcli):
         ],
     )
     assert called == 2
-    assert len(wcli._data_check().log_store.get_recv("a")) == 3
+    assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 3
 
     webcface.Log.keep_lines = 2
     send_back(
         wcli,
         [
-            Log.new_full(
-                10,
+            LogRes.new(
+                1,
+                "",
                 [
                     LogLine(3, datetime.datetime.now(), "d"),
                 ],
@@ -402,9 +413,9 @@ def test_log_req(wcli):
         ],
     )
     assert called == 3
-    assert len(wcli._data_check().log_store.get_recv("a")) == 2
-    assert wcli._data_check().log_store.get_recv("a")[0].level == 2
-    assert wcli._data_check().log_store.get_recv("a")[1].level == 3
+    assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 2
+    assert wcli._data_check().log_store.get_recv("a", "b").data[0].level == 2
+    assert wcli._data_check().log_store.get_recv("a", "b").data[1].level == 3
 
 
 def test_func_info(wcli):

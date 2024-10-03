@@ -1,10 +1,19 @@
 from __future__ import annotations
 import io
-from typing import Iterable
+from typing import Iterable, List
 import sys
 import logging
 import datetime
 import webcface.client_data
+
+
+class LogData:
+    data: List[LogLine]
+    sent_lines: int
+
+    def __init__(self) -> None:
+        self.data = []
+        self.sent_lines = 0
 
 
 class LogLine:
@@ -19,34 +28,30 @@ class LogLine:
 
 
 class Handler(logging.Handler):
-    _data: webcface.client_data.ClientData
+    _log: webcface.log.Log
 
-    def __init__(self, data: webcface.client_data.ClientData) -> None:
+    def __init__(self, data: webcface.client_data.ClientData, name: str) -> None:
         super().__init__(logging.NOTSET)
-        self._data = data
-
-    def emit(self, record: logging.LogRecord) -> None:
-        self.write(
-            LogLine(
-                record.levelno // 10,
-                datetime.datetime.fromtimestamp(record.created),
-                record.getMessage(),
-            )
+        self._log = webcface.log.Log(
+            webcface.field.Field(data, data.self_member_name), name
         )
 
-    def write(self, line: LogLine) -> None:
-        with self._data.log_store.lock:
-            ls = self._data.log_store.get_recv(self._data.self_member_name)
-            assert ls is not None
-            ls.append(line)
+    def emit(self, record: logging.LogRecord) -> None:
+        self._log.append(
+            record.levelno // 10,
+            record.getMessage(),
+            datetime.datetime.fromtimestamp(record.created),
+        )
 
 
 class LogWriteIO(io.TextIOBase):
-    _data: webcface.client_data.ClientData
+    _log: webcface.log.Log
 
-    def __init__(self, data: webcface.client_data.ClientData) -> None:
+    def __init__(self, data: webcface.client_data.ClientData, name: str) -> None:
         super().__init__()
-        self._data = data
+        self._log = webcface.log.Log(
+            webcface.field.Field(data, data.self_member_name), name
+        )
 
     def isatty(self) -> bool:
         """:return: False"""
@@ -68,5 +73,5 @@ class LogWriteIO(io.TextIOBase):
         """webcfaceに文字列を出力すると同時にsys.__stderr__にも流す"""
         for l in s.split("\n"):
             if len(l) > 0:
-                self._data.logging_handler.write(LogLine(2, datetime.datetime.now(), l))
-        return sys.__stdout__.write(s)
+                self._log.append(2, l, datetime.datetime.now())
+        return sys.__stderr__.write(s)

@@ -41,7 +41,7 @@ def on_recv(
                 data.view_store.add_member(m.member_name)
                 data.canvas2d_store.add_member(m.member_name)
                 data.canvas3d_store.add_member(m.member_name)
-                data.log_store.clear_entry(m.member_name)
+                data.log_store.add_member(m.member_name)
                 data.member_ids[m.member_name] = m.member_id
                 data.member_lib_name[m.member_id] = m.lib_name
                 data.member_lib_ver[m.member_id] = m.lib_ver
@@ -140,6 +140,27 @@ def on_recv(
                 on_entry = data.on_canvas3d_entry.get(member)
                 if on_entry is not None:
                     on_entry(wcli.member(member).canvas3d(m.field))
+            if isinstance(m, webcface.message.LogRes):
+                member, field = data.log_store.get_req(m.req_id, m.sub_field)
+                log_data = data.log_store.get_recv(member, field)
+                if log_data is None:
+                    log_data = webcface.log_handler.LogData()
+                    data.log_store.set_recv(member, field, log_data)
+                log_data.data.extend(m.log)
+                if (
+                    webcface.Log.keep_lines >= 0
+                    and len(log_data.data) > webcface.Log.keep_lines
+                ):
+                    del log_data.data[: -webcface.Log.keep_lines]
+                on_change = data.on_log_change.get(member)
+                if on_change is not None:
+                    on_change(wcli.member(member).log())
+            if isinstance(m, webcface.message.LogEntry):
+                member = data.get_member_name_from_id(m.member_id)
+                data.log_store.set_entry(member, m.field)
+                on_entry = data.on_log_entry.get(member)
+                if on_entry is not None:
+                    on_entry(wcli.member(member).log(m.field))
             if isinstance(m, webcface.message.FuncInfo):
                 member = data.get_member_name_from_id(m.member_id)
                 data.func_store.set_entry(member, m.field)
@@ -204,24 +225,6 @@ def on_recv(
                     data.logger_internal.error(
                         f"error receiving call result id={m.caller_id}"
                     )
-            if isinstance(m, webcface.message.LogEntry):
-                member = data.get_member_name_from_id(m.member_id)
-                data.log_store.set_entry(member)
-            if isinstance(m, webcface.message.Log):
-                member = data.get_member_name_from_id(m.member_id)
-                log_s = data.log_store.get_recv(member)
-                if log_s is None:
-                    log_s = []
-                    data.log_store.set_recv(member, log_s)
-                log_s.extend(m.log)
-                if (
-                    webcface.Log.keep_lines >= 0
-                    and len(log_s) > webcface.Log.keep_lines
-                ):
-                    del log_s[: -webcface.Log.keep_lines]
-                on_change = data.on_log_change.get(member)
-                if on_change is not None:
-                    on_change(wcli.member(member).log())
         for member in sync_members:
             on_sync = data.on_sync.get(member)
             if on_sync is not None:
@@ -260,7 +263,8 @@ def sync_data_first(
                 msgs.append(webcface.message.Canvas3DReq.new(m, k, i))
     with data.log_store.lock:
         for m, r2 in data.log_store.transfer_req().items():
-            msgs.append(webcface.message.LogReq.new(m))
+            for k, i in r.items():
+                msgs.append(webcface.message.LogReq.new(m, k, i))
 
     msgs.extend(sync_data(data, True))
     return msgs
@@ -316,15 +320,15 @@ def sync_data(
                     c3_diff[str(i)] = c3
             msgs.append(webcface.message.Canvas3D.new(k, c3_diff, len(v6)))
     with data.log_store.lock:
-        log_all = data.log_store.get_recv(data.self_member_name)
-        assert log_all is not None
-        if is_first:
-            log_send = log_all
-        else:
-            log_send = log_all[data.log_sent_lines :]
-        data.log_sent_lines = len(log_all)
-        if len(log_send) > 0:
-            msgs.append(webcface.message.Log.new(log_send))
+        log_send = data.log_store.transfer_send(is_first)
+        for k, v7 in log_send.items():
+            if is_first:
+                log_send_data = v7.data
+            else:
+                log_send_data = v7.data[v7.sent_lines :]
+            v7.sent_lines = len(v7.data)
+            if len(log_send_data) > 0:
+                msgs.append(webcface.message.Log.new(k, log_send_data))
     with data.func_store.lock:
         for k, v3 in data.func_store.transfer_send(is_first).items():
             if not k.startswith("."):
