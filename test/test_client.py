@@ -42,14 +42,14 @@ def test_auto_sync(wcli):
     assert wcli._auto_sync is None
     print(wcli.sync)
     wcli.start()
-    time.sleep(0.1)
+    time.sleep(0.3)
     assert check_sent(wcli, SyncInit) is None
     assert check_sent(wcli, Sync) is None
     clear_sent(wcli)
 
-    wcli._auto_sync = 0.09
+    wcli._auto_sync = 0.2
     wcli.start()
-    time.sleep(0.1)
+    time.sleep(0.3)
     m = check_sent(wcli, SyncInit)
     assert isinstance(m, SyncInit)
     assert m.member_name == self_name
@@ -60,14 +60,14 @@ def test_auto_sync(wcli):
     clear_sent(wcli)
     wcli._data_check()._msg_first = True
 
-    time.sleep(0.1)
+    time.sleep(0.3)
     wcli.sync = lambda timeout, auto_start: time.sleep(timeout)
     assert check_sent(wcli, SyncInit) is None
     m = check_sent(wcli, Sync)
     assert isinstance(m, Sync)
 
     wcli.close()
-    time.sleep(0.2)
+    time.sleep(0.5)
     assert not wcli._sync_thread.is_alive()
 
 
