@@ -23,12 +23,15 @@ class Client(webcface.member.Member):
     :arg host: サーバーのアドレス
     :arg port: サーバーのポート
     :arg auto_reconnect: (ver2.0〜) 通信が切断された時に自動で再接続する。(デフォルト: True)
+    :arg auto_sync: (ver2.1〜) 指定した間隔(秒)ごとに別スレッドで自動的に sync() をする (デフォルト: None (syncしない))
     """
 
     _ws: Optional[websocket.WebSocketApp]
     _closing: bool
     _reconnect_thread: threading.Thread
     _send_thread: threading.Thread
+    _auto_sync: Optional[float]
+    _sync_thread: Optional[threading.Thread]
 
     def __init__(
         self,
@@ -36,6 +39,7 @@ class Client(webcface.member.Member):
         host: str = "127.0.0.1",
         port: int = 7530,
         auto_reconnect: bool = True,
+        auto_sync: Optional[float] = None,
     ) -> None:
         logger = logging.getLogger(f"webcface_internal({name})")
         handler = logging.StreamHandler()
@@ -131,6 +135,9 @@ class Client(webcface.member.Member):
 
         self._send_thread = threading.Thread(target=msg_send, daemon=True)
 
+        self._auto_sync = auto_sync
+        self._sync_thread = None
+
         # data.queue_msg(webcface.client_impl.sync_data_first(self, data))
 
         def close_at_exit():
@@ -142,6 +149,8 @@ class Client(webcface.member.Member):
                 self._reconnect_thread.join()
             if self._send_thread.is_alive():
                 self._send_thread.join()
+            if self._sync_thread.is_alive():
+                self._sync_thread.join()
 
         atexit.register(close_at_exit)
 
@@ -164,6 +173,16 @@ class Client(webcface.member.Member):
             self._reconnect_thread.start()
         if not self._send_thread.is_alive():
             self._send_thread.start()
+        if self._auto_sync is not None:
+            if self._sync_thread is None:
+
+                def loop_sync():
+                    while self._reconnect_thread.is_alive():
+                        self.sync(timeout=self._auto_sync)
+
+                self._sync_thread = threading.Thread(target=loop_sync, daemon=True)
+            if not self._sync_thread.is_alive():
+                self._sync_thread.start()
 
     def wait_connection(self) -> None:
         """サーバーに接続が成功するまで待機する。
