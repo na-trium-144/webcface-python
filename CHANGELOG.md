@@ -1,3 +1,15 @@
+## [2.1.0] - 2024-10-05
+### Changed
+* Logの名前を指定可能にする新Logメッセージに移行 (#32)
+    * Member.log_entries, on_log_entry 追加
+    * Log.name
+    * Log.handler, Log.io
+### Added
+* Clientコンストラクタに auto_sync 機能追加 (#33)
+### Fixed
+* sync() でtimeoutの判定が間違っているバグを修正 (#33)
+* log_handlerがstderrに出力と書いてあったのに実際にはstdoutに出力していたバグ?を修正 (#32)
+
 ## [2.0.0] - 2024-09-22
 ### Changed
 (#31: C++版クライアントver2.0に対応した更新です)
