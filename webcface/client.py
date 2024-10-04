@@ -149,7 +149,7 @@ class Client(webcface.member.Member):
                 self._reconnect_thread.join()
             if self._send_thread.is_alive():
                 self._send_thread.join()
-            if self._sync_thread.is_alive():
+            if self._sync_thread is not None and self._sync_thread.is_alive():
                 self._sync_thread.join()
 
         atexit.register(close_at_exit)
@@ -178,7 +178,7 @@ class Client(webcface.member.Member):
 
                 def loop_sync():
                     while self._reconnect_thread.is_alive():
-                        self.sync(timeout=self._auto_sync)
+                        self.sync(timeout=self._auto_sync, auto_start=False)
 
                 self._sync_thread = threading.Thread(target=loop_sync, daemon=True)
             if not self._sync_thread.is_alive():
@@ -209,7 +209,7 @@ class Client(webcface.member.Member):
         """
         return self._data_check().connected
 
-    def sync(self, timeout: Optional[float] = 0) -> None:
+    def sync(self, timeout: Optional[float] = 0, auto_start: bool = True) -> None:
         """送信用にセットしたデータをすべて送信キューに入れ、受信したデータを処理する
 
         * 実際に送信をするのは別スレッドであり、この関数はブロックしない。
@@ -225,14 +225,16 @@ class Client(webcface.member.Member):
         (deadlock回避)
 
         :param timeout: (ver2.0〜) sync()を再試行するタイムアウト (秒単位の実数、またはNone)
+        :param auto_start: (ver2.1〜)
         """
-        self.start()
+        if auto_start:
+            self.start()
         data = self._data_check()
         if data._msg_first:
             data.queue_msg_always(webcface.client_impl.sync_data(data, False))
         else:
             data.queue_first()
-        start_ns = time.thread_time_ns()
+        start_ns = time.time_ns()
         timeout_ns = round(timeout * 1e9) if timeout is not None else None
         while not self._closing and (data.connected or data.auto_reconnect):
             with data.recv_cv:
@@ -240,7 +242,7 @@ class Client(webcface.member.Member):
                     timeout_now = None
                     if timeout_ns is not None:
                         timeout_now = (
-                            timeout_ns - (time.thread_time_ns() - start_ns)
+                            timeout_ns - (time.time_ns() - start_ns)
                         ) / 1e9
                     data.recv_cv.wait(timeout=timeout_now)
                 for msg in data.recv_queue:
@@ -248,7 +250,7 @@ class Client(webcface.member.Member):
                 data.recv_queue = []
             if (
                 timeout_ns is not None
-                and time.thread_time_ns() - start_ns >= timeout_ns
+                and time.time_ns() - start_ns >= timeout_ns
             ):
                 break
 

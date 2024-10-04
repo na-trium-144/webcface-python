@@ -38,6 +38,39 @@ def test_sync(wcli):
     assert isinstance(m, Sync)
 
 
+def test_auto_sync(wcli):
+    assert wcli._auto_sync is None
+    print(wcli.sync)
+    wcli.start()
+    time.sleep(0.1)
+    assert check_sent(wcli, SyncInit) is None
+    assert check_sent(wcli, Sync) is None
+    clear_sent(wcli)
+
+    wcli._auto_sync = 0.09
+    wcli.start()
+    time.sleep(0.1)
+    m = check_sent(wcli, SyncInit)
+    assert isinstance(m, SyncInit)
+    assert m.member_name == self_name
+    assert m.lib_name == "python"
+    assert m.lib_ver == conf["tool"]["poetry"]["version"]
+    m = check_sent(wcli, Sync)
+    assert isinstance(m, Sync)
+    clear_sent(wcli)
+    wcli._data_check()._msg_first = True
+
+    time.sleep(0.1)
+    wcli.sync = lambda timeout, auto_start: time.sleep(timeout)
+    assert check_sent(wcli, SyncInit) is None
+    m = check_sent(wcli, Sync)
+    assert isinstance(m, Sync)
+
+    wcli.close()
+    time.sleep(0.2)
+    assert not wcli._sync_thread.is_alive()
+
+
 def test_server_version(wcli):
     send_back(wcli, [SyncInitEnd.new("a", "1", 10, "b")])
     assert wcli.server_name == "a"
@@ -382,7 +415,9 @@ def test_log_req(wcli):
     assert called == 1
     assert len(wcli._data_check().log_store.get_recv("a", "b").data) == 2
     assert wcli._data_check().log_store.get_recv("a", "b").data[0].level == 0
-    assert wcli._data_check().log_store.get_recv("a", "b").data[0].message == "a" * 100000
+    assert (
+        wcli._data_check().log_store.get_recv("a", "b").data[0].message == "a" * 100000
+    )
 
     send_back(
         wcli,
