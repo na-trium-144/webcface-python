@@ -139,6 +139,7 @@ class FuncInfo:
         return_type: Optional[Union[int, type]],
         args: Optional[List[Arg]],
         in_thread: bool = False,
+        handle: bool = False,
     ) -> None:
         if args is None:
             self.args = []
@@ -148,17 +149,21 @@ class FuncInfo:
             sig = None
         else:
             sig = inspect.signature(func)
-            for i, pname in enumerate(sig.parameters):
-                p = sig.parameters[pname]
-                if p.default != inspect.Parameter.empty:
-                    init = p.default
-                else:
-                    init = None
-                auto_arg = Arg(name=pname, type=p.annotation, init=init)
-                if i < len(self.args):
-                    self.args[i] = auto_arg.merge_config(self.args[i])
-                else:
-                    self.args.append(auto_arg)
+            if len(sig.parameters) == 1 and list(sig.parameters)[0] == CallHandle:
+                handle = True
+            else:
+                handle = False
+                for i, pname in enumerate(sig.parameters):
+                    p = sig.parameters[pname]
+                    if p.default != inspect.Parameter.empty:
+                        init = p.default
+                    else:
+                        init = None
+                    auto_arg = Arg(name=pname, type=p.annotation, init=init)
+                    if i < len(self.args):
+                        self.args[i] = auto_arg.merge_config(self.args[i])
+                    else:
+                        self.args.append(auto_arg)
         if isinstance(return_type, int):
             self.return_type = return_type
         elif isinstance(return_type, type):
@@ -168,20 +173,23 @@ class FuncInfo:
         else:
             raise ValueError()
 
-        def func_impl(p: Promise, args) -> None:
+        def func_impl(p: PromiseData, args) -> None:
             if func is None:
                 p._set_finish("func is None", is_error=True)
             else:
                 try:
-                    ret = func(*args)
-                    if ret is None:
-                        p._set_finish("", is_error=False)
-                    elif isinstance(ret, bool):
-                        p._set_finish(ret, is_error=False)
-                    elif isinstance(ret, SupportsFloat):
-                        p._set_finish(float(ret), is_error = False)
+                    if handle:
+                        func(CallHandle(p))
                     else:
-                        p._set_finish(str(ret), is_error=False)
+                        ret = func(*args)
+                        if ret is None:
+                            p._set_finish("", is_error=False)
+                        elif isinstance(ret, bool):
+                            p._set_finish(ret, is_error=False)
+                        elif isinstance(ret, SupportsFloat):
+                            p._set_finish(float(ret), is_error=False)
+                        else:
+                            p._set_finish(str(ret), is_error=False)
                 except Exception as e:
                     p._set_finish(str(e), is_error=True)
 
@@ -192,7 +200,7 @@ class FuncInfo:
         else:
             self.func_impl = func_impl
 
-    def run(self, p: Promise, args) -> None:
+    def run(self, p: PromiseData, args) -> None:
         if len(args) != len(self.args):
             # raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
             p._set_finish(
@@ -220,14 +228,9 @@ class FuncNotFoundError(RuntimeError):
         super().__init__(f'member("{base._member}").func("{base._field}") is not set')
 
 
-class Promise:
-    """非同期で実行した関数の実行結果を表す。
-
-    ver2.0〜 AsyncFuncResultからPromiseに名前変更
-    """
-
-    _caller_id: int
-    _caller: str
+class PromiseData:
+    _base: webcface.field.Field
+    _args: List[Union[float, bool, str]]
     _reached: bool
     _found: bool
     _finished: bool
@@ -238,17 +241,12 @@ class Promise:
     _on_finish: Optional[Callable]
     _finish_event_done: bool
     _cv: threading.Condition
-    _base: webcface.field.Field
 
     def __init__(
-        self,
-        caller_id: int,
-        caller: str,
-        base: webcface.field.Field,
+        self, base: webcface.field.Field, args: List[Union[float, bool, str]]
     ) -> None:
-        self._caller_id = caller_id
-        self._caller = caller
         self._base = base
+        self._args = args
         self._reached = False
         self._found = False
         self._finished = False
@@ -259,179 +257,6 @@ class Promise:
         self._reach_event_done = False
         self._finish_event_done = False
         self._cv = threading.Condition()
-
-    @property
-    def member(self) -> webcface.member.Member:
-        """関数のMember"""
-        return webcface.member.Member(self._base)
-
-    @property
-    def name(self) -> str:
-        """関数のfield名"""
-        return self._base._field
-
-    @property
-    def started(self) -> bool:
-        """関数が開始したらTrue, 存在しなければFalse
-
-        Falseの場合自動でresultにもFuncNotFoundErrorが入る
-
-        .. deprecated:: ver2.0
-        """
-        self.wait_reach()
-        return self.found
-
-    @property
-    def started_ready(self) -> bool:
-        """startedが取得可能であればTrue
-
-        .. deprecated:: ver2.0
-            (reached と同じ)
-        """
-        return self.reached
-
-    @property
-    def reached(self) -> bool:
-        """関数呼び出しのメッセージが相手のクライアントに到達したらTrue
-        (ver2.0〜)
-        """
-        return self._reached
-
-    @property
-    def found(self) -> bool:
-        """呼び出した関数がリモートに存在するか(=実行が開始されたか)を返す
-        (ver2.0〜)
-        """
-        return self._found
-
-    def wait_reach(self, timeout: Optional[float] = None) -> Promise:
-        """リモートに呼び出しメッセージが到達するまで待機
-        (ver2.0〜)
-
-        * reached がtrueになるまで待機する。
-        * on_reached
-        にコールバックが設定されている場合そのコールバックの完了も待機する。
-        * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
-        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
-        この関数を使用して待機している間に Client.sync()
-        が呼ばれていないとデッドロックしてしまうので注意。
-
-        :param timeout: 待機するタイムアウト (秒)
-        """
-        with self._cv:
-            while not self._reached:
-                self._cv.wait(timeout)
-        return self
-
-    @property
-    def result(self) -> Union[float, bool, str]:
-        """実行結果または例外
-
-        結果が返ってくるまで待機する。
-
-        .. deprecated:: ver2.0
-        """
-        with self._cv:
-            while not self._finished:
-                self._cv.wait()
-        if not self._found:
-            raise FuncNotFoundError(self._base)
-        if self._result_is_error:
-            raise RuntimeError(self._result)
-        return self._result
-
-    @property
-    def result_ready(self) -> bool:
-        """resultが取得可能であればTrue
-
-        .. deprecated:: ver2.0
-            (finished と同じ)
-        """
-        return self._finished
-
-    @property
-    def finished(self) -> bool:
-        """関数の実行が完了したかどうかを返す
-        (ver2.0〜)
-        """
-        return self._finished
-
-    @property
-    def is_error(self) -> bool:
-        """関数がエラーになったかどうかを返す
-        (ver2.0〜)
-        """
-        return self._result_is_error
-
-    @property
-    def response(self) -> Union[float, bool, str]:
-        """関数の実行が完了した場合その戻り値を返す
-        (ver2.0〜)
-        """
-        if self._result_is_error:
-            return ""
-        return self._result
-
-    @property
-    def rejection(self) -> str:
-        """関数の実行がエラーになった場合そのエラーメッセージを返す
-        (ver2.0〜)
-        """
-        if self._result_is_error:
-            return str(self._result)
-        return ""
-
-    def wait_finish(self, timeout: Optional[float] = None) -> Promise:
-        """関数の実行が完了するまで待機
-        (ver2.0〜)
-
-        * finished がtrueになるまで待機する。
-        * on_finished
-        にコールバックが設定されている場合そのコールバックの完了も待機する。
-        * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
-        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
-        この関数を使用して待機している間に Client.sync()
-        が呼ばれていないとデッドロックしてしまうので注意。
-
-        :param timeout: 待機するタイムアウト (秒)
-        """
-        with self._cv:
-            while not self._finished:
-                self._cv.wait(timeout)
-        return self
-
-    def on_reach(self, func: Callable) -> Promise:
-        """リモートに呼び出しメッセージが到達したときに呼び出すコールバックを設定
-        (ver2.0〜)
-
-        * コールバックの引数にはこのPromiseが渡される。
-        * すでにreachedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
-        """
-        with self._cv:
-            if not self._reach_event_done:
-                self._on_reach = func
-                if self._reached:
-                    func(self)
-                    self._reach_event_done = True
-        return self
-
-    def on_finish(self, func: Callable) -> Promise:
-        """関数の実行が完了したときに呼び出すコールバックを設定
-        (ver2.0〜)
-
-        * コールバックの引数にはこのPromiseが渡される。
-        * すでにfinishedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
-        """
-        run_func = False
-        with self._cv:
-            if not self._finish_event_done:
-                self._on_finish = func
-                if self._finished:
-                    self._finish_event_done = True
-                    run_func = True
-        if run_func:
-            func(self)
-        return self
 
     def _set_reach(self, found: bool) -> None:
         run_reach_func: Optional[Callable] = None
@@ -466,4 +291,221 @@ class Promise:
             self._cv.notify_all()
 
 
+class Promise:
+    """非同期で実行した関数の実行結果を表す。
+
+    ver2.0〜 AsyncFuncResultからPromiseに名前変更
+    """
+
+    _data: PromiseData
+    _caller_id: int
+    _caller: str
+
+    def __init__(self, caller_id: int, caller: str, data: PromiseData) -> None:
+        self._data = data
+        self._caller_id = caller_id
+        self._caller = caller
+
+    @property
+    def member(self) -> webcface.member.Member:
+        """関数のMember"""
+        return webcface.member.Member(self._data._base)
+
+    @property
+    def name(self) -> str:
+        """関数のfield名"""
+        return self._data._base._field
+
+    @property
+    def started(self) -> bool:
+        """関数が開始したらTrue, 存在しなければFalse
+
+        Falseの場合自動でresultにもFuncNotFoundErrorが入る
+
+        .. deprecated:: ver2.0
+        """
+        self.wait_reach()
+        return self.found
+
+    @property
+    def started_ready(self) -> bool:
+        """startedが取得可能であればTrue
+
+        .. deprecated:: ver2.0
+            (reached と同じ)
+        """
+        return self.reached
+
+    @property
+    def reached(self) -> bool:
+        """関数呼び出しのメッセージが相手のクライアントに到達したらTrue
+        (ver2.0〜)
+        """
+        return self._data._reached
+
+    @property
+    def found(self) -> bool:
+        """呼び出した関数がリモートに存在するか(=実行が開始されたか)を返す
+        (ver2.0〜)
+        """
+        return self._data._found
+
+    def wait_reach(self, timeout: Optional[float] = None) -> Promise:
+        """リモートに呼び出しメッセージが到達するまで待機
+        (ver2.0〜)
+
+        * reached がtrueになるまで待機する。
+        * on_reached
+        にコールバックが設定されている場合そのコールバックの完了も待機する。
+        * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        この関数を使用して待機している間に Client.sync()
+        が呼ばれていないとデッドロックしてしまうので注意。
+
+        :param timeout: 待機するタイムアウト (秒)
+        """
+        with self._data._cv:
+            while not self._data._reached:
+                self._data._cv.wait(timeout)
+        return self
+
+    @property
+    def result(self) -> Union[float, bool, str]:
+        """実行結果または例外
+
+        結果が返ってくるまで待機する。
+
+        .. deprecated:: ver2.0
+        """
+        with self._data._cv:
+            while not self._data._finished:
+                self._data._cv.wait()
+        if not self._data._found:
+            raise FuncNotFoundError(self._data._base)
+        if self._data._result_is_error:
+            raise RuntimeError(self._data._result)
+        return self._data._result
+
+    @property
+    def result_ready(self) -> bool:
+        """resultが取得可能であればTrue
+
+        .. deprecated:: ver2.0
+            (finished と同じ)
+        """
+        return self._data._finished
+
+    @property
+    def finished(self) -> bool:
+        """関数の実行が完了したかどうかを返す
+        (ver2.0〜)
+        """
+        return self._data._finished
+
+    @property
+    def is_error(self) -> bool:
+        """関数がエラーになったかどうかを返す
+        (ver2.0〜)
+        """
+        return self._data._result_is_error
+
+    @property
+    def response(self) -> Union[float, bool, str]:
+        """関数の実行が完了した場合その戻り値を返す
+        (ver2.0〜)
+        """
+        if self._data._result_is_error:
+            return ""
+        return self._data._result
+
+    @property
+    def rejection(self) -> str:
+        """関数の実行がエラーになった場合そのエラーメッセージを返す
+        (ver2.0〜)
+        """
+        if self._data._result_is_error:
+            return str(self._data._result)
+        return ""
+
+    def wait_finish(self, timeout: Optional[float] = None) -> Promise:
+        """関数の実行が完了するまで待機
+        (ver2.0〜)
+
+        * finished がtrueになるまで待機する。
+        * on_finished
+        にコールバックが設定されている場合そのコールバックの完了も待機する。
+        * Client.sync() を呼ぶのとは別のスレッドで使用することを想定している。
+        呼び出しが成功したかどうかの情報の受信は Client.sync() で行われるため、
+        この関数を使用して待機している間に Client.sync()
+        が呼ばれていないとデッドロックしてしまうので注意。
+
+        :param timeout: 待機するタイムアウト (秒)
+        """
+        with self._data._cv:
+            while not self._data._finished:
+                self._data._cv.wait(timeout)
+        return self
+
+    def on_reach(self, func: Callable) -> Promise:
+        """リモートに呼び出しメッセージが到達したときに呼び出すコールバックを設定
+        (ver2.0〜)
+
+        * コールバックの引数にはこのPromiseが渡される。
+        * すでにreachedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
+        """
+        with self._data._cv:
+            if not self._data._reach_event_done:
+                self._data._on_reach = func
+                if self._data._reached:
+                    func(self)
+                    self._data._reach_event_done = True
+        return self
+
+    def on_finish(self, func: Callable) -> Promise:
+        """関数の実行が完了したときに呼び出すコールバックを設定
+        (ver2.0〜)
+
+        * コールバックの引数にはこのPromiseが渡される。
+        * すでにfinishedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
+        """
+        run_func = False
+        with self._data._cv:
+            if not self._data._finish_event_done:
+                self._data._on_finish = func
+                if self._data._finished:
+                    self._data._finish_event_done = True
+                    run_func = True
+        if run_func:
+            func(self)
+        return self
+
+
 AsyncFuncResult = Promise
+
+
+class CallHandle:
+    _data: PromiseData
+
+    def __init__(
+        self,
+        data: PromiseData,
+    ) -> None:
+        self._data = data
+
+    @property
+    def args(self) -> List[Union[float, bool, str]]:
+        return self._data._args
+
+    def respond(self, result: Union[float, bool, str] = "") -> None:
+        self._data._set_finish(result, False)
+
+    def reject(self, reason: str) -> None:
+        self._data._set_finish(reason, True)
+
+    def assert_args_num(self, expected: int) -> bool:
+        if len(self._data._args) != expected:
+            self.reject(
+                f"requires {expected} arguments but got {len(self._data._args)}"
+            )
+            return False
+        return True
