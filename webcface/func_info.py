@@ -149,7 +149,10 @@ class FuncInfo:
             sig = None
         else:
             sig = inspect.signature(func)
-            if len(sig.parameters) == 1 and list(sig.parameters)[0] == CallHandle:
+            if (
+                len(sig.parameters) == 1
+                and list(sig.parameters.values())[0].annotation == CallHandle
+            ):
                 handle = True
             else:
                 handle = False
@@ -173,7 +176,7 @@ class FuncInfo:
         else:
             raise ValueError()
 
-        def func_impl(p: PromiseData, args) -> None:
+        def func_impl(p: PromiseData) -> None:
             if func is None:
                 p._set_finish("func is None", is_error=True)
             else:
@@ -181,7 +184,7 @@ class FuncInfo:
                     if handle:
                         func(CallHandle(p))
                     else:
-                        ret = func(*args)
+                        ret = func(*p._args)
                         if ret is None:
                             p._set_finish("", is_error=False)
                         elif isinstance(ret, bool):
@@ -194,8 +197,8 @@ class FuncInfo:
                     p._set_finish(str(e), is_error=True)
 
         if in_thread:
-            self.func_impl = lambda p, args: threading.Thread(
-                target=func_impl, args=(p, args), daemon=True
+            self.func_impl = lambda p: threading.Thread(
+                target=func_impl, args=(p,), daemon=True
             )
         else:
             self.func_impl = func_impl
@@ -220,7 +223,8 @@ class FuncInfo:
                 new_args.append(str(a))
             else:
                 new_args.append(a)
-        self.func_impl(p, new_args)
+        p._args = new_args
+        self.func_impl(p)
 
 
 class FuncNotFoundError(RuntimeError):
@@ -242,11 +246,9 @@ class PromiseData:
     _finish_event_done: bool
     _cv: threading.Condition
 
-    def __init__(
-        self, base: webcface.field.Field, args: List[Union[float, bool, str]]
-    ) -> None:
+    def __init__(self, base: webcface.field.Field) -> None:
         self._base = base
-        self._args = args
+        self._args = []
         self._reached = False
         self._found = False
         self._finished = False

@@ -178,22 +178,22 @@ def on_recv(
                             )
                         ]
                     )
-                    r = webcface.func_info.Promise(
-                        m.caller_id,
-                        "",
-                        webcface.field.Field(data, data.self_member_name, m.field),
+                    r = webcface.func_info.PromiseData(
+                        webcface.field.Field(data, data.self_member_name, m.field)
                     )
                     func_info.run(r, m.args)
 
-                    @r.on_finish
-                    def on_finish(r: webcface.func_info.Promise):
+                    p = webcface.func_info.Promise(0, "", r)
+
+                    @p.on_finish
+                    def on_finish(p: webcface.func_info.Promise):
                         data.queue_msg_always(
                             [
                                 webcface.message.CallResult.new(
                                     m.caller_id,
                                     m.caller_member_id,
-                                    r.is_error,
-                                    r.rejection if r.is_error else r.response,
+                                    p.is_error,
+                                    p.rejection if p.is_error else p.response,
                                 )
                             ]
                         )

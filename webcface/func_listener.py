@@ -37,6 +37,11 @@ class FuncListener(webcface.field.Field):
     def _set_info(self, info: webcface.func_info.FuncInfo) -> None:
         self._set_check().func_store.set_send(self._field, info)
 
+    def _handlers(self):
+        if self._field not in self._set_check().func_listener_handlers:
+            self._set_check().func_listener_handlers[self._field] = []
+        return self._set_check().func_listener_handlers[self._field]
+
     def listen(
         self,
         return_type: Optional[Union[int, type]] = None,
@@ -47,6 +52,14 @@ class FuncListener(webcface.field.Field):
 
         def listener(handle: webcface.func_info.CallHandle):
             if handle.assert_args_num(args_num):
-                self._data_check().func_listener_handlers.append(handle)
+                self._handlers().append(handle)
 
-        self._set_info(webcface.func_info.FuncInfo(listener, return_type, args))
+        self._set_info(
+            webcface.func_info.FuncInfo(listener, return_type, args, handle=True)
+        )
+
+    def fetch_call(self) -> Optional[webcface.func_info.CallHandle]:
+        """関数が呼び出されていればhandleを返す"""
+        if len(self._handlers()) >= 1:
+            return self._handlers().pop(0)
+        return None

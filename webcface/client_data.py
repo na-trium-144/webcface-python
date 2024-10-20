@@ -220,7 +220,7 @@ class SyncDataStore1(Generic[T]):
 
 
 class FuncResultStore:
-    results: List[Optional[webcface.func_info.Promise]]
+    results: List[Optional[webcface.func_info.PromiseData]]
     lock: threading.Lock
 
     def __init__(self):
@@ -228,15 +228,17 @@ class FuncResultStore:
         self.lock = threading.Lock()
 
     def add_result(
-        self, caller: str, base: webcface.field.Field
+        self,
+        caller: str,
+        base: webcface.field.Field,
     ) -> webcface.func_info.Promise:
         with self.lock:
             caller_id = len(self.results)
-            r = webcface.func_info.Promise(caller_id, caller, base)
+            r = webcface.func_info.PromiseData(base)
             self.results.append(r)
-            return r
+            return webcface.func_info.Promise(caller_id, caller, r)
 
-    def get_result(self, caller_id: int) -> webcface.func_info.Promise:
+    def get_result(self, caller_id: int) -> webcface.func_info.PromiseData:
         with self.lock:
             r = self.results[caller_id]
             if r is None:
@@ -260,6 +262,7 @@ class ClientData:
     log_store: SyncDataStore2[webcface.log_handler.LogData]
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
+    func_listener_handlers: Dict[str, List[webcface.func_info.CallHandle]]
     member_ids: Dict[str, int]
     member_lib_name: Dict[int, str]
     member_lib_ver: Dict[int, str]
@@ -320,6 +323,7 @@ class ClientData:
         self.log_store = SyncDataStore2[webcface.log_handler.LogData](name)
         self.sync_time_store = SyncDataStore1[datetime.datetime](name)
         self.func_result_store = FuncResultStore()
+        self.func_listener_handlers = {}
         self.member_ids = {}
         self.member_lib_name = {}
         self.member_lib_ver = {}
