@@ -174,7 +174,7 @@ class Func(webcface.field.Field):
             if not self._data_check().queue_msg_online(
                 [
                     webcface.message.Call.new(
-                        r._caller_id,
+                        r._data._caller_id,
                         0,
                         self._data_check().get_member_id_from_name(self._member),
                         self._field,

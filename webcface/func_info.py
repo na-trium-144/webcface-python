@@ -149,13 +149,24 @@ class FuncInfo:
             sig = None
         else:
             sig = inspect.signature(func)
+            first_annotation: Union[None, type, str] = None
+            if len(sig.parameters) >= 1:
+                first_annotation = list(sig.parameters.values())[0].annotation
+            # from __future__ import annotations がある場合strで返ってくるのでそのチェックもする
             if (
-                len(sig.parameters) == 1
-                and list(sig.parameters.values())[0].annotation == CallHandle
+                first_annotation is webcface.func_info.CallHandle
+                or first_annotation == "CallHandle"
+                or (
+                    isinstance(first_annotation, str)
+                    and first_annotation.endswith(".CallHandle")
+                )
             ):
                 handle = True
             else:
                 handle = False
+                assert len(self.args) == 0 or len(self.args) == len(
+                    sig.parameters
+                ), "number of args information passed and actual parameters number does not match"
                 for i, pname in enumerate(sig.parameters):
                     p = sig.parameters[pname]
                     if p.default != inspect.Parameter.empty:
@@ -234,6 +245,8 @@ class FuncNotFoundError(RuntimeError):
 
 class PromiseData:
     _base: webcface.field.Field
+    _caller_id: int
+    _caller: str
     _args: List[Union[float, bool, str]]
     _reached: bool
     _found: bool
@@ -246,7 +259,7 @@ class PromiseData:
     _finish_event_done: bool
     _cv: threading.Condition
 
-    def __init__(self, base: webcface.field.Field) -> None:
+    def __init__(self, base: webcface.field.Field, caller_id: int = 0, caller: str = "") -> None:
         self._base = base
         self._args = []
         self._reached = False
@@ -259,6 +272,8 @@ class PromiseData:
         self._reach_event_done = False
         self._finish_event_done = False
         self._cv = threading.Condition()
+        self._caller_id = caller_id
+        self._caller = caller
 
     def _set_reach(self, found: bool) -> None:
         run_reach_func: Optional[Callable] = None
@@ -269,7 +284,7 @@ class PromiseData:
                 self._reach_event_done = True
                 run_reach_func = self._on_reach
         if run_reach_func is not None:
-            run_reach_func(self)
+            run_reach_func(Promise(self))
         with self._cv:
             self._cv.notify_all()
         if not found:
@@ -288,7 +303,7 @@ class PromiseData:
                 self._finish_event_done = True
                 run_finish_func = self._on_finish
         if run_finish_func is not None:
-            run_finish_func(self)
+            run_finish_func(Promise(self))
         with self._cv:
             self._cv.notify_all()
 
@@ -300,13 +315,9 @@ class Promise:
     """
 
     _data: PromiseData
-    _caller_id: int
-    _caller: str
 
-    def __init__(self, caller_id: int, caller: str, data: PromiseData) -> None:
+    def __init__(self, data: PromiseData) -> None:
         self._data = data
-        self._caller_id = caller_id
-        self._caller = caller
 
     @property
     def member(self) -> webcface.member.Member:

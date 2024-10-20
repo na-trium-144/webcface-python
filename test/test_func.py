@@ -52,7 +52,7 @@ def test_func_set(data):
 
     f = Func(Field(data, self_name, "c"))
     f.set(
-        lambda x: x + 0.5,
+        lambda x, y: x + 0.5,
         args=[Arg(name="aaaa", type=int), Arg("b")],
         return_type=float,
     )

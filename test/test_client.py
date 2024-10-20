@@ -455,7 +455,7 @@ def test_log_req(wcli):
 
 def test_func_info(wcli):
     f = wcli.func("a").set(
-        lambda: 1,
+        lambda a: 1,
         return_type=ValType.INT,
         args=[Arg("a", type=ValType.INT, init=3)],
     )

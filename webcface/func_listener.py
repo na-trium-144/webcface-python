@@ -13,7 +13,7 @@ class FuncListener(webcface.field.Field):
         """Funcを指すクラス
 
         このコンストラクタを直接使わず、
-        Member.func(), Member.funcs(), Member.onFuncEntry などを使うこと
+        Member.func_listener() を使うこと
 
         詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
         """
@@ -46,7 +46,7 @@ class FuncListener(webcface.field.Field):
         self,
         return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
-    ) -> None:
+    ) -> FuncListener:
         """関数呼び出しの待ち受けを開始する"""
         args_num = len(args) if args is not None else 0
 
@@ -57,6 +57,7 @@ class FuncListener(webcface.field.Field):
         self._set_info(
             webcface.func_info.FuncInfo(listener, return_type, args, handle=True)
         )
+        return self
 
     def fetch_call(self) -> Optional[webcface.func_info.CallHandle]:
         """関数が呼び出されていればhandleを返す"""

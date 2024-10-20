@@ -183,7 +183,7 @@ def on_recv(
                     )
                     func_info.run(r, m.args)
 
-                    p = webcface.func_info.Promise(0, "", r)
+                    p = webcface.func_info.Promise(r)
 
                     @p.on_finish
                     def on_finish(p: webcface.func_info.Promise):

@@ -234,9 +234,9 @@ class FuncResultStore:
     ) -> webcface.func_info.Promise:
         with self.lock:
             caller_id = len(self.results)
-            r = webcface.func_info.PromiseData(base)
+            r = webcface.func_info.PromiseData(base, caller_id, caller)
             self.results.append(r)
-            return webcface.func_info.Promise(caller_id, caller, r)
+            return webcface.func_info.Promise(r)
 
     def get_result(self, caller_id: int) -> webcface.func_info.PromiseData:
         with self.lock:
