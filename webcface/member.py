@@ -6,6 +6,7 @@ import webcface.value
 import webcface.text
 import webcface.view
 import webcface.func
+import webcface.func_listener
 import webcface.log
 import webcface.message
 import webcface.canvas2d
@@ -83,6 +84,12 @@ class Member(webcface.field.Field):
         2, 3 の場合のkwargsは Func.set() を参照。
         """
         return webcface.func.Func(self, arg, **kwargs)
+
+    def func_listener(self, field: str) -> webcface.func_listener.FuncListener:
+        """FuncListenerオブジェクトを生成
+        (ver2.2〜)
+        """
+        return webcface.func_listener.FuncListener(self, field)
 
     def values(self) -> Iterable[webcface.value.Value]:
         """このメンバーのValueをすべて取得する。

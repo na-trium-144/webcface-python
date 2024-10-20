@@ -2,10 +2,11 @@ from .member import Member
 from .value import Value
 from .text import Text, Variant, InputRef
 from .func import Func
+from .func_listener import FuncListener
 from .view import View
 from .log import Log
 from .client import Client
-from .func_info import ValType, Arg, Promise
+from .func_info import ValType, Arg, Promise, CallHandle
 from .view_components import ViewComponentType, ViewColor
 from .transform import Point, Transform
 from .geometries import GeometryType, Geometry
@@ -23,12 +24,14 @@ __all__ = [
     "Variant",
     "InputRef",
     "Func",
+    "FuncListener",
     "View",
     "Log",
     "Client",
     "ValType",
     "Arg",
     "Promise",
+    "CallHandle",
     "ViewComponentType",
     "ViewColor",
     "view_components",

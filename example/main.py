@@ -35,6 +35,13 @@ def main():
         print(f"hello2 a={a},b={b},c={c},d={d}")
         return a + b
 
+    func3_listener = wcli.func_listener("func3").listen(
+        args=[
+            Arg("a", type=int),
+            Arg("b", type=str),
+        ]
+    )
+
     logger = getLogger("main")
     logger.setLevel(DEBUG)
     logger.addHandler(StreamHandler())
@@ -48,6 +55,7 @@ def main():
     print("this is print", file=wcli.logging_io)
 
     import sys
+
     sys.stdout = wcli.logging_io
     print("this is print with replaced stdout")
     sys.stdout = sys.__stdout__
@@ -58,7 +66,7 @@ def main():
         # 値を更新
         wcli.value("test").set(i)
         wcli.value("not_frequent").set(i // 10)
-        
+
         # 文字列を送信
         wcli.text("str").set("hello")
 
@@ -67,6 +75,11 @@ def main():
         v.add(f"hello, world\n{i}\n")
         v.add(view_components.button("a", lambda: print("hello")))
         v.sync()
+
+        call = func3_listener.fetch_call()
+        if call is not None:
+            print(f"func3 called: {call.args}")
+            call.respond(123)
 
         # a =
 

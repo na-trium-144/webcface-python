@@ -11,6 +11,7 @@ import webcface.func_info
 class Func(webcface.field.Field):
     _return_type: Optional[Union[int, type]]
     _args: Optional[List[webcface.func_info.Arg]]
+    _handle: bool
 
     def __init__(
         self,
@@ -18,6 +19,7 @@ class Func(webcface.field.Field):
         field: str = "",
         return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
+        handle: bool = False,
     ) -> None:
         """Funcを指すクラス
 
@@ -34,6 +36,7 @@ class Func(webcface.field.Field):
             )
         self._return_type = return_type
         self._args = args
+        self._handle = handle
 
     @property
     def member(self) -> webcface.member.Member:
@@ -66,6 +69,7 @@ class Func(webcface.field.Field):
         func: Callable,
         return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
+        handle: bool = False,
     ) -> Func:
         """関数からFuncInfoを構築しセットする
 
@@ -76,12 +80,18 @@ class Func(webcface.field.Field):
         :arg func: 登録したい関数
         :arg return_type: 関数の戻り値 (ValTypeのEnumまたはtypeクラス)
         :arg args: 関数の引数の情報
+        :arg handle: (ver2.2〜) これをTrueにするか引数型のアノテーションでCallHandle型が指定されている場合、
+        引数に CallHandle が渡されるようになる
         """
         if return_type is not None:
             self._return_type = return_type
         if args is not None:
             self._args = args
-        self._set_info(webcface.func_info.FuncInfo(func, self._return_type, self._args))
+        self._set_info(
+            webcface.func_info.FuncInfo(
+                func, self._return_type, self._args, handle=handle or self._handle
+            )
+        )
         return self
 
     def set_async(
@@ -89,6 +99,7 @@ class Func(webcface.field.Field):
         func: Callable,
         return_type: Optional[Union[int, type]] = None,
         args: Optional[List[webcface.func_info.Arg]] = None,
+        handle: bool = False,
     ) -> Func:
         """関数からFuncInfoを構築しセットする
         (ver2.0〜)
@@ -98,6 +109,8 @@ class Func(webcface.field.Field):
         :arg func: 登録したい関数
         :arg return_type: 関数の戻り値 (ValTypeのEnumまたはtypeクラス)
         :arg args: 関数の引数の情報
+        :arg handle: (ver2.2〜) これをTrueにするか引数型のアノテーションでCallHandle型が指定されている場合、
+        引数に CallHandle が渡されるようになる
         """
         if return_type is not None:
             self._return_type = return_type
@@ -105,7 +118,11 @@ class Func(webcface.field.Field):
             self._args = args
         self._set_info(
             webcface.func_info.FuncInfo(
-                func, self._return_type, self._args, in_thread=True
+                func,
+                self._return_type,
+                self._args,
+                in_thread=True,
+                handle=handle or self._handle,
             )
         )
         return self
@@ -144,20 +161,20 @@ class Func(webcface.field.Field):
         """
         r = self._data_check().func_result_store.add_result("", self)
         if self._data_check().is_self(self._member):
-            with r._cv:
+            with r._data._cv:
                 func_info = self._data_check().func_store.get_recv(
                     self._member, self._field
                 )
                 if func_info is None:
-                    r._set_reach(False)
+                    r._data._set_reach(False)
                 else:
-                    r._set_reach(True)
-                    func_info.run(r, args)
+                    r._data._set_reach(True)
+                    func_info.run(r._data, args)
         else:
             if not self._data_check().queue_msg_online(
                 [
                     webcface.message.Call.new(
-                        r._caller_id,
+                        r._data._caller_id,
                         0,
                         self._data_check().get_member_id_from_name(self._member),
                         self._field,
@@ -165,7 +182,7 @@ class Func(webcface.field.Field):
                     )
                 ]
             ):
-                r._set_reach(False)
+                r._data._set_reach(False)
         return r
 
     def __call__(self, *args) -> Union[float, bool, str, Callable]:

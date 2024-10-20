@@ -139,6 +139,7 @@ class FuncInfo:
         return_type: Optional[Union[int, type]],
         args: Optional[List[Arg]],
         in_thread: bool = False,
+        handle: bool = False,
     ) -> None:
         if args is None:
             self.args = []
@@ -148,17 +149,35 @@ class FuncInfo:
             sig = None
         else:
             sig = inspect.signature(func)
-            for i, pname in enumerate(sig.parameters):
-                p = sig.parameters[pname]
-                if p.default != inspect.Parameter.empty:
-                    init = p.default
-                else:
-                    init = None
-                auto_arg = Arg(name=pname, type=p.annotation, init=init)
-                if i < len(self.args):
-                    self.args[i] = auto_arg.merge_config(self.args[i])
-                else:
-                    self.args.append(auto_arg)
+            first_annotation: Union[None, type, str] = None
+            if len(sig.parameters) >= 1:
+                first_annotation = list(sig.parameters.values())[0].annotation
+            # from __future__ import annotations がある場合strで返ってくるのでそのチェックもする
+            if (
+                first_annotation is webcface.func_info.CallHandle
+                or first_annotation == "CallHandle"
+                or (
+                    isinstance(first_annotation, str)
+                    and first_annotation.endswith(".CallHandle")
+                )
+            ):
+                handle = True
+            else:
+                handle = False
+                assert len(self.args) == 0 or len(self.args) == len(
+                    sig.parameters
+                ), "number of args information passed and actual parameters number does not match"
+                for i, pname in enumerate(sig.parameters):
+                    p = sig.parameters[pname]
+                    if p.default != inspect.Parameter.empty:
+                        init = p.default
+                    else:
+                        init = None
+                    auto_arg = Arg(name=pname, type=p.annotation, init=init)
+                    if i < len(self.args):
+                        self.args[i] = auto_arg.merge_config(self.args[i])
+                    else:
+                        self.args.append(auto_arg)
         if isinstance(return_type, int):
             self.return_type = return_type
         elif isinstance(return_type, type):
@@ -168,31 +187,34 @@ class FuncInfo:
         else:
             raise ValueError()
 
-        def func_impl(p: Promise, args) -> None:
+        def func_impl(p: PromiseData) -> None:
             if func is None:
                 p._set_finish("func is None", is_error=True)
             else:
                 try:
-                    ret = func(*args)
-                    if ret is None:
-                        p._set_finish("", is_error=False)
-                    elif isinstance(ret, bool):
-                        p._set_finish(ret, is_error=False)
-                    elif isinstance(ret, SupportsFloat):
-                        p._set_finish(float(ret), is_error = False)
+                    if handle:
+                        func(CallHandle(p))
                     else:
-                        p._set_finish(str(ret), is_error=False)
+                        ret = func(*p._args)
+                        if ret is None:
+                            p._set_finish("", is_error=False)
+                        elif isinstance(ret, bool):
+                            p._set_finish(ret, is_error=False)
+                        elif isinstance(ret, SupportsFloat):
+                            p._set_finish(float(ret), is_error=False)
+                        else:
+                            p._set_finish(str(ret), is_error=False)
                 except Exception as e:
                     p._set_finish(str(e), is_error=True)
 
         if in_thread:
-            self.func_impl = lambda p, args: threading.Thread(
-                target=func_impl, args=(p, args), daemon=True
+            self.func_impl = lambda p: threading.Thread(
+                target=func_impl, args=(p,), daemon=True
             )
         else:
             self.func_impl = func_impl
 
-    def run(self, p: Promise, args) -> None:
+    def run(self, p: PromiseData, args) -> None:
         if len(args) != len(self.args):
             # raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
             p._set_finish(
@@ -212,7 +234,8 @@ class FuncInfo:
                 new_args.append(str(a))
             else:
                 new_args.append(a)
-        self.func_impl(p, new_args)
+        p._args = new_args
+        self.func_impl(p)
 
 
 class FuncNotFoundError(RuntimeError):
@@ -220,14 +243,11 @@ class FuncNotFoundError(RuntimeError):
         super().__init__(f'member("{base._member}").func("{base._field}") is not set')
 
 
-class Promise:
-    """非同期で実行した関数の実行結果を表す。
-
-    ver2.0〜 AsyncFuncResultからPromiseに名前変更
-    """
-
+class PromiseData:
+    _base: webcface.field.Field
     _caller_id: int
     _caller: str
+    _args: List[Union[float, bool, str]]
     _reached: bool
     _found: bool
     _finished: bool
@@ -238,17 +258,10 @@ class Promise:
     _on_finish: Optional[Callable]
     _finish_event_done: bool
     _cv: threading.Condition
-    _base: webcface.field.Field
 
-    def __init__(
-        self,
-        caller_id: int,
-        caller: str,
-        base: webcface.field.Field,
-    ) -> None:
-        self._caller_id = caller_id
-        self._caller = caller
+    def __init__(self, base: webcface.field.Field, caller_id: int = 0, caller: str = "") -> None:
         self._base = base
+        self._args = []
         self._reached = False
         self._found = False
         self._finished = False
@@ -259,16 +272,62 @@ class Promise:
         self._reach_event_done = False
         self._finish_event_done = False
         self._cv = threading.Condition()
+        self._caller_id = caller_id
+        self._caller = caller
+
+    def _set_reach(self, found: bool) -> None:
+        run_reach_func: Optional[Callable] = None
+        with self._cv:
+            self._reached = True
+            self._found = found
+            if not self._reach_event_done and self._on_reach is not None:
+                self._reach_event_done = True
+                run_reach_func = self._on_reach
+        if run_reach_func is not None:
+            run_reach_func(Promise(self))
+        with self._cv:
+            self._cv.notify_all()
+        if not found:
+            self._set_finish(
+                f'member("{self._base._member}").func("{self._base._field}") is not set',
+                is_error=True,
+            )
+
+    def _set_finish(self, result: Union[float, bool, str], is_error: bool) -> None:
+        run_finish_func: Optional[Callable] = None
+        with self._cv:
+            self._finished = True
+            self._result_is_error = is_error
+            self._result = result
+            if not self._finish_event_done and self._on_finish is not None:
+                self._finish_event_done = True
+                run_finish_func = self._on_finish
+        if run_finish_func is not None:
+            run_finish_func(Promise(self))
+        with self._cv:
+            self._cv.notify_all()
+
+
+class Promise:
+    """非同期で実行した関数の実行結果を表す。
+
+    ver2.0〜 AsyncFuncResultからPromiseに名前変更
+    """
+
+    _data: PromiseData
+
+    def __init__(self, data: PromiseData) -> None:
+        self._data = data
 
     @property
     def member(self) -> webcface.member.Member:
         """関数のMember"""
-        return webcface.member.Member(self._base)
+        return webcface.member.Member(self._data._base)
 
     @property
     def name(self) -> str:
         """関数のfield名"""
-        return self._base._field
+        return self._data._base._field
 
     @property
     def started(self) -> bool:
@@ -295,14 +354,14 @@ class Promise:
         """関数呼び出しのメッセージが相手のクライアントに到達したらTrue
         (ver2.0〜)
         """
-        return self._reached
+        return self._data._reached
 
     @property
     def found(self) -> bool:
         """呼び出した関数がリモートに存在するか(=実行が開始されたか)を返す
         (ver2.0〜)
         """
-        return self._found
+        return self._data._found
 
     def wait_reach(self, timeout: Optional[float] = None) -> Promise:
         """リモートに呼び出しメッセージが到達するまで待機
@@ -318,9 +377,9 @@ class Promise:
 
         :param timeout: 待機するタイムアウト (秒)
         """
-        with self._cv:
-            while not self._reached:
-                self._cv.wait(timeout)
+        with self._data._cv:
+            while not self._data._reached:
+                self._data._cv.wait(timeout)
         return self
 
     @property
@@ -331,14 +390,14 @@ class Promise:
 
         .. deprecated:: ver2.0
         """
-        with self._cv:
-            while not self._finished:
-                self._cv.wait()
-        if not self._found:
-            raise FuncNotFoundError(self._base)
-        if self._result_is_error:
-            raise RuntimeError(self._result)
-        return self._result
+        with self._data._cv:
+            while not self._data._finished:
+                self._data._cv.wait()
+        if not self._data._found:
+            raise FuncNotFoundError(self._data._base)
+        if self._data._result_is_error:
+            raise RuntimeError(self._data._result)
+        return self._data._result
 
     @property
     def result_ready(self) -> bool:
@@ -347,38 +406,38 @@ class Promise:
         .. deprecated:: ver2.0
             (finished と同じ)
         """
-        return self._finished
+        return self._data._finished
 
     @property
     def finished(self) -> bool:
         """関数の実行が完了したかどうかを返す
         (ver2.0〜)
         """
-        return self._finished
+        return self._data._finished
 
     @property
     def is_error(self) -> bool:
         """関数がエラーになったかどうかを返す
         (ver2.0〜)
         """
-        return self._result_is_error
+        return self._data._result_is_error
 
     @property
     def response(self) -> Union[float, bool, str]:
         """関数の実行が完了した場合その戻り値を返す
         (ver2.0〜)
         """
-        if self._result_is_error:
+        if self._data._result_is_error:
             return ""
-        return self._result
+        return self._data._result
 
     @property
     def rejection(self) -> str:
         """関数の実行がエラーになった場合そのエラーメッセージを返す
         (ver2.0〜)
         """
-        if self._result_is_error:
-            return str(self._result)
+        if self._data._result_is_error:
+            return str(self._data._result)
         return ""
 
     def wait_finish(self, timeout: Optional[float] = None) -> Promise:
@@ -395,9 +454,9 @@ class Promise:
 
         :param timeout: 待機するタイムアウト (秒)
         """
-        with self._cv:
-            while not self._finished:
-                self._cv.wait(timeout)
+        with self._data._cv:
+            while not self._data._finished:
+                self._data._cv.wait(timeout)
         return self
 
     def on_reach(self, func: Callable) -> Promise:
@@ -407,12 +466,12 @@ class Promise:
         * コールバックの引数にはこのPromiseが渡される。
         * すでにreachedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
         """
-        with self._cv:
-            if not self._reach_event_done:
-                self._on_reach = func
-                if self._reached:
+        with self._data._cv:
+            if not self._data._reach_event_done:
+                self._data._on_reach = func
+                if self._data._reached:
                     func(self)
-                    self._reach_event_done = True
+                    self._data._reach_event_done = True
         return self
 
     def on_finish(self, func: Callable) -> Promise:
@@ -423,47 +482,43 @@ class Promise:
         * すでにfinishedがtrueの場合はこのスレッドで即座にcallbackが呼ばれる。
         """
         run_func = False
-        with self._cv:
-            if not self._finish_event_done:
-                self._on_finish = func
-                if self._finished:
-                    self._finish_event_done = True
+        with self._data._cv:
+            if not self._data._finish_event_done:
+                self._data._on_finish = func
+                if self._data._finished:
+                    self._data._finish_event_done = True
                     run_func = True
         if run_func:
             func(self)
         return self
 
-    def _set_reach(self, found: bool) -> None:
-        run_reach_func: Optional[Callable] = None
-        with self._cv:
-            self._reached = True
-            self._found = found
-            if not self._reach_event_done and self._on_reach is not None:
-                self._reach_event_done = True
-                run_reach_func = self._on_reach
-        if run_reach_func is not None:
-            run_reach_func(self)
-        with self._cv:
-            self._cv.notify_all()
-        if not found:
-            self._set_finish(
-                f'member("{self._base._member}").func("{self._base._field}") is not set',
-                is_error=True,
-            )
-
-    def _set_finish(self, result: Union[float, bool, str], is_error: bool) -> None:
-        run_finish_func: Optional[Callable] = None
-        with self._cv:
-            self._finished = True
-            self._result_is_error = is_error
-            self._result = result
-            if not self._finish_event_done and self._on_finish is not None:
-                self._finish_event_done = True
-                run_finish_func = self._on_finish
-        if run_finish_func is not None:
-            run_finish_func(self)
-        with self._cv:
-            self._cv.notify_all()
-
 
 AsyncFuncResult = Promise
+
+
+class CallHandle:
+    _data: PromiseData
+
+    def __init__(
+        self,
+        data: PromiseData,
+    ) -> None:
+        self._data = data
+
+    @property
+    def args(self) -> List[Union[float, bool, str]]:
+        return self._data._args
+
+    def respond(self, result: Union[float, bool, str] = "") -> None:
+        self._data._set_finish(result, False)
+
+    def reject(self, reason: str) -> None:
+        self._data._set_finish(reason, True)
+
+    def assert_args_num(self, expected: int) -> bool:
+        if len(self._data._args) != expected:
+            self.reject(
+                f"requires {expected} arguments but got {len(self._data._args)}"
+            )
+            return False
+        return True

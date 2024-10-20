@@ -1,3 +1,11 @@
+## [2.2.0] - 2024-10-20
+### Added
+* CallHandle, FuncListener (#36)
+    * Member.func_listener() 追加
+    * Func.set() が引数にCallHandleを1つとる関数を受け付ける
+### Changed
+* func.set() でargsの個数と実際の引数の個数が合っていなかったら Assertion Error を投げるようにした (#36)
+
 ## [2.1.1] - 2024-10-07
 ### Changed
 * py.typed を追加
