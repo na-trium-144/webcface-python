@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_data &mdash; WebCFace-Python 2.1.1  documentation</title>
+  <title>webcface.client_data &mdash; WebCFace-Python 2.2.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.1.1
+            WebCFace-Python 2.2.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.1.1</a>
+          <a href="../../index.html">WebCFace-Python 2.2.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -377,7 +377,7 @@
 <div class="viewcode-block" id="FuncResultStore">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore">[docs]</a>
 <span class="k">class</span> <span class="nc">FuncResultStore</span><span class="p">:</span>
-    <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">]]</span>
+    <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">]]</span>
     <span class="n">lock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -387,18 +387,20 @@
 <div class="viewcode-block" id="FuncResultStore.add_result">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore.add_result">[docs]</a>
     <span class="k">def</span> <span class="nf">add_result</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">base</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="n">caller_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
-            <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">(</span><span class="n">caller_id</span><span class="p">,</span> <span class="n">caller</span><span class="p">,</span> <span class="n">base</span><span class="p">)</span>
+            <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">,</span> <span class="n">caller</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
-            <span class="k">return</span> <span class="n">r</span></div>
+            <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">(</span><span class="n">r</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FuncResultStore.get_result">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore.get_result">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">caller_id</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -429,6 +431,7 @@
     <span class="n">log_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogData</span><span class="p">]</span>
     <span class="n">sync_time_store</span><span class="p">:</span> <span class="n">SyncDataStore1</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span>
     <span class="n">func_result_store</span><span class="p">:</span> <span class="n">FuncResultStore</span>
+    <span class="n">func_listener_handlers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">CallHandle</span><span class="p">]]</span>
     <span class="n">member_ids</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="n">member_lib_name</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">member_lib_ver</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
@@ -489,6 +492,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">log_store</span> <span class="o">=</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogData</span><span class="p">](</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">sync_time_store</span> <span class="o">=</span> <span class="n">SyncDataStore1</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">](</span><span class="n">name</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">func_result_store</span> <span class="o">=</span> <span class="n">FuncResultStore</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">func_listener_handlers</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">member_ids</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">member_lib_name</span> <span class="o">=</span> <span class="p">{}</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">member_lib_ver</span> <span class="o">=</span> <span class="p">{}</span>

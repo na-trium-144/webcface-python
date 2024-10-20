@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_impl &mdash; WebCFace-Python 2.1.1  documentation</title>
+  <title>webcface.client_impl &mdash; WebCFace-Python 2.2.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.1.1
+            WebCFace-Python 2.2.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.1.1</a>
+          <a href="../../index.html">WebCFace-Python 2.2.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -251,22 +251,22 @@
                             <span class="p">)</span>
                         <span class="p">]</span>
                     <span class="p">)</span>
-                    <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">(</span>
-                        <span class="n">m</span><span class="o">.</span><span class="n">caller_id</span><span class="p">,</span>
-                        <span class="s2">&quot;&quot;</span><span class="p">,</span>
-                        <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">field</span><span class="p">),</span>
+                    <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">(</span>
+                        <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>
                     <span class="p">)</span>
                     <span class="n">func_info</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">r</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">args</span><span class="p">)</span>
 
-                    <span class="nd">@r</span><span class="o">.</span><span class="n">on_finish</span>
-                    <span class="k">def</span> <span class="nf">on_finish</span><span class="p">(</span><span class="n">r</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">):</span>
+                    <span class="n">p</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">(</span><span class="n">r</span><span class="p">)</span>
+
+                    <span class="nd">@p</span><span class="o">.</span><span class="n">on_finish</span>
+                    <span class="k">def</span> <span class="nf">on_finish</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">):</span>
                         <span class="n">data</span><span class="o">.</span><span class="n">queue_msg_always</span><span class="p">(</span>
                             <span class="p">[</span>
                                 <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">CallResult</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
                                     <span class="n">m</span><span class="o">.</span><span class="n">caller_id</span><span class="p">,</span>
                                     <span class="n">m</span><span class="o">.</span><span class="n">caller_member_id</span><span class="p">,</span>
-                                    <span class="n">r</span><span class="o">.</span><span class="n">is_error</span><span class="p">,</span>
-                                    <span class="n">r</span><span class="o">.</span><span class="n">rejection</span> <span class="k">if</span> <span class="n">r</span><span class="o">.</span><span class="n">is_error</span> <span class="k">else</span> <span class="n">r</span><span class="o">.</span><span class="n">response</span><span class="p">,</span>
+                                    <span class="n">p</span><span class="o">.</span><span class="n">is_error</span><span class="p">,</span>
+                                    <span class="n">p</span><span class="o">.</span><span class="n">rejection</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">is_error</span> <span class="k">else</span> <span class="n">p</span><span class="o">.</span><span class="n">response</span><span class="p">,</span>
                                 <span class="p">)</span>
                             <span class="p">]</span>
                         <span class="p">)</span>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.func_info module &mdash; WebCFace-Python 2.1.1  documentation</title>
+  <title>webcface.func_info module &mdash; WebCFace-Python 2.2.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="webcface.geometries module" href="webcface.geometries.html" />
+    <link rel="next" title="webcface.func_listener module" href="webcface.func_listener.html" />
     <link rel="prev" title="webcface.func module" href="webcface.func.html" /> 
 </head>
 
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 2.1.1
+            WebCFace-Python 2.2.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -58,13 +58,16 @@
 <li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.func_info module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.Arg"><code class="docutils literal notranslate"><span class="pre">Arg</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.AsyncFuncResult"><code class="docutils literal notranslate"><span class="pre">AsyncFuncResult</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.CallHandle"><code class="docutils literal notranslate"><span class="pre">CallHandle</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.FuncInfo"><code class="docutils literal notranslate"><span class="pre">FuncInfo</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.FuncNotFoundError"><code class="docutils literal notranslate"><span class="pre">FuncNotFoundError</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.Promise"><code class="docutils literal notranslate"><span class="pre">Promise</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.PromiseData"><code class="docutils literal notranslate"><span class="pre">PromiseData</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.ValType"><code class="docutils literal notranslate"><span class="pre">ValType</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.func_info.get_type_enum"><code class="docutils literal notranslate"><span class="pre">get_type_enum()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.func_listener.html">webcface.func_listener module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.geometries.html">webcface.geometries module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
@@ -89,7 +92,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 2.1.1</a>
+          <a href="index.html">WebCFace-Python 2.2.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -158,8 +161,34 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.func_info.CallHandle">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">CallHandle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.func_info.PromiseData" title="webcface.func_info.PromiseData"><span class="pre">PromiseData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#CallHandle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.CallHandle" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.func_info.CallHandle.args">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">args</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.func_info.CallHandle.args" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.func_info.CallHandle.assert_args_num">
+<span class="sig-name descname"><span class="pre">assert_args_num</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">expected</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/func_info.html#CallHandle.assert_args_num"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.CallHandle.assert_args_num" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.func_info.CallHandle.reject">
+<span class="sig-name descname"><span class="pre">reject</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">reason</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/func_info.html#CallHandle.reject"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.CallHandle.reject" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.func_info.CallHandle.respond">
+<span class="sig-name descname"><span class="pre">respond</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">result</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/func_info.html#CallHandle.respond"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.CallHandle.respond" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.func_info.FuncInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">FuncInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#webcface.func_info.Arg" title="webcface.func_info.Arg"><span class="pre">Arg</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#FuncInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.FuncInfo" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">FuncInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#webcface.func_info.Arg" title="webcface.func_info.Arg"><span class="pre">Arg</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">in_thread</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#FuncInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.FuncInfo" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="webcface.func_info.FuncInfo.args">
@@ -178,7 +207,7 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.func_info.FuncInfo.run">
-<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.func_info.Promise" title="webcface.func_info.Promise"><span class="pre">Promise</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/func_info.html#FuncInfo.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.FuncInfo.run" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">run</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">p</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.func_info.PromiseData" title="webcface.func_info.PromiseData"><span class="pre">PromiseData</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/func_info.html#FuncInfo.run"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.FuncInfo.run" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -191,7 +220,7 @@
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.func_info.Promise">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">Promise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">caller_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#Promise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.Promise" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">Promise</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.func_info.PromiseData" title="webcface.func_info.PromiseData"><span class="pre">PromiseData</span></a></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#Promise"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.Promise" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>非同期で実行した関数の実行結果を表す。</p>
 <p>ver2.0〜 AsyncFuncResultからPromiseに名前変更</p>
@@ -354,6 +383,12 @@
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.func_info.PromiseData">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">PromiseData</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller_id</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">caller</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#PromiseData"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.PromiseData" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.func_info.ValType">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.func_info.</span></span><span class="sig-name descname"><span class="pre">ValType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func_info.html#ValType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.func_info.ValType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
@@ -402,7 +437,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="webcface.func.html" class="btn btn-neutral float-left" title="webcface.func module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="webcface.geometries.html" class="btn btn-neutral float-right" title="webcface.geometries module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="webcface.func_listener.html" class="btn btn-neutral float-right" title="webcface.func_listener module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
