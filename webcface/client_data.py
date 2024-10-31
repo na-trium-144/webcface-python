@@ -255,6 +255,7 @@ class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[List[float]]
     text_store: SyncDataStore2[Union[float, bool, str]]
+    image_store: SyncDataStore2[webcface.image.ImageFrame]
     func_store: SyncDataStore2[webcface.func_info.FuncInfo]
     view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
     canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
@@ -287,6 +288,7 @@ class ClientData:
     on_ping: Dict[str, Callable]
     on_value_entry: Dict[str, Callable]
     on_text_entry: Dict[str, Callable]
+    on_image_entry: Dict[str, Callable]
     on_view_entry: Dict[str, Callable]
     on_func_entry: Dict[str, Callable]
     on_canvas2d_entry: Dict[str, Callable]
@@ -295,6 +297,7 @@ class ClientData:
     on_sync: Dict[str, Callable]
     on_value_change: Dict[str, Dict[str, Callable]]
     on_text_change: Dict[str, Dict[str, Callable]]
+    on_image_change: Dict[str, Dict[str, Callable]]
     on_view_change: Dict[str, Dict[str, Callable]]
     on_canvas2d_change: Dict[str, Dict[str, Callable]]
     on_canvas3d_change: Dict[str, Dict[str, Callable]]
@@ -310,6 +313,7 @@ class ClientData:
         self.text_store = SyncDataStore2[Union[float, bool, str]](
             name, SyncDataStore2.should_send_on_change
         )
+        self.image_store = SyncDataStore2[webcface.image.ImageFrame](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](
             name, SyncDataStore2.should_not_send_twice
         )
@@ -349,6 +353,7 @@ class ClientData:
         self.on_value_entry = {}
         self.on_view_entry = {}
         self.on_text_entry = {}
+        self.on_image_entry = {}
         self.on_func_entry = {}
         self.on_canvas2d_entry = {}
         self.on_canvas3d_entry = {}
@@ -356,6 +361,7 @@ class ClientData:
         self.on_sync = {}
         self.on_value_change = {}
         self.on_text_change = {}
+        self.on_image_change = {}
         self.on_view_change = {}
         self.on_canvas2d_change = {}
         self.on_canvas3d_change = {}

@@ -1,5 +1,5 @@
 from __future__ import annotations
-from typing import Dict, List, Union
+from typing import Dict, List, Union, Optional
 import datetime
 import msgpack
 import webcface.func_info
@@ -307,6 +307,158 @@ class TextEntry(MessageBase):
     @staticmethod
     def new(m: int, f: str) -> TextEntry:
         return TextEntry({"m": m, "f": f})
+
+    @property
+    def member_id(self) -> int:
+        return self.msg["m"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+
+class Image(MessageBase):
+    kind_def = 5
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(f: str, d: bytes, w: int, h: int, l: int, p: int) -> Image:
+        return Image({"f": f, "d": d, "h": h, "w": w, "l": l, "p": p})
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> bytes:
+        return self.msg["d"]
+
+    @property
+    def height(self) -> int:
+        return self.msg["h"]
+
+    @property
+    def width(self) -> int:
+        return self.msg["w"]
+
+    @property
+    def color_mode(self) -> int:
+        return self.msg["l"]
+
+    @property
+    def cmp_mode(self) -> int:
+        return self.msg["p"]
+
+
+class ImageReq(MessageBase):
+    kind_def = 45
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(
+        m: str,
+        f: str,
+        i: Optional[int],
+        w: Optional[int],
+        h: Optional[int],
+        l: Optional[int],
+        p: Optional[int],
+        q: Optional[int],
+        r: Optional[int],
+    ) -> ImageReq:
+        return ImageReq(
+            {"M": m, "f": f, "i": i, "w": w, "h": h, "l": l, "p": p, "q": q, "r": r}
+        )
+
+    @property
+    def member(self) -> str:
+        return self.msg["M"]
+
+    @property
+    def field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def width(self) -> Optional[int]:
+        return self.msg["w"]
+
+    @property
+    def height(self) -> Optional[int]:
+        return self.msg["h"]
+
+    @property
+    def color_mode(self) -> Optional[int]:
+        return self.msg["l"]
+
+    @property
+    def cmp_mode(self) -> Optional[int]:
+        return self.msg["p"]
+
+    @property
+    def quality(self) -> Optional[int]:
+        return self.msg["q"]
+
+    @property
+    def frame_rate(self) -> Optional[int]:
+        return self.msg["r"]
+
+
+class ImageRes(MessageBase):
+    kind_def = 65
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(i: int, f: str, d: bytes, w: int, h: int, l: int, p: int) -> ImageRes:
+        return ImageRes({"i": i, "f": f, "d": d, "h": h, "w": w, "l": l, "p": p})
+
+    @property
+    def req_id(self) -> int:
+        return self.msg["i"]
+
+    @property
+    def sub_field(self) -> str:
+        return self.msg["f"]
+
+    @property
+    def data(self) -> bytes:
+        return self.msg["d"]
+
+    @property
+    def height(self) -> int:
+        return self.msg["h"]
+
+    @property
+    def width(self) -> int:
+        return self.msg["w"]
+
+    @property
+    def color_mode(self) -> int:
+        return self.msg["l"]
+
+    @property
+    def cmp_mode(self) -> int:
+        return self.msg["p"]
+
+
+class ImageEntry(MessageBase):
+    kind_def = 25
+
+    def __init__(self, msg: dict) -> None:
+        super().__init__(self.kind_def, msg)
+
+    @staticmethod
+    def new(m: int, f: str) -> ImageEntry:
+        return ImageEntry({"m": m, "f": f})
 
     @property
     def member_id(self) -> int:
@@ -999,6 +1151,8 @@ message_classes_recv = [
     ValueEntry,
     TextRes,
     TextEntry,
+    ImageRes,
+    ImageEntry,
     ViewRes,
     ViewEntry,
     Canvas2DRes,
