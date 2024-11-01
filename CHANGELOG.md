@@ -1,3 +1,8 @@
+## [2.3.0] - 2024-11-01
+### Changed
+* Python3.6, 3.7 に対応 (#38)
+    * 依存ライブラリのmsgpackをu-msgpack-pythonに変更
+
 ## [2.2.0] - 2024-10-20
 ### Added
 * CallHandle, FuncListener (#36)

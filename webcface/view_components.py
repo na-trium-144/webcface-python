@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Callable, Union
 from enum import IntEnum
 import webcface.view
@@ -37,7 +36,7 @@ class ViewColor(IntEnum):
     PINK = 23
 
 
-def text(text: str, **kwargs) -> webcface.view.ViewComponent:
+def text(text: str, **kwargs) -> "webcface.view.ViewComponent":
     """textコンポーネント
 
     kwargsに指定したプロパティはViewComponentのコンストラクタに渡される
@@ -45,16 +44,16 @@ def text(text: str, **kwargs) -> webcface.view.ViewComponent:
     return webcface.view.ViewComponent(type=ViewComponentType.TEXT, text=text, **kwargs)
 
 
-def new_line() -> webcface.view.ViewComponent:
+def new_line() -> "webcface.view.ViewComponent":
     """newLineコンポーネント"""
     return webcface.view.ViewComponent(type=ViewComponentType.NEW_LINE)
 
 
 def button(
     text: str,
-    on_click: Union[webcface.func.Func, Callable],
+    on_click: "Union[webcface.func.Func, Callable]",
     **kwargs,
-) -> webcface.view.ViewComponent:
+) -> "webcface.view.ViewComponent":
     """buttonコンポーネント
 
     kwargsに指定したプロパティはViewComponentのコンストラクタに渡される
@@ -64,7 +63,7 @@ def button(
     )
 
 
-def text_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def text_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """textInputコンポーネント
     (ver2.0〜)
     """
@@ -73,7 +72,7 @@ def text_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     )
 
 
-def decimal_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def decimal_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """decimalInputコンポーネント
     (ver2.0〜)
     """
@@ -82,7 +81,7 @@ def decimal_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     )
 
 
-def number_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def number_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """numberInputコンポーネント
     (ver2.0〜)
     """
@@ -91,7 +90,7 @@ def number_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     )
 
 
-def toggle_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def toggle_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """toggleInputコンポーネント
     (ver2.0〜)
     """
@@ -100,7 +99,7 @@ def toggle_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     )
 
 
-def select_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def select_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """selectInputコンポーネント
     (ver2.0〜)
     """
@@ -109,7 +108,7 @@ def select_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     )
 
 
-def slider_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def slider_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """sliderInputコンポーネント
     (ver2.0〜)
     """
@@ -118,7 +117,7 @@ def slider_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
     )
 
 
-def check_input(text: str = "", **kwargs) -> webcface.view.ViewComponent:
+def check_input(text: str = "", **kwargs) -> "webcface.view.ViewComponent":
     """checkInputコンポーネント
     (ver2.0〜)
     """

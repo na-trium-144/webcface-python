@@ -234,24 +234,27 @@ class Client(webcface.member.Member):
             data.queue_msg_always(webcface.client_impl.sync_data(data, False))
         else:
             data.queue_first()
-        start_ns = time.time_ns()
+
+        if hasattr(time, "time_ns"):
+            time_ns = time.time_ns
+        else:
+
+            def time_ns():
+                return int(time.time() * 1e9)
+
+        start_ns = time_ns()
         timeout_ns = round(timeout * 1e9) if timeout is not None else None
         while not self._closing and (data.connected or data.auto_reconnect):
             with data.recv_cv:
                 if len(data.recv_queue) == 0:
                     timeout_now = None
                     if timeout_ns is not None:
-                        timeout_now = (
-                            timeout_ns - (time.time_ns() - start_ns)
-                        ) / 1e9
+                        timeout_now = (timeout_ns - (time_ns() - start_ns)) / 1e9
                     data.recv_cv.wait(timeout=timeout_now)
                 for msg in data.recv_queue:
                     webcface.client_impl.on_recv(self, data, msg)
                 data.recv_queue = []
-            if (
-                timeout_ns is not None
-                and time.time_ns() - start_ns >= timeout_ns
-            ):
+            if timeout_ns is not None and time_ns() - start_ns >= timeout_ns:
                 break
 
     def member(self, member_name: str) -> webcface.member.Member:

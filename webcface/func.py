@@ -1,8 +1,5 @@
-from __future__ import annotations
 from typing import Callable, Optional, List, Union
 from copy import deepcopy
-import threading
-import sys
 import webcface.member
 import webcface.field
 import webcface.func_info
@@ -10,15 +7,15 @@ import webcface.func_info
 
 class Func(webcface.field.Field):
     _return_type: Optional[Union[int, type]]
-    _args: Optional[List[webcface.func_info.Arg]]
+    _args: "Optional[List[webcface.func_info.Arg]]"
     _handle: bool
 
     def __init__(
         self,
-        base: Optional[webcface.field.Field],
+        base: "Optional[webcface.field.Field]",
         field: str = "",
         return_type: Optional[Union[int, type]] = None,
-        args: Optional[List[webcface.func_info.Arg]] = None,
+        args: "Optional[List[webcface.func_info.Arg]]" = None,
         handle: bool = False,
     ) -> None:
         """Funcを指すクラス
@@ -39,7 +36,7 @@ class Func(webcface.field.Field):
         self._handle = handle
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -48,10 +45,10 @@ class Func(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    def _set_info(self, info: webcface.func_info.FuncInfo) -> None:
+    def _set_info(self, info: "webcface.func_info.FuncInfo") -> None:
         self._set_check().func_store.set_send(self._field, info)
 
-    def _get_info(self) -> webcface.func_info.FuncInfo:
+    def _get_info(self) -> "webcface.func_info.FuncInfo":
         func_info = self._data_check().func_store.get_recv(self._member, self._field)
         if func_info is None:
             raise ValueError("Func not set")
@@ -68,9 +65,9 @@ class Func(webcface.field.Field):
         self,
         func: Callable,
         return_type: Optional[Union[int, type]] = None,
-        args: Optional[List[webcface.func_info.Arg]] = None,
+        args: "Optional[List[webcface.func_info.Arg]]" = None,
         handle: bool = False,
-    ) -> Func:
+    ) -> "Func":
         """関数からFuncInfoを構築しセットする
 
         * 関数にアノテーションがついている場合はreturn_typeとargs内のtypeは不要
@@ -98,9 +95,9 @@ class Func(webcface.field.Field):
         self,
         func: Callable,
         return_type: Optional[Union[int, type]] = None,
-        args: Optional[List[webcface.func_info.Arg]] = None,
+        args: "Optional[List[webcface.func_info.Arg]]" = None,
         handle: bool = False,
-    ) -> Func:
+    ) -> "Func":
         """関数からFuncInfoを構築しセットする
         (ver2.0〜)
 
@@ -127,7 +124,7 @@ class Func(webcface.field.Field):
         )
         return self
 
-    def free(self) -> Func:
+    def free(self) -> "Func":
         """関数の設定を削除"""
         self._data_check().func_store.unset_recv(self._member, self._field)
         return self
@@ -154,7 +151,7 @@ class Func(webcface.field.Field):
             raise RuntimeError(ret.rejection)
         return ret.response
 
-    def run_async(self, *args) -> webcface.func_info.Promise:
+    def run_async(self, *args) -> "webcface.func_info.Promise":
         """関数を実行する (非同期)
 
         * 戻り値やエラー、例外はPromiseから取得する
@@ -208,6 +205,6 @@ class Func(webcface.field.Field):
         return self._get_info().return_type
 
     @property
-    def args(self) -> List[webcface.func_info.Arg]:
+    def args(self) -> "List[webcface.func_info.Arg]":
         """引数の情報を返す"""
         return deepcopy(self._get_info().args)

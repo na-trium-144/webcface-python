@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List, Callable
 import logging
 import io
@@ -11,7 +10,7 @@ import webcface.log_handler
 class Log(webcface.field.Field):
     keep_lines: int = 1000
 
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+    def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """Logを指すクラス
 
         このコンストラクタを直接使わず、
@@ -24,7 +23,7 @@ class Log(webcface.field.Field):
         )
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -53,7 +52,7 @@ class Log(webcface.field.Field):
                 [webcface.message.LogReq.new(self._member, self._field, req)]
             )
 
-    def try_get(self) -> Optional[List[webcface.log_handler.LogLine]]:
+    def try_get(self) -> "Optional[List[webcface.log_handler.LogLine]]":
         """ログをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         log_data = self._data_check().log_store.get_recv(self._member, self._field)
@@ -62,12 +61,12 @@ class Log(webcface.field.Field):
         else:
             return None
 
-    def get(self) -> List[webcface.log_handler.LogLine]:
+    def get(self) -> "List[webcface.log_handler.LogLine]":
         """ログをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
 
-    def clear(self) -> Log:
+    def clear(self) -> "Log":
         """受信したログを空にする
 
         リクエスト状態はクリアしない"""

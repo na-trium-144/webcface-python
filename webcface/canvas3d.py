@@ -1,6 +1,4 @@
-from __future__ import annotations
 from typing import Optional, Callable, List
-from copy import deepcopy
 import webcface.field
 import webcface.canvas3d_base
 import webcface.geometries
@@ -10,12 +8,12 @@ import webcface.view_components
 
 
 class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
-    _data: Optional[webcface.client_data.ClientData]
+    _data: "Optional[webcface.client_data.ClientData]"
 
     def __init__(
         self,
-        base: webcface.canvas3d_base.Canvas3DComponentBase,
-        data: Optional[webcface.client_data.ClientData],
+        base: "webcface.canvas3d_base.Canvas3DComponentBase",
+        data: "Optional[webcface.client_data.ClientData]",
     ) -> None:
         super().__init__(
             base._type,
@@ -39,7 +37,7 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
         return self._type
 
     @property
-    def origin(self) -> webcface.transform.Transform:
+    def origin(self) -> "webcface.transform.Transform":
         """表示する要素の移動"""
         return webcface.transform.Transform(self._origin_pos, self._origin_rot)
 
@@ -49,7 +47,7 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
         return self._color
 
     @property
-    def geometry(self) -> Optional[webcface.geometries.Geometry]:
+    def geometry(self) -> "Optional[webcface.geometries.Geometry]":
         """表示する図形"""
         if self._geometry_type is None:
             return None
@@ -63,12 +61,12 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
 
 
 class Canvas3D(webcface.field.Field):
-    _c3data: Optional[List[webcface.canvas3d_base.Canvas3DComponentBase]]
+    _c3data: "Optional[List[webcface.canvas3d_base.Canvas3DComponentBase]]"
     _modified: bool
 
     def __init__(
         self,
-        base: webcface.field.Field,
+        base: "webcface.field.Field",
         field: str = "",
     ) -> None:
         """Canvas3Dを指すクラス
@@ -85,7 +83,7 @@ class Canvas3D(webcface.field.Field):
         self._modified = False
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -109,7 +107,7 @@ class Canvas3D(webcface.field.Field):
         data.on_canvas3d_change[self._member][self._field] = func
         return func
 
-    def child(self, field: str) -> Canvas3D:
+    def child(self, field: str) -> "Canvas3D":
         """子フィールドを返す
 
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
@@ -147,12 +145,12 @@ class Canvas3D(webcface.field.Field):
         """
         return self._field in self._data_check().canvas3d_store.get_entry(self._member)
 
-    def __enter__(self) -> Canvas3D:
+    def __enter__(self) -> "Canvas3D":
         """with構文の最初でinit"""
         self.init()
         return self
 
-    def init(self) -> Canvas3D:
+    def init(self) -> "Canvas3D":
         """このCanvas3Dオブジェクトにaddした内容を初期化する"""
         self._c3data = []
         self._modified = True
@@ -162,7 +160,7 @@ class Canvas3D(webcface.field.Field):
         """with構文の終わりに自動でsync()を呼ぶ"""
         self.sync()
 
-    def sync(self) -> Canvas3D:
+    def sync(self) -> "Canvas3D":
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified and self._c3data is not None:
@@ -175,7 +173,7 @@ class Canvas3D(webcface.field.Field):
             on_change(self)
         return self
 
-    def add(self, *args, **kwargs) -> Canvas3D:
+    def add(self, *args, **kwargs) -> "Canvas3D":
         """要素を追加
 
         引数は add_geometry() にそのまま渡される
@@ -190,10 +188,10 @@ class Canvas3D(webcface.field.Field):
 
     def add_geometry(
         self,
-        geometry: webcface.geometries.Geometry3D,
-        origin: Optional[webcface.transform.Transform] = None,
+        geometry: "webcface.geometries.Geometry3D",
+        origin: "Optional[webcface.transform.Transform]" = None,
         color: int = webcface.view_components.ViewColor.INHERIT,
-    ) -> Canvas3D:
+    ) -> "Canvas3D":
         """Geometryを追加"""
         if self._c3data is None:
             self.init()

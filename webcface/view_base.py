@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List, Union
 import webcface.field
 import webcface.client_data
@@ -7,8 +6,8 @@ import webcface.client_data
 class ViewComponentBase:
     _type: int
     _text: str
-    _on_click_func: Optional[webcface.field.FieldBase]
-    _text_ref: Optional[webcface.field.FieldBase]
+    _on_click_func: "Optional[webcface.field.FieldBase]"
+    _text_ref: "Optional[webcface.field.FieldBase]"
     _text_color: int
     _bg_color: int
     _min: Optional[float]
@@ -20,8 +19,8 @@ class ViewComponentBase:
         self,
         type: int = 0,
         text: str = "",
-        on_click: Optional[webcface.field.FieldBase] = None,
-        text_ref: Optional[webcface.field.FieldBase] = None,
+        on_click: "Optional[webcface.field.FieldBase]" = None,
+        text_ref: "Optional[webcface.field.FieldBase]" = None,
         text_color: int = 0,
         bg_color: int = 0,
         min: Optional[float] = None,

@@ -1,13 +1,11 @@
-from __future__ import annotations
 from typing import Callable, Optional, List, SupportsFloat, Union
 from enum import IntEnum
 from copy import deepcopy
 import inspect
 import threading
-import logging
 import webcface.field
 import webcface.member
-
+from webcface.typing import convertible_to_float
 
 class ValType(IntEnum):
     NONE = 0
@@ -65,18 +63,18 @@ class Arg:
             self._init = None
         elif isinstance(init, bool):
             self._init = init
-        elif isinstance(init, SupportsFloat):
+        elif convertible_to_float(init):
             self._init = float(init)
         else:
             self._init = str(init)
         self._option = []
         for op in option:
-            if isinstance(op, SupportsFloat):
+            if convertible_to_float(op):
                 self._option.append(float(op))
             else:
                 self._option.append(str(op))
 
-    def merge_config(self, a: Arg) -> Arg:
+    def merge_config(self, a: "Arg") -> "Arg":
         if a._name != "":
             self._name = a._name
         if a._type != ValType.NONE:
@@ -200,7 +198,7 @@ class FuncInfo:
                             p._set_finish("", is_error=False)
                         elif isinstance(ret, bool):
                             p._set_finish(ret, is_error=False)
-                        elif isinstance(ret, SupportsFloat):
+                        elif convertible_to_float(ret):
                             p._set_finish(float(ret), is_error=False)
                         else:
                             p._set_finish(str(ret), is_error=False)
@@ -214,7 +212,7 @@ class FuncInfo:
         else:
             self.func_impl = func_impl
 
-    def run(self, p: PromiseData, args) -> None:
+    def run(self, p: "PromiseData", args) -> None:
         if len(args) != len(self.args):
             # raise TypeError(f"requires {len(self.args)} arguments but got {len(args)}")
             p._set_finish(
@@ -239,12 +237,12 @@ class FuncInfo:
 
 
 class FuncNotFoundError(RuntimeError):
-    def __init__(self, base: webcface.field.FieldBase) -> None:
+    def __init__(self, base: "webcface.field.FieldBase") -> None:
         super().__init__(f'member("{base._member}").func("{base._field}") is not set')
 
 
 class PromiseData:
-    _base: webcface.field.Field
+    _base: "webcface.field.Field"
     _caller_id: int
     _caller: str
     _args: List[Union[float, bool, str]]
@@ -259,7 +257,7 @@ class PromiseData:
     _finish_event_done: bool
     _cv: threading.Condition
 
-    def __init__(self, base: webcface.field.Field, caller_id: int = 0, caller: str = "") -> None:
+    def __init__(self, base: "webcface.field.Field", caller_id: int = 0, caller: str = "") -> None:
         self._base = base
         self._args = []
         self._reached = False
@@ -320,7 +318,7 @@ class Promise:
         self._data = data
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """関数のMember"""
         return webcface.member.Member(self._data._base)
 
@@ -363,7 +361,7 @@ class Promise:
         """
         return self._data._found
 
-    def wait_reach(self, timeout: Optional[float] = None) -> Promise:
+    def wait_reach(self, timeout: Optional[float] = None) -> "Promise":
         """リモートに呼び出しメッセージが到達するまで待機
         (ver2.0〜)
 
@@ -440,7 +438,7 @@ class Promise:
             return str(self._data._result)
         return ""
 
-    def wait_finish(self, timeout: Optional[float] = None) -> Promise:
+    def wait_finish(self, timeout: Optional[float] = None) -> "Promise":
         """関数の実行が完了するまで待機
         (ver2.0〜)
 
@@ -459,7 +457,7 @@ class Promise:
                 self._data._cv.wait(timeout)
         return self
 
-    def on_reach(self, func: Callable) -> Promise:
+    def on_reach(self, func: Callable) -> "Promise":
         """リモートに呼び出しメッセージが到達したときに呼び出すコールバックを設定
         (ver2.0〜)
 
@@ -474,7 +472,7 @@ class Promise:
                     self._data._reach_event_done = True
         return self
 
-    def on_finish(self, func: Callable) -> Promise:
+    def on_finish(self, func: Callable) -> "Promise":
         """関数の実行が完了したときに呼び出すコールバックを設定
         (ver2.0〜)
 
