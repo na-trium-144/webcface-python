@@ -7,7 +7,7 @@ import threading
 import logging
 import webcface.field
 import webcface.member
-
+from webcface.typing import convertible_to_float
 
 class ValType(IntEnum):
     NONE = 0
@@ -65,13 +65,13 @@ class Arg:
             self._init = None
         elif isinstance(init, bool):
             self._init = init
-        elif isinstance(init, SupportsFloat):
+        elif convertible_to_float(init):
             self._init = float(init)
         else:
             self._init = str(init)
         self._option = []
         for op in option:
-            if isinstance(op, SupportsFloat):
+            if convertible_to_float(op):
                 self._option.append(float(op))
             else:
                 self._option.append(str(op))
@@ -200,7 +200,7 @@ class FuncInfo:
                             p._set_finish("", is_error=False)
                         elif isinstance(ret, bool):
                             p._set_finish(ret, is_error=False)
-                        elif isinstance(ret, SupportsFloat):
+                        elif convertible_to_float(ret):
                             p._set_finish(float(ret), is_error=False)
                         else:
                             p._set_finish(str(ret), is_error=False)

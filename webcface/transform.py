@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import List, Tuple, Union, SupportsFloat
+from webcface.typing import convertible_to_float
 
 ConvertibleToPoint = Union[
     List[SupportsFloat],
@@ -147,7 +148,7 @@ class Transform(Point):
 
         :arg new_rot: 座標 2次元の場合 :code:`float`, 3次元の場合 :code:`[float, float, float]` など
         """
-        if isinstance(new_rot, SupportsFloat):
+        if convertible_to_float(new_rot):
             self._rot = (float(new_rot), 0.0, 0.0)
         elif len(new_rot) == 3:
             self._rot = (float(new_rot[0]), float(new_rot[1]), float(new_rot[2]))
@@ -160,6 +161,7 @@ class Transform(Point):
             return self._pos == other._pos and self._rot == other._rot
         else:
             return False
+
 
 def identity() -> Transform:
     return Transform([0, 0, 0], [0, 0, 0])

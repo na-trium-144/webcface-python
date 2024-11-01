@@ -2,6 +2,7 @@ from __future__ import annotations
 from typing import Optional, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
+from webcface.typing import convertible_to_float
 
 
 class Variant(webcface.field.Field):
@@ -85,7 +86,7 @@ class Variant(webcface.field.Field):
         """値をセットする"""
         if isinstance(data, bool):
             data2: Union[float, bool, str] = data
-        elif isinstance(data, SupportsFloat):
+        elif convertible_to_float(data):
             data2 = float(data)
         else:
             data2 = str(data)

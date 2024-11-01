@@ -7,6 +7,7 @@ import webcface.view_base
 import webcface.view_components
 import webcface.client_data
 import webcface.func
+from webcface.typing import convertible_to_float
 
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
@@ -70,7 +71,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             for op in option:
                 if isinstance(op, bool):
                     option2.append(op)
-                elif isinstance(init, SupportsFloat):
+                elif convertible_to_float(init):
                     option2.append(float(op))
                 else:
                     option2.append(str(op))
@@ -94,7 +95,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             self._init = None
         elif isinstance(init, bool):
             self._init = init
-        elif isinstance(init, SupportsFloat):
+        elif convertible_to_float(init):
             self._init = float(init)
         else:
             self._init = str(init)

@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Dict, List, Union
 import datetime
-import msgpack
+import umsgpack
 import webcface.func_info
 import webcface.view_base
 import webcface.canvas2d_base
@@ -1019,11 +1019,11 @@ def pack(msgs: List[MessageBase]) -> bytes:
     for m in msgs:
         send_msgs.append(m.kind)
         send_msgs.append(m.msg)
-    return msgpack.packb(send_msgs)
+    return umsgpack.packb(send_msgs)
 
 
 def unpack(packed: bytes) -> List[MessageBase]:
-    unpack_obj = msgpack.unpackb(packed, strict_map_key=False)
+    unpack_obj = umsgpack.unpackb(packed, strict_map_key=False)
     assert len(unpack_obj) % 2 == 0
     msg_ret = []
     for i in range(0, len(unpack_obj), 2):

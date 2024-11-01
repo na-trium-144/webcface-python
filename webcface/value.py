@@ -3,6 +3,7 @@ from typing import Optional, List, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
 import webcface.message
+from webcface.typing import convertible_to_float
 
 
 class Value(webcface.field.Field):
@@ -97,7 +98,7 @@ class Value(webcface.field.Field):
     def set(self, data: Union[List[SupportsFloat], SupportsFloat]) -> Value:
         """値をセットする"""
         self._set_check()
-        if isinstance(data, SupportsFloat):
+        if convertible_to_float(data):
             self._set_check().value_store.set_send(self._field, [float(data)])
         elif isinstance(data, list):
             self._set_check().value_store.set_send(
