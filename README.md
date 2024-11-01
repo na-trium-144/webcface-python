@@ -21,7 +21,7 @@ pip install webcface
 Or from GitHub release:
 
 ```sh
-pip install https://github.com/na-trium-144/webcface-python/releases/download/v2.2.0/webcface-2.2.0-py3-none-any.whl
+pip install https://github.com/na-trium-144/webcface-python/releases/download/v2.3.0/webcface-2.3.0-py3-none-any.whl
 ```
 
 You can also install from source, but it may fail on older python that Poetry dropped support.
