@@ -8,6 +8,7 @@ import webcface.view_base
 import webcface.log_handler
 import webcface.canvas2d_base
 import webcface.canvas3d_base
+import webcface.image
 
 T = TypeVar("T")
 
