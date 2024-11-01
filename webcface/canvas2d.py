@@ -1,6 +1,4 @@
-from __future__ import annotations
 from typing import Optional, Callable, List, SupportsFloat
-from copy import deepcopy
 import webcface.field
 import webcface.canvas2d_base
 import webcface.geometries
@@ -14,7 +12,7 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
 
     def __init__(
         self,
-        base: webcface.canvas2d_base.Canvas2DComponentBase,
+        base: "webcface.canvas2d_base.Canvas2DComponentBase",
         # data: Optional[webcface.client_data.ClientData]
     ) -> None:
         super().__init__(
@@ -37,7 +35,7 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
         return self._type
 
     @property
-    def origin(self) -> webcface.transform.Transform:
+    def origin(self) -> "webcface.transform.Transform":
         """表示する要素の移動"""
         return webcface.transform.Transform(self._origin_pos, self._origin_rot)
 
@@ -57,7 +55,7 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
         return self._stroke_width
 
     @property
-    def geometry(self) -> webcface.geometries.Geometry:
+    def geometry(self) -> "webcface.geometries.Geometry":
         """表示する図形"""
         return webcface.geometries.Geometry(
             self._geometry_type, self._geometry_properties
@@ -65,12 +63,12 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
 
 
 class Canvas2D(webcface.field.Field):
-    _c2data: Optional[webcface.canvas2d_base.Canvas2DData]
+    _c2data: "Optional[webcface.canvas2d_base.Canvas2DData]"
     _modified: bool
 
     def __init__(
         self,
-        base: webcface.field.Field,
+        base: "webcface.field.Field",
         field: str = "",
         width: Optional[SupportsFloat] = None,
         height: Optional[SupportsFloat] = None,
@@ -93,7 +91,7 @@ class Canvas2D(webcface.field.Field):
             self.init(width, height)
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -117,7 +115,7 @@ class Canvas2D(webcface.field.Field):
         data.on_canvas2d_change[self._member][self._field] = func
         return func
 
-    def child(self, field: str) -> Canvas2D:
+    def child(self, field: str) -> "Canvas2D":
         """子フィールドを返す
 
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
@@ -132,7 +130,7 @@ class Canvas2D(webcface.field.Field):
                 [webcface.message.Canvas2DReq.new(self._member, self._field, req)]
             )
 
-    def try_get(self) -> Optional[List[Canvas2DComponent]]:
+    def try_get(self) -> "Optional[List[Canvas2DComponent]]":
         """CanvasをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
         v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
@@ -141,7 +139,7 @@ class Canvas2D(webcface.field.Field):
             v2 = [Canvas2DComponent(vb) for vb in v.components]
         return v2
 
-    def get(self) -> List[Canvas2DComponent]:
+    def get(self) -> "List[Canvas2DComponent]":
         """Canvasをlistで返す、まだリクエストされてなければ自動でリクエストされる"""
         v = self.try_get()
         return v if v is not None else []
@@ -185,11 +183,11 @@ class Canvas2D(webcface.field.Field):
             else:
                 return 0
 
-    def __enter__(self) -> Canvas2D:
+    def __enter__(self) -> "Canvas2D":
         """with構文の最初でなにもしない"""
         return self
 
-    def init(self, width: SupportsFloat, height: SupportsFloat) -> Canvas2D:
+    def init(self, width: SupportsFloat, height: SupportsFloat) -> "Canvas2D":
         """このCanvas2Dオブジェクトにaddした内容を初期化する
         and Canvas2Dのサイズを指定する
         """
@@ -201,7 +199,7 @@ class Canvas2D(webcface.field.Field):
         """with構文の終わりに自動でsync()を呼ぶ"""
         self.sync()
 
-    def sync(self) -> Canvas2D:
+    def sync(self) -> "Canvas2D":
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified and self._c2data is not None:
@@ -216,12 +214,12 @@ class Canvas2D(webcface.field.Field):
 
     def add(
         self,
-        geometry: webcface.geometries.Geometry2D,
-        origin: Optional[webcface.transform.Transform] = None,
+        geometry: "webcface.geometries.Geometry2D",
+        origin: "Optional[webcface.transform.Transform]" = None,
         color: int = webcface.view_components.ViewColor.INHERIT,
         fill: int = webcface.view_components.ViewColor.INHERIT,
         stroke_width: SupportsFloat = 1,
-    ) -> Canvas2D:
+    ) -> "Canvas2D":
         """コンポーネントを追加
 
         初期化時またはinit()で事前にサイズを指定していなければエラー

@@ -9,14 +9,14 @@ repository = "https://github.com/na-trium-144/webcface-python"
 documentation = "https://na-trium-144.github.io/webcface-python/"
 
 [tool.poetry.dependencies]
-python = "^3.7"
+python = "^3.6"
 websocket-client = "^1"
 u-msgpack-python = "^2"
 importlib-metadata = {version = ">=1", python = "<3.8"}
 
 
 [tool.poetry.group.test.dependencies]
-pytest = "^7.4.2"
+pytest = ">=6"
 toml = "^0.10.2"
 
 

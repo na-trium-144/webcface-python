@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import TypeVar, Generic, Dict, Tuple, Optional, Callable, List, Union
 import threading
 import datetime
@@ -220,7 +219,7 @@ class SyncDataStore1(Generic[T]):
 
 
 class FuncResultStore:
-    results: List[Optional[webcface.func_info.PromiseData]]
+    results: "List[Optional[webcface.func_info.PromiseData]]"
     lock: threading.Lock
 
     def __init__(self):
@@ -230,15 +229,15 @@ class FuncResultStore:
     def add_result(
         self,
         caller: str,
-        base: webcface.field.Field,
-    ) -> webcface.func_info.Promise:
+        base: "webcface.field.Field",
+    ) -> "webcface.func_info.Promise":
         with self.lock:
             caller_id = len(self.results)
             r = webcface.func_info.PromiseData(base, caller_id, caller)
             self.results.append(r)
             return webcface.func_info.Promise(r)
 
-    def get_result(self, caller_id: int) -> webcface.func_info.PromiseData:
+    def get_result(self, caller_id: int) -> "webcface.func_info.PromiseData":
         with self.lock:
             r = self.results[caller_id]
             if r is None:
@@ -255,14 +254,14 @@ class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[List[float]]
     text_store: SyncDataStore2[Union[float, bool, str]]
-    func_store: SyncDataStore2[webcface.func_info.FuncInfo]
-    view_store: SyncDataStore2[List[webcface.view_base.ViewComponentBase]]
-    canvas2d_store: SyncDataStore2[webcface.canvas2d_base.Canvas2DData]
-    canvas3d_store: SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase]]
-    log_store: SyncDataStore2[webcface.log_handler.LogData]
+    func_store: "SyncDataStore2[webcface.func_info.FuncInfo]"
+    view_store: "SyncDataStore2[List[webcface.view_base.ViewComponentBase]]"
+    canvas2d_store: "SyncDataStore2[webcface.canvas2d_base.Canvas2DData]"
+    canvas3d_store: "SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase]]"
+    log_store: "SyncDataStore2[webcface.log_handler.LogData]"
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
-    func_listener_handlers: Dict[str, List[webcface.func_info.CallHandle]]
+    func_listener_handlers: "Dict[str, List[webcface.func_info.CallHandle]]"
     member_ids: Dict[str, int]
     member_lib_name: Dict[int, str]
     member_lib_ver: Dict[int, str]
@@ -271,11 +270,11 @@ class ClientData:
     svr_version: str
     svr_hostname: str
     ping_status_req: bool
-    ping_status: dict[int, int]
+    ping_status: Dict[int, int]
     connected: bool
     _connection_cv: threading.Condition
     _msg_first: bool  # syncInitメッセージをqueueに入れたらtrue
-    _msg_queue: List[List[webcface.message.MessageBase]]
+    _msg_queue: "List[List[webcface.message.MessageBase]]"
     _msg_cv: threading.Condition
     recv_queue: List[bytes]
     recv_cv: threading.Condition
@@ -366,13 +365,13 @@ class ClientData:
             self._msg_queue.insert(0, webcface.client_impl.sync_data_first(self))
             self._msg_first = True
 
-    def queue_msg_always(self, msgs: List[webcface.message.MessageBase]) -> None:
+    def queue_msg_always(self, msgs: "List[webcface.message.MessageBase]") -> None:
         """メッセージをキューに入れる"""
         with self._msg_cv:
             self._msg_queue.append(msgs)
             self._msg_cv.notify_all()
 
-    def queue_msg_online(self, msgs: List[webcface.message.MessageBase]) -> bool:
+    def queue_msg_online(self, msgs: "List[webcface.message.MessageBase]") -> bool:
         """接続できていればキューに入れtrueを返す"""
         with self._connection_cv:
             if self.connected:
@@ -382,7 +381,7 @@ class ClientData:
                 return True
             return False
 
-    def queue_msg_req(self, msgs: List[webcface.message.MessageBase]) -> bool:
+    def queue_msg_req(self, msgs: "List[webcface.message.MessageBase]") -> bool:
         """msg_firstが空でなければキューに入れtrueを返す"""
         with self._msg_cv:
             if self._msg_first:
@@ -414,7 +413,7 @@ class ClientData:
                 if timeout is not None:
                     break
 
-    def pop_msg(self) -> Optional[List[webcface.message.MessageBase]]:
+    def pop_msg(self) -> "Optional[List[webcface.message.MessageBase]]":
         with self._msg_cv:
             if len(self._msg_queue) == 0:
                 return None

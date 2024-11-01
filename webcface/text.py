@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
@@ -6,7 +5,7 @@ from webcface.typing import convertible_to_float
 
 
 class Variant(webcface.field.Field):
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+    def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """文字列、数値などの型を送受信するVariantを指すクラス
         (ver2.0〜)
         """
@@ -15,7 +14,7 @@ class Variant(webcface.field.Field):
         )
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -39,7 +38,7 @@ class Variant(webcface.field.Field):
         data.on_text_change[self._member][self._field] = func
         return func
 
-    def child(self, field: str) -> Variant:
+    def child(self, field: str) -> "Variant":
         """子フィールドを返す
 
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText
@@ -82,7 +81,7 @@ class Variant(webcface.field.Field):
             f'<member("{self.member.name}").variant("{self.name}") = {self.try_get()}>'
         )
 
-    def set(self, data: Union[SupportsFloat, bool, str]) -> Variant:
+    def set(self, data: Union[SupportsFloat, bool, str]) -> "Variant":
         """値をセットする"""
         if isinstance(data, bool):
             data2: Union[float, bool, str] = data
@@ -100,7 +99,7 @@ class Variant(webcface.field.Field):
 
 
 class Text(Variant):
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+    def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """Textを指すクラス
 
         このコンストラクタを直接使わず、
@@ -121,7 +120,7 @@ class Text(Variant):
         super().on_change(lambda var: func(Text(var)))
         return func
 
-    def child(self, field: str) -> Text:
+    def child(self, field: str) -> "Text":
         """子フィールドを返す
 
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText

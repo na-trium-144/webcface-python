@@ -1,4 +1,3 @@
-from __future__ import annotations
 import io
 from typing import Iterable, List
 import sys
@@ -8,7 +7,7 @@ import webcface.client_data
 
 
 class LogData:
-    data: List[LogLine]
+    data: "List[LogLine]"
     sent_lines: int
 
     def __init__(self) -> None:
@@ -28,9 +27,9 @@ class LogLine:
 
 
 class Handler(logging.Handler):
-    _log: webcface.log.Log
+    _log: "webcface.log.Log"
 
-    def __init__(self, data: webcface.client_data.ClientData, name: str) -> None:
+    def __init__(self, data: "webcface.client_data.ClientData", name: str) -> None:
         super().__init__(logging.NOTSET)
         self._log = webcface.log.Log(
             webcface.field.Field(data, data.self_member_name), name
@@ -45,9 +44,9 @@ class Handler(logging.Handler):
 
 
 class LogWriteIO(io.TextIOBase):
-    _log: webcface.log.Log
+    _log: "webcface.log.Log"
 
-    def __init__(self, data: webcface.client_data.ClientData, name: str) -> None:
+    def __init__(self, data: "webcface.client_data.ClientData", name: str) -> None:
         super().__init__()
         self._log = webcface.log.Log(
             webcface.field.Field(data, data.self_member_name), name

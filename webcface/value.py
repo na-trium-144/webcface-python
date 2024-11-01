@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List, Callable, SupportsFloat, Union
 import webcface.field
 import webcface.member
@@ -7,7 +6,7 @@ from webcface.typing import convertible_to_float
 
 
 class Value(webcface.field.Field):
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+    def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """Valueを指すクラス
 
         このコンストラクタを直接使わず、
@@ -20,7 +19,7 @@ class Value(webcface.field.Field):
         )
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -44,7 +43,7 @@ class Value(webcface.field.Field):
         data.on_value_change[self._member][self._field] = func
         return func
 
-    def child(self, field: str) -> Value:
+    def child(self, field: str) -> "Value":
         """子フィールドを返す
 
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするValue
@@ -95,7 +94,7 @@ class Value(webcface.field.Field):
         """
         return f'<member("{self.member.name}").value("{self.name}") = {self.try_get_vec()}>'
 
-    def set(self, data: Union[List[SupportsFloat], SupportsFloat]) -> Value:
+    def set(self, data: Union[List[SupportsFloat], SupportsFloat]) -> "Value":
         """値をセットする"""
         self._set_check()
         if convertible_to_float(data):

@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import List, Tuple, Union, SupportsFloat
 from webcface.typing import convertible_to_float
 
@@ -64,48 +63,48 @@ class Point:
         else:
             return False
 
-    def __add__(self, other: Point) -> Point:
+    def __add__(self, other: "Point") -> "Point":
         if isinstance(other, Point):
             return Point([a + b for a, b in zip(self.pos, other.pos)])
         return NotImplemented
 
-    def __iadd__(self, other: Point) -> Point:
+    def __iadd__(self, other: "Point") -> "Point":
         if isinstance(other, Point):
             self._pos = [a + b for a, b in zip(self.pos, other.pos)]
             return self
         return NotImplemented
 
-    def __sub__(self, other: Point) -> Point:
+    def __sub__(self, other: "Point") -> "Point":
         if isinstance(other, Point):
             return Point([a - b for a, b in zip(self.pos, other.pos)])
         return NotImplemented
 
-    def __isub__(self, other: Point) -> Point:
+    def __isub__(self, other: "Point") -> "Point":
         if isinstance(other, Point):
             self._pos = [a - b for a, b in zip(self.pos, other.pos)]
             return self
         return NotImplemented
 
-    def __neg__(self) -> Point:
+    def __neg__(self) -> "Point":
         return Point([-a for a in self.pos])
 
-    def __pos__(self) -> Point:
+    def __pos__(self) -> "Point":
         return Point(self.pos)
 
-    def __mul__(self, other: SupportsFloat) -> Point:
+    def __mul__(self, other: SupportsFloat) -> "Point":
         return Point([a * float(other) for a in self.pos])
 
-    def __rmul__(self, other: SupportsFloat) -> Point:
+    def __rmul__(self, other: SupportsFloat) -> "Point":
         return Point([a * float(other) for a in self.pos])
 
-    def __imul__(self, other: SupportsFloat) -> Point:
+    def __imul__(self, other: SupportsFloat) -> "Point":
         self._pos = [a * float(other) for a in self.pos]
         return self
 
-    def __div__(self, other: SupportsFloat) -> Point:
+    def __div__(self, other: SupportsFloat) -> "Point":
         return Point([a / float(other) for a in self.pos])
 
-    def __idiv__(self, other: SupportsFloat) -> Point:
+    def __idiv__(self, other: SupportsFloat) -> "Point":
         self._pos = [a / float(other) for a in self.pos]
         return self
 
