@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, List
 from enum import IntEnum
 
@@ -52,7 +51,7 @@ class Canvas2DComponentBase:
 
 
 class Canvas2DData:
-    components: List[Canvas2DComponentBase]
+    components: "List[Canvas2DComponentBase]"
     width: float
     height: float
 

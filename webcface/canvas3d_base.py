@@ -1,7 +1,5 @@
-from __future__ import annotations
 from typing import Optional, List, Dict
 from enum import IntEnum
-import webcface.field
 
 
 class Canvas3DComponentType(IntEnum):

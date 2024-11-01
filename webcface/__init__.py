@@ -10,11 +10,15 @@ from .func_info import ValType, Arg, Promise, CallHandle
 from .view_components import ViewComponentType, ViewColor
 from .transform import Point, Transform
 from .geometries import GeometryType, Geometry
-import importlib.metadata
 
 try:
-    __version__ = importlib.metadata.version(__package__)
-except importlib.metadata.PackageNotFoundError:
+    from importlib.metadata import version, PackageNotFoundError
+except ModuleNotFoundError:
+    from importlib_metadata import version, PackageNotFoundError
+
+try:
+    __version__ = version(__package__)
+except PackageNotFoundError:
     __version__ = ""
 
 __all__ = [

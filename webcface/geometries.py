@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import List, Union, SupportsFloat
 from enum import IntEnum
 import webcface.transform
@@ -42,9 +41,7 @@ class Geometry:
     _geometry_type: int
     _properties: List[float]
 
-    def __init__(
-        self, geometry_type: int, properties: List[SupportsFloat]
-    ) -> None:
+    def __init__(self, geometry_type: int, properties: List[SupportsFloat]) -> None:
         self._geometry_type = geometry_type
         self._properties = [float(p) for p in properties]
 
@@ -53,35 +50,35 @@ class Geometry:
         return self._geometry_type
 
     @property
-    def as_line(self) -> Line:
+    def as_line(self) -> "Line":
         return Line(self._properties)
 
     @property
-    def as_plane(self) -> Plane:
+    def as_plane(self) -> "Plane":
         return Plane(self._properties)
 
     @property
-    def as_rect(self) -> Plane:
+    def as_rect(self) -> "Plane":
         return Plane(self._properties)
 
     @property
-    def as_box(self) -> Box:
+    def as_box(self) -> "Box":
         return Box(self._properties)
 
     @property
-    def as_circle(self) -> Circle:
+    def as_circle(self) -> "Circle":
         return Circle(self._properties)
 
     @property
-    def as_cylinder(self) -> Cylinder:
+    def as_cylinder(self) -> "Cylinder":
         return Cylinder(self._properties)
 
     @property
-    def as_sphere(self) -> Sphere:
+    def as_sphere(self) -> "Sphere":
         return Sphere(self._properties)
 
     @property
-    def as_polygon(self) -> Polygon:
+    def as_polygon(self) -> "Polygon":
         return Polygon(self._properties)
 
 
@@ -91,17 +88,17 @@ class Line(Geometry):
         super().__init__(GeometryType.LINE, properties)
 
     @property
-    def begin(self) -> webcface.transform.Point:
+    def begin(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self._properties[0:3])
 
     @property
-    def end(self) -> webcface.transform.Point:
+    def end(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self._properties[3:6])
 
 
 def line(
-    begin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
-    end: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    begin: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    end: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
 ) -> Line:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -116,7 +113,7 @@ class Polygon(Geometry):
         super().__init__(GeometryType.POLYGON, properties)
 
     @property
-    def points(self) -> List[webcface.transform.Point]:
+    def points(self) -> "List[webcface.transform.Point]":
         points: List[webcface.transform.Point] = []
         for i in range(0, len(self._properties), 3):
             points.append(webcface.transform.Point(self._properties[i : i + 3]))
@@ -124,7 +121,7 @@ class Polygon(Geometry):
 
 
 def polygon(
-    points: List[Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]],
+    points: "List[Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]]",
 ) -> Polygon:
     props: List[float] = []
     for p in points:
@@ -140,7 +137,7 @@ class Plane(Geometry):
         super().__init__(GeometryType.PLANE, properties)
 
     @property
-    def origin(self) -> webcface.transform.Transform:
+    def origin(self) -> "webcface.transform.Transform":
         return webcface.transform.Transform(
             self._properties[0:3], self._properties[3:6]
         )
@@ -154,20 +151,20 @@ class Plane(Geometry):
         return self._properties[7]
 
     @property
-    def vertex1(self) -> webcface.transform.Point:
+    def vertex1(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self.origin.pos) - webcface.transform.Point(
             [self.width / 2, self.height / 2, 0]
         )
 
     @property
-    def vertex2(self) -> webcface.transform.Point:
+    def vertex2(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self.origin.pos) + webcface.transform.Point(
             [self.width / 2, self.height / 2, 0]
         )
 
 
 def plane(
-    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
+    origin: "Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]",
     width: SupportsFloat,
     height: SupportsFloat,
 ) -> Plane:
@@ -177,8 +174,8 @@ def plane(
 
 
 def rect(
-    begin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
-    end: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    begin: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    end: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
 ) -> Plane:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -198,17 +195,17 @@ class Box(Geometry):
         super().__init__(GeometryType.BOX, properties)
 
     @property
-    def vertex1(self) -> webcface.transform.Point:
+    def vertex1(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self._properties[0:3])
 
     @property
-    def vertex2(self) -> webcface.transform.Point:
+    def vertex2(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self._properties[3:6])
 
 
 def box(
-    vertex1: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
-    vertex2: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    vertex1: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    vertex2: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
 ) -> Box:
     if not isinstance(vertex1, webcface.transform.Point):
         vertex1 = webcface.transform.Point(vertex1)
@@ -223,7 +220,7 @@ class Circle(Geometry):
         super().__init__(GeometryType.CIRCLE, properties)
 
     @property
-    def origin(self) -> webcface.transform.Transform:
+    def origin(self) -> "webcface.transform.Transform":
         return webcface.transform.Transform(
             self._properties[0:3], self._properties[3:6]
         )
@@ -234,7 +231,7 @@ class Circle(Geometry):
 
 
 def circle(
-    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
+    origin: "Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]",
     radius: SupportsFloat,
 ) -> Circle:
     if not isinstance(origin, webcface.transform.Transform):
@@ -248,7 +245,7 @@ class Cylinder(Geometry):
         super().__init__(GeometryType.CYLINDER, properties)
 
     @property
-    def origin(self) -> webcface.transform.Transform:
+    def origin(self) -> "webcface.transform.Transform":
         return webcface.transform.Transform(
             self._properties[0:3], self._properties[3:6]
         )
@@ -263,7 +260,7 @@ class Cylinder(Geometry):
 
 
 def cylinder(
-    origin: Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform],
+    origin: "Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]",
     radius: SupportsFloat,
     length: SupportsFloat,
 ) -> Cylinder:
@@ -278,7 +275,7 @@ class Sphere(Geometry):
         super().__init__(GeometryType.SPHERE, properties)
 
     @property
-    def origin(self) -> webcface.transform.Point:
+    def origin(self) -> "webcface.transform.Point":
         return webcface.transform.Point(self._properties[0:3])
 
     @property
@@ -287,7 +284,7 @@ class Sphere(Geometry):
 
 
 def sphere(
-    origin: Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint],
+    origin: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
     radius: SupportsFloat,
 ) -> Sphere:
     if not isinstance(origin, webcface.transform.Point):

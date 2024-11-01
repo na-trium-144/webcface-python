@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, Union, List
 import webcface.field
 import webcface.func_info
@@ -7,7 +6,7 @@ import webcface.func_info
 class FuncListener(webcface.field.Field):
     def __init__(
         self,
-        base: Optional[webcface.field.Field],
+        base: "Optional[webcface.field.Field]",
         field: str = "",
     ) -> None:
         """Funcを指すクラス
@@ -25,7 +24,7 @@ class FuncListener(webcface.field.Field):
             )
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -34,7 +33,7 @@ class FuncListener(webcface.field.Field):
         """field名を返す"""
         return self._field
 
-    def _set_info(self, info: webcface.func_info.FuncInfo) -> None:
+    def _set_info(self, info: "webcface.func_info.FuncInfo") -> None:
         self._set_check().func_store.set_send(self._field, info)
 
     def _handlers(self):
@@ -45,8 +44,8 @@ class FuncListener(webcface.field.Field):
     def listen(
         self,
         return_type: Optional[Union[int, type]] = None,
-        args: Optional[List[webcface.func_info.Arg]] = None,
-    ) -> FuncListener:
+        args: "Optional[List[webcface.func_info.Arg]]" = None,
+    ) -> "FuncListener":
         """関数呼び出しの待ち受けを開始する"""
         args_num = len(args) if args is not None else 0
 
@@ -59,7 +58,7 @@ class FuncListener(webcface.field.Field):
         )
         return self
 
-    def fetch_call(self) -> Optional[webcface.func_info.CallHandle]:
+    def fetch_call(self) -> "Optional[webcface.func_info.CallHandle]":
         """関数が呼び出されていればhandleを返す"""
         if len(self._handlers()) >= 1:
             return self._handlers().pop(0)

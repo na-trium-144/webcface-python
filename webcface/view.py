@@ -1,4 +1,3 @@
-from __future__ import annotations
 from typing import Optional, Callable, List, Callable, SupportsFloat, Union
 from copy import deepcopy
 import webcface.field
@@ -7,19 +6,20 @@ import webcface.view_base
 import webcface.view_components
 import webcface.client_data
 import webcface.func
+from webcface.typing import convertible_to_float
 
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
-    _data: Optional[webcface.client_data.ClientData]
+    _data: "Optional[webcface.client_data.ClientData]"
     _on_click_func_tmp: Optional[Callable]
-    _bind_tmp: Optional[webcface.text.InputRef]
+    _bind_tmp: "Optional[webcface.text.InputRef]"
     _init: Optional[Union[float, bool, str]]
 
     @staticmethod
     def from_base(
-        base: webcface.view_base.ViewComponentBase,
-        data: Optional[webcface.client_data.ClientData],
-    ) -> ViewComponent:
+        base: "webcface.view_base.ViewComponentBase",
+        data: "Optional[webcface.client_data.ClientData]",
+    ) -> "ViewComponent":
         vc = ViewComponent(
             type=base._type,
             text=base._text,
@@ -39,11 +39,11 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         self,
         type: int = 0,
         text: str = "",
-        on_click: Optional[Union[webcface.field.FieldBase, Callable]] = None,
+        on_click: "Optional[Union[webcface.field.FieldBase, Callable]]" = None,
         text_color: int = 0,
         bg_color: int = 0,
-        on_change: Optional[Union[webcface.func.Func, Callable]] = None,
-        bind: Optional[webcface.text.InputRef] = None,
+        on_change: "Optional[Union[webcface.func.Func, Callable]]" = None,
+        bind: "Optional[webcface.text.InputRef]" = None,
         min: Optional[SupportsFloat] = None,
         max: Optional[SupportsFloat] = None,
         step: Optional[SupportsFloat] = None,
@@ -70,7 +70,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             for op in option:
                 if isinstance(op, bool):
                     option2.append(op)
-                elif isinstance(init, SupportsFloat):
+                elif convertible_to_float(init):
                     option2.append(float(op))
                 else:
                     option2.append(str(op))
@@ -94,7 +94,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             self._init = None
         elif isinstance(init, bool):
             self._init = init
-        elif isinstance(init, SupportsFloat):
+        elif convertible_to_float(init):
             self._init = float(init)
         else:
             self._init = str(init)
@@ -137,8 +137,8 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             self._data = on_change._data
 
     def lock_tmp(
-        self, data: webcface.client_data.ClientData, field_id: str
-    ) -> ViewComponent:
+        self, data: "webcface.client_data.ClientData", field_id: str
+    ) -> "ViewComponent":
         """on_clickをFuncオブジェクトにlockする"""
         if self._on_click_func_tmp is not None:
             on_click = webcface.func.Func(
@@ -209,7 +209,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return self._text
 
     @property
-    def on_click(self) -> Optional[webcface.func.Func]:
+    def on_click(self) -> "Optional[webcface.func.Func]":
         """クリックしたときに呼び出す関数"""
         if self._on_click_func is not None:
             if self._data is None:
@@ -222,7 +222,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return None
 
     @property
-    def on_change(self) -> Optional[webcface.func.Func]:
+    def on_change(self) -> "Optional[webcface.func.Func]":
         """値が変化したときに呼び出す関数
         (ver2.0〜)
 
@@ -233,7 +233,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return self.on_click
 
     @property
-    def bind(self) -> Optional[webcface.text.Variant]:
+    def bind(self) -> "Optional[webcface.text.Variant]":
         """inputの現在の値を取得
         (ver2.0〜)
 
@@ -299,7 +299,7 @@ class View(webcface.field.Field):
     _components: List[Union[ViewComponent, str, bool, float, int]]
     _modified: bool
 
-    def __init__(self, base: webcface.field.Field, field: str = "") -> None:
+    def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """Viewを指すクラス
 
         このコンストラクタを直接使わず、
@@ -314,7 +314,7 @@ class View(webcface.field.Field):
         self._modified = False
 
     @property
-    def member(self) -> webcface.member.Member:
+    def member(self) -> "webcface.member.Member":
         """Memberを返す"""
         return webcface.member.Member(self)
 
@@ -338,7 +338,7 @@ class View(webcface.field.Field):
         data.on_view_change[self._member][self._field] = func
         return func
 
-    def child(self, field: str) -> View:
+    def child(self, field: str) -> "View":
         """子フィールドを返す
 
         :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
@@ -378,7 +378,7 @@ class View(webcface.field.Field):
 
     def set(
         self, components: List[Union[ViewComponent, str, bool, SupportsFloat]]
-    ) -> View:
+    ) -> "View":
         """Viewのリストをセットする"""
         data2 = []
         for c in components:
@@ -403,12 +403,12 @@ class View(webcface.field.Field):
             on_change(self)
         return self
 
-    def __enter__(self) -> View:
+    def __enter__(self) -> "View":
         """with構文の最初で自動でinit()を呼ぶ"""
         self.init()
         return self
 
-    def init(self) -> View:
+    def init(self) -> "View":
         """このViewオブジェクトにaddした内容を初期化する"""
         self._components = []
         self._modified = True
@@ -418,7 +418,7 @@ class View(webcface.field.Field):
         """with構文の終わりに自動でsync()を呼ぶ"""
         self.sync()
 
-    def sync(self) -> View:
+    def sync(self) -> "View":
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified:
@@ -426,7 +426,7 @@ class View(webcface.field.Field):
             self._modified = False
         return self
 
-    def add(self, *args: Union[ViewComponent, str, bool, SupportsFloat]) -> View:
+    def add(self, *args: Union[ViewComponent, str, bool, SupportsFloat]) -> "View":
         """コンポーネントを追加
 
         Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする

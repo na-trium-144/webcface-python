@@ -1,7 +1,6 @@
-from __future__ import annotations
 from typing import Dict, List, Union
 import datetime
-import msgpack
+import umsgpack
 import webcface.func_info
 import webcface.view_base
 import webcface.canvas2d_base
@@ -34,11 +33,11 @@ class SyncInit(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(M: str, l: str, v: str) -> SyncInit:
+    def new(M: str, l: str, v: str) -> "SyncInit":
         return SyncInit.new_full(M, 0, l, v, "")
 
     @staticmethod
-    def new_full(M: str, m: int, l: str, v: str, a: str) -> SyncInit:
+    def new_full(M: str, m: int, l: str, v: str, a: str) -> "SyncInit":
         return SyncInit({"M": M, "m": m, "l": l, "v": v, "a": a})
 
     @property
@@ -69,7 +68,7 @@ class SyncInitEnd(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(n: str, v: str, m: int, h: str) -> SyncInitEnd:
+    def new(n: str, v: str, m: int, h: str) -> "SyncInitEnd":
         return SyncInitEnd({"n": n, "v": v, "m": m, "h": h})
 
     @property
@@ -96,7 +95,7 @@ class Ping(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new() -> Ping:
+    def new() -> "Ping":
         return Ping({})
 
 
@@ -107,7 +106,7 @@ class PingStatus(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(s: Dict[int, int]) -> PingStatus:
+    def new(s: Dict[int, int]) -> "PingStatus":
         return PingStatus({"s": s})
 
     @property
@@ -122,7 +121,7 @@ class PingStatusReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new() -> PingStatusReq:
+    def new() -> "PingStatusReq":
         return PingStatusReq({})
 
 
@@ -133,11 +132,11 @@ class Sync(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new() -> Sync:
+    def new() -> "Sync":
         return Sync({"m": 0, "t": time_to_int(datetime.datetime.now())})
 
     @staticmethod
-    def new_full(m: int, t: int) -> Sync:
+    def new_full(m: int, t: int) -> "Sync":
         return Sync({"m": m, "t": t})
 
     @property
@@ -156,7 +155,7 @@ class Value(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, d: List[float]) -> Value:
+    def new(f: str, d: List[float]) -> "Value":
         return Value({"f": f, "d": d})
 
     @property
@@ -175,7 +174,7 @@ class ValueReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str, f: str, i: int) -> ValueReq:
+    def new(m: str, f: str, i: int) -> "ValueReq":
         return ValueReq({"M": m, "f": f, "i": i})
 
     @property
@@ -198,7 +197,7 @@ class ValueRes(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, f: str, d: List[float]) -> ValueRes:
+    def new(i: int, f: str, d: List[float]) -> "ValueRes":
         return ValueRes({"i": i, "f": f, "d": d})
 
     @property
@@ -221,7 +220,7 @@ class ValueEntry(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int, f: str) -> ValueEntry:
+    def new(m: int, f: str) -> "ValueEntry":
         return ValueEntry({"m": m, "f": f})
 
     @property
@@ -240,7 +239,7 @@ class Text(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, d: str) -> Text:
+    def new(f: str, d: str) -> "Text":
         return Text({"f": f, "d": d})
 
     @property
@@ -259,7 +258,7 @@ class TextReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str, f: str, i: int) -> TextReq:
+    def new(m: str, f: str, i: int) -> "TextReq":
         return TextReq({"M": m, "f": f, "i": i})
 
     @property
@@ -282,7 +281,7 @@ class TextRes(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, f: str, d: str) -> TextRes:
+    def new(i: int, f: str, d: str) -> "TextRes":
         return TextRes({"i": i, "f": f, "d": d})
 
     @property
@@ -305,7 +304,7 @@ class TextEntry(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int, f: str) -> TextEntry:
+    def new(m: int, f: str) -> "TextEntry":
         return TextEntry({"m": m, "f": f})
 
     @property
@@ -317,7 +316,7 @@ class TextEntry(MessageBase):
         return self.msg["f"]
 
 
-def vb_to_vd(vb: Dict[str, webcface.view_base.ViewComponentBase]) -> dict:
+def vb_to_vd(vb: "Dict[str, webcface.view_base.ViewComponentBase]") -> dict:
     """ViewComponentBaseクラスからメッセージに変換"""
     vd = {}
     for i, b in vb.items():
@@ -338,7 +337,7 @@ def vb_to_vd(vb: Dict[str, webcface.view_base.ViewComponentBase]) -> dict:
     return vd
 
 
-def vd_to_vb(vd: dict) -> Dict[str, webcface.view_base.ViewComponentBase]:
+def vd_to_vb(vd: dict) -> "Dict[str, webcface.view_base.ViewComponentBase]":
     """メッセージからViewComponentBaseクラスに変換"""
     vb = {}
     for i, d in vd.items():
@@ -372,7 +371,9 @@ class View(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, d: Dict[str, webcface.view_base.ViewComponentBase], l: int) -> View:
+    def new(
+        f: str, d: "Dict[str, webcface.view_base.ViewComponentBase]", l: int
+    ) -> "View":
         return View({"f": f, "d": vb_to_vd(d), "l": l})
 
     @property
@@ -380,7 +381,7 @@ class View(MessageBase):
         return self.msg["f"]
 
     @property
-    def data(self) -> Dict[str, webcface.view_base.ViewComponentBase]:
+    def data(self) -> "Dict[str, webcface.view_base.ViewComponentBase]":
         return vd_to_vb(self.msg["d"])
 
     @property
@@ -395,7 +396,7 @@ class ViewReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str, f: str, i: int) -> ViewReq:
+    def new(m: str, f: str, i: int) -> "ViewReq":
         return ViewReq({"M": m, "f": f, "i": i})
 
     @property
@@ -419,8 +420,8 @@ class ViewRes(MessageBase):
 
     @staticmethod
     def new(
-        i: int, f: str, d: Dict[str, webcface.view_base.ViewComponentBase], l: int
-    ) -> ViewRes:
+        i: int, f: str, d: "Dict[str, webcface.view_base.ViewComponentBase]", l: int
+    ) -> "ViewRes":
         return ViewRes({"i": i, "f": f, "d": vb_to_vd(d), "l": l})
 
     @property
@@ -432,7 +433,7 @@ class ViewRes(MessageBase):
         return self.msg["f"]
 
     @property
-    def data_diff(self) -> Dict[str, webcface.view_base.ViewComponentBase]:
+    def data_diff(self) -> "Dict[str, webcface.view_base.ViewComponentBase]":
         return vd_to_vb(self.msg["d"])
 
     @property
@@ -447,7 +448,7 @@ class ViewEntry(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int, f: str) -> ViewEntry:
+    def new(m: int, f: str) -> "ViewEntry":
         return ViewEntry({"m": m, "f": f})
 
     @property
@@ -459,7 +460,7 @@ class ViewEntry(MessageBase):
         return self.msg["f"]
 
 
-def c2b_to_c2d(vb: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]) -> dict:
+def c2b_to_c2d(vb: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]") -> dict:
     """Canvas2dComponentBaseクラスからメッセージに変換"""
     vd = {}
     for i, b in vb.items():
@@ -476,7 +477,7 @@ def c2b_to_c2d(vb: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]) -> d
     return vd
 
 
-def c2d_to_c2b(vd: dict) -> Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]:
+def c2d_to_c2b(vd: dict) -> "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]":
     """メッセージからCanvas2DComponentBaseクラスに変換"""
     vb = {}
     for i, d in vd.items():
@@ -504,9 +505,9 @@ class Canvas2D(MessageBase):
         f: str,
         w: float,
         h: float,
-        d: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase],
+        d: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]",
         l: int,
-    ) -> Canvas2D:
+    ) -> "Canvas2D":
         return Canvas2D({"f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
 
     @property
@@ -522,7 +523,7 @@ class Canvas2D(MessageBase):
         return self.msg["h"]
 
     @property
-    def data(self) -> Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]:
+    def data(self) -> "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]":
         return c2d_to_c2b(self.msg["d"])
 
     @property
@@ -537,7 +538,7 @@ class Canvas2DReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str, f: str, i: int) -> Canvas2DReq:
+    def new(m: str, f: str, i: int) -> "Canvas2DReq":
         return Canvas2DReq({"M": m, "f": f, "i": i})
 
     @property
@@ -565,9 +566,9 @@ class Canvas2DRes(MessageBase):
         f: str,
         w: float,
         h: float,
-        d: Dict[str, webcface.canvas2d_base.Canvas2DComponentBase],
+        d: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]",
         l: int,
-    ) -> Canvas2DRes:
+    ) -> "Canvas2DRes":
         return Canvas2DRes({"i": i, "f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
 
     @property
@@ -587,7 +588,7 @@ class Canvas2DRes(MessageBase):
         return self.msg["h"]
 
     @property
-    def data_diff(self) -> Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]:
+    def data_diff(self) -> "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]":
         return c2d_to_c2b(self.msg["d"])
 
     @property
@@ -602,7 +603,7 @@ class Canvas2DEntry(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int, f: str) -> Canvas2DEntry:
+    def new(m: int, f: str) -> "Canvas2DEntry":
         return Canvas2DEntry({"m": m, "f": f})
 
     @property
@@ -614,7 +615,7 @@ class Canvas2DEntry(MessageBase):
         return self.msg["f"]
 
 
-def c3b_to_c3d(vb: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]) -> dict:
+def c3b_to_c3d(vb: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]") -> dict:
     """Canvas3dComponentBaseクラスからメッセージに変換"""
     vd = {}
     for i, b in vb.items():
@@ -632,7 +633,7 @@ def c3b_to_c3d(vb: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]) -> d
     return vd
 
 
-def c3d_to_c3b(vd: dict) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]:
+def c3d_to_c3b(vd: dict) -> "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]":
     """メッセージからCanvas2DComponentBaseクラスに変換"""
     vb = {}
     for i, d in vd.items():
@@ -659,9 +660,9 @@ class Canvas3D(MessageBase):
     @staticmethod
     def new(
         f: str,
-        d: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase],
+        d: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]",
         l: int,
-    ) -> Canvas3D:
+    ) -> "Canvas3D":
         return Canvas3D({"f": f, "d": c3b_to_c3d(d), "l": l})
 
     @property
@@ -669,7 +670,7 @@ class Canvas3D(MessageBase):
         return self.msg["f"]
 
     @property
-    def data(self) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]:
+    def data(self) -> "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]":
         return c3d_to_c3b(self.msg["d"])
 
     @property
@@ -684,7 +685,7 @@ class Canvas3DReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str, f: str, i: int) -> Canvas3DReq:
+    def new(m: str, f: str, i: int) -> "Canvas3DReq":
         return Canvas3DReq({"M": m, "f": f, "i": i})
 
     @property
@@ -710,9 +711,9 @@ class Canvas3DRes(MessageBase):
     def new(
         i: int,
         f: str,
-        d: Dict[str, webcface.canvas3d_base.Canvas3DComponentBase],
+        d: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]",
         l: int,
-    ) -> Canvas3DRes:
+    ) -> "Canvas3DRes":
         return Canvas3DRes({"i": i, "f": f, "d": c3b_to_c3d(d), "l": l})
 
     @property
@@ -724,7 +725,7 @@ class Canvas3DRes(MessageBase):
         return self.msg["f"]
 
     @property
-    def data_diff(self) -> Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]:
+    def data_diff(self) -> "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]":
         return c3d_to_c3b(self.msg["d"])
 
     @property
@@ -739,7 +740,7 @@ class Canvas3DEntry(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int, f: str) -> Canvas3DEntry:
+    def new(m: int, f: str) -> "Canvas3DEntry":
         return Canvas3DEntry({"m": m, "f": f})
 
     @property
@@ -758,11 +759,11 @@ class FuncInfo(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, fi: webcface.func_info.FuncInfo) -> FuncInfo:
+    def new(f: str, fi: "webcface.func_info.FuncInfo") -> "FuncInfo":
         return FuncInfo.new_full(0, f, fi)
 
     @staticmethod
-    def new_full(m: int, f: str, fi: webcface.func_info.FuncInfo) -> FuncInfo:
+    def new_full(m: int, f: str, fi: "webcface.func_info.FuncInfo") -> "FuncInfo":
         ad = []
         for a in fi.args:
             ad.append(
@@ -786,7 +787,7 @@ class FuncInfo(MessageBase):
         return self.msg["f"]
 
     @property
-    def func_info(self) -> webcface.func_info.FuncInfo:
+    def func_info(self) -> "webcface.func_info.FuncInfo":
         args = []
         for a in self.msg["a"]:
             args.append(
@@ -809,7 +810,7 @@ class Call(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, r: int, f: str, a: List[Union[float, bool, str]]) -> Call:
+    def new(i: int, c: int, r: int, f: str, a: List[Union[float, bool, str]]) -> "Call":
         return Call({"i": i, "c": c, "r": r, "f": f, "a": a})
 
     @property
@@ -840,7 +841,7 @@ class CallResponse(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, s: bool) -> CallResponse:
+    def new(i: int, c: int, s: bool) -> "CallResponse":
         return CallResponse({"i": i, "c": c, "s": s})
 
     @property
@@ -863,7 +864,7 @@ class CallResult(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, c: int, e: bool, r: Union[float, bool, str]) -> CallResult:
+    def new(i: int, c: int, e: bool, r: Union[float, bool, str]) -> "CallResult":
         return CallResult({"i": i, "c": c, "e": e, "r": r})
 
     @property
@@ -883,13 +884,13 @@ class CallResult(MessageBase):
         return self.msg["r"]
 
 
-def msg2logline(lm: List[Dict]) -> List[webcface.log_handler.LogLine]:
+def msg2logline(lm: List[Dict]) -> "List[webcface.log_handler.LogLine]":
     return [
         webcface.log_handler.LogLine(l["v"], int_to_time(l["t"]), l["m"]) for l in lm
     ]
 
 
-def logline2msg(lls: List[webcface.log_handler.LogLine]) -> List[Dict]:
+def logline2msg(lls: "List[webcface.log_handler.LogLine]") -> List[Dict]:
     return [{"v": ll.level, "t": time_to_int(ll.time), "m": ll.message} for ll in lls]
 
 
@@ -900,7 +901,7 @@ class Log(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(f: str, lls: List[webcface.log_handler.LogLine]) -> Log:
+    def new(f: str, lls: "List[webcface.log_handler.LogLine]") -> "Log":
         return Log(
             {
                 "f": f,
@@ -913,7 +914,7 @@ class Log(MessageBase):
         return self.msg["f"]
 
     @property
-    def log(self) -> List[webcface.log_handler.LogLine]:
+    def log(self) -> "List[webcface.log_handler.LogLine]":
         return msg2logline(self.msg["l"])
 
 
@@ -924,7 +925,7 @@ class LogRes(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(i: int, f: str, lls: List[webcface.log_handler.LogLine]) -> LogRes:
+    def new(i: int, f: str, lls: "List[webcface.log_handler.LogLine]") -> "LogRes":
         return LogRes(
             {
                 "i": i,
@@ -942,7 +943,7 @@ class LogRes(MessageBase):
         return self.msg["f"]
 
     @property
-    def log(self) -> List[webcface.log_handler.LogLine]:
+    def log(self) -> "List[webcface.log_handler.LogLine]":
         return msg2logline(self.msg["l"])
 
 
@@ -953,7 +954,7 @@ class LogReq(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: str, f: str, i: int) -> LogReq:
+    def new(m: str, f: str, i: int) -> "LogReq":
         return LogReq({"M": m, "f": f, "i": i})
 
     @property
@@ -976,7 +977,7 @@ class LogEntry(MessageBase):
         super().__init__(self.kind_def, msg)
 
     @staticmethod
-    def new(m: int, f: str) -> LogEntry:
+    def new(m: int, f: str) -> "LogEntry":
         return LogEntry({"m": m, "f": f})
 
     @property
@@ -1019,11 +1020,11 @@ def pack(msgs: List[MessageBase]) -> bytes:
     for m in msgs:
         send_msgs.append(m.kind)
         send_msgs.append(m.msg)
-    return msgpack.packb(send_msgs)
+    return umsgpack.packb(send_msgs)
 
 
 def unpack(packed: bytes) -> List[MessageBase]:
-    unpack_obj = msgpack.unpackb(packed, strict_map_key=False)
+    unpack_obj = umsgpack.unpackb(packed, strict_map_key=False)
     assert len(unpack_obj) % 2 == 0
     msg_ret = []
     for i in range(0, len(unpack_obj), 2):
