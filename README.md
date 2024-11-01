@@ -9,7 +9,7 @@ Please refer to the WebCFace repository for how to use it. To use this library, 
 
 ## Installation
 
-Since webcface-python 2.3, Python >=3.5 is supported.
+Since webcface-python 2.3, Python >=3.6 is supported.
 (Note that older version of webcface-python requires Python >=3.8.)
 
 From PyPI:
