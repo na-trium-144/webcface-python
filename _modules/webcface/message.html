@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.message &mdash; WebCFace-Python 2.2.0  documentation</title>
+  <title>webcface.message &mdash; WebCFace-Python 2.3.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.2.0
+            WebCFace-Python 2.3.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.2.0</a>
+          <a href="../../index.html">WebCFace-Python 2.3.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,10 +69,9 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.message</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
-<span class="kn">import</span> <span class="nn">msgpack</span>
+<span class="kn">import</span> <span class="nn">umsgpack</span>
 <span class="kn">import</span> <span class="nn">webcface.func_info</span>
 <span class="kn">import</span> <span class="nn">webcface.view_base</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas2d_base</span>
@@ -118,14 +117,14 @@
 <div class="viewcode-block" id="SyncInit.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.SyncInit.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">M</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyncInit</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">M</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SyncInit&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SyncInit</span><span class="o">.</span><span class="n">new_full</span><span class="p">(</span><span class="n">M</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">l</span><span class="p">,</span> <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="SyncInit.new_full">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.SyncInit.new_full">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new_full</span><span class="p">(</span><span class="n">M</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyncInit</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new_full</span><span class="p">(</span><span class="n">M</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SyncInit&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SyncInit</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">M</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">})</span></div>
 
 
@@ -162,7 +161,7 @@
 <div class="viewcode-block" id="SyncInitEnd.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.SyncInitEnd.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SyncInitEnd</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">n</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">v</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">h</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;SyncInitEnd&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">SyncInitEnd</span><span class="p">({</span><span class="s2">&quot;n&quot;</span><span class="p">:</span> <span class="n">n</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">:</span> <span class="n">v</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="n">h</span><span class="p">})</span></div>
 
 
@@ -195,7 +194,7 @@
 <div class="viewcode-block" id="Ping.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Ping.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Ping</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;Ping&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Ping</span><span class="p">({})</span></div>
 </div>
 
@@ -212,7 +211,7 @@
 <div class="viewcode-block" id="PingStatus.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.PingStatus.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">PingStatus</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;PingStatus&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">PingStatus</span><span class="p">({</span><span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="n">s</span><span class="p">})</span></div>
 
 
@@ -233,7 +232,7 @@
 <div class="viewcode-block" id="PingStatusReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.PingStatusReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">PingStatusReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;PingStatusReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">PingStatusReq</span><span class="p">({})</span></div>
 </div>
 
@@ -250,14 +249,14 @@
 <div class="viewcode-block" id="Sync.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Sync.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Sync</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;Sync&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Sync</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">time_to_int</span><span class="p">(</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="o">.</span><span class="n">now</span><span class="p">())})</span></div>
 
 
 <div class="viewcode-block" id="Sync.new_full">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Sync.new_full">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new_full</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sync</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new_full</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">t</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Sync&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Sync</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">t</span><span class="p">})</span></div>
 
 
@@ -282,7 +281,7 @@
 <div class="viewcode-block" id="Value.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Value.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Value</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Value&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Value</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">})</span></div>
 
 
@@ -307,7 +306,7 @@
 <div class="viewcode-block" id="ValueReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ValueReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValueReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValueReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ValueReq</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span></div>
 
 
@@ -336,7 +335,7 @@
 <div class="viewcode-block" id="ValueRes.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ValueRes.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ValueRes</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValueRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ValueRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">})</span></div>
 
 
@@ -365,7 +364,7 @@
 <div class="viewcode-block" id="ValueEntry.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ValueEntry.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ValueEntry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ValueEntry&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ValueEntry</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span></div>
 
 
@@ -390,7 +389,7 @@
 <div class="viewcode-block" id="Text.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Text.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Text</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Text&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Text</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">})</span></div>
 
 
@@ -415,7 +414,7 @@
 <div class="viewcode-block" id="TextReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.TextReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TextReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TextReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TextReq</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span></div>
 
 
@@ -444,7 +443,7 @@
 <div class="viewcode-block" id="TextRes.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.TextRes.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TextRes</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TextRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TextRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">d</span><span class="p">})</span></div>
 
 
@@ -473,7 +472,7 @@
 <div class="viewcode-block" id="TextEntry.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.TextEntry.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">TextEntry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;TextEntry&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">TextEntry</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span></div>
 
 
@@ -489,7 +488,7 @@
 
 <div class="viewcode-block" id="vb_to_vd">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.vb_to_vd">[docs]</a>
-<span class="k">def</span> <span class="nf">vb_to_vd</span><span class="p">(</span><span class="n">vb</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">vb_to_vd</span><span class="p">(</span><span class="n">vb</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;ViewComponentBaseクラスからメッセージに変換&quot;&quot;&quot;</span>
     <span class="n">vd</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">vb</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -513,7 +512,7 @@
 
 <div class="viewcode-block" id="vd_to_vb">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.vd_to_vb">[docs]</a>
-<span class="k">def</span> <span class="nf">vd_to_vb</span><span class="p">(</span><span class="n">vd</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">vd_to_vb</span><span class="p">(</span><span class="n">vd</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;メッセージからViewComponentBaseクラスに変換&quot;&quot;&quot;</span>
     <span class="n">vb</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">vd</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -552,7 +551,9 @@
 <div class="viewcode-block" id="View.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.View.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">View</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
+        <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">View</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">vb_to_vd</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
 
@@ -561,7 +562,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">vd_to_vb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
@@ -581,7 +582,7 @@
 <div class="viewcode-block" id="ViewReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ViewReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ViewReq</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span></div>
 
 
@@ -611,8 +612,8 @@
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewRes.new">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
-        <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">],</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewRes</span><span class="p">:</span>
+        <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ViewRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ViewRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">vb_to_vd</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
 
@@ -625,7 +626,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">vd_to_vb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
@@ -645,7 +646,7 @@
 <div class="viewcode-block" id="ViewEntry.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewEntry.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ViewEntry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ViewEntry&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ViewEntry</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span></div>
 
 
@@ -661,7 +662,7 @@
 
 <div class="viewcode-block" id="c2b_to_c2d">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.c2b_to_c2d">[docs]</a>
-<span class="k">def</span> <span class="nf">c2b_to_c2d</span><span class="p">(</span><span class="n">vb</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DComponentBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">c2b_to_c2d</span><span class="p">(</span><span class="n">vb</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Canvas2dComponentBaseクラスからメッセージに変換&quot;&quot;&quot;</span>
     <span class="n">vd</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">vb</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -681,7 +682,7 @@
 
 <div class="viewcode-block" id="c2d_to_c2b">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.c2d_to_c2b">[docs]</a>
-<span class="k">def</span> <span class="nf">c2d_to_c2b</span><span class="p">(</span><span class="n">vd</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DComponentBase</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">c2d_to_c2b</span><span class="p">(</span><span class="n">vd</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;メッセージからCanvas2DComponentBaseクラスに変換&quot;&quot;&quot;</span>
     <span class="n">vb</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">vd</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -714,9 +715,9 @@
         <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DComponentBase</span><span class="p">],</span>
+        <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">,</span>
         <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas2D</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas2D&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas2D</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c2b_to_c2d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
 
@@ -733,7 +734,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DComponentBase</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">c2d_to_c2b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
@@ -753,7 +754,7 @@
 <div class="viewcode-block" id="Canvas2DReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas2DReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas2DReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas2DReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas2DReq</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span></div>
 
 
@@ -787,9 +788,9 @@
         <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
-        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DComponentBase</span><span class="p">],</span>
+        <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">,</span>
         <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas2DRes</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas2DRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas2DRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c2b_to_c2d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
 
@@ -810,7 +811,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;h&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DComponentBase</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">c2d_to_c2b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
@@ -830,7 +831,7 @@
 <div class="viewcode-block" id="Canvas2DEntry.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas2DEntry.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas2DEntry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas2DEntry&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas2DEntry</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span></div>
 
 
@@ -846,7 +847,7 @@
 
 <div class="viewcode-block" id="c3b_to_c3d">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.c3b_to_c3d">[docs]</a>
-<span class="k">def</span> <span class="nf">c3b_to_c3d</span><span class="p">(</span><span class="n">vb</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
+<span class="k">def</span> <span class="nf">c3b_to_c3d</span><span class="p">(</span><span class="n">vb</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Canvas3dComponentBaseクラスからメッセージに変換&quot;&quot;&quot;</span>
     <span class="n">vd</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="n">vb</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -867,7 +868,7 @@
 
 <div class="viewcode-block" id="c3d_to_c3b">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.c3d_to_c3b">[docs]</a>
-<span class="k">def</span> <span class="nf">c3d_to_c3b</span><span class="p">(</span><span class="n">vd</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">c3d_to_c3b</span><span class="p">(</span><span class="n">vd</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;メッセージからCanvas2DComponentBaseクラスに変換&quot;&quot;&quot;</span>
     <span class="n">vb</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">vd</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -899,9 +900,9 @@
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
         <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">],</span>
+        <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">,</span>
         <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas3D</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c3b_to_c3d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
 
@@ -910,7 +911,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">c3d_to_c3b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
@@ -930,7 +931,7 @@
 <div class="viewcode-block" id="Canvas3DReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas3DReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3DReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3DReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas3DReq</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span></div>
 
 
@@ -962,9 +963,9 @@
     <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
         <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">d</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">],</span>
+        <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">,</span>
         <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3DRes</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3DRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas3DRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c3b_to_c3d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
 
@@ -977,7 +978,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">data_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">data_diff</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">c3d_to_c3b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
@@ -997,7 +998,7 @@
 <div class="viewcode-block" id="Canvas3DEntry.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas3DEntry.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3DEntry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3DEntry&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas3DEntry</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span></div>
 
 
@@ -1022,14 +1023,14 @@
 <div class="viewcode-block" id="FuncInfo.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.FuncInfo.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fi</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncInfo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fi</span><span class="p">:</span> <span class="s2">&quot;webcface.func_info.FuncInfo&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FuncInfo&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">FuncInfo</span><span class="o">.</span><span class="n">new_full</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">f</span><span class="p">,</span> <span class="n">fi</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="FuncInfo.new_full">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.FuncInfo.new_full">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new_full</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fi</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FuncInfo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new_full</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">fi</span><span class="p">:</span> <span class="s2">&quot;webcface.func_info.FuncInfo&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;FuncInfo&quot;</span><span class="p">:</span>
         <span class="n">ad</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="n">fi</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
             <span class="n">ad</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1054,7 +1055,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">func_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">func_info</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.func_info.FuncInfo&quot;</span><span class="p">:</span>
         <span class="n">args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;a&quot;</span><span class="p">]:</span>
             <span class="n">args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
@@ -1082,7 +1083,7 @@
 <div class="viewcode-block" id="Call.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Call.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="n">Call</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">a</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Call&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Call</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;a&quot;</span><span class="p">:</span> <span class="n">a</span><span class="p">})</span></div>
 
 
@@ -1119,7 +1120,7 @@
 <div class="viewcode-block" id="CallResponse.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.CallResponse.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">CallResponse</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">s</span><span class="p">:</span> <span class="nb">bool</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;CallResponse&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CallResponse</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s2">&quot;s&quot;</span><span class="p">:</span> <span class="n">s</span><span class="p">})</span></div>
 
 
@@ -1148,7 +1149,7 @@
 <div class="viewcode-block" id="CallResult.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.CallResult.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">CallResult</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">c</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">e</span><span class="p">:</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">r</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;CallResult&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">CallResult</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;c&quot;</span><span class="p">:</span> <span class="n">c</span><span class="p">,</span> <span class="s2">&quot;e&quot;</span><span class="p">:</span> <span class="n">e</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">:</span> <span class="n">r</span><span class="p">})</span></div>
 
 
@@ -1172,7 +1173,7 @@
 
 <div class="viewcode-block" id="msg2logline">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.msg2logline">[docs]</a>
-<span class="k">def</span> <span class="nf">msg2logline</span><span class="p">(</span><span class="n">lm</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">msg2logline</span><span class="p">(</span><span class="n">lm</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;List[webcface.log_handler.LogLine]&quot;</span><span class="p">:</span>
     <span class="k">return</span> <span class="p">[</span>
         <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="s2">&quot;v&quot;</span><span class="p">],</span> <span class="n">int_to_time</span><span class="p">(</span><span class="n">l</span><span class="p">[</span><span class="s2">&quot;t&quot;</span><span class="p">]),</span> <span class="n">l</span><span class="p">[</span><span class="s2">&quot;m&quot;</span><span class="p">])</span> <span class="k">for</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">lm</span>
     <span class="p">]</span></div>
@@ -1181,7 +1182,7 @@
 
 <div class="viewcode-block" id="logline2msg">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.logline2msg">[docs]</a>
-<span class="k">def</span> <span class="nf">logline2msg</span><span class="p">(</span><span class="n">lls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
+<span class="k">def</span> <span class="nf">logline2msg</span><span class="p">(</span><span class="n">lls</span><span class="p">:</span> <span class="s2">&quot;List[webcface.log_handler.LogLine]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">Dict</span><span class="p">]:</span>
     <span class="k">return</span> <span class="p">[{</span><span class="s2">&quot;v&quot;</span><span class="p">:</span> <span class="n">ll</span><span class="o">.</span><span class="n">level</span><span class="p">,</span> <span class="s2">&quot;t&quot;</span><span class="p">:</span> <span class="n">time_to_int</span><span class="p">(</span><span class="n">ll</span><span class="o">.</span><span class="n">time</span><span class="p">),</span> <span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">ll</span><span class="o">.</span><span class="n">message</span><span class="p">}</span> <span class="k">for</span> <span class="n">ll</span> <span class="ow">in</span> <span class="n">lls</span><span class="p">]</span></div>
 
 
@@ -1197,7 +1198,7 @@
 <div class="viewcode-block" id="Log.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Log.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Log</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lls</span><span class="p">:</span> <span class="s2">&quot;List[webcface.log_handler.LogLine]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Log&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Log</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span>
@@ -1211,7 +1212,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;List[webcface.log_handler.LogLine]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">msg2logline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">])</span></div>
 
 
@@ -1227,7 +1228,7 @@
 <div class="viewcode-block" id="LogRes.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.LogRes.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lls</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">LogRes</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">lls</span><span class="p">:</span> <span class="s2">&quot;List[webcface.log_handler.LogLine]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LogRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">LogRes</span><span class="p">(</span>
             <span class="p">{</span>
                 <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
@@ -1246,7 +1247,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;f&quot;</span><span class="p">]</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;List[webcface.log_handler.LogLine]&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">msg2logline</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">])</span></div>
 
 
@@ -1262,7 +1263,7 @@
 <div class="viewcode-block" id="LogReq.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.LogReq.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogReq</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LogReq&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">LogReq</span><span class="p">({</span><span class="s2">&quot;M&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">})</span></div>
 
 
@@ -1291,7 +1292,7 @@
 <div class="viewcode-block" id="LogEntry.new">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.LogEntry.new">[docs]</a>
     <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">LogEntry</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">new</span><span class="p">(</span><span class="n">m</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;LogEntry&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">LogEntry</span><span class="p">({</span><span class="s2">&quot;m&quot;</span><span class="p">:</span> <span class="n">m</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">})</span></div>
 
 
@@ -1338,14 +1339,14 @@
     <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">msgs</span><span class="p">:</span>
         <span class="n">send_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">kind</span><span class="p">)</span>
         <span class="n">send_msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">msg</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">packb</span><span class="p">(</span><span class="n">send_msgs</span><span class="p">)</span></div>
+    <span class="k">return</span> <span class="n">umsgpack</span><span class="o">.</span><span class="n">packb</span><span class="p">(</span><span class="n">send_msgs</span><span class="p">)</span></div>
 
 
 
 <div class="viewcode-block" id="unpack">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.unpack">[docs]</a>
 <span class="k">def</span> <span class="nf">unpack</span><span class="p">(</span><span class="n">packed</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="n">MessageBase</span><span class="p">]:</span>
-    <span class="n">unpack_obj</span> <span class="o">=</span> <span class="n">msgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="n">packed</span><span class="p">,</span> <span class="n">strict_map_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">unpack_obj</span> <span class="o">=</span> <span class="n">umsgpack</span><span class="o">.</span><span class="n">unpackb</span><span class="p">(</span><span class="n">packed</span><span class="p">,</span> <span class="n">strict_map_key</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
     <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">unpack_obj</span><span class="p">)</span> <span class="o">%</span> <span class="mi">2</span> <span class="o">==</span> <span class="mi">0</span>
     <span class="n">msg_ret</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">unpack_obj</span><span class="p">),</span> <span class="mi">2</span><span class="p">):</span>

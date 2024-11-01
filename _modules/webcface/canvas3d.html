@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.canvas3d &mdash; WebCFace-Python 2.2.0  documentation</title>
+  <title>webcface.canvas3d &mdash; WebCFace-Python 2.3.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.2.0
+            WebCFace-Python 2.3.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.2.0</a>
+          <a href="../../index.html">WebCFace-Python 2.3.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,9 +69,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.canvas3d</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas3d_base</span>
 <span class="kn">import</span> <span class="nn">webcface.geometries</span>
@@ -83,12 +81,12 @@
 <div class="viewcode-block" id="Canvas3DComponent">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3DComponent</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">):</span>
-    <span class="n">_data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">client_data</span><span class="o">.</span><span class="n">ClientData</span><span class="p">]</span>
+    <span class="n">_data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">,</span>
-        <span class="n">data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">client_data</span><span class="o">.</span><span class="n">ClientData</span><span class="p">],</span>
+        <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.canvas3d_base.Canvas3DComponentBase&quot;</span><span class="p">,</span>
+        <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">base</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span>
@@ -112,7 +110,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;表示する要素の移動&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_origin_rot</span><span class="p">)</span>
 
@@ -122,7 +120,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">geometries</span><span class="o">.</span><span class="n">Geometry</span><span class="p">]:</span>
+    <span class="k">def</span> <span class="nf">geometry</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Optional[webcface.geometries.Geometry]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;表示する図形&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_geometry_type</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="kc">None</span>
@@ -139,12 +137,12 @@
 <div class="viewcode-block" id="Canvas3D">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3D</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
-    <span class="n">_c3data</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">]]</span>
+    <span class="n">_c3data</span><span class="p">:</span> <span class="s2">&quot;Optional[List[webcface.canvas3d_base.Canvas3DComponentBase]]&quot;</span>
     <span class="n">_modified</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span>
+        <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span>
         <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas3Dを指すクラス</span>
@@ -161,7 +159,7 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.member.Member&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Memberを返す&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
 
@@ -190,7 +188,7 @@
 
 <div class="viewcode-block" id="Canvas3D.child">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.child">[docs]</a>
-    <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;子フィールドを返す</span>
 
 <span class="sd">        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView</span>
@@ -241,14 +239,14 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span></div>
 
 
-    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__enter__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;with構文の最初でinit&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
         <span class="k">return</span> <span class="bp">self</span>
 
 <div class="viewcode-block" id="Canvas3D.init">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.init">[docs]</a>
-    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このCanvas3Dオブジェクトにaddした内容を初期化する&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
@@ -261,7 +259,7 @@
 
 <div class="viewcode-block" id="Canvas3D.sync">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.sync">[docs]</a>
-    <span class="k">def</span> <span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewの内容をclientに反映し送信可能にする&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
@@ -277,7 +275,7 @@
 
 <div class="viewcode-block" id="Canvas3D.add">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;要素を追加</span>
 
 <span class="sd">        引数は add_geometry() にそのまま渡される</span>
@@ -295,10 +293,10 @@
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.add_geometry">[docs]</a>
     <span class="k">def</span> <span class="nf">add_geometry</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">geometry</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">geometries</span><span class="o">.</span><span class="n">Geometry3D</span><span class="p">,</span>
-        <span class="n">origin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">geometry</span><span class="p">:</span> <span class="s2">&quot;webcface.geometries.Geometry3D&quot;</span><span class="p">,</span>
+        <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.transform.Transform]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_components</span><span class="o">.</span><span class="n">ViewColor</span><span class="o">.</span><span class="n">INHERIT</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Canvas3D</span><span class="p">:</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Geometryを追加&quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>

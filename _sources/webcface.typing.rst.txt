@@ -1,0 +1,7 @@
+webcface.typing module
+======================
+
+.. automodule:: webcface.typing
+   :members:
+   :undoc-members:
+   :show-inheritance:

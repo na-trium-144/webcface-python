@@ -25,6 +25,7 @@ Submodules
    webcface.message
    webcface.text
    webcface.transform
+   webcface.typing
    webcface.value
    webcface.view
    webcface.view_base

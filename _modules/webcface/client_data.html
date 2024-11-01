@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_data &mdash; WebCFace-Python 2.2.0  documentation</title>
+  <title>webcface.client_data &mdash; WebCFace-Python 2.3.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -13,7 +13,7 @@
         <script src="../../_static/jquery.js?v=5d32c60e"></script>
         <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
         <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
-        <script src="../../_static/doctools.js?v=888ff710"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
         <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="../../_static/js/theme.js"></script>
     <link rel="index" title="Index" href="../../genindex.html" />
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.2.0
+            WebCFace-Python 2.3.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.2.0</a>
+          <a href="../../index.html">WebCFace-Python 2.3.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,8 +69,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.client_data</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">TypeVar</span><span class="p">,</span> <span class="n">Generic</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">threading</span>
 <span class="kn">import</span> <span class="nn">datetime</span>
 <span class="kn">import</span> <span class="nn">logging</span>
@@ -377,7 +376,7 @@
 <div class="viewcode-block" id="FuncResultStore">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore">[docs]</a>
 <span class="k">class</span> <span class="nc">FuncResultStore</span><span class="p">:</span>
-    <span class="n">results</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Optional</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">]]</span>
+    <span class="n">results</span><span class="p">:</span> <span class="s2">&quot;List[Optional[webcface.func_info.PromiseData]]&quot;</span>
     <span class="n">lock</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Lock</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
@@ -389,8 +388,8 @@
     <span class="k">def</span> <span class="nf">add_result</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-        <span class="n">base</span><span class="p">:</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">Promise</span><span class="p">:</span>
+        <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.func_info.Promise&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="n">caller_id</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">)</span>
             <span class="n">r</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">(</span><span class="n">base</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">,</span> <span class="n">caller</span><span class="p">)</span>
@@ -400,7 +399,7 @@
 
 <div class="viewcode-block" id="FuncResultStore.get_result">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.FuncResultStore.get_result">[docs]</a>
-    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">PromiseData</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">get_result</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.func_info.PromiseData&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
             <span class="n">r</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">results</span><span class="p">[</span><span class="n">caller_id</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">r</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
@@ -424,14 +423,14 @@
     <span class="n">self_member_name</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">value_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]]</span>
     <span class="n">text_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
-    <span class="n">func_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">FuncInfo</span><span class="p">]</span>
-    <span class="n">view_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">]]</span>
-    <span class="n">canvas2d_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas2d_base</span><span class="o">.</span><span class="n">Canvas2DData</span><span class="p">]</span>
-    <span class="n">canvas3d_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">]]</span>
-    <span class="n">log_store</span><span class="p">:</span> <span class="n">SyncDataStore2</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogData</span><span class="p">]</span>
+    <span class="n">func_store</span><span class="p">:</span> <span class="s2">&quot;SyncDataStore2[webcface.func_info.FuncInfo]&quot;</span>
+    <span class="n">view_store</span><span class="p">:</span> <span class="s2">&quot;SyncDataStore2[List[webcface.view_base.ViewComponentBase]]&quot;</span>
+    <span class="n">canvas2d_store</span><span class="p">:</span> <span class="s2">&quot;SyncDataStore2[webcface.canvas2d_base.Canvas2DData]&quot;</span>
+    <span class="n">canvas3d_store</span><span class="p">:</span> <span class="s2">&quot;SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase]]&quot;</span>
+    <span class="n">log_store</span><span class="p">:</span> <span class="s2">&quot;SyncDataStore2[webcface.log_handler.LogData]&quot;</span>
     <span class="n">sync_time_store</span><span class="p">:</span> <span class="n">SyncDataStore1</span><span class="p">[</span><span class="n">datetime</span><span class="o">.</span><span class="n">datetime</span><span class="p">]</span>
     <span class="n">func_result_store</span><span class="p">:</span> <span class="n">FuncResultStore</span>
-    <span class="n">func_listener_handlers</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">func_info</span><span class="o">.</span><span class="n">CallHandle</span><span class="p">]]</span>
+    <span class="n">func_listener_handlers</span><span class="p">:</span> <span class="s2">&quot;Dict[str, List[webcface.func_info.CallHandle]]&quot;</span>
     <span class="n">member_ids</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="n">member_lib_name</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">member_lib_ver</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
@@ -440,11 +439,11 @@
     <span class="n">svr_version</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">svr_hostname</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">ping_status_req</span><span class="p">:</span> <span class="nb">bool</span>
-    <span class="n">ping_status</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+    <span class="n">ping_status</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
     <span class="n">connected</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">_connection_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
     <span class="n">_msg_first</span><span class="p">:</span> <span class="nb">bool</span>  <span class="c1"># syncInitメッセージをqueueに入れたらtrue</span>
-    <span class="n">_msg_queue</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">]]</span>
+    <span class="n">_msg_queue</span><span class="p">:</span> <span class="s2">&quot;List[List[webcface.message.MessageBase]]&quot;</span>
     <span class="n">_msg_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
     <span class="n">recv_queue</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">bytes</span><span class="p">]</span>
     <span class="n">recv_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
@@ -540,7 +539,7 @@
 
 <div class="viewcode-block" id="ClientData.queue_msg_always">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg_always">[docs]</a>
-    <span class="k">def</span> <span class="nf">queue_msg_always</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">queue_msg_always</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="s2">&quot;List[webcface.message.MessageBase]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;メッセージをキューに入れる&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">msgs</span><span class="p">)</span>
@@ -549,7 +548,7 @@
 
 <div class="viewcode-block" id="ClientData.queue_msg_online">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg_online">[docs]</a>
-    <span class="k">def</span> <span class="nf">queue_msg_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">queue_msg_online</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="s2">&quot;List[webcface.message.MessageBase]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;接続できていればキューに入れtrueを返す&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_connection_cv</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">connected</span><span class="p">:</span>
@@ -562,7 +561,7 @@
 
 <div class="viewcode-block" id="ClientData.queue_msg_req">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.queue_msg_req">[docs]</a>
-    <span class="k">def</span> <span class="nf">queue_msg_req</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">queue_msg_req</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msgs</span><span class="p">:</span> <span class="s2">&quot;List[webcface.message.MessageBase]&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;msg_firstが空でなければキューに入れtrueを返す&quot;&quot;&quot;</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_first</span><span class="p">:</span>
@@ -609,7 +608,7 @@
 
 <div class="viewcode-block" id="ClientData.pop_msg">
 <a class="viewcode-back" href="../../webcface.client_data.html#webcface.client_data.ClientData.pop_msg">[docs]</a>
-    <span class="k">def</span> <span class="nf">pop_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">MessageBase</span><span class="p">]]:</span>
+    <span class="k">def</span> <span class="nf">pop_msg</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Optional[List[webcface.message.MessageBase]]&quot;</span><span class="p">:</span>
         <span class="k">with</span> <span class="bp">self</span><span class="o">.</span><span class="n">_msg_cv</span><span class="p">:</span>
             <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_msg_queue</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
                 <span class="k">return</span> <span class="kc">None</span>

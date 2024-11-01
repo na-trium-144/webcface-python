@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.field module &mdash; WebCFace-Python 2.3.0  documentation</title>
+  <title>webcface.typing module &mdash; WebCFace-Python 2.3.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,8 +19,8 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="webcface.func module" href="webcface.func.html" />
-    <link rel="prev" title="webcface.client_impl module" href="webcface.client_impl.html" /> 
+    <link rel="next" title="webcface.value module" href="webcface.value.html" />
+    <link rel="prev" title="webcface.transform module" href="webcface.transform.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -53,11 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
-<li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.field module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="#webcface.field.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#webcface.field.FieldBase"><code class="docutils literal notranslate"><span class="pre">FieldBase</span></code></a></li>
-</ul>
-</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_listener.html">webcface.func_listener module</a></li>
@@ -68,7 +64,10 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.typing.html">webcface.typing module</a></li>
+<li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.typing module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.typing.convertible_to_float"><code class="docutils literal notranslate"><span class="pre">convertible_to_float()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
@@ -95,9 +94,9 @@
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
           <li class="breadcrumb-item"><a href="webcface.html">webcface package</a></li>
-      <li class="breadcrumb-item active">webcface.field module</li>
+      <li class="breadcrumb-item active">webcface.typing module</li>
       <li class="wy-breadcrumbs-aside">
-            <a href="_sources/webcface.field.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/webcface.typing.rst.txt" rel="nofollow"> View page source</a>
       </li>
   </ul>
   <hr/>
@@ -105,19 +104,12 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="module-webcface.field">
-<span id="webcface-field-module"></span><h1>webcface.field module<a class="headerlink" href="#module-webcface.field" title="Link to this heading"></a></h1>
-<dl class="py class">
-<dt class="sig sig-object py" id="webcface.field.Field">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.field.</span></span><span class="sig-name descname"><span class="pre">Field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/field.html#Field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.field.Field" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#webcface.field.FieldBase" title="webcface.field.FieldBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldBase</span></code></a></p>
-</dd></dl>
-
-<dl class="py class">
-<dt class="sig sig-object py" id="webcface.field.FieldBase">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.field.</span></span><span class="sig-name descname"><span class="pre">FieldBase</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/field.html#FieldBase"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.field.FieldBase" title="Link to this definition"></a></dt>
-<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
-</dd></dl>
+  <section id="module-webcface.typing">
+<span id="webcface-typing-module"></span><h1>webcface.typing module<a class="headerlink" href="#module-webcface.typing" title="Link to this heading"></a></h1>
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.typing.convertible_to_float">
+<span class="sig-prename descclassname"><span class="pre">webcface.typing.</span></span><span class="sig-name descname"><span class="pre">convertible_to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/typing.html#convertible_to_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.typing.convertible_to_float" title="Link to this definition"></a></dt>
+<dd></dd></dl>
 
 </section>
 
@@ -125,8 +117,8 @@
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="webcface.client_impl.html" class="btn btn-neutral float-left" title="webcface.client_impl module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="webcface.func.html" class="btn btn-neutral float-right" title="webcface.func module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="webcface.transform.html" class="btn btn-neutral float-left" title="webcface.transform module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="webcface.value.html" class="btn btn-neutral float-right" title="webcface.value module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
