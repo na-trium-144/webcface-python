@@ -6,7 +6,7 @@ import webcface.view_base
 import webcface.canvas2d_base
 import webcface.field
 import webcface.log_handler
-import webcface.image
+import webcface.image_frame
 
 
 class MessageBase:
@@ -360,7 +360,7 @@ class ImageReq(MessageBase):
 
     @staticmethod
     def new(
-        m: str, f: str, i: Optional[int], r: "webcface.image.ImageReq"
+        m: str, f: str, i: Optional[int], r: "webcface.image_frame.ImageReq"
     ) -> "ImageReq":
         return ImageReq(
             {

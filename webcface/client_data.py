@@ -8,7 +8,7 @@ import webcface.view_base
 import webcface.log_handler
 import webcface.canvas2d_base
 import webcface.canvas3d_base
-import webcface.image
+import webcface.image_frame
 
 T = TypeVar("T")
 R = TypeVar("R")
@@ -271,7 +271,9 @@ class ClientData:
     self_member_name: str
     value_store: SyncDataStore2[List[float], None]
     text_store: SyncDataStore2[Union[float, bool, str], None]
-    image_store: "SyncDataStore2[webcface.image.ImageFrame, webcface.image.ImageReq]"
+    image_store: (
+        "SyncDataStore2[webcface.image_frame.ImageFrame, webcface.image_frame.ImageReq]"
+    )
     func_store: "SyncDataStore2[webcface.func_info.FuncInfo, None]"
     view_store: "SyncDataStore2[List[webcface.view_base.ViewComponentBase], None]"
     canvas2d_store: "SyncDataStore2[webcface.canvas2d_base.Canvas2DData, None]"
@@ -332,7 +334,7 @@ class ClientData:
             name, SyncDataStore2.should_send_on_change
         )
         self.image_store = SyncDataStore2[
-            webcface.image.ImageFrame, webcface.image.ImageReq
+            webcface.image_frame.ImageFrame, webcface.image_frame.ImageReq
         ](name)
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo, None](
             name, SyncDataStore2.should_not_send_twice
