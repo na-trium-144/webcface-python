@@ -99,6 +99,37 @@ class ImageFrame:
         return self._data
 
 
+class ImageReq:
+    width: Optional[int]
+    height: Optional[int]
+    color_mode: Optional[int]
+    compress_mode: Optional[int]
+    quality: Optional[int]
+    frame_rate: Optional[float]
+
+    def __init__(self, width, height, color_mode, compress_mode, quality, frame_rate):
+        self.width = width
+        self.height = height
+        self.color_mode = color_mode
+        self.compress_mode = compress_mode
+        self.quality = quality
+        self.frame_rate = frame_rate
+
+    def __eq__(self, obj) -> bool:
+        return (
+            isinstance(obj, ImageReq)
+            and self.width == obj.width
+            and self.height == obj.height
+            and self.color_mode == obj.color_mode
+            and self.compress_mode == obj.compress_mode
+            and self.quality == obj.quality
+            and self.frame_rate == obj.frame_rate
+        )
+
+    def __ne__(self, obj) -> bool:
+        return not self == obj
+
+
 class Image(webcface.field.Field):
     def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """Imageを指すクラス
@@ -141,12 +172,49 @@ class Image(webcface.field.Field):
         """
         return Image(self, self._field + "." + field)
 
-    def request(self) -> None:
-        """値の受信をリクエストする"""
+    def _try_request(self) -> None:
+        # req_dataがNoneの場合以前のreq_dataは上書きされない
         req = self._data_check().image_store.add_req(self._member, self._field)
         if req > 0:
+            self.request()
+
+    def request(
+        self,
+        width: Optional[int] = None,
+        height: Optional[int] = None,
+        color_mode: Optional[int] = None,
+        compress_mode: Optional[int] = None,
+        quality: Optional[int] = None,
+        frame_rate: Optional[int] = None,
+    ) -> None:
+        """画像の受信をリクエストする
+
+        :param width: 画像の幅
+        :param height: 画像の高さ
+            width, height のどちらかのみがNoneの場合縦横比を保ってリサイズし、
+            どちらもNoneの場合は元画像のサイズになる
+        :param color_mode: 画像の色フォーマット (Noneの場合元画像のフォーマット)
+        :param cmp_mode: 圧縮モード
+        :param quality: 圧縮のパラメータ
+            * jpeg → 0〜100 (大きいほうが高品質)
+            * png → 0〜9 (大きいほうが圧縮後のサイズが小さい)
+            * webp → 1〜100 (大きいほうが高品質)
+        :param frame_rate: 画像を受信する頻度 (指定しない場合元画像が更新されるたびに受信する)
+        """
+        img_req = ImageReq(
+            width, height, color_mode, compress_mode, quality, frame_rate
+        )
+        req = self._data_check().image_store.add_req(self._member, self._field, img_req)
+        if req > 0:
             self._data_check().queue_msg_req(
-                [webcface.message.ImageReq.new(self._member, self._field, req)]
+                [
+                    webcface.message.ImageReq.new(
+                        self._member,
+                        self._field,
+                        req,
+                        img_req,
+                    )
+                ]
             )
 
     def try_get(self) -> "Optional[ImageFrame]":

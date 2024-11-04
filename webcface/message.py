@@ -6,6 +6,7 @@ import webcface.view_base
 import webcface.canvas2d_base
 import webcface.field
 import webcface.log_handler
+import webcface.image
 
 
 class MessageBase:
@@ -359,18 +360,20 @@ class ImageReq(MessageBase):
 
     @staticmethod
     def new(
-        m: str,
-        f: str,
-        i: Optional[int],
-        w: Optional[int],
-        h: Optional[int],
-        l: Optional[int],
-        p: Optional[int],
-        q: Optional[int],
-        r: Optional[int],
+        m: str, f: str, i: Optional[int], r: "webcface.image.ImageReq"
     ) -> "ImageReq":
         return ImageReq(
-            {"M": m, "f": f, "i": i, "w": w, "h": h, "l": l, "p": p, "q": q, "r": r}
+            {
+                "M": m,
+                "f": f,
+                "i": i,
+                "w": r.width,
+                "h": r.height,
+                "l": r.color_mode,
+                "p": r.compress_mode,
+                "q": r.quality,
+                "r": r.frame_rate,
+            }
         )
 
     @property
@@ -406,7 +409,7 @@ class ImageReq(MessageBase):
         return self.msg["q"]
 
     @property
-    def frame_rate(self) -> Optional[int]:
+    def frame_rate(self) -> Optional[float]:
         return self.msg["r"]
 
 
