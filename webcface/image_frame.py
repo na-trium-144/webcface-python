@@ -112,6 +112,7 @@ class ImageFrame:
         """
         import numpy
 
+        assert isinstance(img, numpy.ndarray), "img must be numpy.ndarray"
         assert img.dtype == numpy.uint8, "only dtype uint8 is supported"
         if color_mode == ImageColorMode.GRAY:
             assert len(img.shape) == 2 or (
