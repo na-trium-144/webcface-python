@@ -1,6 +1,11 @@
 from typing import Optional
 from enum import IntEnum
 
+try:
+    import numpy
+except ModuleNotFoundError:
+    pass
+
 
 class ImageColorMode(IntEnum):
     GRAY = 0
@@ -38,6 +43,7 @@ class ImageFrame:
         self._data = data
         self._color_mode = color_mode
         self._cmp_mode = compress_mode
+        assert width * height * self.channels == len(data)
 
     def empty(self) -> bool:
         """画像が空かどうかを返す"""
@@ -94,6 +100,61 @@ class ImageFrame:
         要素の画像データ。 それ以外の場合、圧縮された画像のデータ
         """
         return self._data
+
+    @staticmethod
+    def from_numpy(img: "numpy.ndarray", color_mode: int) -> "ImageFrame":
+        """numpy配列からImageFrameを作成する
+
+        color_mode がGRAYの場合 (height, width) または (height, width, 1),
+        color_mode がBGR,RGBの場合 (height, width, 3),
+        color_mode がBGRA,RGBAの場合 (height, width, 4)
+        のuint8配列のみが使用可能
+        """
+        import numpy
+
+        assert img.dtype == numpy.uint8, "only dtype uint8 is supported"
+        if color_mode == ImageColorMode.GRAY:
+            assert len(img.shape) == 2 or (
+                len(img.shape) == 3 and img.shape[2] == 1
+            ), "shape must be (height, width) or (height, width, 1)"
+        elif color_mode == ImageColorMode.BGR or color_mode == ImageColorMode.RGB:
+            assert (
+                len(img.shape) == 3 and img.shape[2] == 3
+            ), "shape must be (height, width, 3)"
+        elif color_mode == ImageColorMode.BGRA or color_mode == ImageColorMode.RGBA:
+            assert (
+                len(img.shape) == 3 and img.shape[2] == 4
+            ), "shape must be (height, width, 4)"
+        else:
+            raise ValueError("Unknown color format")
+
+        return ImageFrame(
+            img.shape[1],
+            img.shape[0],
+            img.tobytes(),
+            color_mode,
+            ImageCompressMode.RAW,
+        )
+
+    def numpy(self) -> "numpy.ndarray":
+        """numpy配列に変換する
+
+        color_mode がGRAYの場合 (height, width, 1),
+        color_mode がBGR,RGBの場合 (height, width, 3),
+        color_mode がBGRA,RGBAの場合 (height, width, 4)
+        のuint8配列を返す
+
+        compress_mode がRAWでない場合はエラー
+        """
+        import numpy
+
+        assert (
+            self._cmp_mode == ImageCompressMode.RAW
+        ), "compressed image is not supported"
+
+        return numpy.frombuffer(self._data, dtype=numpy.uint8).reshape(
+            self._height, self._width, self.channels
+        )
 
 
 class ImageReq:

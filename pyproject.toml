@@ -16,8 +16,16 @@ importlib-metadata = {version = ">=1", python = "<3.8"}
 
 
 [tool.poetry.group.test.dependencies]
-pytest = ">=6"
+pytest = [
+    {version = "^8", python = "^3.8"},
+    {version = ">=7", python = "^3.6"},
+]
 toml = "^0.10.2"
+numpy = [
+    {version = "^2.1", python = "^3.10"},
+    {version = "^2", python = "^3.9"},
+    {version = ">=1", python = "^3.6"},
+]
 
 
 [tool.poetry.group.docs.dependencies]
