@@ -95,6 +95,10 @@ class SyncDataStore2(Generic[T, R]):
                 return self.req[member][field]
             return 0
 
+    def get_req_info(self, member: str, field: str) -> Optional[R]:
+        with self.lock:
+            return self.req_info.get(member, {}).get(field)
+
     def get_recv(self, member: str, field: str) -> Optional[T]:
         with self.lock:
             d = self.data_recv.get(member, {}).get(field)

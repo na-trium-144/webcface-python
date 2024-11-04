@@ -10,6 +10,7 @@ from webcface.func import Func
 from webcface.func_info import Arg, ValType, FuncNotFoundError
 from webcface.view import ViewComponent
 from webcface.log_handler import LogLine, LogData
+from webcface.image_frame import ImageFrame, ImageColorMode, ImageCompressMode
 import webcface.func_info
 import webcface.view_components
 
@@ -146,6 +147,15 @@ def test_entry(wcli):
     assert list(m.texts())[0].name == "b"
     assert m.text("b").exists() is True
 
+    assert m.image("b").exists() is False
+    m.on_image_entry(callback)
+    send_back(wcli, [ImageEntry.new(10, "b")])
+    assert called == 1
+    called = 0
+    assert len(list(m.image_entries())) == 1
+    assert list(m.image_entries())[0].name == "b"
+    assert m.image("b").exists() is True
+
     assert m.func("b").exists() is False
     m.on_func_entry(callback)
     send_back(
@@ -238,6 +248,80 @@ def test_text_req(wcli):
     assert called == 1
     assert wcli._data_check().text_store.get_recv("a", "b") == "z"
     assert wcli._data_check().text_store.get_recv("a", "b.c") == "z"
+
+
+def test_image_send(wcli):
+    wcli._data_check().image_store.set_send(
+        "a", ImageFrame(5, 5, b"\0" * 75, ImageColorMode.RGB, ImageCompressMode.RAW)
+    )
+    wcli.sync()
+    m = check_sent(wcli, Image)
+    assert isinstance(m, Image)
+    assert m.field == "a"
+    assert m.width == 5
+    assert m.height == 5
+    assert m.data == b"\0" * 75
+    assert m.color_mode == ImageColorMode.RGB
+    assert m.cmp_mode == ImageCompressMode.RAW
+
+
+def test_image_req(wcli):
+    called = 0
+
+    def callback(v):
+        nonlocal called
+        called += 1
+
+    wcli._data_check()._msg_first = True
+    wcli.member("a").image("b").on_change(callback)
+    m = check_sent(wcli, ImageReq)
+    assert isinstance(m, ImageReq)
+    assert m.member == "a"
+    assert m.field == "b"
+    assert m.req_id == 1
+    assert m.width is None
+    assert m.height is None
+    assert m.color_mode is None
+    assert m.cmp_mode is None
+    assert m.quality is None
+    assert m.frame_rate is None
+
+    clear_sent(wcli)
+    wcli._data_check()._msg_first = True
+    wcli.member("a").image("b").request(
+        width=5,
+        height=5,
+        color_mode=ImageColorMode.RGB,
+        compress_mode=ImageCompressMode.RAW,
+        quality=10,
+        frame_rate=10,
+    )
+    m = check_sent(wcli, ImageReq)
+    assert isinstance(m, ImageReq)
+    assert m.member == "a"
+    assert m.field == "b"
+    assert m.req_id == 1
+    assert m.width == 5
+    assert m.height == 5
+    assert m.color_mode == ImageColorMode.RGB
+    assert m.cmp_mode == ImageCompressMode.RAW
+    assert m.quality == 10
+    assert m.frame_rate == 10
+
+    send_back(
+        wcli,
+        [
+            ImageRes.new(
+                1, "", b"\0" * 75, 5, 5, ImageColorMode.RGB, ImageCompressMode.RAW
+            ),
+            ImageRes.new(
+                1, "c", b"\0" * 75, 5, 5, ImageColorMode.RGB, ImageCompressMode.RAW
+            ),
+        ],
+    )
+    assert called == 1
+    assert wcli._data_check().image_store.get_recv("a", "b").data == b"\0"*75
+    assert wcli._data_check().image_store.get_recv("a", "b.c").data == b"\0"*75
 
 
 def test_view_send(wcli):

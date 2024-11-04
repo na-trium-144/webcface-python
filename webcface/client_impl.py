@@ -5,6 +5,7 @@ import webcface.client_data
 import webcface.message
 import webcface.client
 import webcface.canvas2d_base
+import webcface.image_frame
 import webcface
 
 
@@ -74,7 +75,13 @@ def on_recv(
                     on_entry(wcli.member(member).text(m.field))
             if isinstance(m, webcface.message.ImageRes):
                 member, field = data.image_store.get_req(m.req_id, m.sub_field)
-                data.image_store.set_recv(member, field, m.to_frame())
+                data.image_store.set_recv(
+                    member,
+                    field,
+                    webcface.image_frame.ImageFrame(
+                        m.width, m.height, m.data, m.color_mode, m.cmp_mode
+                    ),
+                )
                 on_change = data.on_image_change.get(member, {}).get(field)
                 if on_change is not None:
                     on_change(wcli.member(member).image(field))
@@ -264,7 +271,12 @@ def sync_data_first(
     with data.image_store.lock:
         for m, r in data.image_store.transfer_req().items():
             for k, i in r.items():
-                msgs.append(webcface.message.ImageReq.new(m, k, i))
+                info = data.image_store.get_req_info(m, k)
+                if info is None:
+                    info = webcface.image_frame.ImageReq(
+                        None, None, None, None, None, None
+                    )
+                msgs.append(webcface.message.ImageReq.new(m, k, i, info))
     with data.view_store.lock:
         for m, r in data.view_store.transfer_req().items():
             for k, i in r.items():
@@ -301,7 +313,11 @@ def sync_data(
             msgs.append(webcface.message.Text.new(k, v2))
     with data.image_store.lock:
         for k, v8 in data.image_store.transfer_send(is_first).items():
-            msgs.append(webcface.message.Image.new(k, v8))
+            msgs.append(
+                webcface.message.Image.new(
+                    k, v8.data, v8.width, v8.height, v8.color_mode, v8.compress_mode
+                )
+            )
     with data.view_store.lock:
         view_send_prev = data.view_store.get_send_prev(is_first)
         view_send = data.view_store.transfer_send(is_first)

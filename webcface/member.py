@@ -7,6 +7,7 @@ import webcface.view
 import webcface.func
 import webcface.func_listener
 import webcface.log
+import webcface.image
 import webcface.message
 import webcface.canvas2d
 import webcface.canvas3d
@@ -39,6 +40,10 @@ class Member(webcface.field.Field):
     def variant(self, field: str) -> "webcface.text.Variant":
         """Variantオブジェクトを生成 (ver2.0〜)"""
         return webcface.text.Variant(self, field)
+
+    def image(self, field: str) -> "webcface.image.Image":
+        """Imageオブジェクトを生成"""
+        return webcface.image.Image(self, field)
 
     def view(self, field: str) -> "webcface.view.View":
         """Viewオブジェクトを生成"""
@@ -112,6 +117,10 @@ class Member(webcface.field.Field):
         """このメンバーのTextをすべて取得する。"""
         return map(self.text, self._data_check().text_store.get_entry(self._member))
 
+    def image_entries(self) -> "Iterable[webcface.image.Image]":
+        """このメンバーのImageをすべて取得する。"""
+        return map(self.image, self._data_check().image_store.get_entry(self._member))
+
     def views(self) -> "Iterable[webcface.view.View]":
         """このメンバーのViewをすべて取得する。
 
@@ -164,6 +173,14 @@ class Member(webcface.field.Field):
         コールバックの引数にはTextオブジェクトが渡される。
         """
         self._data_check().on_text_entry[self._member] = func
+        return func
+
+    def on_image_entry(self, func: Callable) -> Callable:
+        """Textが追加されたときのイベント
+
+        コールバックの引数にはTextオブジェクトが渡される。
+        """
+        self._data_check().on_image_entry[self._member] = func
         return func
 
     def on_view_entry(self, func: Callable) -> Callable:
