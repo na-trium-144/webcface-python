@@ -1,7 +1,8 @@
 from typing import List, Tuple, Union, SupportsFloat, Optional
-from enum import Enum
+from enum import IntEnum
 from collections.abc import Sequence
 from webcface.typing import convertible_to_float
+import webcface.transform_impl
 
 
 class Point:
@@ -109,7 +110,7 @@ class Point:
         return self
 
 
-class AxisSequence(Enum):
+class AxisSequence(IntEnum):
     """オイラー角の回転順序 (ver2.4〜)
 
     * 右手系の座標系で、
@@ -190,6 +191,7 @@ class Rotation:
         """
         if axis == AxisSequence.ZYX:
             if self._az is None or self._ay is None or self._ax is None:
+                assert self._rmat is not None
                 (self._az, self._ay, self._ax) = (
                     webcface.transform_impl.matrix_to_euler(self._rmat, axis)
                 )
@@ -206,6 +208,9 @@ class Rotation:
     ]:
         """回転角を回転行列として取得 (ver2.4〜)"""
         if self._rmat is None:
+            assert (
+                self._az is not None and self._ay is not None and self._ax is not None
+            )
             self._rmat = webcface.transform_impl.euler_to_matrix(
                 (self._az, self._ay, self._ax), AxisSequence.ZYX
             )
@@ -217,7 +222,7 @@ class Rotation:
 
     def rot_axis_angle(self) -> Tuple[Tuple[float, float, float], float]:
         """回転角を軸と角度((x, y, z), angle)として取得 (ver2.4〜)"""
-        return webcface.transform_impl.matrix_to_axis_angle(self.rot_matrix())
+        return webcface.transform_impl.quaternion_to_axis_angle(self.rot_quat())
 
     @staticmethod
     def from_euler(
@@ -267,8 +272,8 @@ class Rotation:
         :arg angle: 角度
         """
         assert len(axis) == 3, "Axis must be 3 dimensional, got " + str(axis)
-        return Rotation.from_matrix(
-            webcface.transform_impl.axis_angle_to_matrix(axis, float(angle))
+        return Rotation.from_quat(
+            webcface.transform_impl.axis_angle_to_quaternion(axis, angle)
         )
 
 
