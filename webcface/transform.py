@@ -178,11 +178,51 @@ class Rotation:
         """回転角を取得
 
         2次元の場合は rot[0] を使う
+
+        .. deprecated:: ver2.4
         """
-        return (self._az, self._ay, self._ax)
+        return self.rot_euler()
+
+    def rot_euler(self, axis=AxisSequence.ZYX) -> Tuple[float, float, float]:
+        """回転角をオイラー角として取得 (ver2.4〜)
+
+        :arg axis: オイラー角の回転順序
+        """
+        if axis == AxisSequence.ZYX:
+            if self._az is None or self._ay is None or self._ax is None:
+                (self._az, self._ay, self._ax) = (
+                    webcface.transform_impl.matrix_to_euler(self._rmat, axis)
+                )
+            return (self._az, self._ay, self._ax)
+        else:
+            return webcface.transform_impl.matrix_to_euler(self.rot_matrix(), axis)
+
+    def rot_matrix(
+        self,
+    ) -> Tuple[
+        Tuple[float, float, float],
+        Tuple[float, float, float],
+        Tuple[float, float, float],
+    ]:
+        """回転角を回転行列として取得 (ver2.4〜)"""
+        if self._rmat is None:
+            self._rmat = webcface.transform_impl.euler_to_matrix(
+                (self._az, self._ay, self._ax), AxisSequence.ZYX
+            )
+        return self._rmat
+
+    def rot_quat(self) -> Tuple[float, float, float, float]:
+        """回転角をクォータニオン(w, x, y, z)として取得 (ver2.4〜)"""
+        return webcface.transform_impl.matrix_to_quaternion(self.rot_matrix())
+
+    def rot_axis_angle(self) -> Tuple[Tuple[float, float, float], float]:
+        """回転角を軸と角度((x, y, z), angle)として取得 (ver2.4〜)"""
+        return webcface.transform_impl.matrix_to_axis_angle(self.rot_matrix())
 
     @staticmethod
-    def from_euler(angles: Sequence[SupportsFloat], axis: AxisSequence) -> "Rotation":
+    def from_euler(
+        angles: Sequence[SupportsFloat], axis=AxisSequence.ZYX
+    ) -> "Rotation":
         """オイラー角からRotationを作成
 
         :arg angles: オイラー角
@@ -208,44 +248,46 @@ class Rotation:
         ), "Rotation matrix must be 3x3, got " + str(rmat)
         return Rotation(None, None, None, rmat)
 
+    @staticmethod
+    def from_quat(quat: Sequence[SupportsFloat]) -> "Rotation":
+        """クォータニオンからRotationを作成
 
-class Transform(Point):
+        :arg quat: クォータニオン (w, x, y, z)
+        """
+        assert len(quat) == 4, "Quaternion must be 4 dimensional, got " + str(quat)
+        return Rotation.from_matrix(webcface.transform_impl.quaternion_to_matrix(quat))
+
+    @staticmethod
+    def from_axis_angle(
+        axis: Sequence[SupportsFloat], angle: SupportsFloat
+    ) -> "Rotation":
+        """軸と角度からRotationを作成
+
+        :arg axis: 軸
+        :arg angle: 角度
+        """
+        assert len(axis) == 3, "Axis must be 3 dimensional, got " + str(axis)
+        return Rotation.from_matrix(
+            webcface.transform_impl.axis_angle_to_matrix(axis, float(angle))
+        )
+
+
+class Transform(Point, Rotation):
     """3次元の座標と回転
 
     内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。
     """
 
-    _rot: Tuple[float, float, float]
-
     def __init__(
         self,
-        pos: ConvertibleToPoint,
-        rot: ConvertibleToRotation,
+        pos: "Union[Point, Sequence[SupportsFloat]]",
+        rot: "Rotation",
     ) -> None:
-        """引数についてはset_pos(), set_rot()を参照"""
-        super().__init__(pos)
-        self.set_rot(rot)
-
-
-    @rot.setter
-    def rot(self, new_rot: ConvertibleToRotation) -> None:
-        """回転角をセット
-
-        mypyが型に関してエラーを出す場合はset_rot()を使うと良いかも
-        """
-        self.set_rot(new_rot)
-
-    def set_rot(self, new_rot: ConvertibleToRotation) -> None:
-        """回転角をセット
-
-        :arg new_rot: 座標 2次元の場合 :code:`float`, 3次元の場合 :code:`[float, float, float]` など
-        """
-        if convertible_to_float(new_rot):
-            self._rot = (float(new_rot), 0.0, 0.0)
-        elif len(new_rot) == 3:
-            self._rot = (float(new_rot[0]), float(new_rot[1]), float(new_rot[2]))
+        if isinstance(pos, Point):
+            Point.__init__(self, pos.pos)
         else:
-            raise ValueError(f"invalid pos format (len = {len(new_rot)})")
+            Point.__init__(self, pos)
+        Rotation.__init__(self, rot._az, rot._ay, rot._ax, rot._rmat)
 
     def __eq__(self, other: object) -> bool:
         """Transformと比較した場合座標と回転が一致すればTrue"""
@@ -255,5 +297,5 @@ class Transform(Point):
             return False
 
 
-def identity() -> Transform:
-    return Transform([0, 0, 0], [0, 0, 0])
+def identity() -> "Transform":
+    return Transform([0, 0, 0], Rotation.from_euler([0, 0, 0]))
