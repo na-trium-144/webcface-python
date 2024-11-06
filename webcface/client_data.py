@@ -8,17 +8,20 @@ import webcface.view_base
 import webcface.log_handler
 import webcface.canvas2d_base
 import webcface.canvas3d_base
+import webcface.image_frame
 
 T = TypeVar("T")
+R = TypeVar("R")
 
 
-class SyncDataStore2(Generic[T]):
+class SyncDataStore2(Generic[T, R]):
     self_member_name: str
     data_send: Dict[str, T]
     data_send_prev: Dict[str, T]
     data_recv: Dict[str, Dict[str, T]]
     entry: Dict[str, List[str]]
     req: Dict[str, Dict[str, int]]
+    req_info: Dict[str, Dict[str, R]]
     lock: threading.RLock
     should_send: Callable
 
@@ -29,6 +32,7 @@ class SyncDataStore2(Generic[T]):
         self.data_recv = {}
         self.entry = {}
         self.req = {}
+        self.req_info = {}
         self.lock = threading.RLock()
         self.should_send = should_send or SyncDataStore2.should_send_always
 
@@ -65,7 +69,7 @@ class SyncDataStore2(Generic[T]):
                 self.data_recv[member] = {}
             self.data_recv[member][field] = data
 
-    def add_req(self, member: str, field: str) -> int:
+    def add_req(self, member: str, field: str, req_data: Optional[R] = None) -> int:
         with self.lock:
             if not self.is_self(member) and self.req.get(member, {}).get(field, 0) == 0:
                 max_req = 0
@@ -75,8 +79,25 @@ class SyncDataStore2(Generic[T]):
                 if member not in self.req:
                     self.req[member] = {}
                 self.req[member][field] = new_req
+                if req_data is not None:
+                    if member not in self.req_info:
+                        self.req_info[member] = {}
+                    self.req_info[member][field] = req_data
                 return new_req
+            elif (
+                not self.is_self(member)
+                and req_data is not None
+                and self.req_info.get(member, {}).get(field) != req_data
+            ):
+                if member not in self.req_info:
+                    self.req_info[member] = {}
+                self.req_info[member][field] = req_data
+                return self.req[member][field]
             return 0
+
+    def get_req_info(self, member: str, field: str) -> Optional[R]:
+        with self.lock:
+            return self.req_info.get(member, {}).get(field)
 
     def get_recv(self, member: str, field: str) -> Optional[T]:
         with self.lock:
@@ -252,13 +273,18 @@ class FuncResultStore:
 
 class ClientData:
     self_member_name: str
-    value_store: SyncDataStore2[List[float]]
-    text_store: SyncDataStore2[Union[float, bool, str]]
-    func_store: "SyncDataStore2[webcface.func_info.FuncInfo]"
-    view_store: "SyncDataStore2[List[webcface.view_base.ViewComponentBase]]"
-    canvas2d_store: "SyncDataStore2[webcface.canvas2d_base.Canvas2DData]"
-    canvas3d_store: "SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase]]"
-    log_store: "SyncDataStore2[webcface.log_handler.LogData]"
+    value_store: SyncDataStore2[List[float], None]
+    text_store: SyncDataStore2[Union[float, bool, str], None]
+    image_store: (
+        "SyncDataStore2[webcface.image_frame.ImageFrame, webcface.image_frame.ImageReq]"
+    )
+    func_store: "SyncDataStore2[webcface.func_info.FuncInfo, None]"
+    view_store: "SyncDataStore2[List[webcface.view_base.ViewComponentBase], None]"
+    canvas2d_store: "SyncDataStore2[webcface.canvas2d_base.Canvas2DData, None]"
+    canvas3d_store: (
+        "SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase], None]"
+    )
+    log_store: "SyncDataStore2[webcface.log_handler.LogData, None]"
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
     func_listener_handlers: "Dict[str, List[webcface.func_info.CallHandle]]"
@@ -286,6 +312,7 @@ class ClientData:
     on_ping: Dict[str, Callable]
     on_value_entry: Dict[str, Callable]
     on_text_entry: Dict[str, Callable]
+    on_image_entry: Dict[str, Callable]
     on_view_entry: Dict[str, Callable]
     on_func_entry: Dict[str, Callable]
     on_canvas2d_entry: Dict[str, Callable]
@@ -294,6 +321,7 @@ class ClientData:
     on_sync: Dict[str, Callable]
     on_value_change: Dict[str, Dict[str, Callable]]
     on_text_change: Dict[str, Dict[str, Callable]]
+    on_image_change: Dict[str, Dict[str, Callable]]
     on_view_change: Dict[str, Dict[str, Callable]]
     on_canvas2d_change: Dict[str, Dict[str, Callable]]
     on_canvas3d_change: Dict[str, Dict[str, Callable]]
@@ -303,23 +331,28 @@ class ClientData:
         self, name: str, logger_internal: logging.Logger, auto_reconnect: bool
     ) -> None:
         self.self_member_name = name
-        self.value_store = SyncDataStore2[List[float]](
+        self.value_store = SyncDataStore2[List[float], None](
             name, SyncDataStore2.should_send_on_change
         )
-        self.text_store = SyncDataStore2[Union[float, bool, str]](
+        self.text_store = SyncDataStore2[Union[float, bool, str], None](
             name, SyncDataStore2.should_send_on_change
         )
-        self.func_store = SyncDataStore2[webcface.func_info.FuncInfo](
+        self.image_store = SyncDataStore2[
+            webcface.image_frame.ImageFrame, webcface.image_frame.ImageReq
+        ](name)
+        self.func_store = SyncDataStore2[webcface.func_info.FuncInfo, None](
             name, SyncDataStore2.should_not_send_twice
         )
-        self.view_store = SyncDataStore2[List[webcface.view_base.ViewComponentBase]](
+        self.view_store = SyncDataStore2[
+            List[webcface.view_base.ViewComponentBase], None
+        ](name)
+        self.canvas2d_store = SyncDataStore2[webcface.canvas2d_base.Canvas2DData, None](
             name
         )
-        self.canvas2d_store = SyncDataStore2[webcface.canvas2d_base.Canvas2DData](name)
         self.canvas3d_store = SyncDataStore2[
-            List[webcface.canvas3d_base.Canvas3DComponentBase]
+            List[webcface.canvas3d_base.Canvas3DComponentBase], None
         ](name)
-        self.log_store = SyncDataStore2[webcface.log_handler.LogData](name)
+        self.log_store = SyncDataStore2[webcface.log_handler.LogData, None](name)
         self.sync_time_store = SyncDataStore1[datetime.datetime](name)
         self.func_result_store = FuncResultStore()
         self.func_listener_handlers = {}
@@ -348,6 +381,7 @@ class ClientData:
         self.on_value_entry = {}
         self.on_view_entry = {}
         self.on_text_entry = {}
+        self.on_image_entry = {}
         self.on_func_entry = {}
         self.on_canvas2d_entry = {}
         self.on_canvas3d_entry = {}
@@ -355,6 +389,7 @@ class ClientData:
         self.on_sync = {}
         self.on_value_change = {}
         self.on_text_change = {}
+        self.on_image_change = {}
         self.on_view_change = {}
         self.on_canvas2d_change = {}
         self.on_canvas3d_change = {}
