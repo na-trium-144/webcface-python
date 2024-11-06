@@ -19,6 +19,8 @@ Submodules
    webcface.func_info
    webcface.func_listener
    webcface.geometries
+   webcface.image
+   webcface.image_frame
    webcface.log
    webcface.log_handler
    webcface.member

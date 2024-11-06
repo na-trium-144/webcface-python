@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.member &mdash; WebCFace-Python 2.3.0  documentation</title>
+  <title>webcface.member &mdash; WebCFace-Python 2.4.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.3.0
+            WebCFace-Python 2.4.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.3.0</a>
+          <a href="../../index.html">WebCFace-Python 2.4.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -78,6 +78,7 @@
 <span class="kn">import</span> <span class="nn">webcface.func</span>
 <span class="kn">import</span> <span class="nn">webcface.func_listener</span>
 <span class="kn">import</span> <span class="nn">webcface.log</span>
+<span class="kn">import</span> <span class="nn">webcface.image</span>
 <span class="kn">import</span> <span class="nn">webcface.message</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas2d</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas3d</span>
@@ -120,6 +121,13 @@
     <span class="k">def</span> <span class="nf">variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.text.Variant&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Variantオブジェクトを生成 (ver2.0〜)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Member.image">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.image">[docs]</a>
+    <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.image.Image&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Imageオブジェクトを生成&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Member.view">
@@ -224,6 +232,13 @@
         <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">text</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
 
 
+<div class="viewcode-block" id="Member.image_entries">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.image_entries">[docs]</a>
+    <span class="k">def</span> <span class="nf">image_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.image.Image]&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このメンバーのImageをすべて取得する。&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">map</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">image</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">))</span></div>
+
+
 <div class="viewcode-block" id="Member.views">
 <a class="viewcode-back" href="../../webcface.member.html#webcface.Member.views">[docs]</a>
     <span class="k">def</span> <span class="nf">views</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.view.View]&quot;</span><span class="p">:</span>
@@ -302,6 +317,17 @@
 <span class="sd">        コールバックの引数にはTextオブジェクトが渡される。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_text_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="k">return</span> <span class="n">func</span></div>
+
+
+<div class="viewcode-block" id="Member.on_image_entry">
+<a class="viewcode-back" href="../../webcface.member.html#webcface.Member.on_image_entry">[docs]</a>
+    <span class="k">def</span> <span class="nf">on_image_entry</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Textが追加されたときのイベント</span>
+
+<span class="sd">        コールバックの引数にはTextオブジェクトが渡される。</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_image_entry</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">return</span> <span class="n">func</span></div>
 
 

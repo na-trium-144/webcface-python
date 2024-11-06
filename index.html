@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Welcome to webcface’s documentation! &mdash; WebCFace-Python 2.3.0  documentation</title>
+  <title>Welcome to webcface’s documentation! &mdash; WebCFace-Python 2.4.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -31,7 +31,7 @@
           
           
           <a href="#" class="icon icon-home">
-            WebCFace-Python 2.3.0
+            WebCFace-Python 2.4.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -52,7 +52,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">WebCFace-Python 2.3.0</a>
+          <a href="#">WebCFace-Python 2.4.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -160,6 +160,17 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.geometries.html#webcface.geometries.sphere"><code class="docutils literal notranslate"><span class="pre">sphere()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html">webcface.image module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="webcface.image.html#webcface.image.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html">webcface.image_frame module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode"><code class="docutils literal notranslate"><span class="pre">ImageColorMode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageCompressMode"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame"><code class="docutils literal notranslate"><span class="pre">ImageFrame</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq"><code class="docutils literal notranslate"><span class="pre">ImageReq</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="webcface.log.html#webcface.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
 </ul>
@@ -188,6 +199,10 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DReq"><code class="docutils literal notranslate"><span class="pre">Canvas3DReq</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.FuncInfo"><code class="docutils literal notranslate"><span class="pre">FuncInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.ImageEntry"><code class="docutils literal notranslate"><span class="pre">ImageEntry</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq"><code class="docutils literal notranslate"><span class="pre">ImageReq</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes"><code class="docutils literal notranslate"><span class="pre">ImageRes</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.LogEntry"><code class="docutils literal notranslate"><span class="pre">LogEntry</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.message.html#webcface.message.LogReq"><code class="docutils literal notranslate"><span class="pre">LogReq</span></code></a></li>
@@ -342,6 +357,45 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.GeometryType.SPHERE"><code class="docutils literal notranslate"><span class="pre">GeometryType.SPHERE</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.html#webcface.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.child"><code class="docutils literal notranslate"><span class="pre">Image.child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.exists"><code class="docutils literal notranslate"><span class="pre">Image.exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.get"><code class="docutils literal notranslate"><span class="pre">Image.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.member"><code class="docutils literal notranslate"><span class="pre">Image.member</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.name"><code class="docutils literal notranslate"><span class="pre">Image.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.on_change"><code class="docutils literal notranslate"><span class="pre">Image.on_change()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.request"><code class="docutils literal notranslate"><span class="pre">Image.request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.set"><code class="docutils literal notranslate"><span class="pre">Image.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Image.try_get"><code class="docutils literal notranslate"><span class="pre">Image.try_get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.html#webcface.ImageColorMode"><code class="docutils literal notranslate"><span class="pre">ImageColorMode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageColorMode.BGR"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.BGR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageColorMode.BGRA"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.BGRA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageColorMode.GRAY"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.GRAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageColorMode.RGB"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.RGB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageColorMode.RGBA"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.RGBA</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.html#webcface.ImageCompressMode"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageCompressMode.JPEG"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.JPEG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageCompressMode.PNG"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.PNG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageCompressMode.RAW"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.RAW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageCompressMode.WEBP"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.WEBP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.html#webcface.ImageFrame"><code class="docutils literal notranslate"><span class="pre">ImageFrame</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.channels"><code class="docutils literal notranslate"><span class="pre">ImageFrame.channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.color_mode"><code class="docutils literal notranslate"><span class="pre">ImageFrame.color_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.compress_mode"><code class="docutils literal notranslate"><span class="pre">ImageFrame.compress_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.data"><code class="docutils literal notranslate"><span class="pre">ImageFrame.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.empty"><code class="docutils literal notranslate"><span class="pre">ImageFrame.empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.from_numpy"><code class="docutils literal notranslate"><span class="pre">ImageFrame.from_numpy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.height"><code class="docutils literal notranslate"><span class="pre">ImageFrame.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.numpy"><code class="docutils literal notranslate"><span class="pre">ImageFrame.numpy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.ImageFrame.width"><code class="docutils literal notranslate"><span class="pre">ImageFrame.width</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.html#webcface.InputRef"><code class="docutils literal notranslate"><span class="pre">InputRef</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.InputRef.get"><code class="docutils literal notranslate"><span class="pre">InputRef.get()</span></code></a></li>
 </ul>
@@ -370,6 +424,8 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.func_entries"><code class="docutils literal notranslate"><span class="pre">Member.func_entries()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.func_listener"><code class="docutils literal notranslate"><span class="pre">Member.func_listener()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.funcs"><code class="docutils literal notranslate"><span class="pre">Member.funcs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.image"><code class="docutils literal notranslate"><span class="pre">Member.image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.image_entries"><code class="docutils literal notranslate"><span class="pre">Member.image_entries()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.lib_name"><code class="docutils literal notranslate"><span class="pre">Member.lib_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.lib_version"><code class="docutils literal notranslate"><span class="pre">Member.lib_version</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.log"><code class="docutils literal notranslate"><span class="pre">Member.log()</span></code></a></li>
@@ -378,6 +434,7 @@
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_canvas2d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas2d_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_canvas3d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas3d_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_func_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_func_entry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_image_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_image_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_log_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_log_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_ping"><code class="docutils literal notranslate"><span class="pre">Member.on_ping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="webcface.html#webcface.Member.on_sync"><code class="docutils literal notranslate"><span class="pre">Member.on_sync()</span></code></a></li>

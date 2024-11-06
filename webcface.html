@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface package &mdash; WebCFace-Python 2.3.0  documentation</title>
+  <title>webcface package &mdash; WebCFace-Python 2.4.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 2.3.0
+            WebCFace-Python 2.4.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -58,6 +58,8 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_listener.html">webcface.func_listener module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.geometries.html">webcface.geometries module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html">webcface.image module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html">webcface.image_frame module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html">webcface.log module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
@@ -149,6 +151,45 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.GeometryType.SPHERE"><code class="docutils literal notranslate"><span class="pre">GeometryType.SPHERE</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#webcface.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.child"><code class="docutils literal notranslate"><span class="pre">Image.child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.exists"><code class="docutils literal notranslate"><span class="pre">Image.exists()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.get"><code class="docutils literal notranslate"><span class="pre">Image.get()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.member"><code class="docutils literal notranslate"><span class="pre">Image.member</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.name"><code class="docutils literal notranslate"><span class="pre">Image.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.on_change"><code class="docutils literal notranslate"><span class="pre">Image.on_change()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.request"><code class="docutils literal notranslate"><span class="pre">Image.request()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.set"><code class="docutils literal notranslate"><span class="pre">Image.set()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Image.try_get"><code class="docutils literal notranslate"><span class="pre">Image.try_get()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#webcface.ImageColorMode"><code class="docutils literal notranslate"><span class="pre">ImageColorMode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageColorMode.BGR"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.BGR</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageColorMode.BGRA"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.BGRA</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageColorMode.GRAY"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.GRAY</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageColorMode.RGB"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.RGB</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageColorMode.RGBA"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.RGBA</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#webcface.ImageCompressMode"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageCompressMode.JPEG"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.JPEG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageCompressMode.PNG"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.PNG</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageCompressMode.RAW"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.RAW</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageCompressMode.WEBP"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.WEBP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="#webcface.ImageFrame"><code class="docutils literal notranslate"><span class="pre">ImageFrame</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.channels"><code class="docutils literal notranslate"><span class="pre">ImageFrame.channels</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.color_mode"><code class="docutils literal notranslate"><span class="pre">ImageFrame.color_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.compress_mode"><code class="docutils literal notranslate"><span class="pre">ImageFrame.compress_mode</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.data"><code class="docutils literal notranslate"><span class="pre">ImageFrame.data</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.empty"><code class="docutils literal notranslate"><span class="pre">ImageFrame.empty()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.from_numpy"><code class="docutils literal notranslate"><span class="pre">ImageFrame.from_numpy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.height"><code class="docutils literal notranslate"><span class="pre">ImageFrame.height</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.numpy"><code class="docutils literal notranslate"><span class="pre">ImageFrame.numpy()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.ImageFrame.width"><code class="docutils literal notranslate"><span class="pre">ImageFrame.width</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#webcface.InputRef"><code class="docutils literal notranslate"><span class="pre">InputRef</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.InputRef.get"><code class="docutils literal notranslate"><span class="pre">InputRef.get()</span></code></a></li>
 </ul>
@@ -177,6 +218,8 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.func_entries"><code class="docutils literal notranslate"><span class="pre">Member.func_entries()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.func_listener"><code class="docutils literal notranslate"><span class="pre">Member.func_listener()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.funcs"><code class="docutils literal notranslate"><span class="pre">Member.funcs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Member.image"><code class="docutils literal notranslate"><span class="pre">Member.image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Member.image_entries"><code class="docutils literal notranslate"><span class="pre">Member.image_entries()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.lib_name"><code class="docutils literal notranslate"><span class="pre">Member.lib_name</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.lib_version"><code class="docutils literal notranslate"><span class="pre">Member.lib_version</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.log"><code class="docutils literal notranslate"><span class="pre">Member.log()</span></code></a></li>
@@ -185,6 +228,7 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_canvas2d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas2d_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_canvas3d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas3d_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_func_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_func_entry()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_image_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_image_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_log_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_log_entry()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_ping"><code class="docutils literal notranslate"><span class="pre">Member.on_ping()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Member.on_sync"><code class="docutils literal notranslate"><span class="pre">Member.on_sync()</span></code></a></li>
@@ -335,7 +379,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 2.3.0</a>
+          <a href="index.html">WebCFace-Python 2.4.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -467,6 +511,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.get_member_id_from_name"><code class="docutils literal notranslate"><span class="pre">ClientData.get_member_id_from_name()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.get_member_name_from_id"><code class="docutils literal notranslate"><span class="pre">ClientData.get_member_name_from_id()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.has_msg"><code class="docutils literal notranslate"><span class="pre">ClientData.has_msg()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.image_store"><code class="docutils literal notranslate"><span class="pre">ClientData.image_store</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.is_self"><code class="docutils literal notranslate"><span class="pre">ClientData.is_self()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.log_store"><code class="docutils literal notranslate"><span class="pre">ClientData.log_store</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.logger_internal"><code class="docutils literal notranslate"><span class="pre">ClientData.logger_internal</span></code></a></li>
@@ -479,6 +524,8 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_canvas3d_change"><code class="docutils literal notranslate"><span class="pre">ClientData.on_canvas3d_change</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_canvas3d_entry"><code class="docutils literal notranslate"><span class="pre">ClientData.on_canvas3d_entry</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_func_entry"><code class="docutils literal notranslate"><span class="pre">ClientData.on_func_entry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_image_change"><code class="docutils literal notranslate"><span class="pre">ClientData.on_image_change</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_image_entry"><code class="docutils literal notranslate"><span class="pre">ClientData.on_image_entry</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_log_change"><code class="docutils literal notranslate"><span class="pre">ClientData.on_log_change</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_log_entry"><code class="docutils literal notranslate"><span class="pre">ClientData.on_log_entry</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData.on_member_entry"><code class="docutils literal notranslate"><span class="pre">ClientData.on_member_entry</span></code></a></li>
@@ -549,10 +596,12 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_members"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_members()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_recv"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_recv()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_req"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_req()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_req_info"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_req_info()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_send_prev"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_send_prev()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.is_self"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.is_self()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.lock"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.lock</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.req"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.req</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.req_info"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.req_info</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.self_member_name"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.self_member_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.set_entry"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.set_entry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.set_recv"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.set_recv()</span></code></a></li>
@@ -737,6 +786,60 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.geometries.html#webcface.geometries.sphere"><code class="docutils literal notranslate"><span class="pre">sphere()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l1"><a class="reference internal" href="webcface.image.html">webcface.image module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.image.html#webcface.image.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.child"><code class="docutils literal notranslate"><span class="pre">Image.child()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.exists"><code class="docutils literal notranslate"><span class="pre">Image.exists()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.get"><code class="docutils literal notranslate"><span class="pre">Image.get()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.member"><code class="docutils literal notranslate"><span class="pre">Image.member</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.name"><code class="docutils literal notranslate"><span class="pre">Image.name</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.on_change"><code class="docutils literal notranslate"><span class="pre">Image.on_change()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.request"><code class="docutils literal notranslate"><span class="pre">Image.request()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.set"><code class="docutils literal notranslate"><span class="pre">Image.set()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image.html#webcface.image.Image.try_get"><code class="docutils literal notranslate"><span class="pre">Image.try_get()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="webcface.image_frame.html">webcface.image_frame module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode"><code class="docutils literal notranslate"><span class="pre">ImageColorMode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode.BGR"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.BGR</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode.BGRA"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.BGRA</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode.GRAY"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.GRAY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode.RGB"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.RGB</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageColorMode.RGBA"><code class="docutils literal notranslate"><span class="pre">ImageColorMode.RGBA</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageCompressMode"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageCompressMode.JPEG"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.JPEG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageCompressMode.PNG"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.PNG</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageCompressMode.RAW"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.RAW</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageCompressMode.WEBP"><code class="docutils literal notranslate"><span class="pre">ImageCompressMode.WEBP</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame"><code class="docutils literal notranslate"><span class="pre">ImageFrame</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.channels"><code class="docutils literal notranslate"><span class="pre">ImageFrame.channels</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.color_mode"><code class="docutils literal notranslate"><span class="pre">ImageFrame.color_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.compress_mode"><code class="docutils literal notranslate"><span class="pre">ImageFrame.compress_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.data"><code class="docutils literal notranslate"><span class="pre">ImageFrame.data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.empty"><code class="docutils literal notranslate"><span class="pre">ImageFrame.empty()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.from_numpy"><code class="docutils literal notranslate"><span class="pre">ImageFrame.from_numpy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.height"><code class="docutils literal notranslate"><span class="pre">ImageFrame.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.numpy"><code class="docutils literal notranslate"><span class="pre">ImageFrame.numpy()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame.width"><code class="docutils literal notranslate"><span class="pre">ImageFrame.width</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq"><code class="docutils literal notranslate"><span class="pre">ImageReq</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq.color_mode"><code class="docutils literal notranslate"><span class="pre">ImageReq.color_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq.compress_mode"><code class="docutils literal notranslate"><span class="pre">ImageReq.compress_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq.frame_rate"><code class="docutils literal notranslate"><span class="pre">ImageReq.frame_rate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq.height"><code class="docutils literal notranslate"><span class="pre">ImageReq.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq.quality"><code class="docutils literal notranslate"><span class="pre">ImageReq.quality</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageReq.width"><code class="docutils literal notranslate"><span class="pre">ImageReq.width</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.log.html">webcface.log module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="webcface.log.html#webcface.log.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.log.html#webcface.log.Log.append"><code class="docutils literal notranslate"><span class="pre">Log.append()</span></code></a></li>
@@ -791,6 +894,8 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.func_entries"><code class="docutils literal notranslate"><span class="pre">Member.func_entries()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.func_listener"><code class="docutils literal notranslate"><span class="pre">Member.func_listener()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.funcs"><code class="docutils literal notranslate"><span class="pre">Member.funcs()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.image"><code class="docutils literal notranslate"><span class="pre">Member.image()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.image_entries"><code class="docutils literal notranslate"><span class="pre">Member.image_entries()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.lib_name"><code class="docutils literal notranslate"><span class="pre">Member.lib_name</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.lib_version"><code class="docutils literal notranslate"><span class="pre">Member.lib_version</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.log"><code class="docutils literal notranslate"><span class="pre">Member.log()</span></code></a></li>
@@ -799,6 +904,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_canvas2d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas2d_entry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_canvas3d_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_canvas3d_entry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_func_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_func_entry()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_image_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_image_entry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_log_entry"><code class="docutils literal notranslate"><span class="pre">Member.on_log_entry()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_ping"><code class="docutils literal notranslate"><span class="pre">Member.on_ping()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html#webcface.member.Member.on_sync"><code class="docutils literal notranslate"><span class="pre">Member.on_sync()</span></code></a></li>
@@ -926,6 +1032,50 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.FuncInfo.member_id"><code class="docutils literal notranslate"><span class="pre">FuncInfo.member_id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.FuncInfo.new"><code class="docutils literal notranslate"><span class="pre">FuncInfo.new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.FuncInfo.new_full"><code class="docutils literal notranslate"><span class="pre">FuncInfo.new_full()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.Image"><code class="docutils literal notranslate"><span class="pre">Image</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.cmp_mode"><code class="docutils literal notranslate"><span class="pre">Image.cmp_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.color_mode"><code class="docutils literal notranslate"><span class="pre">Image.color_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.data"><code class="docutils literal notranslate"><span class="pre">Image.data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.field"><code class="docutils literal notranslate"><span class="pre">Image.field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.height"><code class="docutils literal notranslate"><span class="pre">Image.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.kind_def"><code class="docutils literal notranslate"><span class="pre">Image.kind_def</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.new"><code class="docutils literal notranslate"><span class="pre">Image.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Image.width"><code class="docutils literal notranslate"><span class="pre">Image.width</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.ImageEntry"><code class="docutils literal notranslate"><span class="pre">ImageEntry</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageEntry.field"><code class="docutils literal notranslate"><span class="pre">ImageEntry.field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageEntry.kind_def"><code class="docutils literal notranslate"><span class="pre">ImageEntry.kind_def</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageEntry.member_id"><code class="docutils literal notranslate"><span class="pre">ImageEntry.member_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageEntry.new"><code class="docutils literal notranslate"><span class="pre">ImageEntry.new()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq"><code class="docutils literal notranslate"><span class="pre">ImageReq</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.cmp_mode"><code class="docutils literal notranslate"><span class="pre">ImageReq.cmp_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.color_mode"><code class="docutils literal notranslate"><span class="pre">ImageReq.color_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.field"><code class="docutils literal notranslate"><span class="pre">ImageReq.field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.frame_rate"><code class="docutils literal notranslate"><span class="pre">ImageReq.frame_rate</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.height"><code class="docutils literal notranslate"><span class="pre">ImageReq.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.kind_def"><code class="docutils literal notranslate"><span class="pre">ImageReq.kind_def</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.member"><code class="docutils literal notranslate"><span class="pre">ImageReq.member</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.new"><code class="docutils literal notranslate"><span class="pre">ImageReq.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.quality"><code class="docutils literal notranslate"><span class="pre">ImageReq.quality</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.req_id"><code class="docutils literal notranslate"><span class="pre">ImageReq.req_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageReq.width"><code class="docutils literal notranslate"><span class="pre">ImageReq.width</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes"><code class="docutils literal notranslate"><span class="pre">ImageRes</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.cmp_mode"><code class="docutils literal notranslate"><span class="pre">ImageRes.cmp_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.color_mode"><code class="docutils literal notranslate"><span class="pre">ImageRes.color_mode</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.data"><code class="docutils literal notranslate"><span class="pre">ImageRes.data</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.height"><code class="docutils literal notranslate"><span class="pre">ImageRes.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.kind_def"><code class="docutils literal notranslate"><span class="pre">ImageRes.kind_def</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.new"><code class="docutils literal notranslate"><span class="pre">ImageRes.new()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.req_id"><code class="docutils literal notranslate"><span class="pre">ImageRes.req_id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.sub_field"><code class="docutils literal notranslate"><span class="pre">ImageRes.sub_field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ImageRes.width"><code class="docutils literal notranslate"><span class="pre">ImageRes.width</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.Log"><code class="docutils literal notranslate"><span class="pre">Log</span></code></a><ul>
@@ -1713,6 +1863,230 @@ timeout=0 または負の値なら再試行せず即座にreturnする。
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.Image">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/image.html#Image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.child">
+<span class="sig-name descname"><span class="pre">child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image.html#webcface.image.Image" title="webcface.image.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.child" title="Link to this definition"></a></dt>
+<dd><p>子フィールドを返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns<span class="colon">:</span></dt>
+<dd class="field-odd"><p>「(thisのフィールド名).(子フィールド名)」をフィールド名とするImage</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.exists">
+<span class="sig-name descname"><span class="pre">exists</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.exists"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.exists" title="Link to this definition"></a></dt>
+<dd><p>このフィールドにデータが存在すればtrue</p>
+<p>try_get() などとは違って、実際のデータを受信しない。
+リクエストもしない。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.get">
+<span class="sig-name descname"><span class="pre">get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame" title="webcface.image_frame.ImageFrame"><span class="pre">ImageFrame</span></a></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.get" title="Link to this definition"></a></dt>
+<dd><p>画像を返す、まだリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.Image.member">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a></em><a class="headerlink" href="#webcface.Image.member" title="Link to this definition"></a></dt>
+<dd><p>Memberを返す</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.Image.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.Image.name" title="Link to this definition"></a></dt>
+<dd><p>field名を返す</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.on_change">
+<span class="sig-name descname"><span class="pre">on_change</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.on_change"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.on_change" title="Link to this definition"></a></dt>
+<dd><p>値が変化したときのイベント</p>
+<p>コールバックの引数にはImageオブジェクトが渡される。</p>
+<p>まだ値をリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.request">
+<span class="sig-name descname"><span class="pre">request</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">quality</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">frame_rate</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.request"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.request" title="Link to this definition"></a></dt>
+<dd><p>画像の受信をリクエストする</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>width</strong> – 画像の幅</p></li>
+<li><p><strong>height</strong> – 画像の高さ
+width, height のどちらかのみがNoneの場合縦横比を保ってリサイズし、
+どちらもNoneの場合は元画像のサイズになる</p></li>
+<li><p><strong>color_mode</strong> – 画像の色フォーマット (Noneの場合元画像のフォーマット)</p></li>
+<li><p><strong>cmp_mode</strong> – 圧縮モード</p></li>
+<li><p><strong>quality</strong> – 圧縮のパラメータ
+* jpeg → 0〜100 (大きいほうが高品質)
+* png → 0〜9 (大きいほうが圧縮後のサイズが小さい)
+* webp → 1〜100 (大きいほうが高品質)</p></li>
+<li><p><strong>frame_rate</strong> – 画像を受信する頻度 (指定しない場合元画像が更新されるたびに受信する)</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.set">
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame" title="webcface.image_frame.ImageFrame"><span class="pre">ImageFrame</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image.html#webcface.image.Image" title="webcface.image.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.set" title="Link to this definition"></a></dt>
+<dd><p>画像をセットする</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Image.try_get">
+<span class="sig-name descname"><span class="pre">try_get</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame" title="webcface.image_frame.ImageFrame"><span class="pre">ImageFrame</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/image.html#Image.try_get"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Image.try_get" title="Link to this definition"></a></dt>
+<dd><p>画像を返す、まだリクエストされてなければ自動でリクエストされる</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.ImageColorMode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ImageColorMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/image_frame.html#ImageColorMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ImageColorMode" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageColorMode.BGR">
+<span class="sig-name descname"><span class="pre">BGR</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#webcface.ImageColorMode.BGR" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageColorMode.BGRA">
+<span class="sig-name descname"><span class="pre">BGRA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#webcface.ImageColorMode.BGRA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageColorMode.GRAY">
+<span class="sig-name descname"><span class="pre">GRAY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#webcface.ImageColorMode.GRAY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageColorMode.RGB">
+<span class="sig-name descname"><span class="pre">RGB</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#webcface.ImageColorMode.RGB" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageColorMode.RGBA">
+<span class="sig-name descname"><span class="pre">RGBA</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#webcface.ImageColorMode.RGBA" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.ImageCompressMode">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ImageCompressMode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/image_frame.html#ImageCompressMode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ImageCompressMode" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>An enumeration.</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageCompressMode.JPEG">
+<span class="sig-name descname"><span class="pre">JPEG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#webcface.ImageCompressMode.JPEG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageCompressMode.PNG">
+<span class="sig-name descname"><span class="pre">PNG</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#webcface.ImageCompressMode.PNG" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageCompressMode.RAW">
+<span class="sig-name descname"><span class="pre">RAW</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#webcface.ImageCompressMode.RAW" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.ImageCompressMode.WEBP">
+<span class="sig-name descname"><span class="pre">WEBP</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#webcface.ImageCompressMode.WEBP" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.ImageFrame">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ImageFrame</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bytes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">compress_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/image_frame.html#ImageFrame"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ImageFrame" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>画像データ (ver2.4〜)</p>
+<ul class="simple">
+<li><p>8bitのグレースケール, BGR, BGRAフォーマットのみを扱う</p></li>
+<li><p>画像受信時にはjpegやpngなどにエンコードされたデータが入ることもある</p></li>
+</ul>
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.ImageFrame.channels">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">channels</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.ImageFrame.channels" title="Link to this definition"></a></dt>
+<dd><p>1ピクセルあたりのデータサイズ(byte数)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.ImageFrame.color_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">color_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.ImageFrame.color_mode" title="Link to this definition"></a></dt>
+<dd><p>色の並び順</p>
+<p>compress_modeがRAWでない場合意味をなさない。</p>
+<p>ImageColorMode のenumを参照</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.ImageFrame.compress_mode">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">compress_mode</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.ImageFrame.compress_mode" title="Link to this definition"></a></dt>
+<dd><p>画像の圧縮モード</p>
+<p>ImageCompressMode のenumを参照</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.ImageFrame.data">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">data</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">bytes</span></em><a class="headerlink" href="#webcface.ImageFrame.data" title="Link to this definition"></a></dt>
+<dd><p>画像データ</p>
+<p>compress_modeがRAWの場合、height * width * channels
+要素の画像データ。 それ以外の場合、圧縮された画像のデータ</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.ImageFrame.empty">
+<span class="sig-name descname"><span class="pre">empty</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/image_frame.html#ImageFrame.empty"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ImageFrame.empty" title="Link to this definition"></a></dt>
+<dd><p>画像が空かどうかを返す</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.ImageFrame.from_numpy">
+<em class="property"><span class="pre">static</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">from_numpy</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">img</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ndarray</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">color_mode</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image_frame.html#webcface.image_frame.ImageFrame" title="webcface.image_frame.ImageFrame"><span class="pre">ImageFrame</span></a></span></span><a class="reference internal" href="_modules/webcface/image_frame.html#ImageFrame.from_numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ImageFrame.from_numpy" title="Link to this definition"></a></dt>
+<dd><p>numpy配列からImageFrameを作成する</p>
+<p>color_mode がGRAYの場合 (height, width) または (height, width, 1),
+color_mode がBGR,RGBの場合 (height, width, 3),
+color_mode がBGRA,RGBAの場合 (height, width, 4)
+のuint8配列のみが使用可能</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.ImageFrame.height">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">height</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.ImageFrame.height" title="Link to this definition"></a></dt>
+<dd><p>画像の高さ</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.ImageFrame.numpy">
+<span class="sig-name descname"><span class="pre">numpy</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">ndarray</span></span></span><a class="reference internal" href="_modules/webcface/image_frame.html#ImageFrame.numpy"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ImageFrame.numpy" title="Link to this definition"></a></dt>
+<dd><p>numpy配列に変換する</p>
+<p>color_mode がGRAYの場合 (height, width, 1),
+color_mode がBGR,RGBの場合 (height, width, 3),
+color_mode がBGRA,RGBAの場合 (height, width, 4)
+のuint8配列を返す</p>
+<p>compress_mode がRAWでない場合はエラー</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.ImageFrame.width">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">width</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">int</span></em><a class="headerlink" href="#webcface.ImageFrame.width" title="Link to this definition"></a></dt>
+<dd><p>画像の幅</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.InputRef">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">InputRef</span></span><a class="reference internal" href="_modules/webcface/text.html#InputRef"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.InputRef" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -1730,7 +2104,7 @@ timeout=0 または負の値なら再試行せず即座にreturnする。
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.Log.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">11,</span> <span class="pre">1,</span> <span class="pre">10,</span> <span class="pre">55,</span> <span class="pre">23,</span> <span class="pre">632711)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">11,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">46,</span> <span class="pre">8,</span> <span class="pre">887095)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
 <dd><p>ログをwebcfaceに送信する
 (ver2.0〜)</p>
 <p>コンソールなどには出力されない</p>
@@ -1910,6 +2284,18 @@ timeout=0 または負の値なら再試行せず即座にreturnする。
 </div>
 </dd></dl>
 
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Member.image">
+<span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image.html#webcface.image.Image" title="webcface.image.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Member.image" title="Link to this definition"></a></dt>
+<dd><p>Imageオブジェクトを生成</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Member.image_entries">
+<span class="sig-name descname"><span class="pre">image_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.image.html#webcface.image.Image" title="webcface.image.Image"><span class="pre">Image</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.image_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Member.image_entries" title="Link to this definition"></a></dt>
+<dd><p>このメンバーのImageをすべて取得する。</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.Member.lib_name">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">lib_name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.Member.lib_name" title="Link to this definition"></a></dt>
@@ -1966,6 +2352,13 @@ pythonクライアントは”python”を返す。</p>
 <span class="sig-name descname"><span class="pre">on_func_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.on_func_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Member.on_func_entry" title="Link to this definition"></a></dt>
 <dd><p>Funcが追加されたときのイベント</p>
 <p>コールバックの引数にはFuncオブジェクトが渡される。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Member.on_image_entry">
+<span class="sig-name descname"><span class="pre">on_image_entry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/webcface/member.html#Member.on_image_entry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Member.on_image_entry" title="Link to this definition"></a></dt>
+<dd><p>Textが追加されたときのイベント</p>
+<p>コールバックの引数にはTextオブジェクトが渡される。</p>
 </dd></dl>
 
 <dl class="py method">

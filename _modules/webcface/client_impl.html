@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.client_impl &mdash; WebCFace-Python 2.3.0  documentation</title>
+  <title>webcface.client_impl &mdash; WebCFace-Python 2.4.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.3.0
+            WebCFace-Python 2.4.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.3.0</a>
+          <a href="../../index.html">WebCFace-Python 2.4.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -76,6 +76,7 @@
 <span class="kn">import</span> <span class="nn">webcface.message</span>
 <span class="kn">import</span> <span class="nn">webcface.client</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas2d_base</span>
+<span class="kn">import</span> <span class="nn">webcface.image_frame</span>
 <span class="kn">import</span> <span class="nn">webcface</span>
 
 
@@ -145,6 +146,24 @@
                 <span class="n">on_entry</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">on_text_entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
                 <span class="k">if</span> <span class="n">on_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
                     <span class="n">on_entry</span><span class="p">(</span><span class="n">wcli</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="n">member</span><span class="p">)</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">field</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">ImageRes</span><span class="p">):</span>
+                <span class="n">member</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_req</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">req_id</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">sub_field</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">set_recv</span><span class="p">(</span>
+                    <span class="n">member</span><span class="p">,</span>
+                    <span class="n">field</span><span class="p">,</span>
+                    <span class="n">webcface</span><span class="o">.</span><span class="n">image_frame</span><span class="o">.</span><span class="n">ImageFrame</span><span class="p">(</span>
+                        <span class="n">m</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">color_mode</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">cmp_mode</span>
+                    <span class="p">),</span>
+                <span class="p">)</span>
+                <span class="n">on_change</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">on_change</span><span class="p">(</span><span class="n">wcli</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="n">member</span><span class="p">)</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">field</span><span class="p">))</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">ImageEntry</span><span class="p">):</span>
+                <span class="n">member</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">get_member_name_from_id</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">member_id</span><span class="p">)</span>
+                <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">set_entry</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">field</span><span class="p">)</span>
+                <span class="n">on_entry</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">on_image_entry</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">member</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">on_entry</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">on_entry</span><span class="p">(</span><span class="n">wcli</span><span class="o">.</span><span class="n">member</span><span class="p">(</span><span class="n">member</span><span class="p">)</span><span class="o">.</span><span class="n">image</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">field</span><span class="p">))</span>
             <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">ViewRes</span><span class="p">):</span>
                 <span class="n">member</span><span class="p">,</span> <span class="n">field</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">get_req</span><span class="p">(</span><span class="n">m</span><span class="o">.</span><span class="n">req_id</span><span class="p">,</span> <span class="n">m</span><span class="o">.</span><span class="n">sub_field</span><span class="p">)</span>
                 <span class="n">v_prev</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="n">member</span><span class="p">,</span> <span class="n">field</span><span class="p">)</span>
@@ -325,6 +344,15 @@
         <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">transfer_req</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
                 <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">TextReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">transfer_req</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+                <span class="n">info</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_req_info</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k</span><span class="p">)</span>
+                <span class="k">if</span> <span class="n">info</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                    <span class="n">info</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">image_frame</span><span class="o">.</span><span class="n">ImageReq</span><span class="p">(</span>
+                        <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span>
+                    <span class="p">)</span>
+                <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">ImageReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">info</span><span class="p">))</span>
     <span class="k">with</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">m</span><span class="p">,</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">transfer_req</span><span class="p">()</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">r</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -362,6 +390,13 @@
     <span class="k">with</span> <span class="n">data</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v2</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">transfer_send</span><span class="p">(</span><span class="n">is_first</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
             <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">Text</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v2</span><span class="p">))</span>
+    <span class="k">with</span> <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v8</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">transfer_send</span><span class="p">(</span><span class="n">is_first</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">msgs</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">Image</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                    <span class="n">k</span><span class="p">,</span> <span class="n">v8</span><span class="o">.</span><span class="n">data</span><span class="p">,</span> <span class="n">v8</span><span class="o">.</span><span class="n">width</span><span class="p">,</span> <span class="n">v8</span><span class="o">.</span><span class="n">height</span><span class="p">,</span> <span class="n">v8</span><span class="o">.</span><span class="n">color_mode</span><span class="p">,</span> <span class="n">v8</span><span class="o">.</span><span class="n">compress_mode</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
     <span class="k">with</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
         <span class="n">view_send_prev</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">get_send_prev</span><span class="p">(</span><span class="n">is_first</span><span class="p">)</span>
         <span class="n">view_send</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">transfer_send</span><span class="p">(</span><span class="n">is_first</span><span class="p">)</span>

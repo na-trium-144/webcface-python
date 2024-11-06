@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webcface.image_frame &mdash; WebCFace-Python 2.4.0  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            WebCFace-Python 2.4.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../webcface.html">webcface package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">webcface.image_frame</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for webcface.image_frame</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">import</span> <span class="nn">numpy</span>
+<span class="k">except</span> <span class="ne">ModuleNotFoundError</span><span class="p">:</span>
+    <span class="k">pass</span>
+
+
+<div class="viewcode-block" id="ImageColorMode">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageColorMode">[docs]</a>
+<span class="k">class</span> <span class="nc">ImageColorMode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">GRAY</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">BGR</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BGRA</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">RGB</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">RGBA</span> <span class="o">=</span> <span class="mi">4</span></div>
+
+
+
+<div class="viewcode-block" id="ImageCompressMode">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageCompressMode">[docs]</a>
+<span class="k">class</span> <span class="nc">ImageCompressMode</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">RAW</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">JPEG</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">WEBP</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">PNG</span> <span class="o">=</span> <span class="mi">3</span></div>
+
+
+
+<div class="viewcode-block" id="ImageFrame">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageFrame">[docs]</a>
+<span class="k">class</span> <span class="nc">ImageFrame</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;画像データ (ver2.4〜)</span>
+
+<span class="sd">    * 8bitのグレースケール, BGR, BGRAフォーマットのみを扱う</span>
+<span class="sd">    * 画像受信時にはjpegやpngなどにエンコードされたデータが入ることもある</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_width</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_height</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_data</span><span class="p">:</span> <span class="nb">bytes</span>
+    <span class="n">_color_mode</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_cmp_mode</span><span class="p">:</span> <span class="nb">int</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">height</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="nb">bytes</span><span class="p">,</span> <span class="n">color_mode</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">compress_mode</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span> <span class="o">=</span> <span class="n">color_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_cmp_mode</span> <span class="o">=</span> <span class="n">compress_mode</span>
+        <span class="k">assert</span> <span class="n">width</span> <span class="o">*</span> <span class="n">height</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span> <span class="o">==</span> <span class="nb">len</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
+
+<div class="viewcode-block" id="ImageFrame.empty">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageFrame.empty">[docs]</a>
+    <span class="k">def</span> <span class="nf">empty</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;画像が空かどうかを返す&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span> <span class="o">==</span> <span class="mi">0</span></div>
+
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">width</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;画像の幅&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">height</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;画像の高さ&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_height</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">channels</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;1ピクセルあたりのデータサイズ(byte数)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">GRAY</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">1</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">BGR</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">3</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">RGB</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">3</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">BGRA</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">3</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">RGBA</span><span class="p">:</span>
+            <span class="k">return</span> <span class="mi">3</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown color format&quot;</span><span class="p">)</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">color_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;色の並び順</span>
+
+<span class="sd">        compress_modeがRAWでない場合意味をなさない。</span>
+
+<span class="sd">        ImageColorMode のenumを参照</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_color_mode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">compress_mode</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;画像の圧縮モード</span>
+
+<span class="sd">        ImageCompressMode のenumを参照</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_cmp_mode</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">data</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bytes</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;画像データ</span>
+
+<span class="sd">        compress_modeがRAWの場合、height * width * channels</span>
+<span class="sd">        要素の画像データ。 それ以外の場合、圧縮された画像のデータ</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span>
+
+<div class="viewcode-block" id="ImageFrame.from_numpy">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageFrame.from_numpy">[docs]</a>
+    <span class="nd">@staticmethod</span>
+    <span class="k">def</span> <span class="nf">from_numpy</span><span class="p">(</span><span class="n">img</span><span class="p">:</span> <span class="s2">&quot;numpy.ndarray&quot;</span><span class="p">,</span> <span class="n">color_mode</span><span class="p">:</span> <span class="nb">int</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ImageFrame&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;numpy配列からImageFrameを作成する</span>
+
+<span class="sd">        color_mode がGRAYの場合 (height, width) または (height, width, 1),</span>
+<span class="sd">        color_mode がBGR,RGBの場合 (height, width, 3),</span>
+<span class="sd">        color_mode がBGRA,RGBAの場合 (height, width, 4)</span>
+<span class="sd">        のuint8配列のみが使用可能</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">numpy</span>
+
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">img</span><span class="p">,</span> <span class="n">numpy</span><span class="o">.</span><span class="n">ndarray</span><span class="p">),</span> <span class="s2">&quot;img must be numpy.ndarray&quot;</span>
+        <span class="k">assert</span> <span class="n">img</span><span class="o">.</span><span class="n">dtype</span> <span class="o">==</span> <span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span><span class="p">,</span> <span class="s2">&quot;only dtype uint8 is supported&quot;</span>
+        <span class="k">if</span> <span class="n">color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">GRAY</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">or</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span>
+            <span class="p">),</span> <span class="s2">&quot;shape must be (height, width) or (height, width, 1)&quot;</span>
+        <span class="k">elif</span> <span class="n">color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">BGR</span> <span class="ow">or</span> <span class="n">color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">RGB</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">3</span>
+            <span class="p">),</span> <span class="s2">&quot;shape must be (height, width, 3)&quot;</span>
+        <span class="k">elif</span> <span class="n">color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">BGRA</span> <span class="ow">or</span> <span class="n">color_mode</span> <span class="o">==</span> <span class="n">ImageColorMode</span><span class="o">.</span><span class="n">RGBA</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="nb">len</span><span class="p">(</span><span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">==</span> <span class="mi">4</span>
+            <span class="p">),</span> <span class="s2">&quot;shape must be (height, width, 4)&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Unknown color format&quot;</span><span class="p">)</span>
+
+        <span class="k">return</span> <span class="n">ImageFrame</span><span class="p">(</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span>
+            <span class="n">img</span><span class="o">.</span><span class="n">tobytes</span><span class="p">(),</span>
+            <span class="n">color_mode</span><span class="p">,</span>
+            <span class="n">ImageCompressMode</span><span class="o">.</span><span class="n">RAW</span><span class="p">,</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="ImageFrame.numpy">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageFrame.numpy">[docs]</a>
+    <span class="k">def</span> <span class="nf">numpy</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;numpy.ndarray&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;numpy配列に変換する</span>
+
+<span class="sd">        color_mode がGRAYの場合 (height, width, 1),</span>
+<span class="sd">        color_mode がBGR,RGBの場合 (height, width, 3),</span>
+<span class="sd">        color_mode がBGRA,RGBAの場合 (height, width, 4)</span>
+<span class="sd">        のuint8配列を返す</span>
+
+<span class="sd">        compress_mode がRAWでない場合はエラー</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="kn">import</span> <span class="nn">numpy</span>
+
+        <span class="k">assert</span> <span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_cmp_mode</span> <span class="o">==</span> <span class="n">ImageCompressMode</span><span class="o">.</span><span class="n">RAW</span>
+        <span class="p">),</span> <span class="s2">&quot;compressed image is not supported&quot;</span>
+
+        <span class="k">return</span> <span class="n">numpy</span><span class="o">.</span><span class="n">frombuffer</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">numpy</span><span class="o">.</span><span class="n">uint8</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_height</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_width</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">channels</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="ImageReq">
+<a class="viewcode-back" href="../../webcface.image_frame.html#webcface.ImageReq">[docs]</a>
+<span class="k">class</span> <span class="nc">ImageReq</span><span class="p">:</span>
+    <span class="n">width</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">height</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">color_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">compress_mode</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">quality</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span>
+    <span class="n">frame_rate</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">color_mode</span><span class="p">,</span> <span class="n">compress_mode</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">frame_rate</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">=</span> <span class="n">height</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">color_mode</span> <span class="o">=</span> <span class="n">color_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">compress_mode</span> <span class="o">=</span> <span class="n">compress_mode</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">quality</span> <span class="o">=</span> <span class="n">quality</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">frame_rate</span> <span class="o">=</span> <span class="n">frame_rate</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">ImageReq</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">width</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">width</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">height</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">height</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">color_mode</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">color_mode</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">compress_mode</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">compress_mode</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">quality</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">quality</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">frame_rate</span> <span class="o">==</span> <span class="n">obj</span><span class="o">.</span><span class="n">frame_rate</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">obj</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">obj</span></div>
+
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, na-trium-144.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

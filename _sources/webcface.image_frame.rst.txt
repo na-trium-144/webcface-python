@@ -1,0 +1,7 @@
+webcface.image\_frame module
+============================
+
+.. automodule:: webcface.image_frame
+   :members:
+   :undoc-members:
+   :show-inheritance:
