@@ -1,6 +1,8 @@
 from .member import Member
 from .value import Value
 from .text import Text, Variant, InputRef
+from .image import Image
+from .image_frame import ImageFrame, ImageColorMode, ImageCompressMode
 from .func import Func
 from .func_listener import FuncListener
 from .view import View
@@ -27,6 +29,10 @@ __all__ = [
     "Text",
     "Variant",
     "InputRef",
+    "Image",
+    "ImageFrame",
+    "ImageColorMode",
+    "ImageCompressMode",
     "Func",
     "FuncListener",
     "View",

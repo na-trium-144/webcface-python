@@ -14,7 +14,7 @@ self_name = "test"
 
 @fixture
 def s2():
-    return SyncDataStore2[str](self_name)
+    return SyncDataStore2[str, None](self_name)
 
 
 @fixture

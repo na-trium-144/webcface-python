@@ -1,3 +1,9 @@
+## [2.4.0] - 2024-11-06
+### Added
+* Imageの送受信機能 (#37)
+    * Imageクラス、ImageFrameクラス、ImageColorMode, ImageCompressMode
+    * Member.image(), image_entries(), on_image_entry()
+
 ## [2.3.0] - 2024-11-01
 ### Changed
 * Python3.6, 3.7 に対応 (#38)
