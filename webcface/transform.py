@@ -111,7 +111,7 @@ class Point:
 
 
 class AxisSequence(IntEnum):
-    """オイラー角の回転順序 (ver2.4〜)
+    """オイラー角の回転順序 (ver2.5〜)
 
     * 右手系の座標系で、
     内的回転(intrinsic rotation)でz軸,y軸,x軸の順に回転させる系
@@ -138,7 +138,7 @@ class AxisSequence(IntEnum):
 
 
 class Rotation:
-    """3次元の回転 (ver2.4〜)
+    """3次元の回転 (ver2.5〜)
 
     * 内部ではz-y-x系のオイラー角または3x3回転行列で保持している。
     * 送受信時にはすべてこのzyxのオイラー角に変換される。
@@ -180,12 +180,12 @@ class Rotation:
 
         2次元の場合は rot[0] を使う
 
-        .. deprecated:: ver2.4
+        .. deprecated:: ver2.5
         """
         return self.rot_euler()
 
     def rot_euler(self, axis=AxisSequence.ZYX) -> Tuple[float, float, float]:
-        """回転角をオイラー角として取得 (ver2.4〜)
+        """回転角をオイラー角として取得 (ver2.5〜)
 
         :arg axis: オイラー角の回転順序
         """
@@ -206,7 +206,7 @@ class Rotation:
         Tuple[float, float, float],
         Tuple[float, float, float],
     ]:
-        """回転角を回転行列として取得 (ver2.4〜)"""
+        """回転角を回転行列として取得 (ver2.5〜)"""
         if self._rmat is None:
             assert (
                 self._az is not None and self._ay is not None and self._ax is not None
@@ -217,11 +217,11 @@ class Rotation:
         return self._rmat
 
     def rot_quat(self) -> Tuple[float, float, float, float]:
-        """回転角をクォータニオン(w, x, y, z)として取得 (ver2.4〜)"""
+        """回転角をクォータニオン(w, x, y, z)として取得 (ver2.5〜)"""
         return webcface.transform_impl.matrix_to_quaternion(self.rot_matrix())
 
     def rot_axis_angle(self) -> Tuple[Tuple[float, float, float], float]:
-        """回転角を軸と角度((x, y, z), angle)として取得 (ver2.4〜)"""
+        """回転角を軸と角度((x, y, z), angle)として取得 (ver2.5〜)"""
         return webcface.transform_impl.quaternion_to_axis_angle(self.rot_quat())
 
     @staticmethod
