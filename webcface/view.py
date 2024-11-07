@@ -264,7 +264,7 @@ class View(webcface.field.Field):
     ) -> "View":
         """Viewのリストをセットする
 
-        .. deprecated:: ver2.5
+        .. deprecated:: ver3.0
         """
         for c in components:
             self.add(c)
@@ -312,7 +312,7 @@ class View(webcface.field.Field):
 
         :arg args: 追加する要素
         複数指定した場合すべて追加される。
-        :arg kwargs: (ver2.5〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
+        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
         詳細は TemporalComponent のコンストラクタを参照
         """
         for c in args:

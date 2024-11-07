@@ -78,7 +78,7 @@ class TemporalComponent:
         # robot_model: Optional[webcface.robot_model.RobotModel] = None,
         angles: Optional[Dict[str, SupportsFloat]] = None,
     ) -> None:
-        """View, Canvas2D, Canvas3Dの要素を初期化するコンストラクタ。(ver2.5〜)
+        """View, Canvas2D, Canvas3Dの要素を初期化するコンストラクタ。(ver3.0〜)
 
         非対応の引数はadd時に無視される。
 
@@ -98,7 +98,7 @@ class TemporalComponent:
         :arg color: 要素の色 (text_colorと同じ)
         :arg fill: 要素の塗りつぶし色 (bg_colorと同じ)
         :arg stroke_width: 線の太さ
-        :arg text_size: (ver2.5〜) 文字サイズ (内部的にはstroke_widthと同一)
+        :arg text_size: (ver3.0〜) 文字サイズ (内部的にはstroke_widthと同一)
         :arg geometry: 表示する図形
         """
         self._type = type
