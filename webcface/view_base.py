@@ -1,6 +1,36 @@
 from typing import Optional, List, Union
+from enum import IntEnum
 import webcface.field
-import webcface.client_data
+
+
+class ViewComponentType(IntEnum):
+    TEXT = 0
+    NEW_LINE = 1
+    BUTTON = 2
+    TEXT_INPUT = 3
+    DECIMAL_INPUT = 4
+    NUMBER_INPUT = 5
+    TOGGLE_INPUT = 6
+    SELECT_INPUT = 7
+    SLIDER_INPUT = 8
+    CHECK_INPUT = 9
+
+
+class ViewColor(IntEnum):
+    INHERIT = 0
+    BLACK = 1
+    WHITE = 2
+    GRAY = 4
+    RED = 8
+    ORANGE = 9
+    YELLOW = 11
+    GREEN = 13
+    TEAL = 15
+    CYAN = 16
+    BLUE = 18
+    INDIGO = 19
+    PURPLE = 21
+    PINK = 23
 
 
 class ViewComponentBase:

@@ -4,7 +4,7 @@ import webcface.canvas3d_base
 import webcface.geometries
 import webcface.client_data
 import webcface.transform
-import webcface.view_components
+import webcface.view_base
 
 
 class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
@@ -190,7 +190,7 @@ class Canvas3D(webcface.field.Field):
         self,
         geometry: "webcface.geometries.Geometry3D",
         origin: "Optional[webcface.transform.Transform]" = None,
-        color: int = webcface.view_components.ViewColor.INHERIT,
+        color: int = webcface.view_base.ViewColor.INHERIT,
     ) -> "Canvas3D":
         """Geometryを追加"""
         if self._c3data is None:

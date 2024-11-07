@@ -10,7 +10,7 @@ import webcface.geometries as geometries
 from webcface.field import Field
 from webcface.member import Member
 from webcface.transform import Transform, Point
-from webcface.view_components import ViewColor
+from webcface.view_base import ViewColor
 
 
 def test_canvas2d_member(data):

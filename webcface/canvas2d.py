@@ -4,7 +4,7 @@ import webcface.canvas2d_base
 import webcface.geometries
 import webcface.client_data
 import webcface.transform
-import webcface.view_components
+import webcface.view_base
 
 
 class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
@@ -216,8 +216,8 @@ class Canvas2D(webcface.field.Field):
         self,
         geometry: "webcface.geometries.Geometry2D",
         origin: "Optional[webcface.transform.Transform]" = None,
-        color: int = webcface.view_components.ViewColor.INHERIT,
-        fill: int = webcface.view_components.ViewColor.INHERIT,
+        color: int = webcface.view_base.ViewColor.INHERIT,
+        fill: int = webcface.view_base.ViewColor.INHERIT,
         stroke_width: SupportsFloat = 1,
     ) -> "Canvas2D":
         """コンポーネントを追加

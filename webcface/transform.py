@@ -1,12 +1,16 @@
-from typing import List, Tuple, Union, SupportsFloat, Optional
+from typing import List, Tuple, Union, SupportsFloat, Optional, Sequence
 from enum import IntEnum
-from collections.abc import Sequence
 from webcface.typing import convertible_to_float
 import webcface.transform_impl
 
 
 class Point:
-    """3次元or2次元の座標"""
+    """3次元or2次元の座標
+
+    手動でコンストラクタを呼んでもいいが、
+    PointをうけとるAPIは基本的に Sequence[SupportsFloat] を受け付け、
+    内部でPointに変換される。
+    """
 
     _x: float
     _y: float
@@ -159,7 +163,7 @@ class Rotation:
     ]
 
     def __init__(self, az, ay, ax, rmat):
-        """このコンストラクタではなくstaticメソッドを使うこと"""
+        """このコンストラクタではなく、rot_from_* 関数を使うこと"""
         if az is None and ay is None and ax is None:
             assert rmat is not None
             self._rmat = tuple(tuple(float(v) for v in r) for r in rmat)
@@ -224,83 +228,104 @@ class Rotation:
         """回転角を軸と角度((x, y, z), angle)として取得 (ver2.5〜)"""
         return webcface.transform_impl.quaternion_to_axis_angle(self.rot_quat())
 
-    @staticmethod
-    def from_euler(
-        angles: Sequence[SupportsFloat], axis=AxisSequence.ZYX
-    ) -> "Rotation":
-        """オイラー角からRotationを作成
 
-        :arg angles: オイラー角
-        :arg axis: オイラー角の回転順序
-        """
-        assert len(angles) == 3, "Euler angle must be 3 dimensional, got " + str(angles)
-        if axis == AxisSequence.ZYX:
-            return Rotation(angles[0], angles[1], angles[2], None)
-        else:
-            return Rotation(
-                None, None, None, webcface.transform_impl.euler_to_matrix(angles, axis)
-            )
+def rot_from_euler(
+    angles: Sequence[SupportsFloat], axis=AxisSequence.ZYX
+) -> "Rotation":
+    """オイラー角からRotationを作成
 
-    @staticmethod
-    def from_matrix(rmat: Sequence[Sequence[SupportsFloat]]) -> "Rotation":
-        """回転行列からRotationを作成
-
-        :arg rmat: 回転行列
-        """
-        assert len(rmat) == 3, "Rotation matrix must be 3x3, got " + str(rmat)
-        assert all(
-            len(r) == 3 for r in rmat
-        ), "Rotation matrix must be 3x3, got " + str(rmat)
-        return Rotation(None, None, None, rmat)
-
-    @staticmethod
-    def from_quat(quat: Sequence[SupportsFloat]) -> "Rotation":
-        """クォータニオンからRotationを作成
-
-        :arg quat: クォータニオン (w, x, y, z)
-        """
-        assert len(quat) == 4, "Quaternion must be 4 dimensional, got " + str(quat)
-        return Rotation.from_matrix(webcface.transform_impl.quaternion_to_matrix(quat))
-
-    @staticmethod
-    def from_axis_angle(
-        axis: Sequence[SupportsFloat], angle: SupportsFloat
-    ) -> "Rotation":
-        """軸と角度からRotationを作成
-
-        :arg axis: 軸
-        :arg angle: 角度
-        """
-        assert len(axis) == 3, "Axis must be 3 dimensional, got " + str(axis)
-        return Rotation.from_quat(
-            webcface.transform_impl.axis_angle_to_quaternion(axis, angle)
+    :arg angles: オイラー角
+    :arg axis: オイラー角の回転順序
+    """
+    assert len(angles) == 3, "Euler angle must be 3 dimensional, got " + str(angles)
+    if axis == AxisSequence.ZYX:
+        return Rotation(angles[0], angles[1], angles[2], None)
+    else:
+        return Rotation(
+            None, None, None, webcface.transform_impl.euler_to_matrix(angles, axis)
         )
+
+
+def rot_from_matrix(rmat: Sequence[Sequence[SupportsFloat]]) -> "Rotation":
+    """回転行列からRotationを作成
+
+    :arg rmat: 回転行列
+    """
+    assert len(rmat) == 3, "Rotation matrix must be 3x3, got " + str(rmat)
+    assert all(len(r) == 3 for r in rmat), "Rotation matrix must be 3x3, got " + str(
+        rmat
+    )
+    return Rotation(None, None, None, rmat)
+
+
+def rot_from_quat(quat: Sequence[SupportsFloat]) -> "Rotation":
+    """クォータニオンからRotationを作成
+
+    :arg quat: クォータニオン (w, x, y, z)
+    """
+    assert len(quat) == 4, "Quaternion must be 4 dimensional, got " + str(quat)
+    return rot_from_matrix(webcface.transform_impl.quaternion_to_matrix(quat))
+
+
+def rot_from_axis_angle(
+    axis: Sequence[SupportsFloat], angle: SupportsFloat
+) -> "Rotation":
+    """軸と角度からRotationを作成
+
+    :arg axis: 軸
+    :arg angle: 角度
+    """
+    assert len(axis) == 3, "Axis must be 3 dimensional, got " + str(axis)
+    return rot_from_quat(webcface.transform_impl.axis_angle_to_quaternion(axis, angle))
 
 
 class Transform(Point, Rotation):
     """3次元の座標と回転
 
     内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。
+
+    手動でコンストラクタを呼んでもいいが、
+    TransformをうけとるAPIは基本的にPointとRotationのタプルを受け付け、
+    内部でTransformに変換される。
+
+    平行移動のみの場合は translation() を使用する。
+    回転のみの場合はRotationだけ渡せば直接Transformに変換される
     """
 
     def __init__(
         self,
-        pos: "Union[Point, Sequence[SupportsFloat]]",
-        rot: "Rotation",
+        arg1: Union[
+            "Point",
+            Sequence[SupportsFloat],
+            "Rotation",
+        ],
+        arg2: Optional["Rotation"] = None,
     ) -> None:
-        if isinstance(pos, Point):
-            Point.__init__(self, pos.pos)
+        if isinstance(arg1, Rotation):
+            Rotation.__init__(self, arg1._az, arg1._ay, arg1._ax, arg1._rmat)
         else:
-            Point.__init__(self, pos)
-        Rotation.__init__(self, rot._az, rot._ay, rot._ax, rot._rmat)
+            assert (
+                arg2 is not None
+            ), "Rotation must be given, use translation() for translation only"
+            Rotation.__init__(self, arg2._az, arg2._ay, arg2._ax, arg2._rmat)
+            if isinstance(arg1, Point):
+                Point.__init__(self, arg1.pos)
+            else:
+                Point.__init__(self, arg1)
 
-    def __eq__(self, other: object) -> bool:
-        """Transformと比較した場合座標と回転が一致すればTrue"""
-        if isinstance(other, Transform):
-            return self._pos == other._pos and self._rot == other._rot
-        else:
-            return False
+    # def __eq__(self, other: object) -> bool:
+    #     """Transformと比較した場合座標と回転が一致すればTrue"""
+    #     if isinstance(other, Transform):
+    #         return self._pos == other._pos and self._rot == other._rot
+    #     else:
+    #         return False
 
 
 def identity() -> "Transform":
-    return Transform([0, 0, 0], Rotation.from_euler([0, 0, 0]))
+    """なにもしないTransformを作成"""
+    return Transform([0, 0, 0], rot_from_euler([0, 0, 0]))
+
+
+def translation(pos: Union["Point", Sequence[SupportsFloat]]) -> "Transform":
+    """平行移動のみをするTransformを作成 (ver2.5〜)"""
+    return Transform(pos, rot_from_euler([0, 0, 0]))

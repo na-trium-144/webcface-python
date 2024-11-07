@@ -1,9 +1,9 @@
 from conftest import self_name
 import pytest
 from webcface.view import View, ViewComponent
-from webcface.view_components import ViewComponentType, ViewColor
+from webcface.view_base import ViewComponentType, ViewColor
 from webcface.view_base import ViewComponentBase
-import webcface.view_components as view
+import webcface.components as view
 from webcface.func import Func
 from webcface.field import Field
 from webcface.member import Member
