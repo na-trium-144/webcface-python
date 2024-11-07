@@ -1,4 +1,4 @@
-from typing import Optional, Callable, List, SupportsFloat
+from typing import Optional, Callable, List, SupportsFloat, Union
 import webcface.field
 import webcface.canvas2d_base
 import webcface.geometries
@@ -203,6 +203,10 @@ class Canvas2D(webcface.field.Field):
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified and self._c2data is not None:
+            data = self._set_check()
+            for i, c in enumerate(self._c2data.tmp_components):
+                c.lock_tmp(data, f"..v{self._field}.{i}")
+            self._c2data.components = [c.to_canvas2d() for c in self._c2data.tmp_components]
             self._set_check().canvas2d_store.set_send(self._field, self._c2data)
             self._modified = False
         on_change = (
@@ -214,31 +218,39 @@ class Canvas2D(webcface.field.Field):
 
     def add(
         self,
-        geometry: "webcface.geometries.Geometry2D",
-        origin: "Optional[webcface.transform.Transform]" = None,
-        color: int = webcface.view_base.ViewColor.INHERIT,
-        fill: int = webcface.view_base.ViewColor.INHERIT,
-        stroke_width: SupportsFloat = 1,
+        *args: Union[
+            "webcface.temporal_component.TemporalComponent",
+            "webcface.geometries.Geometry2D",
+        ],
+        **kwargs,
     ) -> "Canvas2D":
-        """コンポーネントを追加
+        """要素を追加
 
         初期化時またはinit()で事前にサイズを指定していなければエラー
+
+        :arg args: 追加する要素
+        (ver3.0〜:複数指定した場合すべて追加される。)
+        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
+        詳細は TemporalComponent のコンストラクタを参照
         """
         if self._c2data is None:
             raise ValueError("Canvas2D not initialized")
-        if origin is None:
-            origin = webcface.transform.Transform([0, 0], 0)
-        self._c2data.components.append(
-            webcface.canvas2d_base.Canvas2DComponentBase(
-                webcface.canvas2d_base.Canvas2DComponentType.GEOMETRY,
-                list(origin.pos[0:2]),
-                origin.rot[0],
-                color,
-                fill,
-                float(stroke_width),
-                geometry.type,
-                geometry._properties,
-            )
-        )
+        for c in args:
+            if isinstance(c, webcface.temporal_component.TemporalComponent):
+                if len(kwargs) > 0:
+                    raise ValueError(
+                        f"kwargs is not allowed because {c} is already a component"
+                    )
+                self._c2data.tmp_components.append(c)
+            elif isinstance(c, webcface.geometries.Geometry):
+                self._c2data.tmp_components.append(
+                    webcface.temporal_component.TemporalComponent(
+                        canvas2d_type=webcface.canvas2d_base.Canvas2DComponentType.GEOMETRY,
+                        geometry=c,
+                        **kwargs,
+                    )
+                )
+            else:
+                raise ValueError(f"Invalid component {c}")
         self._modified = True
         return self

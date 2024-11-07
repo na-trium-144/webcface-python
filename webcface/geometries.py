@@ -1,4 +1,4 @@
-from typing import List, Union, SupportsFloat
+from typing import List, Union, SupportsFloat, Sequence, Tuple
 from enum import IntEnum
 import webcface.transform
 
@@ -41,7 +41,7 @@ class Geometry:
     _geometry_type: int
     _properties: List[float]
 
-    def __init__(self, geometry_type: int, properties: List[SupportsFloat]) -> None:
+    def __init__(self, geometry_type: int, properties: Sequence[SupportsFloat]) -> None:
         self._geometry_type = geometry_type
         self._properties = [float(p) for p in properties]
 
@@ -83,7 +83,7 @@ class Geometry:
 
 
 class Line(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) == 6
         super().__init__(GeometryType.LINE, properties)
 
@@ -97,8 +97,8 @@ class Line(Geometry):
 
 
 def line(
-    begin: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
-    end: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    begin: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
+    end: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
 ) -> Line:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
@@ -108,7 +108,7 @@ def line(
 
 
 class Polygon(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) > 0 and len(properties) % 3 == 0
         super().__init__(GeometryType.POLYGON, properties)
 
@@ -121,7 +121,7 @@ class Polygon(Geometry):
 
 
 def polygon(
-    points: "List[Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]]",
+    points: "Sequence[Union[webcface.transform.Point, Sequence[SupportsFloat]]]",
 ) -> Polygon:
     props: List[float] = []
     for p in points:
@@ -132,14 +132,15 @@ def polygon(
 
 
 class Plane(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) == 8
         super().__init__(GeometryType.PLANE, properties)
 
     @property
     def origin(self) -> "webcface.transform.Transform":
         return webcface.transform.Transform(
-            self._properties[0:3], self._properties[3:6]
+            self._properties[0:3],
+            webcface.transform.rot_from_euler(self._properties[3:6]),
         )
 
     @property
@@ -164,25 +165,31 @@ class Plane(Geometry):
 
 
 def plane(
-    origin: "Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]",
+    origin: Union[
+        "webcface.transform.Transform",
+        "webcface.transform.Rotation",
+        Tuple[
+            Union["webcface.transform.Point", Sequence[SupportsFloat]],
+            Union["webcface.transform.Rotation", SupportsFloat],
+        ],
+    ],
     width: SupportsFloat,
     height: SupportsFloat,
 ) -> Plane:
-    if not isinstance(origin, webcface.transform.Transform):
-        origin = webcface.transform.Transform(origin[0], origin[1])
+    origin = webcface.transform.convert_to_transform(origin)
     return Plane(list(origin.pos) + list(origin.rot) + [width, height])
 
 
 def rect(
-    begin: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
-    end: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    begin: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
+    end: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
 ) -> Plane:
     if not isinstance(begin, webcface.transform.Point):
         begin = webcface.transform.Point(begin)
     if not isinstance(end, webcface.transform.Point):
         end = webcface.transform.Point(end)
-    origin = webcface.transform.Transform(
-        [(b + e) / 2 for b, e in zip(begin.pos, end.pos)], 0
+    origin = webcface.transform.translation(
+        [(b + e) / 2 for b, e in zip(begin.pos, end.pos)],
     )
     width = abs(begin.pos[0] - end.pos[0])
     height = abs(begin.pos[1] - end.pos[1])
@@ -190,7 +197,7 @@ def rect(
 
 
 class Box(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) == 6
         super().__init__(GeometryType.BOX, properties)
 
@@ -204,8 +211,8 @@ class Box(Geometry):
 
 
 def box(
-    vertex1: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
-    vertex2: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    vertex1: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
+    vertex2: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
 ) -> Box:
     if not isinstance(vertex1, webcface.transform.Point):
         vertex1 = webcface.transform.Point(vertex1)
@@ -215,14 +222,15 @@ def box(
 
 
 class Circle(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) == 7
         super().__init__(GeometryType.CIRCLE, properties)
 
     @property
     def origin(self) -> "webcface.transform.Transform":
         return webcface.transform.Transform(
-            self._properties[0:3], self._properties[3:6]
+            self._properties[0:3],
+            webcface.transform.rot_from_euler(self._properties[3:6]),
         )
 
     @property
@@ -231,23 +239,32 @@ class Circle(Geometry):
 
 
 def circle(
-    origin: "Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]",
+    origin: Union[
+        "webcface.transform.Point",
+        Sequence[SupportsFloat],
+        "webcface.transform.Transform",
+        "webcface.transform.Rotation",
+        Tuple[
+            Union["webcface.transform.Point", Sequence[SupportsFloat]],
+            Union["webcface.transform.Rotation", SupportsFloat],
+        ],
+    ],
     radius: SupportsFloat,
 ) -> Circle:
-    if not isinstance(origin, webcface.transform.Transform):
-        origin = webcface.transform.Transform(origin[0], origin[1])
+    origin = webcface.transform.convert_to_transform(origin)
     return Circle(list(origin.pos) + list(origin.rot) + [radius])
 
 
 class Cylinder(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) == 8
         super().__init__(GeometryType.CYLINDER, properties)
 
     @property
     def origin(self) -> "webcface.transform.Transform":
         return webcface.transform.Transform(
-            self._properties[0:3], self._properties[3:6]
+            self._properties[0:3],
+            webcface.transform.rot_from_euler(self._properties[3:6]),
         )
 
     @property
@@ -260,17 +277,25 @@ class Cylinder(Geometry):
 
 
 def cylinder(
-    origin: "Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]",
+    origin: Union[
+        "webcface.transform.Point",
+        Sequence[SupportsFloat],
+        "webcface.transform.Transform",
+        "webcface.transform.Rotation",
+        Tuple[
+            Union["webcface.transform.Point", Sequence[SupportsFloat]],
+            Union["webcface.transform.Rotation", SupportsFloat],
+        ],
+    ],
     radius: SupportsFloat,
     length: SupportsFloat,
 ) -> Cylinder:
-    if not isinstance(origin, webcface.transform.Transform):
-        origin = webcface.transform.Transform(origin[0], origin[1])
+    origin = webcface.transform.convert_to_transform(origin)
     return Cylinder(list(origin.pos) + list(origin.rot) + [radius, length])
 
 
 class Sphere(Geometry):
-    def __init__(self, properties: List[SupportsFloat]) -> None:
+    def __init__(self, properties: Sequence[SupportsFloat]) -> None:
         assert len(properties) == 4
         super().__init__(GeometryType.SPHERE, properties)
 
@@ -284,7 +309,7 @@ class Sphere(Geometry):
 
 
 def sphere(
-    origin: "Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]",
+    origin: "Union[webcface.transform.Point, Sequence[SupportsFloat]]",
     radius: SupportsFloat,
 ) -> Sphere:
     if not isinstance(origin, webcface.transform.Point):

@@ -1,9 +1,10 @@
 from typing import Optional, List, Callable, SupportsFloat, Union, Sequence, Tuple, Dict
-from webcface.typing import convertible_to_float
+from webcface.typing import convertible_to_float, is_float_sequence
 import webcface.client_data
 import webcface.text
 import webcface.field
 import webcface.view_base
+import webcface.transform
 
 
 class TemporalComponent:
@@ -64,9 +65,10 @@ class TemporalComponent:
                 "webcface.transform.Point",
                 Sequence[SupportsFloat],
                 "webcface.transform.Transform",
+                "webcface.transform.Rotation",
                 Tuple[
                     Union["webcface.transform.Point", Sequence[SupportsFloat]],
-                    "webcface.transform.Rotation",
+                    Union["webcface.transform.Rotation", SupportsFloat],
                 ],
             ]
         ] = None,
@@ -132,18 +134,10 @@ class TemporalComponent:
             self._stroke_width = float(stroke_width)
         elif text_size is not None:
             self._stroke_width = float(text_size)
-        self._origin = webcface.transform.identity()
-        if isinstance(origin, webcface.transform.Point):
-            self._origin = webcface.transform.translation(origin)
-        elif isinstance(origin, webcface.transform.Transform):
-            self._origin = origin
-        elif origin is not None:
-            if all(convertible_to_float(v) for v in origin):
-                self._origin = webcface.transform.translation(origin)  # type:ignore
-            elif len(origin) == 2:
-                self._origin = webcface.transform.Transform(*origin)
-            else:
-                raise ValueError("Invalid argument for origin: " + str(origin))
+        if origin is None:
+            self._origin = webcface.transform.identity()
+        else:
+            self._origin = webcface.transform.convert_to_transform(origin)
         if geometry is None:
             self._geometry = webcface.geometries.Geometry(0, [])
         else:
@@ -227,7 +221,7 @@ class TemporalComponent:
 
     def to_view(self) -> "webcface.view_base.ViewComponentBase":
         return webcface.view_base.ViewComponentBase(
-            self._type,
+            self._view_type,
             self._text,
             self._on_click_func,
             self._text_ref,
@@ -237,4 +231,16 @@ class TemporalComponent:
             self._max,
             self._step,
             self._option,
+        )
+
+    def to_canvas2d(self) -> "webcface.canvas2d_base.Canvas2DComponentBase":
+        return webcface.canvas2d_base.Canvas2DComponentBase(
+            self._canvas2d_type,
+            list(self._origin.pos[:2]),
+            self._origin.rot[0],
+            self._text_color,
+            self._bg_color,
+            self._stroke_width,
+            self._geometry.type,
+            self._geometry._properties,
         )

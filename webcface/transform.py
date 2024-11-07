@@ -1,6 +1,6 @@
 from typing import List, Tuple, Union, SupportsFloat, Optional, Sequence
 from enum import IntEnum
-from webcface.typing import convertible_to_float
+from webcface.typing import convertible_to_float, is_float_sequence
 import webcface.transform_impl
 
 
@@ -299,7 +299,7 @@ class Transform(Point, Rotation):
             Sequence[SupportsFloat],
             "Rotation",
         ],
-        arg2: Optional["Rotation"] = None,
+        arg2: Optional[Union["Rotation", SupportsFloat]] = None,
     ) -> None:
         if isinstance(arg1, Rotation):
             Rotation.__init__(self, arg1._az, arg1._ay, arg1._ax, arg1._rmat)
@@ -307,7 +307,10 @@ class Transform(Point, Rotation):
             assert (
                 arg2 is not None
             ), "Rotation must be given, use translation() for translation only"
-            Rotation.__init__(self, arg2._az, arg2._ay, arg2._ax, arg2._rmat)
+            if isinstance(arg2, Rotation):
+                Rotation.__init__(self, arg2._az, arg2._ay, arg2._ax, arg2._rmat)
+            else:
+                Rotation.__init__(self, arg2, 0, 0, None)
             if isinstance(arg1, Point):
                 Point.__init__(self, arg1.pos)
             else:
@@ -329,3 +332,26 @@ def identity() -> "Transform":
 def translation(pos: Union["Point", Sequence[SupportsFloat]]) -> "Transform":
     """平行移動のみをするTransformを作成 (ver3.0〜)"""
     return Transform(pos, rot_from_euler([0, 0, 0]))
+
+
+def convert_to_transform(
+    origin: Union[
+        "webcface.transform.Point",
+        Sequence[SupportsFloat],
+        "webcface.transform.Transform",
+        "webcface.transform.Rotation",
+        Tuple[
+            Union["webcface.transform.Point", Sequence[SupportsFloat]],
+            Union["webcface.transform.Rotation", SupportsFloat],
+        ],
+    ]
+) -> "Transform":
+    if isinstance(origin, webcface.transform.Transform):
+        return origin
+    if isinstance(origin, webcface.transform.Point):
+        return webcface.transform.translation(origin)
+    if isinstance(origin, webcface.transform.Rotation):
+        return webcface.transform.Transform(origin)
+    if is_float_sequence(origin):
+        return webcface.transform.translation(origin)  # type:ignore
+    return webcface.transform.Transform(*origin)
