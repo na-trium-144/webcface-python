@@ -226,7 +226,7 @@ class Canvas2D(webcface.field.Field):
             for c in self._c2data.tmp_components:
                 idx = data_idx.get(c._canvas2d_type, 0) + 1
                 data_idx[c._canvas2d_type] = idx
-                c.lock_tmp(data, self._field, f"..{c._canvas2d_type}.{idx}")
+                c.lock_tmp(data, "c2", self._field, f"..{c._canvas2d_type}.{idx}")
                 self._c2data.components[c.id] = c.to_canvas2d()
                 self._c2data.ids.append(c.id)
             self._set_check().canvas2d_store.set_send(self._field, self._c2data)
@@ -257,6 +257,7 @@ class Canvas2D(webcface.field.Field):
         """
         if self._c2data is None:
             raise ValueError("Canvas2D not initialized")
+        assert len(args) > 0, "no components given to Canvas2D.add()"
         for c in args:
             if isinstance(c, webcface.temporal_component.TemporalComponent):
                 if len(kwargs) > 0:

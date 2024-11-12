@@ -307,7 +307,7 @@ class View(webcface.field.Field):
             for c in self._vdata.tmp_components:
                 idx = data_idx.get(c._view_type, 0) + 1
                 data_idx[c._view_type] = idx
-                c.lock_tmp(data, self._field, f"..{c._view_type}.{idx}")
+                c.lock_tmp(data, "v", self._field, f"..{c._view_type}.{idx}")
                 self._vdata.components[c.id] = c.to_view()
                 self._vdata.ids.append(c.id)
             data.view_store.set_send(self._field, self._vdata)
@@ -334,6 +334,7 @@ class View(webcface.field.Field):
         if self._vdata is None:
             self.init()
         assert self._vdata is not None
+        assert len(args) > 0, "no components given to View.add()"
         for c in args:
             if isinstance(c, webcface.temporal_component.TemporalComponent):
                 if len(kwargs) > 0:

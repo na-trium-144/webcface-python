@@ -24,7 +24,7 @@ class Canvas3DComponentBase:
         origin_pos: Optional[List[float]] = None,
         origin_rot: Optional[List[float]] = None,
         color: int = 0,
-        geometry_type: int = 0,
+        geometry_type: Optional[int] = None,
         geometry_properties: Optional[List[float]] = None,
         field_member: Optional[str] = None,
         field_field: Optional[str] = None,

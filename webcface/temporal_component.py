@@ -4,6 +4,8 @@ import webcface.client_data
 import webcface.text
 import webcface.field
 import webcface.view_base
+import webcface.canvas2d_base
+import webcface.canvas3d_base
 import webcface.transform
 
 
@@ -105,6 +107,8 @@ class TemporalComponent:
         :arg stroke_width: 線の太さ
         :arg text_size: (ver3.0〜) 文字サイズ (内部的にはstroke_widthと同一)
         :arg geometry: 表示する図形
+        :arg robot_model: (ver3.?〜) 表示するRobotModel
+        :arg angles: (ver3.0〜) 表示するRobotModelの関節角度
         """
         self._view_type = view_type
         self._canvas2d_type = canvas2d_type
@@ -213,7 +217,11 @@ class TemporalComponent:
         return self._id
 
     def lock_tmp(
-        self, data: "webcface.client_data.ClientData", field_name: str, id: str
+        self,
+        data: "webcface.client_data.ClientData",
+        data_type: str,
+        field_name: str,
+        id: str,
     ) -> None:
         """on_clickをFuncオブジェクトにlockする"""
         if self._id is None:
@@ -221,7 +229,7 @@ class TemporalComponent:
         if self._on_click_func_tmp is not None:
             on_click = webcface.func.Func(
                 webcface.field.Field(data, data.self_member_name),
-                "..v" + field_name + "." + self._id,
+                ".." + data_type + field_name + "." + self._id,
             )
             on_click.set(self._on_click_func_tmp)
             self._on_click_func = on_click
@@ -260,4 +268,17 @@ class TemporalComponent:
             self._stroke_width,
             self._geometry.type,
             self._geometry._properties,
+        )
+
+    def to_canvas3d(self) -> "webcface.canvas3d_base.Canvas3DComponentBase":
+        return webcface.canvas3d_base.Canvas3DComponentBase(
+            self._canvas3d_type,
+            list(self._origin.pos[:3]),
+            list(self._origin.rot_euler()[:3]),
+            self._text_color,
+            self._geometry.type,
+            self._geometry._properties,
+            self._field._member if self._field is not None else None,
+            self._field._field if self._field is not None else None,
+            self._angles,
         )

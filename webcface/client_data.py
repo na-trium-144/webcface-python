@@ -281,9 +281,7 @@ class ClientData:
     func_store: "SyncDataStore2[webcface.func_info.FuncInfo, None]"
     view_store: "SyncDataStore2[webcface.view.ViewData, None]"
     canvas2d_store: "SyncDataStore2[webcface.canvas2d.Canvas2DData, None]"
-    canvas3d_store: (
-        "SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase], None]"
-    )
+    canvas3d_store: "SyncDataStore2[webcface.canvas3d.Canvas3DData, None]"
     log_store: "SyncDataStore2[webcface.log_handler.LogData, None]"
     sync_time_store: SyncDataStore1[datetime.datetime]
     func_result_store: FuncResultStore
@@ -345,9 +343,7 @@ class ClientData:
         )
         self.view_store = SyncDataStore2[webcface.view.ViewData, None](name)
         self.canvas2d_store = SyncDataStore2[webcface.canvas2d.Canvas2DData, None](name)
-        self.canvas3d_store = SyncDataStore2[
-            List[webcface.canvas3d_base.Canvas3DComponentBase], None
-        ](name)
+        self.canvas3d_store = SyncDataStore2[webcface.canvas3d.Canvas3DData, None](name)
         self.log_store = SyncDataStore2[webcface.log_handler.LogData, None](name)
         self.sync_time_store = SyncDataStore1[datetime.datetime](name)
         self.func_result_store = FuncResultStore()

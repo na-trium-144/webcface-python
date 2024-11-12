@@ -1,10 +1,21 @@
-from typing import Optional, Callable, List
+from typing import Optional, Callable, List, Dict, Union
 import webcface.field
 import webcface.canvas3d_base
 import webcface.geometries
 import webcface.client_data
 import webcface.transform
 import webcface.view_base
+
+
+class Canvas3DData:
+    tmp_components: "List[webcface.temporal_component.TemporalComponent]"
+    components: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]"
+    ids: List[str]
+
+    def __init__(self) -> None:
+        self.tmp_components = []
+        self.components = {}
+        self.ids = []
 
 
 class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
@@ -39,7 +50,9 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
     @property
     def origin(self) -> "webcface.transform.Transform":
         """表示する要素の移動"""
-        return webcface.transform.Transform(self._origin_pos, self._origin_rot)
+        return webcface.transform.Transform(
+            self._origin_pos, webcface.transform.rot_from_euler(self._origin_rot)
+        )
 
     @property
     def color(self) -> int:
@@ -61,7 +74,7 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
 
 
 class Canvas3D(webcface.field.Field):
-    _c3data: "Optional[List[webcface.canvas3d_base.Canvas3DComponentBase]]"
+    _c3data: "Optional[Canvas3DData]"
     _modified: bool
 
     def __init__(
@@ -152,7 +165,7 @@ class Canvas3D(webcface.field.Field):
 
     def init(self) -> "Canvas3D":
         """このCanvas3Dオブジェクトにaddした内容を初期化する"""
-        self._c3data = []
+        self._c3data = Canvas3DData()
         self._modified = True
         return self
 
@@ -164,7 +177,15 @@ class Canvas3D(webcface.field.Field):
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified and self._c3data is not None:
-            self._set_check().canvas3d_store.set_send(self._field, self._c3data)
+            data = self._set_check()
+            data_idx: Dict[int, int] = {}
+            for c in self._c3data.tmp_components:
+                idx = data_idx.get(c._canvas3d_type, 0) + 1
+                data_idx[c._canvas3d_type] = idx
+                c.lock_tmp(data, "c3", self._field, f"..{c._canvas3d_type}.{idx}")
+                self._c3data.components[c.id] = c.to_canvas3d()
+                self._c3data.ids.append(c.id)
+            data.canvas3d_store.set_send(self._field, self._c3data)
             self._modified = False
         on_change = (
             self._data_check().on_canvas3d_change.get(self._member, {}).get(self._field)
@@ -173,17 +194,42 @@ class Canvas3D(webcface.field.Field):
             on_change(self)
         return self
 
-    def add(self, *args, **kwargs) -> "Canvas3D":
+    def add(
+        self,
+        *args: Union[
+            "webcface.temporal_component.TemporalComponent",
+            "webcface.geometries.Geometry3D",
+        ],
+        **kwargs,
+    ) -> "Canvas3D":
         """要素を追加
 
-        引数は add_geometry() にそのまま渡される
+        :arg args: (ver3.0〜) 追加する要素 (複数指定した場合すべて追加される。)
+        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
+        詳細は TemporalComponent のコンストラクタを参照
         """
-        if (args and isinstance(args[0], webcface.geometries.Geometry)) or (
-            "geometry" in kwargs
-        ):
-            self.add_geometry(*args, **kwargs)
-        else:
-            raise ValueError("Invalid argument type in Canvas3D.add")
+        if self._c3data is None:
+            self.init()
+        assert self._c3data is not None
+        assert len(args) > 0, "no components given to Canvas3D.add()"
+        for c in args:
+            if isinstance(c, webcface.temporal_component.TemporalComponent):
+                if len(kwargs) > 0:
+                    raise ValueError(
+                        f"kwargs is not allowed because {c} is already a component"
+                    )
+                self._c3data.tmp_components.append(c)
+            elif isinstance(c, webcface.geometries.Geometry):
+                self._c3data.tmp_components.append(
+                    webcface.temporal_component.TemporalComponent(
+                        canvas3d_type=webcface.canvas3d_base.Canvas3DComponentType.GEOMETRY,
+                        geometry=c,
+                        **kwargs,
+                    )
+                )
+            else:
+                raise ValueError(f"Invalid component {c}")
+        self._modified = True
         return self
 
     def add_geometry(
@@ -192,23 +238,8 @@ class Canvas3D(webcface.field.Field):
         origin: "Optional[webcface.transform.Transform]" = None,
         color: int = webcface.view_base.ViewColor.INHERIT,
     ) -> "Canvas3D":
-        """Geometryを追加"""
-        if self._c3data is None:
-            self.init()
-        if origin is None:
-            origin = webcface.transform.Transform([0, 0], 0)
-        self._c3data.append(
-            webcface.canvas3d_base.Canvas3DComponentBase(
-                webcface.canvas3d_base.Canvas3DComponentType.GEOMETRY,
-                list(origin.pos),
-                list(origin.rot),
-                color,
-                geometry.type,
-                geometry._properties,
-                None,
-                None,
-                None,
-            )
-        )
-        self._modified = True
-        return self
+        """Geometryを追加
+
+        .. deprecated:: ver3.0
+        """
+        return self.add(geometry, origin=origin, color=color)
