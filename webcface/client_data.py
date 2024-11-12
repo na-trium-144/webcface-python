@@ -279,8 +279,8 @@ class ClientData:
         "SyncDataStore2[webcface.image_frame.ImageFrame, webcface.image_frame.ImageReq]"
     )
     func_store: "SyncDataStore2[webcface.func_info.FuncInfo, None]"
-    view_store: "SyncDataStore2[List[webcface.view_base.ViewComponentBase], None]"
-    canvas2d_store: "SyncDataStore2[webcface.canvas2d_base.Canvas2DData, None]"
+    view_store: "SyncDataStore2[webcface.view.ViewData, None]"
+    canvas2d_store: "SyncDataStore2[webcface.canvas2d.Canvas2DData, None]"
     canvas3d_store: (
         "SyncDataStore2[List[webcface.canvas3d_base.Canvas3DComponentBase], None]"
     )
@@ -343,12 +343,8 @@ class ClientData:
         self.func_store = SyncDataStore2[webcface.func_info.FuncInfo, None](
             name, SyncDataStore2.should_not_send_twice
         )
-        self.view_store = SyncDataStore2[
-            List[webcface.view_base.ViewComponentBase], None
-        ](name)
-        self.canvas2d_store = SyncDataStore2[webcface.canvas2d_base.Canvas2DData, None](
-            name
-        )
+        self.view_store = SyncDataStore2[webcface.view.ViewData, None](name)
+        self.canvas2d_store = SyncDataStore2[webcface.canvas2d.Canvas2DData, None](name)
         self.canvas3d_store = SyncDataStore2[
             List[webcface.canvas3d_base.Canvas3DComponentBase], None
         ](name)

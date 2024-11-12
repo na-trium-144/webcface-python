@@ -9,6 +9,7 @@ import webcface.transform
 
 class TemporalComponent:
     _data: "Optional[webcface.client_data.ClientData]"
+    _id: Optional[str]
     _on_click_func_tmp: Optional[Callable]
     _bind_tmp: "Optional[webcface.text.InputRef]"
     _init: Optional[Union[float, bool, str]]
@@ -49,6 +50,7 @@ class TemporalComponent:
         view_type: int = 0,
         canvas2d_type: int = 0,
         canvas3d_type: int = 0,
+        id: Optional[str] = None,
         text: str = "",
         on_click: "Optional[Union[webcface.field.FieldBase, Callable]]" = None,
         text_color: Optional[int] = None,
@@ -85,6 +87,7 @@ class TemporalComponent:
         非対応の引数はadd時に無視される。
 
         :arg type: コンポーネントの種類 (text(), button()などコンポーネントを作成する各種関数を使えば自動で設定される)
+        :arg id: (ver3.0〜) 要素のID
         :arg text: 表示する文字列
         :arg on_click: クリック時に実行する関数
         :arg text_color: 文字の色 (ViewColorのEnumを使う)
@@ -103,7 +106,10 @@ class TemporalComponent:
         :arg text_size: (ver3.0〜) 文字サイズ (内部的にはstroke_widthと同一)
         :arg geometry: 表示する図形
         """
-        self._type = type
+        self._view_type = view_type
+        self._canvas2d_type = canvas2d_type
+        self._canvas3d_type = canvas3d_type
+        self._id = id
         self._text = text
         self._on_click_func = None
         self._text_ref = None
@@ -201,17 +207,28 @@ class TemporalComponent:
         ):
             self._data = self._field._data
 
-    def lock_tmp(self, data: "webcface.client_data.ClientData", field_id: str) -> None:
+    @property
+    def id(self) -> str:
+        assert self._id is not None
+        return self._id
+
+    def lock_tmp(
+        self, data: "webcface.client_data.ClientData", field_name: str, id: str
+    ) -> None:
         """on_clickをFuncオブジェクトにlockする"""
+        if self._id is None:
+            self._id = id
         if self._on_click_func_tmp is not None:
             on_click = webcface.func.Func(
-                webcface.field.Field(data, data.self_member_name), field_id
+                webcface.field.Field(data, data.self_member_name),
+                "..v" + field_name + "." + self._id,
             )
             on_click.set(self._on_click_func_tmp)
             self._on_click_func = on_click
         if self._bind_tmp is not None:
             text_ref = webcface.text.Variant(
-                webcface.field.Field(data, data.self_member_name), field_id
+                webcface.field.Field(data, data.self_member_name),
+                "..ir" + field_name + "." + self._id,
             )
             self._bind_tmp._state = text_ref
             self._text_ref = text_ref

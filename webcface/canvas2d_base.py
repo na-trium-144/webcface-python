@@ -1,6 +1,5 @@
-from typing import Optional, List
+from typing import Optional, List, Dict
 from enum import IntEnum
-import webcface.temporal_component
 
 
 class Canvas2DComponentType(IntEnum):
@@ -49,18 +48,3 @@ class Canvas2DComponentBase:
             and self._geometry_type == other._geometry_type
             and self._geometry_properties == other._geometry_properties
         )
-
-
-class Canvas2DData:
-    tmp_components: "List[webcface.temporal_component.TemporalComponent]"
-    components: "List[Canvas2DComponentBase]"
-    width: float
-    height: float
-
-    def __init__(self, width: float, height: float) -> None:
-        if width <= 0 or height <= 0:
-            raise ValueError(f"Invalid Canvas2D size ({width} x {height})")
-        self.tmp_components = []
-        self.components = []
-        self.width = width
-        self.height = height

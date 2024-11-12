@@ -1,4 +1,4 @@
-from typing import Optional, List, Callable, SupportsFloat, Union
+from typing import Optional, List, Callable, SupportsFloat, Union, Dict
 from copy import deepcopy
 import webcface.field
 import webcface.text
@@ -8,6 +8,17 @@ import webcface.client_data
 import webcface.func
 import webcface.temporal_component
 from webcface.typing import convertible_to_float
+
+
+class ViewData:
+    tmp_components: "List[webcface.temporal_component.TemporalComponent]"
+    components: "Dict[str, webcface.view_base.ViewComponentBase]"
+    ids: List[str]
+
+    def __init__(self) -> None:
+        self.tmp_components = []
+        self.components = {}
+        self.ids = []
 
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
@@ -171,7 +182,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
 
 class View(webcface.field.Field):
-    _components: "List[webcface.temporal_component.TemporalComponent]"
+    _vdata: "Optional[ViewData]"
     _modified: bool
 
     def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
@@ -185,7 +196,7 @@ class View(webcface.field.Field):
         super().__init__(
             base._data, base._member, field if field != "" else base._field
         )
-        self._components = []
+        self._vdata = None
         self._modified = False
 
     @property
@@ -234,7 +245,7 @@ class View(webcface.field.Field):
         v = self._data_check().view_store.get_recv(self._member, self._field)
         v2: Optional[List[ViewComponent]] = None
         if v is not None:
-            v2 = [ViewComponent(vb, self._data) for vb in v]
+            v2 = [ViewComponent(v.components[v_id], self._data) for v_id in v.ids]
         return v2
 
     def get(self) -> List[ViewComponent]:
@@ -277,7 +288,7 @@ class View(webcface.field.Field):
 
     def init(self) -> "View":
         """このViewオブジェクトにaddした内容を初期化する"""
-        self._components = []
+        self._vdata = ViewData()
         self._modified = True
         return self
 
@@ -288,13 +299,18 @@ class View(webcface.field.Field):
     def sync(self) -> "View":
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
-        if self._modified:
+        if self._modified and self._vdata is not None:
             data = self._set_check()
-            for i, c in enumerate(self._components):
-                c.lock_tmp(data, f"..v{self._field}.{i}")
-            data.view_store.set_send(
-                self._field, [c.to_view() for c in self._components]
-            )
+            self._vdata.components = {}
+            self._vdata.ids = []
+            data_idx: Dict[int, int] = {}
+            for c in self._vdata.tmp_components:
+                idx = data_idx.get(c._view_type, 0) + 1
+                data_idx[c._view_type] = idx
+                c.lock_tmp(data, self._field, f"..{c._view_type}.{idx}")
+                self._vdata.components[c.id] = c.to_view()
+                self._vdata.ids.append(c.id)
+            data.view_store.set_send(self._field, self._vdata)
             on_change = data.on_view_change.get(self._member, {}).get(self._field)
             if on_change is not None:
                 on_change(self)
@@ -315,22 +331,33 @@ class View(webcface.field.Field):
         :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
         詳細は TemporalComponent のコンストラクタを参照
         """
+        if self._vdata is None:
+            self.init()
+        assert self._vdata is not None
         for c in args:
             if isinstance(c, webcface.temporal_component.TemporalComponent):
                 if len(kwargs) > 0:
                     raise ValueError(
                         f"kwargs is not allowed because {c} is already a component"
                     )
-                self._components.append(c)
+                self._vdata.tmp_components.append(c)
             elif isinstance(c, str):
                 while "\n" in c:
                     s = c[: c.find("\n")]
-                    self._components.append(webcface.components.text(s, **kwargs))
-                    self._components.append(webcface.components.new_line(**kwargs))
+                    self._vdata.tmp_components.append(
+                        webcface.components.text(s, **kwargs)
+                    )
+                    self._vdata.tmp_components.append(
+                        webcface.components.new_line(**kwargs)
+                    )
                     c = c[c.find("\n") + 1 :]
                 if c != "":
-                    self._components.append(webcface.components.text(c, **kwargs))
+                    self._vdata.tmp_components.append(
+                        webcface.components.text(c, **kwargs)
+                    )
             else:
-                self._components.append(webcface.components.text(str(c), **kwargs))
+                self._vdata.tmp_components.append(
+                    webcface.components.text(str(c), **kwargs)
+                )
         self._modified = True
         return self

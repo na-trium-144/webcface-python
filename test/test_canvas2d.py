@@ -1,9 +1,8 @@
 from conftest import self_name
 import pytest
-from webcface.canvas2d import Canvas2D, Canvas2DComponent
+from webcface.canvas2d import Canvas2D, Canvas2DComponent, Canvas2DData
 from webcface.canvas2d_base import (
     Canvas2DComponentBase,
-    Canvas2DData,
     Canvas2DComponentType,
 )
 import webcface.geometries as geometries
