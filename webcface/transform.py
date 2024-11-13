@@ -60,31 +60,49 @@ class Point:
         self._z = float(pos[2]) if len(pos) == 3 else 0.0
 
     def __eq__(self, other: object) -> bool:
-        """Pointと比較した場合座標が一致すればTrue"""
+        """Pointと比較した場合座標の差が 1e-8 未満ならTrue
+
+        (ver3.0〜) Transformとは比較できない
+        """
         if isinstance(other, Transform):
-            return False
+            raise TypeError("Transform can't be compared with Point")
         elif isinstance(other, Point):
-            return self.pos == other.pos
+            return (
+                abs(self._x - other._x) < 1e-8
+                and abs(self._y - other._y) < 1e-8
+                and abs(self._z - other._z) < 1e-8
+            )
         else:
-            return False
+            return NotImplemented
+
+    def __ne__(self, other: object) -> bool:
+        return not self == other
 
     def __add__(self, other: "Point") -> "Point":
+        if isinstance(other, (Transform, Rotation)):
+            raise TypeError("Transform or Rotation can't be added to Point")
         if isinstance(other, Point):
             return Point([a + b for a, b in zip(self.pos, other.pos)])
         return NotImplemented
 
     def __iadd__(self, other: "Point") -> "Point":
+        if isinstance(other, (Transform, Rotation)):
+            raise TypeError("Transform or Rotation can't be added to Point")
         if isinstance(other, Point):
             self.set_pos([a + b for a, b in zip(self.pos, other.pos)])
             return self
         return NotImplemented
 
     def __sub__(self, other: "Point") -> "Point":
+        if isinstance(other, (Transform, Rotation)):
+            raise TypeError("Transform or Rotation can't be subtracted from Point")
         if isinstance(other, Point):
             return Point([a - b for a, b in zip(self.pos, other.pos)])
         return NotImplemented
 
     def __isub__(self, other: "Point") -> "Point":
+        if isinstance(other, (Transform, Rotation)):
+            raise TypeError("Transform or Rotation can't be subtracted to Point")
         if isinstance(other, Point):
             self.set_pos([a - b for a, b in zip(self.pos, other.pos)])
             return self
@@ -97,19 +115,33 @@ class Point:
         return Point(self.pos)
 
     def __mul__(self, other: SupportsFloat) -> "Point":
+        if isinstance(other, (Transform, Rotation, Point)):
+            raise TypeError(
+                "Transform, Rotation or Point can't be multiplied to Point from right"
+            )
         return Point([a * float(other) for a in self.pos])
 
     def __rmul__(self, other: SupportsFloat) -> "Point":
+        if isinstance(other, (Transform, Rotation, Point)):
+            return NotImplemented  # should be defined in the other class
         return Point([a * float(other) for a in self.pos])
 
     def __imul__(self, other: SupportsFloat) -> "Point":
+        if isinstance(other, (Transform, Rotation, Point)):
+            raise TypeError(
+                "Transform, Rotation or Point can't be multiplied to Point from right"
+            )
         self.set_pos([a * float(other) for a in self.pos])
         return self
 
     def __div__(self, other: SupportsFloat) -> "Point":
+        if isinstance(other, (Transform, Rotation, Point)):
+            raise TypeError("Transform, Rotation or Point can't be divided from Point")
         return Point([a / float(other) for a in self.pos])
 
     def __idiv__(self, other: SupportsFloat) -> "Point":
+        if isinstance(other, (Transform, Rotation, Point)):
+            raise TypeError("Transform, Rotation or Point can't be multiplied to Point")
         self.set_pos([a / float(other) for a in self.pos])
         return self
 
@@ -228,6 +260,84 @@ class Rotation:
         """回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)"""
         return webcface.transform_impl.quaternion_to_axis_angle(self.rot_quat())
 
+    def __eq__(self, other: object) -> bool:
+        """Rotationと比較した場合回転行列の各要素の差が 1e-8 未満ならTrue
+
+        Transformとも比較できる
+        """
+        if isinstance(other, Transform):
+            return other == Transform(self)
+        elif isinstance(other, Rotation):
+            return all(
+                all(abs(a - b) < 1e-8 for a, b in zip(ra, rb))
+                for ra, rb in zip(self.rot_matrix(), other.rot_matrix())
+            )
+        else:
+            return NotImplemented
+
+    def __ne__(self, other: object) -> bool:
+        return not self == other
+
+    def applied_to_point(
+        self, other: Union["Point", Sequence[SupportsFloat]]
+    ) -> "Point":
+        """Point を回転させた結果を返す
+
+        :arg other: 回転させる対象
+        """
+        if not isinstance(other, Point):
+            other = Point(other)
+        return Point(
+            webcface.transform_impl.apply_rot_point(self.rot_matrix(), other.pos)
+        )
+
+    def applied_to_rotation(self, other: "Rotation") -> "Rotation":
+        """Rotation を回転させた結果を返す
+
+        :arg other: 回転させる対象
+        """
+        return Rotation(
+            None,
+            None,
+            None,
+            webcface.transform_impl.apply_rot_rot(
+                self.rot_matrix(), other.rot_matrix()
+            ),
+        )
+
+    def applied_to_transform(self, other: "Transform") -> "Transform":
+        """Transform を回転させた結果を返す
+
+        :arg other: 回転させる対象
+        """
+        return Transform(self.applied_to_point(other), self.applied_to_rotation(other))
+
+    def __mul__(
+        self, other: Union["Point", "Rotation", "Transform"]
+    ) -> Union["Point", "Rotation", "Transform"]:
+        if isinstance(other, Transform):
+            return self.applied_to_transform(other)
+        if isinstance(other, Point):
+            return self.applied_to_point(other)
+        if isinstance(other, Rotation):
+            return self.applied_to_rotation(other)
+        return NotImplemented
+
+    def __imul__(self, other: "Rotation") -> "Rotation":
+        if isinstance(other, Transform):
+            raise TypeError("Rotation * Transform is not Rotation")
+        elif isinstance(other, Point):
+            raise TypeError("Rotation * Point is not Rotation")
+        elif isinstance(other, Rotation):
+            result = self.applied_to_rotation(other)
+        else:
+            return TypeError("Rotation can't be multiplied to " + str(type(other)))
+        self._az = None
+        self._ay = None
+        self._ax = None
+        self._rmat = result._rmat
+        return self
+
 
 def rot_from_euler(
     angles: Sequence[SupportsFloat], axis=AxisSequence.ZYX
@@ -316,12 +426,74 @@ class Transform(Point, Rotation):
             else:
                 Point.__init__(self, arg1)
 
-    # def __eq__(self, other: object) -> bool:
-    #     """Transformと比較した場合座標と回転が一致すればTrue"""
-    #     if isinstance(other, Transform):
-    #         return self._pos == other._pos and self._rot == other._rot
-    #     else:
-    #         return False
+    def __eq__(self, other: object) -> bool:
+        """Transformと比較した場合座標と回転がそれぞれ 1e-8 未満の差ならTrue
+
+        (ver3.0〜) Pointとは比較できないが、Rotationとは比較できる
+        """
+        if isinstance(other, Transform):
+            return Point.__eq__(self, other) and Rotation.__eq__(self, other)
+        elif isinstance(other, Rotation):
+            return self == Transform(other)
+        elif isinstance(other, Point):
+            raise TypeError("Point can't be compared with Transform")
+        else:
+            return NotImplemented
+
+    def __ne__(self, other: object) -> bool:
+        return not self == other
+
+    def applied_to_point(
+        self, other: Union["Point", Sequence[SupportsFloat]]
+    ) -> "Point":
+        """Point を回転+平行移動させた結果を返す
+
+        :arg other: 変換する対象
+        """
+        if not isinstance(other, Point):
+            other = Point(other)
+        return Rotation.applied_to_point(self, other) + Point(self.pos)
+
+    def applied_to_rotation(self, other: "Rotation") -> "Transform":
+        """Rotation を回転+平行移動させた結果を返す
+
+        :arg other: 変換する対象
+        :return: 返り値はRotationではなくTransform。 applied_to_transformと同じ結果になる
+        """
+        return self.applied_to_transform(Transform(other))
+
+    def applied_to_transform(self, other: "Transform") -> "Transform":
+        """Transform を回転+平行移動させた結果を返す
+
+        :arg other: 変換する対象対象
+        """
+        return Transform(self.applied_to_point(other), self.applied_to_rotation(other))
+
+    def __mul__(
+        self, other: Union["Point", "Rotation", "Transform"]
+    ) -> Union["Point", "Transform"]:
+        if isinstance(other, Transform):
+            return self.applied_to_transform(other)
+        if isinstance(other, Point):
+            return self.applied_to_point(other)
+        if isinstance(other, Rotation):
+            return self.applied_to_rotation(other)
+        return NotImplemented
+
+    def __imul__(self, other: Union["Rotation", "Transform"]) -> "Transform":
+        if isinstance(other, Transform):
+            result = self.applied_to_transform(other)
+        elif isinstance(other, Rotation):
+            result = self.applied_to_rotation(other)
+        elif isinstance(other, Point):
+            raise TypeError("Transform * Point is not Transform")
+        else:
+            return TypeError("Transform can't be multiplied to " + str(type(other)))
+        self._az = None
+        self._ay = None
+        self._ax = None
+        self._rmat = result._rmat
+        return self
 
 
 def identity() -> "Transform":

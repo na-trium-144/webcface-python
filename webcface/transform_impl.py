@@ -1,17 +1,16 @@
 import math
-from typing import Tuple, SupportsFloat, Sequence
+from typing import Tuple, SupportsFloat, Sequence, List
 import webcface.transform
 
 # https://en.wikipedia.org/wiki/Euler_angles にあるものを写した
 
+Vector3 = Tuple[float, float, float]
+Matrix3 = Tuple[Vector3, Vector3, Vector3]
+
 
 def euler_to_matrix(
     angles: Sequence[SupportsFloat], axis: "webcface.transform.AxisSequence"
-) -> Tuple[
-    Tuple[float, float, float],
-    Tuple[float, float, float],
-    Tuple[float, float, float],
-]:
+) -> Matrix3:
     c0 = math.cos(float(angles[0]))
     c1 = math.cos(float(angles[1]))
     c2 = math.cos(float(angles[2]))
@@ -111,7 +110,7 @@ def is_zero(value: float) -> bool:
 
 def matrix_to_proper_euler(
     rmat: Sequence[Sequence[SupportsFloat]], axis: "webcface.transform.AxisSequence"
-) -> Tuple[float, float, float]:
+) -> Vector3:
     if axis == webcface.transform.AxisSequence.XZX:
         cb = float(rmat[0][0])
         sa_sb = float(rmat[2][0])
@@ -179,7 +178,7 @@ def matrix_to_proper_euler(
 
 def matrix_to_tait_bryan_euler(
     rmat: Sequence[Sequence[SupportsFloat]], axis: "webcface.transform.AxisSequence"
-) -> Tuple[float, float, float]:
+) -> Vector3:
     if axis == webcface.transform.AxisSequence.XZY:
         sb = -float(rmat[0][1])
         sa_cb = float(rmat[2][1])
@@ -247,7 +246,7 @@ def matrix_to_tait_bryan_euler(
 
 def matrix_to_euler(
     rmat: Sequence[Sequence[SupportsFloat]], axis: "webcface.transform.AxisSequence"
-) -> Tuple[float, float, float]:
+) -> Vector3:
     if axis >= 0 and axis < 6:
         return matrix_to_proper_euler(rmat, axis)
     if axis >= 6 and axis < 12:
@@ -255,11 +254,7 @@ def matrix_to_euler(
     raise ValueError("Invalid axis sequence")
 
 
-def quaternion_to_matrix(quat: Sequence[SupportsFloat]) -> Tuple[
-    Tuple[float, float, float],
-    Tuple[float, float, float],
-    Tuple[float, float, float],
-]:
+def quaternion_to_matrix(quat: Sequence[SupportsFloat]) -> Matrix3:
     w = float(quat[0])
     x = float(quat[1])
     y = float(quat[2])
@@ -339,3 +334,28 @@ def quaternion_to_axis_angle(
     z = float(quat[3])
     angle = 2 * math.acos(w)
     return ((x, y, z), angle)
+
+
+def apply_rot_point(left: Matrix3, right: Vector3) -> Vector3:
+    new_pos: List[float] = [0, 0, 0]
+    for i in range(3):
+        new_pos[i] = (
+            left[i][0] * right[0] + left[i][1] * right[1] + left[i][2] * right[2]
+        )
+    return (new_pos[0], new_pos[1], new_pos[2])
+
+
+def apply_rot_rot(left: Matrix3, right: Matrix3) -> Matrix3:
+    new_pos: List[List[float]] = [[0, 0, 0], [0, 0, 0], [0, 0, 0]]
+    for i in range(3):
+        for j in range(3):
+            new_pos[i][j] = (
+                left[i][0] * right[0][j]
+                + left[i][1] * right[1][j]
+                + left[i][2] * right[2][j]
+            )
+    return (
+        (new_pos[0][0], new_pos[0][1], new_pos[0][2]),
+        (new_pos[1][0], new_pos[1][1], new_pos[1][2]),
+        (new_pos[2][0], new_pos[2][1], new_pos[2][2]),
+    )
