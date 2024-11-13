@@ -1,6 +1,5 @@
 import math
-from typing import Tuple, SupportsFloat
-from collections.abc import Sequence
+from typing import Tuple, SupportsFloat, Sequence
 import webcface.transform
 
 # https://en.wikipedia.org/wiki/Euler_angles にあるものを写した
