@@ -48,3 +48,6 @@ class Canvas2DComponentBase:
             and self._geometry_type == other._geometry_type
             and self._geometry_properties == other._geometry_properties
         )
+
+    def __ne__(self, other) -> bool:
+        return not self == other

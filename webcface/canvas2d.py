@@ -44,6 +44,18 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
             base._geometry_properties,
         )
 
+    def __eq__(self, other) -> bool:
+        """プロパティの比較 (ver3.0〜)
+
+        :return: id以外のプロパティが全部等しければTrueになる
+        """
+        return isinstance(
+            other, Canvas2DComponent
+        ) and webcface.canvas2d_base.Canvas2DComponentBase.__eq__(self, other)
+
+    def __ne__(self, other) -> bool:
+        return not self == other
+
     @property
     def type(self) -> int:
         """コンポーネントの種類

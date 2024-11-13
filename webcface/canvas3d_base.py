@@ -53,3 +53,6 @@ class Canvas3DComponentBase:
             and self._field_field == other._field_field
             and self._angles == other._angles
         )
+
+    def __ne__(self, other) -> bool:
+        return not self == other

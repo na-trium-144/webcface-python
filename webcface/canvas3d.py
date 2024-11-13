@@ -39,6 +39,18 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
         )
         self._data = data
 
+    def __eq__(self, other) -> bool:
+        """プロパティの比較 (ver3.0〜)
+
+        :return: id以外のプロパティが全部等しければTrueになる
+        """
+        return isinstance(
+            other, Canvas3DComponent
+        ) and webcface.canvas3d_base.Canvas3DComponentBase.__eq__(self, other)
+
+    def __ne__(self, other) -> bool:
+        return not self == other
+
     @property
     def type(self) -> int:
         """コンポーネントの種類

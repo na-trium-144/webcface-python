@@ -46,37 +46,11 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
     def __eq__(self, other) -> bool:
         """プロパティの比較
 
-        :return: プロパティが全部等しければTrueになる
+        :return: id以外のプロパティが全部等しければTrueになる
         """
-        return (
-            isinstance(other, ViewComponent)
-            and self._type == other._type
-            and self._text == other._text
-            and (
-                (self._on_click_func is None and other._on_click_func is None)
-                or (
-                    self._on_click_func is not None
-                    and other._on_click_func is not None
-                    and self._on_click_func._member == other._on_click_func._member
-                    and self._on_click_func._field == other._on_click_func._field
-                )
-            )
-            and (
-                (self._text_ref is None and other._text_ref is None)
-                or (
-                    self._text_ref is not None
-                    and other._text_ref is not None
-                    and self._text_ref._member == other._text_ref._member
-                    and self._text_ref._field == other._text_ref._field
-                )
-            )
-            and self._text_color == other._text_color
-            and self._bg_color == other._bg_color
-            and self._min == other._min
-            and self._max == other._max
-            and self._step == other._step
-            and self._option == other._option
-        )
+        return isinstance(
+            other, ViewComponent
+        ) and webcface.view_base.ViewComponentBase.__eq__(self, other)
 
     def __ne__(self, other) -> bool:
         return not self == other
