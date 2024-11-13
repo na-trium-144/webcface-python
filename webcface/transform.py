@@ -338,6 +338,15 @@ class Rotation:
         self._rmat = result._rmat
         return self
 
+    def inversed(self) -> "Rotation":
+        """逆回転を取得"""
+        return Rotation(
+            None,
+            None,
+            None,
+            webcface.transform_impl.inverse_matrix(self.rot_matrix()),
+        )
+
 
 def rot_from_euler(
     angles: Sequence[SupportsFloat], axis=AxisSequence.ZYX
@@ -389,7 +398,41 @@ def rot_from_axis_angle(
     return rot_from_quat(webcface.transform_impl.axis_angle_to_quaternion(axis, angle))
 
 
-class Transform(Point, Rotation):
+def rot_2d(angle: SupportsFloat) -> "Rotation":
+    """2次元の回転を作成 (ver3.0〜)
+
+    rot_z() と同じ。
+
+    :arg angle: 回転角
+    """
+    return Rotation(angle, 0, 0, None)
+
+
+def rot_z(angle: SupportsFloat) -> "Rotation":
+    """z軸周りの回転を作成 (ver3.0〜)
+
+    :arg angle: 回転角
+    """
+    return Rotation(angle, 0, 0, None)
+
+
+def rot_y(angle: SupportsFloat) -> "Rotation":
+    """y軸周りの回転を作成 (ver3.0〜)
+
+    :arg angle: 回転角
+    """
+    return Rotation(0, angle, 0, None)
+
+
+def rot_x(angle: SupportsFloat) -> "Rotation":
+    """x軸周りの回転を作成 (ver3.0〜)
+
+    :arg angle: 回転角
+    """
+    return Rotation(0, 0, angle, None)
+
+
+class Transform:
     """3次元の座標と回転
 
     内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。
@@ -400,7 +443,12 @@ class Transform(Point, Rotation):
 
     平行移動のみの場合は translation() を使用する。
     回転のみの場合はRotationだけ渡せば直接Transformに変換される
+
+    ver3.0〜 Pointを継承せず別のクラスとしての実装に変更
     """
+
+    _point: "Point"
+    _rotation: "Rotation"
 
     def __init__(
         self,
@@ -412,19 +460,20 @@ class Transform(Point, Rotation):
         arg2: Optional[Union["Rotation", SupportsFloat]] = None,
     ) -> None:
         if isinstance(arg1, Rotation):
-            Rotation.__init__(self, arg1._az, arg1._ay, arg1._ax, arg1._rmat)
+            self._point = Point([0, 0, 0])
+            self._rotation = Rotation(arg1._az, arg1._ay, arg1._ax, arg1._rmat)
         else:
             assert (
                 arg2 is not None
             ), "Rotation must be given, use translation() for translation only"
             if isinstance(arg2, Rotation):
-                Rotation.__init__(self, arg2._az, arg2._ay, arg2._ax, arg2._rmat)
+                self._rotation = Rotation(arg2._az, arg2._ay, arg2._ax, arg2._rmat)
             else:
-                Rotation.__init__(self, arg2, 0, 0, None)
+                self._rotation = Rotation(arg2, 0, 0, None)
             if isinstance(arg1, Point):
-                Point.__init__(self, arg1.pos)
+                self._point = Point(arg1.pos)
             else:
-                Point.__init__(self, arg1)
+                self._point = Point(arg1)
 
     def __eq__(self, other: object) -> bool:
         """Transformと比較した場合座標と回転がそれぞれ 1e-8 未満の差ならTrue
@@ -432,7 +481,7 @@ class Transform(Point, Rotation):
         (ver3.0〜) Pointとは比較できないが、Rotationとは比較できる
         """
         if isinstance(other, Transform):
-            return Point.__eq__(self, other) and Rotation.__eq__(self, other)
+            return self._point == other._point and self._rotation == other._rotation
         elif isinstance(other, Rotation):
             return self == Transform(other)
         elif isinstance(other, Point):
@@ -443,6 +492,49 @@ class Transform(Point, Rotation):
     def __ne__(self, other: object) -> bool:
         return not self == other
 
+    @property
+    def pos(self) -> Tuple[float, float, float]:
+        """座標を返す
+
+        2次元の場合は pos[0:2] を使う
+        """
+        return self._point.pos
+
+    @property
+    def rot(self) -> Tuple[float, float, float]:
+        """回転角を取得
+
+        2次元の場合は rot[0] を使う
+
+        .. deprecated:: ver3.0
+        """
+        return self.rot_euler()
+
+    def rot_euler(self, axis=AxisSequence.ZYX) -> Tuple[float, float, float]:
+        """回転角をオイラー角として取得 (ver3.0〜)
+
+        :arg axis: オイラー角の回転順序
+        """
+        return self._rotation.rot_euler(axis)
+
+    def rot_matrix(
+        self,
+    ) -> Tuple[
+        Tuple[float, float, float],
+        Tuple[float, float, float],
+        Tuple[float, float, float],
+    ]:
+        """回転角を回転行列として取得 (ver3.0〜)"""
+        return self._rotation.rot_matrix()
+
+    def rot_quat(self) -> Tuple[float, float, float, float]:
+        """回転角をクォータニオン(w, x, y, z)として取得 (ver3.0〜)"""
+        return self._rotation.rot_quat()
+
+    def rot_axis_angle(self) -> Tuple[Tuple[float, float, float], float]:
+        """回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)"""
+        return self._rotation.rot_axis_angle()
+
     def applied_to_point(
         self, other: Union["Point", Sequence[SupportsFloat]]
     ) -> "Point":
@@ -452,7 +544,7 @@ class Transform(Point, Rotation):
         """
         if not isinstance(other, Point):
             other = Point(other)
-        return Rotation.applied_to_point(self, other) + Point(self.pos)
+        return self._rotation.applied_to_point(other) + self._point
 
     def applied_to_rotation(self, other: "Rotation") -> "Transform":
         """Rotation を回転+平行移動させた結果を返す
@@ -467,7 +559,10 @@ class Transform(Point, Rotation):
 
         :arg other: 変換する対象対象
         """
-        return Transform(self.applied_to_point(other), self.applied_to_rotation(other))
+        return Transform(
+            self._rotation.applied_to_point(other._point) + self._point,
+            self._rotation.applied_to_rotation(other._rotation),
+        )
 
     def __mul__(
         self, other: Union["Point", "Rotation", "Transform"]
@@ -489,11 +584,16 @@ class Transform(Point, Rotation):
             raise TypeError("Transform * Point is not Transform")
         else:
             return TypeError("Transform can't be multiplied to " + str(type(other)))
-        self._az = None
-        self._ay = None
-        self._ax = None
-        self._rmat = result._rmat
+        self._point = result._point
+        self._rotation = result._rotation
         return self
+
+    def inversed(self) -> "Transform":
+        """逆変換を取得 (ver3.0〜)"""
+        pos, mat = webcface.transform_impl.inverse_transform(
+            self.pos, self.rot_matrix()
+        )
+        return Transform(pos, rot_from_matrix(mat))
 
 
 def identity() -> "Transform":

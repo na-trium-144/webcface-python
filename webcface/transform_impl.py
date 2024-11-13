@@ -359,3 +359,16 @@ def apply_rot_rot(left: Matrix3, right: Matrix3) -> Matrix3:
         (new_pos[1][0], new_pos[1][1], new_pos[1][2]),
         (new_pos[2][0], new_pos[2][1], new_pos[2][2]),
     )
+
+
+def inverse_matrix(mat: Matrix3) -> Matrix3:
+    return (
+        (mat[0][0], mat[1][0], mat[2][0]),
+        (mat[0][1], mat[1][1], mat[2][1]),
+        (mat[0][2], mat[1][2], mat[2][2]),
+    )
+
+
+def inverse_transform(pos: Vector3, mat: Matrix3) -> Tuple[Vector3, Matrix3]:
+    inv = inverse_matrix(mat)
+    return (apply_rot_point(inv, pos), inv)
