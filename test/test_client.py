@@ -401,11 +401,16 @@ def test_view_req(wcli):
             "b",
             text_color=ViewColor.YELLOW,
             bg_color=ViewColor.GREEN,
-        ),
-        "1": webcface.components.new_line(),
-        "2": webcface.components.button("a", Func(Field(wcli._data_check(), "x", "y"))),
+        )
+        .lock_tmp(wcli._data, "", "", "0")
+        .to_view(),
+        "1": webcface.components.new_line().lock_tmp(wcli._data, "", "", "1").to_view(),
+        "2": webcface.components.button("a", Func(Field(wcli._data_check(), "x", "y")))
+        .lock_tmp(wcli._data, "", "", "2")
+        .to_view(),
     }
-    send_back(wcli, [ViewRes.new(1, "", v, 3), ViewRes.new(1, "c", v, 3)])
+    ids = ["0", "1", "2"]
+    send_back(wcli, [ViewRes.new(1, "", v, ids), ViewRes.new(1, "c", v, ids)])
     assert called == 1
     assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
     assert (
@@ -419,9 +424,9 @@ def test_view_req(wcli):
             "b",
             text_color=ViewColor.RED,
             bg_color=ViewColor.GREEN,
-        ),
+        ).lock_tmp(wcli._data, "", "", "0").to_view(),
     }
-    send_back(wcli, [ViewRes.new(1, "", v2, 3)])
+    send_back(wcli, [ViewRes.new(1, "", v2, None)])
     assert called == 2
     assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
     assert (

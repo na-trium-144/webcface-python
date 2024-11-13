@@ -1,6 +1,6 @@
 from conftest import self_name
 import pytest
-from webcface.view import View, ViewComponent
+from webcface.view import View, ViewComponent, ViewData
 from webcface.view_base import ViewComponentType, ViewColor
 from webcface.view_base import ViewComponentBase
 import webcface.components as view
@@ -33,13 +33,10 @@ def test_view_try_get(data):
     View(Field(data, self_name, "b")).try_get()
     assert self_name not in data.view_store.req
 
-    data.view_store.data_recv["a"] = {"b": [view.text("a").lock_tmp(data, "")]}
-    assert len(View(Field(data, "a", "b")).try_get()) == 1
-    assert isinstance(View(Field(data, "a", "b")).try_get()[0], ViewComponent)
-
-    data.view_store.data_recv["a"] = {
-        "b": [ViewComponentBase(type=ViewComponentType.TEXT, text="a")]
-    }
+    vdata = ViewData()
+    vdata.components = {"0": view.text("a").lock_tmp(data, "", "", "0").to_view()}
+    vdata.ids = ["0"]
+    data.view_store.data_recv["a"] = {"b": vdata}
     assert len(View(Field(data, "a", "b")).try_get()) == 1
     assert isinstance(View(Field(data, "a", "b")).try_get()[0], ViewComponent)
 
@@ -51,13 +48,10 @@ def test_view_get(data):
     View(Field(data, self_name, "b")).get()
     assert self_name not in data.view_store.req
 
-    data.view_store.data_recv["a"] = {"b": [view.text("a").lock_tmp(data, "")]}
-    assert len(View(Field(data, "a", "b")).get()) == 1
-    assert isinstance(View(Field(data, "a", "b")).get()[0], ViewComponent)
-
-    data.view_store.data_recv["a"] = {
-        "b": [ViewComponentBase(type=ViewComponentType.TEXT, text="a")]
-    }
+    vdata = ViewData()
+    vdata.components = {"0": view.text("a").lock_tmp(data, "", "", "0").to_view()}
+    vdata.ids = ["0"]
+    data.view_store.data_recv["a"] = {"b": vdata}
     assert len(View(Field(data, "a", "b")).get()) == 1
     assert isinstance(View(Field(data, "a", "b")).get()[0], ViewComponent)
 
@@ -87,15 +81,18 @@ def test_view_set(data):
         v.add(view.decimal_input("i", bind=ref1, init=123, min=1, max=1000))
         v.add(view.select_input("i2", bind=ref2, option=["a", "b", "c"]))
         called_ref3 = 0
+
         def on_change_ref3(val):
             nonlocal called_ref3
             called_ref3 += 1
             assert val == "aaa"
+
         v.add(view.text_input("i3", on_change=on_change_ref3))
 
         # v.sync()
 
-    vd = data.view_store.data_send.get("b", [])
+    vdata = data.view_store.data_send.get("b", [])
+    vd = [vdata.components[v_id] for v_id in vdata.ids]
     assert vd[0]._type == ViewComponentType.TEXT
     assert vd[0]._text == "a"
     assert vd[1]._type == ViewComponentType.NEW_LINE
@@ -149,8 +146,8 @@ def test_view_set(data):
     # v.sync()
     with View(Field(data, self_name, "b")) as v:
         pass
-    vd = data.view_store.data_send.get("b", [])
-    assert len(vd) == 0
+    vdata = data.view_store.data_send.get("b", [])
+    assert len(vdata.components) == 0
     assert called == 2
 
     with pytest.raises(ValueError) as e:

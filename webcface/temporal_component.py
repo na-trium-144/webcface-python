@@ -222,7 +222,7 @@ class TemporalComponent:
         data_type: str,
         field_name: str,
         id: str,
-    ) -> None:
+    ) -> "TemporalComponent":
         """on_clickをFuncオブジェクトにlockする"""
         if self._id is None:
             self._id = id
@@ -243,6 +243,7 @@ class TemporalComponent:
             if self._init is not None and text_ref.try_get() is None:
                 text_ref.set(self._init)
         self._data = data
+        return self
 
     def to_view(self) -> "webcface.view_base.ViewComponentBase":
         return webcface.view_base.ViewComponentBase(

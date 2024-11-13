@@ -527,7 +527,9 @@ class View(MessageBase):
 
     @staticmethod
     def new(
-        f: str, d: "Dict[str, webcface.view_base.ViewComponentBase]", l: List[str]
+        f: str,
+        d: "Dict[str, webcface.view_base.ViewComponentBase]",
+        l: Optional[List[str]],
     ) -> "View":
         return View({"f": f, "d": vb_to_vd(d), "l": l})
 
@@ -540,7 +542,7 @@ class View(MessageBase):
         return vd_to_vb(self.msg["d"])
 
     @property
-    def ids(self) -> List[str]:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
@@ -575,7 +577,10 @@ class ViewRes(MessageBase):
 
     @staticmethod
     def new(
-        i: int, f: str, d: "Dict[str, webcface.view_base.ViewComponentBase]", l: List[str]
+        i: int,
+        f: str,
+        d: "Dict[str, webcface.view_base.ViewComponentBase]",
+        l: Optional[List[str]],
     ) -> "ViewRes":
         return ViewRes({"i": i, "f": f, "d": vb_to_vd(d), "l": l})
 
@@ -592,7 +597,7 @@ class ViewRes(MessageBase):
         return vd_to_vb(self.msg["d"])
 
     @property
-    def ids(self) -> List[str]:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
@@ -661,7 +666,7 @@ class Canvas2D(MessageBase):
         w: float,
         h: float,
         d: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]",
-        l: List[str],
+        l: Optional[List[str]],
     ) -> "Canvas2D":
         return Canvas2D({"f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
 
@@ -682,7 +687,7 @@ class Canvas2D(MessageBase):
         return c2d_to_c2b(self.msg["d"])
 
     @property
-    def ids(self) -> List[str]:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
@@ -722,7 +727,7 @@ class Canvas2DRes(MessageBase):
         w: float,
         h: float,
         d: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]",
-        l: List[str],
+        l: Optional[List[str]],
     ) -> "Canvas2DRes":
         return Canvas2DRes({"i": i, "f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
 
@@ -747,7 +752,7 @@ class Canvas2DRes(MessageBase):
         return c2d_to_c2b(self.msg["d"])
 
     @property
-    def ids(self) -> List[str]:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
@@ -816,7 +821,7 @@ class Canvas3D(MessageBase):
     def new(
         f: str,
         d: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]",
-        l: List[str],
+        l: Optional[List[str]],
     ) -> "Canvas3D":
         return Canvas3D({"f": f, "d": c3b_to_c3d(d), "l": l})
 
@@ -829,7 +834,7 @@ class Canvas3D(MessageBase):
         return c3d_to_c3b(self.msg["d"])
 
     @property
-    def ids(self) -> List[str]:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
@@ -867,7 +872,7 @@ class Canvas3DRes(MessageBase):
         i: int,
         f: str,
         d: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]",
-        l: List[str],
+        l: Optional[List[str]],
     ) -> "Canvas3DRes":
         return Canvas3DRes({"i": i, "f": f, "d": c3b_to_c3d(d), "l": l})
 
@@ -884,7 +889,7 @@ class Canvas3DRes(MessageBase):
         return c3d_to_c3b(self.msg["d"])
 
     @property
-    def ids(self) -> List[str]:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
