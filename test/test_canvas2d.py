@@ -81,7 +81,7 @@ def test_canvas2d_set(data):
             fill=ViewColor.GREEN,
             stroke_width=123,
         )
-        v.add(geometries.rect([0, 0], [100, 50]))
+        v.add(geometries.rect([0, 0], [100, 50]), id="aaa")
         v.add(geometries.circle([[10, 10], 0], 5))
         v.add(geometries.polygon([[1, 1], [2, 2], [3, 3]]))
 
@@ -96,16 +96,19 @@ def test_canvas2d_set(data):
     assert vc[0]._fill == ViewColor.GREEN
     assert vc[0]._stroke_width == 123
     assert vc[0]._geometry_type == geometries.GeometryType.LINE
-    assert Canvas2DComponent(vc[0]).geometry.as_line.begin == Point([0, 0])
-    assert Canvas2DComponent(vc[0]).geometry.as_line.end == Point([100, 50])
+    vcc = [Canvas2DComponent(vd.components[i], data, i) for i in vd.ids]
+    assert vcc[0].geometry.as_line.begin == Point([0, 0])
+    assert vcc[0].geometry.as_line.end == Point([100, 50])
+    assert vcc[0].id == "..0.0"
 
-    assert Canvas2DComponent(vc[1]).geometry.as_rect.vertex1 == Point([0, 0])
-    assert Canvas2DComponent(vc[1]).geometry.as_rect.vertex2 == Point([100, 50])
+    assert vcc[1].geometry.as_rect.vertex1 == Point([0, 0])
+    assert vcc[1].geometry.as_rect.vertex2 == Point([100, 50])
+    assert vcc[1].id == "aaa"
 
-    # assert Canvas2DComponent(vc[2]).geometry.as_circle.origin == Transform([10, 10], 0)
-    assert Canvas2DComponent(vc[2]).geometry.as_circle.radius == 5
+    # assert vcc[2].geometry.as_circle.origin == Transform([10, 10], 0)
+    assert vcc[2].geometry.as_circle.radius == 5
 
-    assert Canvas2DComponent(vc[3]).geometry.as_polygon.points == [
+    assert vcc[3].geometry.as_polygon.points == [
         Point([1, 1]),
         Point([2, 2]),
         Point([3, 3]),

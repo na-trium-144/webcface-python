@@ -20,11 +20,13 @@ class Canvas3DData:
 
 class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
     _data: "Optional[webcface.client_data.ClientData]"
+    _id: str
 
     def __init__(
         self,
         base: "webcface.canvas3d_base.Canvas3DComponentBase",
         data: "Optional[webcface.client_data.ClientData]",
+        id: str,
     ) -> None:
         super().__init__(
             base._type,
@@ -38,6 +40,7 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
             base._angles,
         )
         self._data = data
+        self._id = id
 
     def __eq__(self, other) -> bool:
         """プロパティの比較 (ver3.0〜)
@@ -50,6 +53,11 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
 
     def __ne__(self, other) -> bool:
         return not self == other
+
+    @property
+    def id(self) -> str:
+        """要素のid (ver3.0〜)"""
+        return self._id
 
     @property
     def type(self) -> int:
@@ -153,7 +161,10 @@ class Canvas3D(webcface.field.Field):
         v = self._data_check().canvas3d_store.get_recv(self._member, self._field)
         v2: Optional[List[Canvas3DComponent]] = None
         if v is not None:
-            v2 = [Canvas3DComponent(vb, self._data) for vb in v]
+            v2 = [
+                Canvas3DComponent(v.components[v_id], self._data, v_id)
+                for v_id in v.ids
+            ]
         return v2
 
     def get(self) -> List[Canvas3DComponent]:
@@ -192,8 +203,8 @@ class Canvas3D(webcface.field.Field):
             data = self._set_check()
             data_idx: Dict[int, int] = {}
             for c in self._c3data.tmp_components:
-                idx = data_idx.get(c._canvas3d_type, 0) + 1
-                data_idx[c._canvas3d_type] = idx
+                idx = data_idx.get(c._canvas3d_type, 0)
+                data_idx[c._canvas3d_type] = idx + 1
                 c.lock_tmp(data, "c3", self._field, f"..{c._canvas3d_type}.{idx}")
                 self._c3data.components[c.id] = c.to_canvas3d()
                 self._c3data.ids.append(c.id)

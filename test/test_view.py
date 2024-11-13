@@ -54,6 +54,7 @@ def test_view_get(data):
     data.view_store.data_recv["a"] = {"b": vdata}
     assert len(View(Field(data, "a", "b")).get()) == 1
     assert isinstance(View(Field(data, "a", "b")).get()[0], ViewComponent)
+    assert View(Field(data, "a", "b")).get()[0].id == "0"
 
 
 def test_view_set(data):

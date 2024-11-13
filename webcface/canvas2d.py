@@ -26,12 +26,14 @@ class Canvas2DData:
 
 
 class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
-    # _data: Optional[webcface.client_data.ClientData]
+    _data: Optional[webcface.client_data.ClientData]
+    _id: str
 
     def __init__(
         self,
         base: "webcface.canvas2d_base.Canvas2DComponentBase",
-        # data: Optional[webcface.client_data.ClientData]
+        data: "Optional[webcface.client_data.ClientData]",
+        id: str,
     ) -> None:
         super().__init__(
             base._type,
@@ -43,6 +45,8 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
             base._geometry_type,
             base._geometry_properties,
         )
+        self._data = data
+        self._id = id
 
     def __eq__(self, other) -> bool:
         """プロパティの比較 (ver3.0〜)
@@ -55,6 +59,11 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
 
     def __ne__(self, other) -> bool:
         return not self == other
+
+    @property
+    def id(self) -> str:
+        """要素のid (ver3.0〜)"""
+        return self._id
 
     @property
     def type(self) -> int:
@@ -166,7 +175,10 @@ class Canvas2D(webcface.field.Field):
         v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
         v2: Optional[List[Canvas2DComponent]] = None
         if v is not None:
-            v2 = [Canvas2DComponent(v.components[v_id]) for v_id in v.ids]
+            v2 = [
+                Canvas2DComponent(v.components[v_id], self._data, v_id)
+                for v_id in v.ids
+            ]
         return v2
 
     def get(self) -> "List[Canvas2DComponent]":
@@ -236,8 +248,8 @@ class Canvas2D(webcface.field.Field):
             data = self._set_check()
             data_idx: Dict[int, int] = {}
             for c in self._c2data.tmp_components:
-                idx = data_idx.get(c._canvas2d_type, 0) + 1
-                data_idx[c._canvas2d_type] = idx
+                idx = data_idx.get(c._canvas2d_type, 0)
+                data_idx[c._canvas2d_type] = idx + 1
                 c.lock_tmp(data, "c2", self._field, f"..{c._canvas2d_type}.{idx}")
                 self._c2data.components[c.id] = c.to_canvas2d()
                 self._c2data.ids.append(c.id)

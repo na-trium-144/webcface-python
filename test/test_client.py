@@ -349,7 +349,7 @@ def test_view_send(wcli):
     assert m.field == "a"
     assert len(m.data) == 3
     assert len(m.ids) == 3
-    m_vc = lambda i: ViewComponent(m.data[str(i)], wcli._data)
+    m_vc = lambda i: ViewComponent(m.data[str(i)], wcli._data, str(i))
     assert m_vc(0).type == ViewComponentType.TEXT
     assert m_vc(0).text == "a"
     assert m_vc(0).text_color == ViewColor.YELLOW
@@ -383,7 +383,7 @@ def test_view_send(wcli):
     assert m.field == "a"
     assert len(m.data) == 1
     assert m.ids is None
-    m_vc = lambda i: ViewComponent(m.data[str(i)], wcli._data)
+    m_vc = lambda i: ViewComponent(m.data[str(i)], wcli._data, str(i))
     assert m_vc(0).type == ViewComponentType.TEXT
     assert m_vc(0).text == "b"
     assert m_vc(0).text_color == ViewColor.RED

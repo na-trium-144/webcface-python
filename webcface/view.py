@@ -23,11 +23,13 @@ class ViewData:
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: "Optional[webcface.client_data.ClientData]"
+    _id: str
 
     def __init__(
         self,
         base: "webcface.view_base.ViewComponentBase",
         data: "Optional[webcface.client_data.ClientData]",
+        id: str,
     ) -> None:
         super().__init__(
             type=base._type,
@@ -42,6 +44,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             option=base._option,
         )
         self._data = data
+        self._id = id
 
     def __eq__(self, other) -> bool:
         """プロパティの比較
@@ -54,6 +57,11 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
     def __ne__(self, other) -> bool:
         return not self == other
+
+    @property
+    def id(self) -> str:
+        """要素のid (ver3.0〜)"""
+        return self._id
 
     @property
     def type(self) -> int:
@@ -219,7 +227,7 @@ class View(webcface.field.Field):
         v = self._data_check().view_store.get_recv(self._member, self._field)
         v2: Optional[List[ViewComponent]] = None
         if v is not None:
-            v2 = [ViewComponent(v.components[v_id], self._data) for v_id in v.ids]
+            v2 = [ViewComponent(v.components[v_id], self._data, v_id) for v_id in v.ids]
         return v2
 
     def get(self) -> List[ViewComponent]:
@@ -279,8 +287,8 @@ class View(webcface.field.Field):
             self._vdata.ids = []
             data_idx: Dict[int, int] = {}
             for c in self._vdata.tmp_components:
-                idx = data_idx.get(c._view_type, 0) + 1
-                data_idx[c._view_type] = idx
+                idx = data_idx.get(c._view_type, 0)
+                data_idx[c._view_type] = idx + 1
                 c.lock_tmp(data, "v", self._field, f"..{c._view_type}.{idx}")
                 self._vdata.components[c.id] = c.to_view()
                 self._vdata.ids.append(c.id)
