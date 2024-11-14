@@ -32,7 +32,7 @@ def get_type_enum(t: type) -> int:
         or t is None
     ):
         return ValType.NONE
-    return ValType.STRING
+    return ValType.NONE
 
 
 class Arg:
@@ -227,9 +227,12 @@ class FuncInfo:
             elif self.args[i].type == ValType.FLOAT:
                 new_args.append(float(a))
             elif self.args[i].type == ValType.BOOL:
-                new_args.append(bool(a))
+                new_args.append(bool(float(a)))
             elif self.args[i].type == ValType.STRING:
-                new_args.append(str(a))
+                if isinstance(a, bool):
+                    new_args.append(str(int(a)))
+                else:
+                    new_args.append(str(a))
             else:
                 new_args.append(a)
         p._args = new_args
