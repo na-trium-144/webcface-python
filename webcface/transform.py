@@ -220,6 +220,10 @@ class Rotation:
         """
         return self.rot_euler()
 
+    def rot_2d(self) -> float:
+        """2次元の回転角を取得 (ver3.0〜)"""
+        return self.rot_euler()[0]
+
     def rot_euler(self, axis=AxisSequence.ZYX) -> Tuple[float, float, float]:
         """回転角をオイラー角として取得 (ver3.0〜)
 
@@ -310,7 +314,10 @@ class Rotation:
 
         :arg other: 回転させる対象
         """
-        return Transform(self.applied_to_point(other), self.applied_to_rotation(other))
+        return Transform(
+            self.applied_to_point(other._point),
+            self.applied_to_rotation(other._rotation),
+        )
 
     def __mul__(
         self, other: Union["Point", "Rotation", "Transform"]
