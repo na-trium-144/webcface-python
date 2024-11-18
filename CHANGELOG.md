@@ -1,3 +1,15 @@
+## [3.0.0] - 2024-11-18
+### Changed
+* Transform改善 (#39)
+    * オイラー角、回転行列、クォータニオンなどの相互変換を実装、Point,Transformどうしの各種演算を実装
+    * PointとTransformのコンストラクタを改善、Rotation クラス追加
+    * `==` での比較は差が1e-8未満かどうかで判定するようにした
+    * Transform.rot はdeprecatedとし、 rot_2d(), rot_euler(), rot_matrix(), rot_quat(), rot_axis_angle() で取得
+* view_components を components に名前変更
+* View, Canvas2D, 3D のコンポーネントに id オプションを追加
+* Func引数でbool型の値がstrに変換されるときの処理を修正 (`True`, `False` ではなく `1`, `0`)
+* Funcに登録したアノテーションのない関数の引数はstrに変換されずそのまま渡すようにした
+
 ## [2.4.0] - 2024-11-06
 ### Added
 * Imageの送受信機能 (#37)

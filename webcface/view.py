@@ -1,29 +1,41 @@
-from typing import Optional, Callable, List, Callable, SupportsFloat, Union
+from typing import Optional, List, Callable, SupportsFloat, Union, Dict
 from copy import deepcopy
 import webcface.field
 import webcface.text
 import webcface.view_base
-import webcface.view_components
+import webcface.components
 import webcface.client_data
 import webcface.func
+import webcface.temporal_component
 from webcface.typing import convertible_to_float
+
+
+class ViewData:
+    tmp_components: "List[webcface.temporal_component.TemporalComponent]"
+    components: "Dict[str, webcface.view_base.ViewComponentBase]"
+    ids: List[str]
+
+    def __init__(self) -> None:
+        self.tmp_components = []
+        self.components = {}
+        self.ids = []
 
 
 class ViewComponent(webcface.view_base.ViewComponentBase):
     _data: "Optional[webcface.client_data.ClientData]"
-    _on_click_func_tmp: Optional[Callable]
-    _bind_tmp: "Optional[webcface.text.InputRef]"
-    _init: Optional[Union[float, bool, str]]
+    _id: str
 
-    @staticmethod
-    def from_base(
+    def __init__(
+        self,
         base: "webcface.view_base.ViewComponentBase",
         data: "Optional[webcface.client_data.ClientData]",
-    ) -> "ViewComponent":
-        vc = ViewComponent(
+        id: str,
+    ) -> None:
+        super().__init__(
             type=base._type,
             text=base._text,
             on_click=base._on_click_func,
+            text_ref=base._text_ref,
             text_color=base._text_color,
             bg_color=base._bg_color,
             min=base._min,
@@ -31,169 +43,25 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             step=base._step,
             option=base._option,
         )
-        vc._text_ref = base._text_ref
-        vc._data = data
-        return vc
-
-    def __init__(
-        self,
-        type: int = 0,
-        text: str = "",
-        on_click: "Optional[Union[webcface.field.FieldBase, Callable]]" = None,
-        text_color: int = 0,
-        bg_color: int = 0,
-        on_change: "Optional[Union[webcface.func.Func, Callable]]" = None,
-        bind: "Optional[webcface.text.InputRef]" = None,
-        min: Optional[SupportsFloat] = None,
-        max: Optional[SupportsFloat] = None,
-        step: Optional[SupportsFloat] = None,
-        option: Optional[List[Union[SupportsFloat, bool, str]]] = None,
-        init: Optional[Union[SupportsFloat, bool, str]] = None,
-    ) -> None:
-        """コンポーネントを作成
-
-        :arg type: コンポーネントの種類 (text(), button()などコンポーネントを作成する各種関数を使えば自動で設定される)
-        :arg text: 表示する文字列
-        :arg on_click: クリック時に実行する関数
-        :arg text_color: 文字の色 (ViewColorのEnumを使う)
-        :arg bg_color: 背景の色 (ViewColorのEnumを使う)
-        :arg on_change: (ver2.0〜) Inputの値が変更されたときに実行する関数
-        :arg bind: (ver2.0〜) Inputの値をバインドするInputRef
-            (on_changeとbindはどちらか片方のみを指定すること)
-        :arg min: (ver2.0〜) Inputの最小値/最小文字数
-        :arg max: (ver2.0〜) Inputの最大値/最大文字数
-        :arg step: (ver2.0〜) Inputの刻み幅
-        :arg option: (ver2.0〜) Inputの選択肢
-        """
-        option2: List[Union[str, bool, float]] = []
-        if option is not None:
-            for op in option:
-                if isinstance(op, bool):
-                    option2.append(op)
-                elif convertible_to_float(init):
-                    option2.append(float(op))
-                else:
-                    option2.append(str(op))
-        super().__init__(
-            type,
-            text,
-            None,
-            None,
-            text_color,
-            bg_color,
-            None if min is None else float(min),
-            None if max is None else float(max),
-            None if step is None else float(step),
-            option2,
-        )
-        self._data = None
-        self._on_click_func = None
-        self._text_ref = None
-        self._on_click_func_tmp = None
-        if init is None:
-            self._init = None
-        elif isinstance(init, bool):
-            self._init = init
-        elif convertible_to_float(init):
-            self._init = float(init)
-        else:
-            self._init = str(init)
-        if on_change is not None:
-            if isinstance(on_change, webcface.func.Func):
-                bind_new = webcface.text.InputRef()
-
-                def on_change_impl(val: Union[float, bool, str]):
-                    if bind_new._state is not None:
-                        bind_new._state.set(val)
-                    return on_change.run(val)
-
-                bind = bind_new
-                on_click = on_change_impl
-            elif callable(on_change):
-                bind_new = webcface.text.InputRef()
-
-                def on_change_impl(val: Union[float, bool, str]):
-                    if bind_new._state is not None:
-                        bind_new._state.set(val)
-                    return on_change(val)
-
-                bind = bind_new
-                on_click = on_change_impl
-        elif bind is not None:
-
-            def on_change_impl(val: Union[float, bool, str]):
-                if bind._state is not None:
-                    bind._state.set(val)
-
-            on_click = on_change_impl
-        self._bind_tmp = bind
-        if isinstance(on_click, webcface.field.FieldBase):
-            self._on_click_func = on_click
-        elif callable(on_click):
-            self._on_click_func_tmp = on_click
-        if isinstance(on_click, webcface.field.Field) and on_click._data is not None:
-            self._data = on_click._data
-        if isinstance(on_change, webcface.field.Field) and on_change._data is not None:
-            self._data = on_change._data
-
-    def lock_tmp(
-        self, data: "webcface.client_data.ClientData", field_id: str
-    ) -> "ViewComponent":
-        """on_clickをFuncオブジェクトにlockする"""
-        if self._on_click_func_tmp is not None:
-            on_click = webcface.func.Func(
-                webcface.field.Field(data, data.self_member_name), field_id
-            )
-            on_click.set(self._on_click_func_tmp)
-            self._on_click_func = on_click
-        if self._bind_tmp is not None:
-            text_ref = webcface.text.Variant(
-                webcface.field.Field(data, data.self_member_name), field_id
-            )
-            self._bind_tmp._state = text_ref
-            self._text_ref = text_ref
-            if self._init is not None and text_ref.try_get() is None:
-                text_ref.set(self._init)
         self._data = data
-        return self
+        self._id = id
 
     def __eq__(self, other) -> bool:
         """プロパティの比較
 
-        :return: プロパティが全部等しければTrueになる
+        :return: id以外のプロパティが全部等しければTrueになる
         """
-        return (
-            isinstance(other, ViewComponent)
-            and self._type == other._type
-            and self._text == other._text
-            and (
-                (self._on_click_func is None and other._on_click_func is None)
-                or (
-                    self._on_click_func is not None
-                    and other._on_click_func is not None
-                    and self._on_click_func._member == other._on_click_func._member
-                    and self._on_click_func._field == other._on_click_func._field
-                )
-            )
-            and (
-                (self._text_ref is None and other._text_ref is None)
-                or (
-                    self._text_ref is not None
-                    and other._text_ref is not None
-                    and self._text_ref._member == other._text_ref._member
-                    and self._text_ref._field == other._text_ref._field
-                )
-            )
-            and self._text_color == other._text_color
-            and self._bg_color == other._bg_color
-            and self._min == other._min
-            and self._max == other._max
-            and self._step == other._step
-            and self._option == other._option
-        )
+        return isinstance(
+            other, ViewComponent
+        ) and webcface.view_base.ViewComponentBase.__eq__(self, other)
 
     def __ne__(self, other) -> bool:
         return not self == other
+
+    @property
+    def id(self) -> str:
+        """要素のid (ver3.0〜)"""
+        return self._id
 
     @property
     def type(self) -> int:
@@ -296,7 +164,7 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
 
 
 class View(webcface.field.Field):
-    _components: List[Union[ViewComponent, str, bool, float, int]]
+    _vdata: "Optional[ViewData]"
     _modified: bool
 
     def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
@@ -310,7 +178,7 @@ class View(webcface.field.Field):
         super().__init__(
             base._data, base._member, field if field != "" else base._field
         )
-        self._components = []
+        self._vdata = None
         self._modified = False
 
     @property
@@ -359,7 +227,7 @@ class View(webcface.field.Field):
         v = self._data_check().view_store.get_recv(self._member, self._field)
         v2: Optional[List[ViewComponent]] = None
         if v is not None:
-            v2 = [ViewComponent.from_base(vb, self._data) for vb in v]
+            v2 = [ViewComponent(v.components[v_id], self._data, v_id) for v_id in v.ids]
         return v2
 
     def get(self) -> List[ViewComponent]:
@@ -377,30 +245,22 @@ class View(webcface.field.Field):
         return self._field in self._data_check().view_store.get_entry(self._member)
 
     def set(
-        self, components: List[Union[ViewComponent, str, bool, SupportsFloat]]
+        self,
+        components: List[
+            Union[
+                "webcface.temporal_component.TemporalComponent",
+                str,
+                bool,
+                SupportsFloat,
+            ]
+        ],
     ) -> "View":
-        """Viewのリストをセットする"""
-        data2 = []
+        """Viewのリストをセットする
+
+        .. deprecated:: ver3.0
+        """
         for c in components:
-            if isinstance(c, ViewComponent):
-                data2.append(c)
-            elif isinstance(c, str):
-                while "\n" in c:
-                    s = c[: c.find("\n")]
-                    data2.append(webcface.view_components.text(s))
-                    data2.append(webcface.view_components.new_line())
-                    c = c[c.find("\n") + 1 :]
-                if c != "":
-                    data2.append(webcface.view_components.text(c))
-            else:
-                data2.append(webcface.view_components.text(str(c)))
-        for i, c in enumerate(data2):
-            data2[i] = c.lock_tmp(self._set_check(), f"..v{self._field}.{i}")
-        data = self._set_check()
-        data.view_store.set_send(self._field, list(data2))
-        on_change = data.on_view_change.get(self._member, {}).get(self._field)
-        if on_change is not None:
-            on_change(self)
+            self.add(c)
         return self
 
     def __enter__(self) -> "View":
@@ -410,7 +270,7 @@ class View(webcface.field.Field):
 
     def init(self) -> "View":
         """このViewオブジェクトにaddした内容を初期化する"""
-        self._components = []
+        self._vdata = ViewData()
         self._modified = True
         return self
 
@@ -421,17 +281,66 @@ class View(webcface.field.Field):
     def sync(self) -> "View":
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
-        if self._modified:
-            self.set(self._components)
+        if self._modified and self._vdata is not None:
+            data = self._set_check()
+            self._vdata.components = {}
+            self._vdata.ids = []
+            data_idx: Dict[int, int] = {}
+            for c in self._vdata.tmp_components:
+                idx = data_idx.get(c._view_type, 0)
+                data_idx[c._view_type] = idx + 1
+                c.lock_tmp(data, "v", self._field, f"..{c._view_type}.{idx}")
+                self._vdata.components[c.id] = c.to_view()
+                self._vdata.ids.append(c.id)
+            data.view_store.set_send(self._field, self._vdata)
+            on_change = data.on_view_change.get(self._member, {}).get(self._field)
+            if on_change is not None:
+                on_change(self)
             self._modified = False
         return self
 
-    def add(self, *args: Union[ViewComponent, str, bool, SupportsFloat]) -> "View":
-        """コンポーネントを追加
+    def add(
+        self,
+        *args: Union[
+            "webcface.temporal_component.TemporalComponent", str, bool, SupportsFloat
+        ],
+        **kwargs,
+    ) -> "View":
+        """Viewに要素を追加
 
-        Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする
+        :arg args: 追加する要素
+        複数指定した場合すべて追加される。
+        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
+        詳細は TemporalComponent のコンストラクタを参照
         """
+        if self._vdata is None:
+            self.init()
+        assert self._vdata is not None
+        assert len(args) > 0, "no components given to View.add()"
         for c in args:
-            self._components.append(c)
+            if isinstance(c, webcface.temporal_component.TemporalComponent):
+                if len(kwargs) > 0:
+                    raise ValueError(
+                        f"kwargs is not allowed because {c} is already a component"
+                    )
+                self._vdata.tmp_components.append(c)
+            elif isinstance(c, str):
+                while "\n" in c:
+                    s = c[: c.find("\n")]
+                    self._vdata.tmp_components.append(
+                        webcface.components.text(s, **kwargs)
+                    )
+                    self._vdata.tmp_components.append(
+                        webcface.components.new_line(**kwargs)
+                    )
+                    c = c[c.find("\n") + 1 :]
+                if c != "":
+                    self._vdata.tmp_components.append(
+                        webcface.components.text(c, **kwargs)
+                    )
+            else:
+                self._vdata.tmp_components.append(
+                    webcface.components.text(str(c), **kwargs)
+                )
         self._modified = True
         return self

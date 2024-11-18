@@ -1,19 +1,39 @@
-from typing import Optional, Callable, List, SupportsFloat
+from typing import Optional, Callable, List, SupportsFloat, Union, Dict
 import webcface.field
 import webcface.canvas2d_base
 import webcface.geometries
 import webcface.client_data
 import webcface.transform
-import webcface.view_components
+import webcface.view_base
+import webcface.temporal_component
+
+
+class Canvas2DData:
+    tmp_components: "List[webcface.temporal_component.TemporalComponent]"
+    components: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]"
+    ids: List[str]
+    width: float
+    height: float
+
+    def __init__(self, width: float, height: float) -> None:
+        if width <= 0 or height <= 0:
+            raise ValueError(f"Invalid Canvas2D size ({width} x {height})")
+        self.tmp_components = []
+        self.components = {}
+        self.ids = []
+        self.width = width
+        self.height = height
 
 
 class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
-    # _data: Optional[webcface.client_data.ClientData]
+    _data: Optional[webcface.client_data.ClientData]
+    _id: str
 
     def __init__(
         self,
         base: "webcface.canvas2d_base.Canvas2DComponentBase",
-        # data: Optional[webcface.client_data.ClientData]
+        data: "Optional[webcface.client_data.ClientData]",
+        id: str,
     ) -> None:
         super().__init__(
             base._type,
@@ -25,6 +45,25 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
             base._geometry_type,
             base._geometry_properties,
         )
+        self._data = data
+        self._id = id
+
+    def __eq__(self, other) -> bool:
+        """プロパティの比較 (ver3.0〜)
+
+        :return: id以外のプロパティが全部等しければTrueになる
+        """
+        return isinstance(
+            other, Canvas2DComponent
+        ) and webcface.canvas2d_base.Canvas2DComponentBase.__eq__(self, other)
+
+    def __ne__(self, other) -> bool:
+        return not self == other
+
+    @property
+    def id(self) -> str:
+        """要素のid (ver3.0〜)"""
+        return self._id
 
     @property
     def type(self) -> int:
@@ -63,7 +102,7 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
 
 
 class Canvas2D(webcface.field.Field):
-    _c2data: "Optional[webcface.canvas2d_base.Canvas2DData]"
+    _c2data: "Optional[Canvas2DData]"
     _modified: bool
 
     def __init__(
@@ -136,7 +175,10 @@ class Canvas2D(webcface.field.Field):
         v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
         v2: Optional[List[Canvas2DComponent]] = None
         if v is not None:
-            v2 = [Canvas2DComponent(vb) for vb in v.components]
+            v2 = [
+                Canvas2DComponent(v.components[v_id], self._data, v_id)
+                for v_id in v.ids
+            ]
         return v2
 
     def get(self) -> "List[Canvas2DComponent]":
@@ -191,7 +233,7 @@ class Canvas2D(webcface.field.Field):
         """このCanvas2Dオブジェクトにaddした内容を初期化する
         and Canvas2Dのサイズを指定する
         """
-        self._c2data = webcface.canvas2d_base.Canvas2DData(float(width), float(height))
+        self._c2data = Canvas2DData(float(width), float(height))
         self._modified = True
         return self
 
@@ -203,6 +245,14 @@ class Canvas2D(webcface.field.Field):
         """Viewの内容をclientに反映し送信可能にする"""
         self._set_check()
         if self._modified and self._c2data is not None:
+            data = self._set_check()
+            data_idx: Dict[int, int] = {}
+            for c in self._c2data.tmp_components:
+                idx = data_idx.get(c._canvas2d_type, 0)
+                data_idx[c._canvas2d_type] = idx + 1
+                c.lock_tmp(data, "c2", self._field, f"..{c._canvas2d_type}.{idx}")
+                self._c2data.components[c.id] = c.to_canvas2d()
+                self._c2data.ids.append(c.id)
             self._set_check().canvas2d_store.set_send(self._field, self._c2data)
             self._modified = False
         on_change = (
@@ -214,31 +264,40 @@ class Canvas2D(webcface.field.Field):
 
     def add(
         self,
-        geometry: "webcface.geometries.Geometry2D",
-        origin: "Optional[webcface.transform.Transform]" = None,
-        color: int = webcface.view_components.ViewColor.INHERIT,
-        fill: int = webcface.view_components.ViewColor.INHERIT,
-        stroke_width: SupportsFloat = 1,
+        *args: Union[
+            "webcface.temporal_component.TemporalComponent",
+            "webcface.geometries.Geometry2D",
+        ],
+        **kwargs,
     ) -> "Canvas2D":
-        """コンポーネントを追加
+        """要素を追加
 
         初期化時またはinit()で事前にサイズを指定していなければエラー
+
+        :arg args: 追加する要素
+        (ver3.0〜:複数指定した場合すべて追加される。)
+        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
+        詳細は TemporalComponent のコンストラクタを参照
         """
         if self._c2data is None:
             raise ValueError("Canvas2D not initialized")
-        if origin is None:
-            origin = webcface.transform.Transform([0, 0], 0)
-        self._c2data.components.append(
-            webcface.canvas2d_base.Canvas2DComponentBase(
-                webcface.canvas2d_base.Canvas2DComponentType.GEOMETRY,
-                list(origin.pos[0:2]),
-                origin.rot[0],
-                color,
-                fill,
-                float(stroke_width),
-                geometry.type,
-                geometry._properties,
-            )
-        )
+        assert len(args) > 0, "no components given to Canvas2D.add()"
+        for c in args:
+            if isinstance(c, webcface.temporal_component.TemporalComponent):
+                if len(kwargs) > 0:
+                    raise ValueError(
+                        f"kwargs is not allowed because {c} is already a component"
+                    )
+                self._c2data.tmp_components.append(c)
+            elif isinstance(c, webcface.geometries.Geometry):
+                self._c2data.tmp_components.append(
+                    webcface.temporal_component.TemporalComponent(
+                        canvas2d_type=webcface.canvas2d_base.Canvas2DComponentType.GEOMETRY,
+                        geometry=c,
+                        **kwargs,
+                    )
+                )
+            else:
+                raise ValueError(f"Invalid component {c}")
         self._modified = True
         return self

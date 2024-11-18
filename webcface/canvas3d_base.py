@@ -24,7 +24,7 @@ class Canvas3DComponentBase:
         origin_pos: Optional[List[float]] = None,
         origin_rot: Optional[List[float]] = None,
         color: int = 0,
-        geometry_type: int = 0,
+        geometry_type: Optional[int] = None,
         geometry_properties: Optional[List[float]] = None,
         field_member: Optional[str] = None,
         field_field: Optional[str] = None,
@@ -53,3 +53,6 @@ class Canvas3DComponentBase:
             and self._field_field == other._field_field
             and self._angles == other._angles
         )
+
+    def __ne__(self, other) -> bool:
+        return not self == other

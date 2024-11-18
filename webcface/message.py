@@ -520,14 +520,16 @@ def vd_to_vb(vd: dict) -> "Dict[str, webcface.view_base.ViewComponentBase]":
 
 
 class View(MessageBase):
-    kind_def = 3
+    kind_def = 9
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
     def new(
-        f: str, d: "Dict[str, webcface.view_base.ViewComponentBase]", l: int
+        f: str,
+        d: "Dict[str, webcface.view_base.ViewComponentBase]",
+        l: Optional[List[str]],
     ) -> "View":
         return View({"f": f, "d": vb_to_vd(d), "l": l})
 
@@ -540,12 +542,12 @@ class View(MessageBase):
         return vd_to_vb(self.msg["d"])
 
     @property
-    def length(self) -> int:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
 class ViewReq(MessageBase):
-    kind_def = 43
+    kind_def = 49
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -568,14 +570,17 @@ class ViewReq(MessageBase):
 
 
 class ViewRes(MessageBase):
-    kind_def = 63
+    kind_def = 69
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
 
     @staticmethod
     def new(
-        i: int, f: str, d: "Dict[str, webcface.view_base.ViewComponentBase]", l: int
+        i: int,
+        f: str,
+        d: "Dict[str, webcface.view_base.ViewComponentBase]",
+        l: Optional[List[str]],
     ) -> "ViewRes":
         return ViewRes({"i": i, "f": f, "d": vb_to_vd(d), "l": l})
 
@@ -592,12 +597,12 @@ class ViewRes(MessageBase):
         return vd_to_vb(self.msg["d"])
 
     @property
-    def length(self) -> int:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
 class ViewEntry(MessageBase):
-    kind_def = 23
+    kind_def = 29
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -650,7 +655,7 @@ def c2d_to_c2b(vd: dict) -> "Dict[str, webcface.canvas2d_base.Canvas2DComponentB
 
 
 class Canvas2D(MessageBase):
-    kind_def = 4
+    kind_def = 10
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -661,7 +666,7 @@ class Canvas2D(MessageBase):
         w: float,
         h: float,
         d: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]",
-        l: int,
+        l: Optional[List[str]],
     ) -> "Canvas2D":
         return Canvas2D({"f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
 
@@ -682,12 +687,12 @@ class Canvas2D(MessageBase):
         return c2d_to_c2b(self.msg["d"])
 
     @property
-    def length(self) -> int:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
 class Canvas2DReq(MessageBase):
-    kind_def = 44
+    kind_def = 50
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -710,7 +715,7 @@ class Canvas2DReq(MessageBase):
 
 
 class Canvas2DRes(MessageBase):
-    kind_def = 64
+    kind_def = 70
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -722,7 +727,7 @@ class Canvas2DRes(MessageBase):
         w: float,
         h: float,
         d: "Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]",
-        l: int,
+        l: Optional[List[str]],
     ) -> "Canvas2DRes":
         return Canvas2DRes({"i": i, "f": f, "w": w, "h": h, "d": c2b_to_c2d(d), "l": l})
 
@@ -747,12 +752,12 @@ class Canvas2DRes(MessageBase):
         return c2d_to_c2b(self.msg["d"])
 
     @property
-    def length(self) -> int:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
 class Canvas2DEntry(MessageBase):
-    kind_def = 24
+    kind_def = 30
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -807,7 +812,7 @@ def c3d_to_c3b(vd: dict) -> "Dict[str, webcface.canvas3d_base.Canvas3DComponentB
 
 
 class Canvas3D(MessageBase):
-    kind_def = 7
+    kind_def = 11
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -816,7 +821,7 @@ class Canvas3D(MessageBase):
     def new(
         f: str,
         d: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]",
-        l: int,
+        l: Optional[List[str]],
     ) -> "Canvas3D":
         return Canvas3D({"f": f, "d": c3b_to_c3d(d), "l": l})
 
@@ -829,12 +834,12 @@ class Canvas3D(MessageBase):
         return c3d_to_c3b(self.msg["d"])
 
     @property
-    def length(self) -> int:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
 class Canvas3DReq(MessageBase):
-    kind_def = 47
+    kind_def = 51
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -857,7 +862,7 @@ class Canvas3DReq(MessageBase):
 
 
 class Canvas3DRes(MessageBase):
-    kind_def = 67
+    kind_def = 71
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)
@@ -867,7 +872,7 @@ class Canvas3DRes(MessageBase):
         i: int,
         f: str,
         d: "Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]",
-        l: int,
+        l: Optional[List[str]],
     ) -> "Canvas3DRes":
         return Canvas3DRes({"i": i, "f": f, "d": c3b_to_c3d(d), "l": l})
 
@@ -884,12 +889,12 @@ class Canvas3DRes(MessageBase):
         return c3d_to_c3b(self.msg["d"])
 
     @property
-    def length(self) -> int:
+    def ids(self) -> Optional[List[str]]:
         return self.msg["l"]
 
 
 class Canvas3DEntry(MessageBase):
-    kind_def = 27
+    kind_def = 31
 
     def __init__(self, msg: dict) -> None:
         super().__init__(self.kind_def, msg)

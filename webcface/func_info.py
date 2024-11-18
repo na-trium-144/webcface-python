@@ -7,6 +7,7 @@ import webcface.field
 import webcface.member
 from webcface.typing import convertible_to_float
 
+
 class ValType(IntEnum):
     NONE = 0
     STRING = 1
@@ -32,7 +33,7 @@ def get_type_enum(t: type) -> int:
         or t is None
     ):
         return ValType.NONE
-    return ValType.STRING
+    return ValType.NONE
 
 
 class Arg:
@@ -229,7 +230,10 @@ class FuncInfo:
             elif self.args[i].type == ValType.BOOL:
                 new_args.append(bool(a))
             elif self.args[i].type == ValType.STRING:
-                new_args.append(str(a))
+                if isinstance(a, bool):
+                    new_args.append(str(int(a)))
+                else:
+                    new_args.append(str(a))
             else:
                 new_args.append(a)
         p._args = new_args
@@ -257,7 +261,9 @@ class PromiseData:
     _finish_event_done: bool
     _cv: threading.Condition
 
-    def __init__(self, base: "webcface.field.Field", caller_id: int = 0, caller: str = "") -> None:
+    def __init__(
+        self, base: "webcface.field.Field", caller_id: int = 0, caller: str = ""
+    ) -> None:
         self._base = base
         self._args = []
         self._reached = False

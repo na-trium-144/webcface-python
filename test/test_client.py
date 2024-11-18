@@ -8,11 +8,12 @@ from webcface.message import *
 from webcface.field import Field
 from webcface.func import Func
 from webcface.func_info import Arg, ValType, FuncNotFoundError
-from webcface.view import ViewComponent
+from webcface.view import ViewComponent, ViewData
 from webcface.log_handler import LogLine, LogData
 from webcface.image_frame import ImageFrame, ImageColorMode, ImageCompressMode
+from webcface.view_base import ViewColor, ViewComponentType
 import webcface.func_info
-import webcface.view_components
+import webcface.components
 
 conf = toml.load(os.path.join(os.path.dirname(__file__), "../pyproject.toml"))
 
@@ -320,68 +321,73 @@ def test_image_req(wcli):
         ],
     )
     assert called == 1
-    assert wcli._data_check().image_store.get_recv("a", "b").data == b"\0"*75
-    assert wcli._data_check().image_store.get_recv("a", "b.c").data == b"\0"*75
+    assert wcli._data_check().image_store.get_recv("a", "b").data == b"\0" * 75
+    assert wcli._data_check().image_store.get_recv("a", "b.c").data == b"\0" * 75
 
 
 def test_view_send(wcli):
-    wcli._data_check().view_store.set_send(
-        "a",
-        [
-            webcface.view_components.text(
-                "a",
-                text_color=webcface.view_components.ViewColor.YELLOW,
-                bg_color=webcface.view_components.ViewColor.GREEN,
-            ),
-            webcface.view_components.new_line(),
-            webcface.view_components.button(
-                "a", Func(Field(wcli._data_check(), "x", "y"))
-            ),
-        ],
-    )
+    data = wcli._data_check()
+    vdata = ViewData()
+    vdata.components = {
+        "0": webcface.components.text(
+            "a",
+            text_color=ViewColor.YELLOW,
+            bg_color=ViewColor.GREEN,
+        )
+        .lock_tmp(data, "", "", "0")
+        .to_view(),
+        "1": webcface.components.new_line().lock_tmp(data, "", "", "1").to_view(),
+        "2": webcface.components.button("a", Func(Field(wcli._data_check(), "x", "y")))
+        .lock_tmp(data, "", "", "2")
+        .to_view(),
+    }
+    vdata.ids = ["0", "1", "2"]
+    wcli._data_check().view_store.set_send("a", vdata)
     wcli.sync()
     m = check_sent(wcli, View)
     assert isinstance(m, View)
     assert m.field == "a"
-    assert m.length == 3
     assert len(m.data) == 3
-    m_vc = lambda i: ViewComponent.from_base(m.data[str(i)], wcli._data)
-    assert m_vc(0).type == webcface.view_components.ViewComponentType.TEXT
+    assert len(m.ids) == 3
+    m_vc = lambda i: ViewComponent(m.data[str(i)], wcli._data, str(i))
+    assert m_vc(0).type == ViewComponentType.TEXT
     assert m_vc(0).text == "a"
-    assert m_vc(0).text_color == webcface.view_components.ViewColor.YELLOW
-    assert m_vc(0).bg_color == webcface.view_components.ViewColor.GREEN
-    assert m_vc(1).type == webcface.view_components.ViewComponentType.NEW_LINE
-    assert m_vc(2).type == webcface.view_components.ViewComponentType.BUTTON
+    assert m_vc(0).text_color == ViewColor.YELLOW
+    assert m_vc(0).bg_color == ViewColor.GREEN
+    assert m_vc(1).type == ViewComponentType.NEW_LINE
+    assert m_vc(2).type == ViewComponentType.BUTTON
     assert m_vc(2).on_click.member.name == "x"
     assert m_vc(2).on_click.name == "y"
     clear_sent(wcli)
     wcli._data_check()._msg_first = True
 
-    wcli._data_check().view_store.set_send(
-        "a",
-        [
-            webcface.view_components.text(
-                "b",
-                text_color=webcface.view_components.ViewColor.RED,
-                bg_color=webcface.view_components.ViewColor.GREEN,
-            ),
-            webcface.view_components.new_line(),
-            webcface.view_components.button(
-                "a", Func(Field(wcli._data_check(), "x", "y"))
-            ),
-        ],
-    )
+    vdata = ViewData()
+    vdata.components = {
+        "0": webcface.components.text(
+            "b",
+            text_color=ViewColor.RED,
+            bg_color=ViewColor.GREEN,
+        )
+        .lock_tmp(data, "", "", "0")
+        .to_view(),
+        "1": webcface.components.new_line().lock_tmp(data, "", "", "1").to_view(),
+        "2": webcface.components.button("a", Func(Field(wcli._data_check(), "x", "y")))
+        .lock_tmp(data, "", "", "2")
+        .to_view(),
+    }
+    vdata.ids = ["0", "1", "2"]
+    wcli._data_check().view_store.set_send("a", vdata)
     wcli.sync()
     m = check_sent(wcli, View)
     assert isinstance(m, View)
     assert m.field == "a"
-    assert m.length == 3
     assert len(m.data) == 1
-    m_vc = lambda i: ViewComponent.from_base(m.data[str(i)], wcli._data)
-    assert m_vc(0).type == webcface.view_components.ViewComponentType.TEXT
+    assert m.ids is None
+    m_vc = lambda i: ViewComponent(m.data[str(i)], wcli._data, str(i))
+    assert m_vc(0).type == ViewComponentType.TEXT
     assert m_vc(0).text == "b"
-    assert m_vc(0).text_color == webcface.view_components.ViewColor.RED
-    assert m_vc(0).bg_color == webcface.view_components.ViewColor.GREEN
+    assert m_vc(0).text_color == ViewColor.RED
+    assert m_vc(0).bg_color == ViewColor.GREEN
 
 
 def test_view_req(wcli):
@@ -400,38 +406,46 @@ def test_view_req(wcli):
     assert m.req_id == 1
 
     v = {
-        "0": webcface.view_components.text(
+        "0": webcface.components.text(
             "b",
-            text_color=webcface.view_components.ViewColor.YELLOW,
-            bg_color=webcface.view_components.ViewColor.GREEN,
-        ),
-        "1": webcface.view_components.new_line(),
-        "2": webcface.view_components.button(
-            "a", Func(Field(wcli._data_check(), "x", "y"))
-        ),
+            text_color=ViewColor.YELLOW,
+            bg_color=ViewColor.GREEN,
+        )
+        .lock_tmp(wcli._data, "", "", "0")
+        .to_view(),
+        "1": webcface.components.new_line().lock_tmp(wcli._data, "", "", "1").to_view(),
+        "2": webcface.components.button("a", Func(Field(wcli._data_check(), "x", "y")))
+        .lock_tmp(wcli._data, "", "", "2")
+        .to_view(),
     }
-    send_back(wcli, [ViewRes.new(1, "", v, 3), ViewRes.new(1, "c", v, 3)])
+    ids = ["0", "1", "2"]
+    send_back(wcli, [ViewRes.new(1, "", v, ids), ViewRes.new(1, "c", v, ids)])
     assert called == 1
-    assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b").components) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b").ids) == 3
     assert (
-        wcli._data_check().view_store.get_recv("a", "b")[0]._text_color
-        == webcface.view_components.ViewColor.YELLOW
+        wcli._data_check().view_store.get_recv("a", "b").components["0"]._text_color
+        == ViewColor.YELLOW
     )
-    assert len(wcli._data_check().view_store.get_recv("a", "b.c")) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b.c").components) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b.c").ids) == 3
 
     v2 = {
-        "0": webcface.view_components.text(
+        "0": webcface.components.text(
             "b",
-            text_color=webcface.view_components.ViewColor.RED,
-            bg_color=webcface.view_components.ViewColor.GREEN,
-        ),
+            text_color=ViewColor.RED,
+            bg_color=ViewColor.GREEN,
+        )
+        .lock_tmp(wcli._data, "", "", "0")
+        .to_view(),
     }
-    send_back(wcli, [ViewRes.new(1, "", v2, 3)])
+    send_back(wcli, [ViewRes.new(1, "", v2, None)])
     assert called == 2
-    assert len(wcli._data_check().view_store.get_recv("a", "b")) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b").components) == 3
+    assert len(wcli._data_check().view_store.get_recv("a", "b").ids) == 3
     assert (
-        wcli._data_check().view_store.get_recv("a", "b")[0]._text_color
-        == webcface.view_components.ViewColor.RED
+        wcli._data_check().view_store.get_recv("a", "b").components["0"]._text_color
+        == ViewColor.RED
     )
 
 

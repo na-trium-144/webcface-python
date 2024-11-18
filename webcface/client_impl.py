@@ -95,15 +95,12 @@ def on_recv(
                 member, field = data.view_store.get_req(m.req_id, m.sub_field)
                 v_prev = data.view_store.get_recv(member, field)
                 if v_prev is None:
-                    v_prev = []
+                    v_prev = webcface.view.ViewData()
                     data.view_store.set_recv(member, field, v_prev)
+                if m.ids is not None:
+                    v_prev.ids = m.ids
                 for i, c in m.data_diff.items():
-                    if int(i) >= len(v_prev):
-                        v_prev.append(c)
-                    else:
-                        v_prev[int(i)] = c
-                if len(v_prev) >= m.length:
-                    del v_prev[m.length :]
+                    v_prev.components[i] = c
                 on_change = data.on_view_change.get(member, {}).get(field)
                 if on_change is not None:
                     on_change(wcli.member(member).view(field))
@@ -117,17 +114,14 @@ def on_recv(
                 member, field = data.canvas2d_store.get_req(m.req_id, m.sub_field)
                 c2_prev = data.canvas2d_store.get_recv(member, field)
                 if c2_prev is None:
-                    c2_prev = webcface.canvas2d_base.Canvas2DData(1.0, 1.0)
+                    c2_prev = webcface.canvas2d.Canvas2DData(1.0, 1.0)
                     data.canvas2d_store.set_recv(member, field, c2_prev)
                 c2_prev.width = m.width
                 c2_prev.height = m.height
+                if m.ids is not None:
+                    c2_prev.ids = m.ids
                 for i, c2 in m.data_diff.items():
-                    if int(i) >= len(c2_prev.components):
-                        c2_prev.components.append(c2)
-                    else:
-                        c2_prev.components[int(i)] = c2
-                if len(c2_prev.components) >= m.length:
-                    del c2_prev.components[m.length :]
+                    c2_prev.components[i] = c2
                 on_change = data.on_canvas2d_change.get(member, {}).get(field)
                 if on_change is not None:
                     on_change(wcli.member(member).canvas2d(field))
@@ -141,15 +135,12 @@ def on_recv(
                 member, field = data.canvas3d_store.get_req(m.req_id, m.sub_field)
                 c3_prev = data.canvas3d_store.get_recv(member, field)
                 if c3_prev is None:
-                    c3_prev = []
+                    c3_prev = webcface.canvas3d.Canvas3DData()
                     data.canvas3d_store.set_recv(member, field, c3_prev)
+                if m.ids is not None:
+                    c3_prev.ids = m.ids
                 for i, c3 in m.data_diff.items():
-                    if int(i) >= len(c3_prev):
-                        c3_prev.append(c3)
-                    else:
-                        c3_prev[int(i)] = c3
-                if len(c3_prev) >= m.length:
-                    del c3_prev[m.length :]
+                    c3_prev.components[i] = c3
                 on_change = data.on_canvas3d_change.get(member, {}).get(field)
                 if on_change is not None:
                     on_change(wcli.member(member).canvas3d(field))
@@ -322,38 +313,57 @@ def sync_data(
         view_send_prev = data.view_store.get_send_prev(is_first)
         view_send = data.view_store.transfer_send(is_first)
         for k, v4 in view_send.items():
-            v_prev = view_send_prev.get(k, [])
+            v_prev = view_send_prev.get(k)
             v_diff = {}
-            for i, c in enumerate(v4):
-                if i >= len(v_prev) or v_prev[i] != c:
-                    v_diff[str(i)] = c
-            msgs.append(webcface.message.View.new(k, v_diff, len(v4)))
+            for i in v4.ids:
+                if (
+                    v_prev is None
+                    or i not in v_prev.components
+                    or v_prev.components[i] != v4.components[i]
+                ):
+                    v_diff[i] = v4.components[i]
+            ids_changed = v_prev is None or v_prev.ids != v4.ids
+            msgs.append(
+                webcface.message.View.new(k, v_diff, (v4.ids if ids_changed else None))
+            )
     with data.canvas2d_store.lock:
         canvas2d_send_prev = data.canvas2d_store.get_send_prev(is_first)
         canvas2d_send = data.canvas2d_store.transfer_send(is_first)
         for k, v5 in canvas2d_send.items():
-            c2_prev = canvas2d_send_prev.get(
-                k, webcface.canvas2d_base.Canvas2DData(1.0, 1.0)
-            )
+            c2_prev = canvas2d_send_prev.get(k)
             c2_diff = {}
-            for i, c2 in enumerate(v5.components):
-                if i >= len(c2_prev.components) or c2_prev.components[i] != c2:
-                    c2_diff[str(i)] = c2
+            for i in v5.ids:
+                if (
+                    c2_prev is None
+                    or i not in c2_prev.components
+                    or c2_prev.components[i] != v5.components[i]
+                ):
+                    c2_diff[i] = v5.components[i]
+            ids_changed = c2_prev is None or c2_prev.ids != v5.ids
             msgs.append(
                 webcface.message.Canvas2D.new(
-                    k, v5.width, v5.height, c2_diff, len(v5.components)
+                    k, v5.width, v5.height, c2_diff, (v5.ids if ids_changed else None)
                 )
             )
     with data.canvas3d_store.lock:
         canvas3d_send_prev = data.canvas3d_store.get_send_prev(is_first)
         canvas3d_send = data.canvas3d_store.transfer_send(is_first)
         for k, v6 in canvas3d_send.items():
-            c3_prev = canvas3d_send_prev.get(k, [])
+            c3_prev = canvas3d_send_prev.get(k)
             c3_diff = {}
-            for i, c3 in enumerate(v6):
-                if i >= len(c3_prev) or c3_prev[i] != c3:
-                    c3_diff[str(i)] = c3
-            msgs.append(webcface.message.Canvas3D.new(k, c3_diff, len(v6)))
+            for i in v6.ids:
+                if (
+                    c3_prev is None
+                    or i not in c3_prev.components
+                    or c3_prev.components[i] != v6.components[i]
+                ):
+                    c3_diff[i] = v6.components[i]
+            ids_changed = c3_prev is None or c3_prev.ids != v6.ids
+            msgs.append(
+                webcface.message.Canvas3D.new(
+                    k, c3_diff, (v6.ids if ids_changed else None)
+                )
+            )
     with data.log_store.lock:
         log_send = data.log_store.transfer_send(is_first)
         for k, v7 in log_send.items():
