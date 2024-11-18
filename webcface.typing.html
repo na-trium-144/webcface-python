@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.typing module &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.typing module &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -20,7 +20,7 @@
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="webcface.value module" href="webcface.value.html" />
-    <link rel="prev" title="webcface.transform module" href="webcface.transform.html" /> 
+    <link rel="prev" title="webcface.transform_impl module" href="webcface.transform_impl.html" /> 
 </head>
 
 <body class="wy-body-for-nav"> 
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -53,6 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.components.html">webcface.components module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
@@ -64,16 +65,18 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html">webcface.temporal_component module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform_impl.html">webcface.transform_impl module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.typing module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.typing.convertible_to_float"><code class="docutils literal notranslate"><span class="pre">convertible_to_float()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.typing.is_float_sequence"><code class="docutils literal notranslate"><span class="pre">is_float_sequence()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html">webcface.view_components module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.html#module-webcface">Module contents</a></li>
@@ -87,7 +90,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 2.4.0</a>
+          <a href="index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -113,13 +116,18 @@
 <span class="sig-prename descclassname"><span class="pre">webcface.typing.</span></span><span class="sig-name descname"><span class="pre">convertible_to_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/typing.html#convertible_to_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.typing.convertible_to_float" title="Link to this definition"></a></dt>
 <dd></dd></dl>
 
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.typing.is_float_sequence">
+<span class="sig-prename descclassname"><span class="pre">webcface.typing.</span></span><span class="sig-name descname"><span class="pre">is_float_sequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">obj</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/typing.html#is_float_sequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.typing.is_float_sequence" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
 </section>
 
 
            </div>
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
-        <a href="webcface.transform.html" class="btn btn-neutral float-left" title="webcface.transform module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
+        <a href="webcface.transform_impl.html" class="btn btn-neutral float-left" title="webcface.transform_impl module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
         <a href="webcface.value.html" class="btn btn-neutral float-right" title="webcface.value module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 

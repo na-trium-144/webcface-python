@@ -14,6 +14,7 @@ Submodules
    webcface.client
    webcface.client_data
    webcface.client_impl
+   webcface.components
    webcface.field
    webcface.func
    webcface.func_info
@@ -25,13 +26,14 @@ Submodules
    webcface.log_handler
    webcface.member
    webcface.message
+   webcface.temporal_component
    webcface.text
    webcface.transform
+   webcface.transform_impl
    webcface.typing
    webcface.value
    webcface.view
    webcface.view_base
-   webcface.view_components
 
 Module contents
 ---------------

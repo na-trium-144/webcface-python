@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.transform &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.transform &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,35 +69,40 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.transform</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">SupportsFloat</span>
-<span class="kn">from</span> <span class="nn">webcface.typing</span> <span class="kn">import</span> <span class="n">convertible_to_float</span>
-
-<span class="n">ConvertibleToPoint</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
-    <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
-    <span class="n">Tuple</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
-    <span class="n">Tuple</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
-<span class="p">]</span>
-<span class="n">ConvertibleToRotation</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span>
-    <span class="n">SupportsFloat</span><span class="p">,</span>
-    <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
-    <span class="n">Tuple</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
-<span class="p">]</span>
-<span class="n">ConvertibleToTransform</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ConvertibleToPoint</span><span class="p">,</span> <span class="n">ConvertibleToRotation</span><span class="p">]</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
+<span class="kn">from</span> <span class="nn">webcface.typing</span> <span class="kn">import</span> <span class="n">convertible_to_float</span><span class="p">,</span> <span class="n">is_float_sequence</span>
+<span class="kn">import</span> <span class="nn">webcface.transform_impl</span>
 
 
 <div class="viewcode-block" id="Point">
 <a class="viewcode-back" href="../../webcface.transform.html#webcface.Point">[docs]</a>
 <span class="k">class</span> <span class="nc">Point</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;3次元or2次元の座標&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;3次元or2次元の座標</span>
 
-    <span class="n">_pos</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+<span class="sd">    手動でコンストラクタを呼んでもいいが、</span>
+<span class="sd">    PointをうけとるAPIは基本的に Sequence[SupportsFloat] を受け付け、</span>
+<span class="sd">    内部でPointに変換される。</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_x</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">_y</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">_z</span><span class="p">:</span> <span class="nb">float</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
-        <span class="n">pos</span><span class="p">:</span> <span class="n">ConvertibleToPoint</span><span class="p">,</span>
+        <span class="n">pos</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;引数についてはset_pos()を参照&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;座標を初期化</span>
+
+<span class="sd">        :arg pos: 座標</span>
+<span class="sd">        2次元の場合 :code:`[float, float]`,</span>
+<span class="sd">        3次元の場合 :code:`[float, float, float]` など</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;Point must be (x, y) or (x, y, z), got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mf">0.0</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">pos</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
@@ -105,10 +110,10 @@
 
 <span class="sd">        2次元の場合は pos[0:2] を使う</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span>
+        <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_y</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_z</span><span class="p">)</span>
 
     <span class="nd">@pos</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pos</span><span class="p">:</span> <span class="n">ConvertibleToPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pos</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;座標をセット</span>
 
 <span class="sd">        mypyが型に関してエラーを出す場合はset_pos()を使うと良いかも</span>
@@ -117,47 +122,65 @@
 
 <div class="viewcode-block" id="Point.set_pos">
 <a class="viewcode-back" href="../../webcface.transform.html#webcface.Point.set_pos">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_pos</span><span class="p">:</span> <span class="n">ConvertibleToPoint</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">set_pos</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">pos</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;座標をセット</span>
 
-<span class="sd">        :arg new_pos: 座標 2次元の場合 :code:`[float, float]`, 3次元の場合 :code:`[float, float, float]` など</span>
+<span class="sd">        :arg pos: 座標</span>
+<span class="sd">        2次元の場合 :code:`[float, float]`,</span>
+<span class="sd">        3次元の場合 :code:`[float, float, float]` など</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">new_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">new_pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_pos</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;invalid pos format (len = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_pos</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="ow">in</span> <span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">),</span> <span class="s2">&quot;Point must be (x, y) or (x, y, z), got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">pos</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span> <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">else</span> <span class="mf">0.0</span></div>
 
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pointと比較した場合座標が一致すればTrue&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Pointと比較した場合座標の差が 1e-8 未満ならTrue</span>
+
+<span class="sd">        (ver3.0〜) Transformとは比較できない</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform can&#39;t be compared with Point&quot;</span><span class="p">)</span>
         <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_pos</span>
+            <span class="k">return</span> <span class="p">(</span>
+                <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_x</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_x</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+                <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_y</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_y</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+                <span class="ow">and</span> <span class="nb">abs</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_z</span> <span class="o">-</span> <span class="n">other</span><span class="o">.</span><span class="n">_z</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
 
     <span class="k">def</span> <span class="fm">__add__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform or Rotation can&#39;t be added to Point&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Point</span><span class="p">([</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)])</span>
         <span class="k">return</span> <span class="bp">NotImplemented</span>
 
     <span class="k">def</span> <span class="fm">__iadd__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform or Rotation can&#39;t be added to Point&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="n">a</span> <span class="o">+</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)])</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="bp">NotImplemented</span>
 
     <span class="k">def</span> <span class="fm">__sub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform or Rotation can&#39;t be subtracted from Point&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">Point</span><span class="p">([</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)])</span>
         <span class="k">return</span> <span class="bp">NotImplemented</span>
 
     <span class="k">def</span> <span class="fm">__isub__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform or Rotation can&#39;t be subtracted to Point&quot;</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)])</span>
             <span class="k">return</span> <span class="bp">self</span>
         <span class="k">return</span> <span class="bp">NotImplemented</span>
 
@@ -168,87 +191,618 @@
         <span class="k">return</span> <span class="n">Point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Point</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Transform, Rotation or Point can&#39;t be multiplied to Point from right&quot;</span>
+            <span class="p">)</span>
         <span class="k">return</span> <span class="n">Point</span><span class="p">([</span><span class="n">a</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="fm">__rmul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Point</span><span class="p">)):</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>  <span class="c1"># should be defined in the other class</span>
         <span class="k">return</span> <span class="n">Point</span><span class="p">([</span><span class="n">a</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Point</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span>
+                <span class="s2">&quot;Transform, Rotation or Point can&#39;t be multiplied to Point from right&quot;</span>
+            <span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="n">a</span> <span class="o">*</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">self</span>
 
     <span class="k">def</span> <span class="nf">__div__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Point</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform, Rotation or Point can&#39;t be divided from Point&quot;</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">Point</span><span class="p">([</span><span class="n">a</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">])</span>
 
     <span class="k">def</span> <span class="nf">__idiv__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">=</span> <span class="p">[</span><span class="n">a</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">]</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="p">(</span><span class="n">Transform</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">,</span> <span class="n">Point</span><span class="p">)):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform, Rotation or Point can&#39;t be multiplied to Point&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">set_pos</span><span class="p">([</span><span class="n">a</span> <span class="o">/</span> <span class="nb">float</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">])</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 
-<div class="viewcode-block" id="Transform">
-<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform">[docs]</a>
-<span class="k">class</span> <span class="nc">Transform</span><span class="p">(</span><span class="n">Point</span><span class="p">):</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;3次元の座標と回転</span>
+<div class="viewcode-block" id="AxisSequence">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.AxisSequence">[docs]</a>
+<span class="k">class</span> <span class="nc">AxisSequence</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;オイラー角の回転順序 (ver3.0〜)</span>
 
-<span class="sd">    内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。</span>
+<span class="sd">    * 右手系の座標系で、</span>
+<span class="sd">    内的回転(intrinsic rotation)でz軸,y軸,x軸の順に回転させる系</span>
+<span class="sd">    = 外的回転(extrinsic rotation)でX軸,Y軸,Z軸の順に回転させる系</span>
+<span class="sd">    = 回転行列がZ(α)Y(β)X(γ)と表される系</span>
+<span class="sd">    を、 AxisSequence::ZYX と表記する。</span>
+<span class="sd">    * ver2.3までの実装はすべてZYXで、現在もWebCFaceの内部表現は基本的にZYXの系である。</span>
+<span class="sd">    * またWebCFaceのインタフェースでオイラー角の回転角を指定する場合、</span>
+<span class="sd">    軸の指定順は内的回転を指す。(AxisSequenceにおける左から右の並び順と一致。)</span>
 <span class="sd">    &quot;&quot;&quot;</span>
 
-    <span class="n">_rot</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]</span>
+    <span class="n">ZXZ</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">XYX</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">YZY</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">ZYZ</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">XZX</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">YXY</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">XYZ</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">YZX</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">ZXY</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">XZY</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">ZYX</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">YXZ</span> <span class="o">=</span> <span class="mi">11</span></div>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="n">pos</span><span class="p">:</span> <span class="n">ConvertibleToPoint</span><span class="p">,</span>
-        <span class="n">rot</span><span class="p">:</span> <span class="n">ConvertibleToRotation</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;引数についてはset_pos(), set_rot()を参照&quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">pos</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_rot</span><span class="p">(</span><span class="n">rot</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="Rotation">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation">[docs]</a>
+<span class="k">class</span> <span class="nc">Rotation</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;3次元の回転 (ver3.0〜)</span>
+
+<span class="sd">    * 内部ではz-y-x系のオイラー角または3x3回転行列で保持している。</span>
+<span class="sd">    * 送受信時にはすべてこのzyxのオイラー角に変換される。</span>
+<span class="sd">    * 2次元の回転を表すのにも使われ、</span>
+<span class="sd">    その場合オイラー角 rot() の最初の要素(=z軸周りの回転)を使って回転を表し、</span>
+<span class="sd">    残りの要素(x,y軸周りの回転)を0とする。</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_az</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">_ay</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">_ax</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
+    <span class="n">_rmat</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+        <span class="n">Tuple</span><span class="p">[</span>
+            <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+            <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+            <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="p">]</span>
+    <span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">az</span><span class="p">,</span> <span class="n">ay</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">rmat</span><span class="p">):</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;このコンストラクタではなく、rot_from_* 関数を使うこと&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="n">az</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ay</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">rmat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="nb">tuple</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">r</span><span class="p">)</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rmat</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_az</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span> <span class="o">=</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="n">rmat</span> <span class="ow">is</span> <span class="kc">None</span>
+            <span class="k">assert</span> <span class="n">az</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_az</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">az</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ay</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">ax</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span> <span class="o">=</span> <span class="kc">None</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">rot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角を取得</span>
 
 <span class="sd">        2次元の場合は rot[0] を使う</span>
+
+<span class="sd">        .. deprecated:: ver3.0</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rot</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot_euler</span><span class="p">()</span>
 
-    <span class="nd">@rot</span><span class="o">.</span><span class="n">setter</span>
-    <span class="k">def</span> <span class="nf">rot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_rot</span><span class="p">:</span> <span class="n">ConvertibleToRotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角をセット</span>
+<div class="viewcode-block" id="Rotation.rot_2d">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.rot_2d">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_2d</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;2次元の回転角を取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot_euler</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span></div>
 
-<span class="sd">        mypyが型に関してエラーを出す場合はset_rot()を使うと良いかも</span>
+
+<div class="viewcode-block" id="Rotation.rot_euler">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.rot_euler">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">AxisSequence</span><span class="o">.</span><span class="n">ZYX</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角をオイラー角として取得 (ver3.0〜)</span>
+
+<span class="sd">        :arg axis: オイラー角の回転順序</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">set_rot</span><span class="p">(</span><span class="n">new_rot</span><span class="p">)</span>
-
-<div class="viewcode-block" id="Transform.set_rot">
-<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.set_rot">[docs]</a>
-    <span class="k">def</span> <span class="nf">set_rot</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">new_rot</span><span class="p">:</span> <span class="n">ConvertibleToRotation</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角をセット</span>
-
-<span class="sd">        :arg new_rot: 座標 2次元の場合 :code:`float`, 3次元の場合 :code:`[float, float, float]` など</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="n">convertible_to_float</span><span class="p">(</span><span class="n">new_rot</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rot</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">new_rot</span><span class="p">),</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">)</span>
-        <span class="k">elif</span> <span class="nb">len</span><span class="p">(</span><span class="n">new_rot</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_rot</span> <span class="o">=</span> <span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">new_rot</span><span class="p">[</span><span class="mi">0</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_rot</span><span class="p">[</span><span class="mi">1</span><span class="p">]),</span> <span class="nb">float</span><span class="p">(</span><span class="n">new_rot</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="n">AxisSequence</span><span class="o">.</span><span class="n">ZYX</span><span class="p">:</span>
+            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_az</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_az</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">)</span> <span class="o">=</span> <span class="p">(</span>
+                    <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">matrix_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">return</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_az</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;invalid pos format (len = </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">new_rot</span><span class="p">)</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span></div>
+            <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">matrix_to_euler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">(),</span> <span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Rotation.rot_matrix">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.rot_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_matrix</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角を回転行列として取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_az</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">euler_to_matrix</span><span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_az</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span><span class="p">),</span> <span class="n">AxisSequence</span><span class="o">.</span><span class="n">ZYX</span>
+            <span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span></div>
+
+
+<div class="viewcode-block" id="Rotation.rot_quat">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.rot_quat">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_quat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角をクォータニオン(w, x, y, z)として取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">matrix_to_quaternion</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">())</span></div>
+
+
+<div class="viewcode-block" id="Rotation.rot_axis_angle">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.rot_axis_angle">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_axis_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">quaternion_to_axis_angle</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_quat</span><span class="p">())</span></div>
 
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transformと比較した場合座標と回転が一致すればTrue&quot;&quot;&quot;</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotationと比較した場合回転行列の各要素の差が 1e-8 未満ならTrue</span>
+
+<span class="sd">        Transformとも比較できる</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
-            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_pos</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_pos</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rot</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_rot</span>
+            <span class="k">return</span> <span class="n">other</span> <span class="o">==</span> <span class="n">Transform</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="k">return</span> <span class="nb">all</span><span class="p">(</span>
+                <span class="nb">all</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">a</span> <span class="o">-</span> <span class="n">b</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mf">1e-8</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">ra</span><span class="p">,</span> <span class="n">rb</span><span class="p">))</span>
+                <span class="k">for</span> <span class="n">ra</span><span class="p">,</span> <span class="n">rb</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">())</span>
+            <span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
-            <span class="k">return</span> <span class="kc">False</span></div>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+
+<div class="viewcode-block" id="Rotation.applied_to_point">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.applied_to_point">[docs]</a>
+    <span class="k">def</span> <span class="nf">applied_to_point</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Point を回転させた結果を返す</span>
+
+<span class="sd">        :arg other: 回転させる対象</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Point</span><span class="p">(</span>
+            <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">apply_rot_point</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Rotation.applied_to_rotation">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.applied_to_rotation">[docs]</a>
+    <span class="k">def</span> <span class="nf">applied_to_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotation を回転させた結果を返す</span>
+
+<span class="sd">        :arg other: 回転させる対象</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">apply_rot_rot</span><span class="p">(</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">(),</span> <span class="n">other</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">()</span>
+            <span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Rotation.applied_to_transform">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.applied_to_transform">[docs]</a>
+    <span class="k">def</span> <span class="nf">applied_to_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Transform&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform を回転させた結果を返す</span>
+
+<span class="sd">        :arg other: 回転させる対象</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_point</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_point</span><span class="p">),</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_rotation</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_rotation</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">,</span> <span class="s2">&quot;Transform&quot;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">,</span> <span class="s2">&quot;Transform&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_transform</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_point</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_rotation</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Rotation * Transform is not Rotation&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Rotation * Point is not Rotation&quot;</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_rotation</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Rotation can&#39;t be multiplied to &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_az</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ay</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_ax</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rmat</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">_rmat</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Rotation.inversed">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Rotation.inversed">[docs]</a>
+    <span class="k">def</span> <span class="nf">inversed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;逆回転を取得&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="kc">None</span><span class="p">,</span>
+            <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">inverse_matrix</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">()),</span>
+        <span class="p">)</span></div>
+</div>
+
+
+
+<div class="viewcode-block" id="rot_from_euler">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_from_euler">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_from_euler</span><span class="p">(</span>
+    <span class="n">angles</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span> <span class="n">axis</span><span class="o">=</span><span class="n">AxisSequence</span><span class="o">.</span><span class="n">ZYX</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;オイラー角からRotationを作成</span>
+
+<span class="sd">    :arg angles: オイラー角</span>
+<span class="sd">    :arg axis: オイラー角の回転順序</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Euler angle must be 3 dimensional, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">angles</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="o">==</span> <span class="n">AxisSequence</span><span class="o">.</span><span class="n">ZYX</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">angles</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">angles</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">angles</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="kc">None</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span>
+            <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">euler_to_matrix</span><span class="p">(</span><span class="n">angles</span><span class="p">,</span> <span class="n">axis</span><span class="p">)</span>
+        <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rot_from_matrix">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_from_matrix">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_from_matrix</span><span class="p">(</span><span class="n">rmat</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;回転行列からRotationを作成</span>
+
+<span class="sd">    :arg rmat: 回転行列</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Rotation matrix must be 3x3, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">rmat</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">all</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">r</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="k">for</span> <span class="n">r</span> <span class="ow">in</span> <span class="n">rmat</span><span class="p">),</span> <span class="s2">&quot;Rotation matrix must be 3x3, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span>
+        <span class="n">rmat</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">rmat</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rot_from_quat">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_from_quat">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_from_quat</span><span class="p">(</span><span class="n">quat</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;クォータニオンからRotationを作成</span>
+
+<span class="sd">    :arg quat: クォータニオン (w, x, y, z)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">quat</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span><span class="p">,</span> <span class="s2">&quot;Quaternion must be 4 dimensional, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">quat</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rot_from_matrix</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">quaternion_to_matrix</span><span class="p">(</span><span class="n">quat</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="rot_from_axis_angle">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_from_axis_angle">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_from_axis_angle</span><span class="p">(</span>
+    <span class="n">axis</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span> <span class="n">angle</span><span class="p">:</span> <span class="n">SupportsFloat</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;軸と角度からRotationを作成</span>
+
+<span class="sd">    :arg axis: 軸</span>
+<span class="sd">    :arg angle: 角度</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span><span class="p">,</span> <span class="s2">&quot;Axis must be 3 dimensional, got &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">rot_from_quat</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">axis_angle_to_quaternion</span><span class="p">(</span><span class="n">axis</span><span class="p">,</span> <span class="n">angle</span><span class="p">))</span></div>
+
+
+
+<div class="viewcode-block" id="rot_2d">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_2d">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_2d</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;2次元の回転を作成 (ver3.0〜)</span>
+
+<span class="sd">    rot_z() と同じ。</span>
+
+<span class="sd">    :arg angle: 回転角</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rot_z">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_z">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_z</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;z軸周りの回転を作成 (ver3.0〜)</span>
+
+<span class="sd">    :arg angle: 回転角</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">angle</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rot_y">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_y">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_y</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;y軸周りの回転を作成 (ver3.0〜)</span>
+
+<span class="sd">    :arg angle: 回転角</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="rot_x">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.rot_x">[docs]</a>
+<span class="k">def</span> <span class="nf">rot_x</span><span class="p">(</span><span class="n">angle</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;x軸周りの回転を作成 (ver3.0〜)</span>
+
+<span class="sd">    :arg angle: 回転角</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Rotation</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">angle</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="Transform">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform">[docs]</a>
+<span class="k">class</span> <span class="nc">Transform</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;3次元の座標と回転</span>
+
+<span class="sd">    内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。</span>
+
+<span class="sd">    手動でコンストラクタを呼んでもいいが、</span>
+<span class="sd">    TransformをうけとるAPIは基本的にPointとRotationのタプルを受け付け、</span>
+<span class="sd">    内部でTransformに変換される。</span>
+
+<span class="sd">    平行移動のみの場合は translation() を使用する。</span>
+<span class="sd">    回転のみの場合はRotationだけ渡せば直接Transformに変換される</span>
+
+<span class="sd">    ver3.0〜 Pointを継承せず別のクラスとしての実装に変更</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">_point</span><span class="p">:</span> <span class="s2">&quot;Point&quot;</span>
+    <span class="n">_rotation</span><span class="p">:</span> <span class="s2">&quot;Rotation&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">arg1</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+            <span class="s2">&quot;Point&quot;</span><span class="p">,</span>
+            <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
+            <span class="s2">&quot;Rotation&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="n">arg2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Rotation&quot;</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">arg1</span><span class="o">.</span><span class="n">_az</span><span class="p">,</span> <span class="n">arg1</span><span class="o">.</span><span class="n">_ay</span><span class="p">,</span> <span class="n">arg1</span><span class="o">.</span><span class="n">_ax</span><span class="p">,</span> <span class="n">arg1</span><span class="o">.</span><span class="n">_rmat</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">assert</span> <span class="p">(</span>
+                <span class="n">arg2</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+            <span class="p">),</span> <span class="s2">&quot;Rotation must be given, use translation() for translation only&quot;</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg2</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">arg2</span><span class="o">.</span><span class="n">_az</span><span class="p">,</span> <span class="n">arg2</span><span class="o">.</span><span class="n">_ay</span><span class="p">,</span> <span class="n">arg2</span><span class="o">.</span><span class="n">_ax</span><span class="p">,</span> <span class="n">arg2</span><span class="o">.</span><span class="n">_rmat</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">Rotation</span><span class="p">(</span><span class="n">arg2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">arg1</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">arg1</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_point</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">arg1</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transformと比較した場合座標と回転がそれぞれ 1e-8 未満の差ならTrue</span>
+
+<span class="sd">        (ver3.0〜) Pointとは比較できないが、Rotationとは比較できる</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_point</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_rotation</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">Transform</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Point can&#39;t be compared with Transform&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="nb">object</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">pos</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;座標を返す</span>
+
+<span class="sd">        2次元の場合は pos[0:2] を使う</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point</span><span class="o">.</span><span class="n">pos</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">rot</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角を取得</span>
+
+<span class="sd">        2次元の場合は rot[0] を使う</span>
+
+<span class="sd">        .. deprecated:: ver3.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot_euler</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Transform.rot_euler">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.rot_euler">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_euler</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="n">AxisSequence</span><span class="o">.</span><span class="n">ZYX</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角をオイラー角として取得 (ver3.0〜)</span>
+
+<span class="sd">        :arg axis: オイラー角の回転順序</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">rot_euler</span><span class="p">(</span><span class="n">axis</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="Transform.rot_matrix">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.rot_matrix">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_matrix</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+        <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span>
+    <span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角を回転行列として取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Transform.rot_quat">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.rot_quat">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_quat</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角をクォータニオン(w, x, y, z)として取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">rot_quat</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Transform.rot_axis_angle">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.rot_axis_angle">[docs]</a>
+    <span class="k">def</span> <span class="nf">rot_axis_angle</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">float</span><span class="p">],</span> <span class="nb">float</span><span class="p">]:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">rot_axis_angle</span><span class="p">()</span></div>
+
+
+<div class="viewcode-block" id="Transform.applied_to_point">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.applied_to_point">[docs]</a>
+    <span class="k">def</span> <span class="nf">applied_to_point</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Point&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Point を回転+平行移動させた結果を返す</span>
+
+<span class="sd">        :arg other: 変換する対象</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="n">other</span> <span class="o">=</span> <span class="n">Point</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">applied_to_point</span><span class="p">(</span><span class="n">other</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point</span></div>
+
+
+<div class="viewcode-block" id="Transform.applied_to_rotation">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.applied_to_rotation">[docs]</a>
+    <span class="k">def</span> <span class="nf">applied_to_rotation</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Rotation を回転+平行移動させた結果を返す</span>
+
+<span class="sd">        :arg other: 変換する対象</span>
+<span class="sd">        :return: 返り値はRotationではなくTransform。 applied_to_transformと同じ結果になる</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_transform</span><span class="p">(</span><span class="n">Transform</span><span class="p">(</span><span class="n">other</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="Transform.applied_to_transform">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.applied_to_transform">[docs]</a>
+    <span class="k">def</span> <span class="nf">applied_to_transform</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="s2">&quot;Transform&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Transform を回転+平行移動させた結果を返す</span>
+
+<span class="sd">        :arg other: 変換する対象対象</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">applied_to_point</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_point</span><span class="p">)</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_point</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span><span class="o">.</span><span class="n">applied_to_rotation</span><span class="p">(</span><span class="n">other</span><span class="o">.</span><span class="n">_rotation</span><span class="p">),</span>
+        <span class="p">)</span></div>
+
+
+    <span class="k">def</span> <span class="fm">__mul__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;Rotation&quot;</span><span class="p">,</span> <span class="s2">&quot;Transform&quot;</span><span class="p">]</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="s2">&quot;Transform&quot;</span><span class="p">]:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_transform</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_point</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_rotation</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">return</span> <span class="bp">NotImplemented</span>
+
+    <span class="k">def</span> <span class="fm">__imul__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Rotation&quot;</span><span class="p">,</span> <span class="s2">&quot;Transform&quot;</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Transform</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_transform</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Rotation</span><span class="p">):</span>
+            <span class="n">result</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">applied_to_rotation</span><span class="p">(</span><span class="n">other</span><span class="p">)</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">Point</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform * Point is not Transform&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">return</span> <span class="ne">TypeError</span><span class="p">(</span><span class="s2">&quot;Transform can&#39;t be multiplied to &quot;</span> <span class="o">+</span> <span class="nb">str</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">other</span><span class="p">)))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_point</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">_point</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_rotation</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">_rotation</span>
+        <span class="k">return</span> <span class="bp">self</span>
+
+<div class="viewcode-block" id="Transform.inversed">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.Transform.inversed">[docs]</a>
+    <span class="k">def</span> <span class="nf">inversed</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;逆変換を取得 (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="n">pos</span><span class="p">,</span> <span class="n">mat</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform_impl</span><span class="o">.</span><span class="n">inverse_transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">rot_matrix</span><span class="p">()</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">Transform</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot_from_matrix</span><span class="p">(</span><span class="n">mat</span><span class="p">))</span></div>
+</div>
 
 
 
 <div class="viewcode-block" id="identity">
 <a class="viewcode-back" href="../../webcface.transform.html#webcface.identity">[docs]</a>
-<span class="k">def</span> <span class="nf">identity</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="n">Transform</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">Transform</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">])</span></div>
+<span class="k">def</span> <span class="nf">identity</span><span class="p">()</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;なにもしないTransformを作成&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Transform</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">rot_from_euler</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span></div>
+
+
+
+<div class="viewcode-block" id="translation">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.translation">[docs]</a>
+<span class="k">def</span> <span class="nf">translation</span><span class="p">(</span><span class="n">pos</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]])</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;平行移動のみをするTransformを作成 (ver3.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">Transform</span><span class="p">(</span><span class="n">pos</span><span class="p">,</span> <span class="n">rot_from_euler</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]))</span></div>
+
+
+
+<div class="viewcode-block" id="convert_to_transform">
+<a class="viewcode-back" href="../../webcface.transform.html#webcface.convert_to_transform">[docs]</a>
+<span class="k">def</span> <span class="nf">convert_to_transform</span><span class="p">(</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span>
+        <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span>
+        <span class="n">Tuple</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]],</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Transform&quot;</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">origin</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Rotation</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">is_float_sequence</span><span class="p">(</span><span class="n">origin</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>  <span class="c1"># type:ignore</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="o">*</span><span class="n">origin</span><span class="p">)</span></div>
 
 </pre></div>
 

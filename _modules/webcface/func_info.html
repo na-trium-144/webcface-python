@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.func_info &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.func_info &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -77,6 +77,7 @@
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.member</span>
 <span class="kn">from</span> <span class="nn">webcface.typing</span> <span class="kn">import</span> <span class="n">convertible_to_float</span>
+
 
 <div class="viewcode-block" id="ValType">
 <a class="viewcode-back" href="../../webcface.func_info.html#webcface.ValType">[docs]</a>
@@ -108,7 +109,7 @@
         <span class="ow">or</span> <span class="n">t</span> <span class="ow">is</span> <span class="kc">None</span>
     <span class="p">):</span>
         <span class="k">return</span> <span class="n">ValType</span><span class="o">.</span><span class="n">NONE</span>
-    <span class="k">return</span> <span class="n">ValType</span><span class="o">.</span><span class="n">STRING</span></div>
+    <span class="k">return</span> <span class="n">ValType</span><span class="o">.</span><span class="n">NONE</span></div>
 
 
 
@@ -316,7 +317,10 @@
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ValType</span><span class="o">.</span><span class="n">BOOL</span><span class="p">:</span>
                 <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">bool</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
             <span class="k">elif</span> <span class="bp">self</span><span class="o">.</span><span class="n">args</span><span class="p">[</span><span class="n">i</span><span class="p">]</span><span class="o">.</span><span class="n">type</span> <span class="o">==</span> <span class="n">ValType</span><span class="o">.</span><span class="n">STRING</span><span class="p">:</span>
-                <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
+                    <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">a</span><span class="p">)))</span>
+                <span class="k">else</span><span class="p">:</span>
+                    <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">a</span><span class="p">))</span>
             <span class="k">else</span><span class="p">:</span>
                 <span class="n">new_args</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">a</span><span class="p">)</span>
         <span class="n">p</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="n">new_args</span>
@@ -351,7 +355,9 @@
     <span class="n">_finish_event_done</span><span class="p">:</span> <span class="nb">bool</span>
     <span class="n">_cv</span><span class="p">:</span> <span class="n">threading</span><span class="o">.</span><span class="n">Condition</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span> <span class="n">caller_id</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="n">caller</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">base</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_args</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_reached</span> <span class="o">=</span> <span class="kc">False</span>

@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html class="writer-html5" lang="en" >
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>webcface.components &mdash; WebCFace-Python 3.0.0  documentation</title>
+      <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
+      <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
+  <!--[if lt IE 9]>
+    <script src="../../_static/js/html5shiv.min.js"></script>
+  <![endif]-->
+  
+        <script src="../../_static/jquery.js?v=5d32c60e"></script>
+        <script src="../../_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+        <script src="../../_static/documentation_options.js?v=5929fcd5"></script>
+        <script src="../../_static/doctools.js?v=9a2dae69"></script>
+        <script src="../../_static/sphinx_highlight.js?v=dc90522c"></script>
+    <script src="../../_static/js/theme.js"></script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav"> 
+  <div class="wy-grid-for-nav">
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+
+          
+          
+          <a href="../../index.html" class="icon icon-home">
+            WebCFace-Python 3.0.0
+          </a>
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" aria-label="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+        </div><div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="Navigation menu">
+              <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../../webcface.html">webcface package</a></li>
+</ul>
+
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
+      </nav>
+
+      <div class="wy-nav-content">
+        <div class="rst-content">
+          <div role="navigation" aria-label="Page navigation">
+  <ul class="wy-breadcrumbs">
+      <li><a href="../../index.html" class="icon icon-home" aria-label="Home"></a></li>
+          <li class="breadcrumb-item"><a href="../index.html">Module code</a></li>
+      <li class="breadcrumb-item active">webcface.components</li>
+      <li class="wy-breadcrumbs-aside">
+      </li>
+  </ul>
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+             
+  <h1>Source code for webcface.components</h1><div class="highlight"><pre>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Union</span>
+<span class="kn">import</span> <span class="nn">webcface.temporal_component</span>
+<span class="kn">import</span> <span class="nn">webcface.view_base</span>
+<span class="kn">import</span> <span class="nn">webcface.func</span>
+
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;text&quot;</span><span class="p">,</span> <span class="s2">&quot;new_line&quot;</span><span class="p">,</span> <span class="s2">&quot;button&quot;</span><span class="p">]</span>
+
+
+<div class="viewcode-block" id="text">
+<a class="viewcode-back" href="../../webcface.components.html#webcface.components.text">[docs]</a>
+<span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;text要素&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">TEXT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="new_line">
+<a class="viewcode-back" href="../../webcface.components.html#webcface.components.new_line">[docs]</a>
+<span class="k">def</span> <span class="nf">new_line</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;newLine要素&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">NEW_LINE</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span></div>
+
+
+
+<div class="viewcode-block" id="button">
+<a class="viewcode-back" href="../../webcface.components.html#webcface.components.button">[docs]</a>
+<span class="k">def</span> <span class="nf">button</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="n">on_click</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.func.Func, Callable]&quot;</span><span class="p">,</span>
+    <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;button要素&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">BUTTON</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+        <span class="n">on_click</span><span class="o">=</span><span class="n">on_click</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span></div>
+
+
+
+<span class="k">def</span> <span class="nf">text_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;textInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">TEXT_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">decimal_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;decimalInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">DECIMAL_INPUT</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">number_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;numberInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">NUMBER_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">toggle_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;toggleInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">TOGGLE_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">select_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;selectInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">SELECT_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">slider_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;sliderInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">SLIDER_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">check_input</span><span class="p">(</span>
+    <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;checkInput要素 (ver2.0〜)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+        <span class="n">view_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentType</span><span class="o">.</span><span class="n">CHECK_INPUT</span><span class="p">,</span> <span class="n">text</span><span class="o">=</span><span class="n">text</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span>
+    <span class="p">)</span>
+</pre></div>
+
+           </div>
+          </div>
+          <footer>
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>&#169; Copyright 2023, na-trium-144.</p>
+  </div>
+
+  Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
+    <a href="https://github.com/readthedocs/sphinx_rtd_theme">theme</a>
+    provided by <a href="https://readthedocs.org">Read the Docs</a>.
+   
+
+</footer>
+        </div>
+      </div>
+    </section>
+  </div>
+  <script>
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script> 
+
+</body>
+</html>

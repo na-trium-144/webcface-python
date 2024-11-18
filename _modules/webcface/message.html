@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.message &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.message &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -722,7 +722,7 @@
 <div class="viewcode-block" id="View">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.View">[docs]</a>
 <span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">9</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -731,7 +731,9 @@
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.View.new">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
-        <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">,</span>
+        <span class="n">l</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">View</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">vb_to_vd</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
@@ -745,7 +747,7 @@
         <span class="k">return</span> <span class="n">vd_to_vb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span></div>
 
 
@@ -753,7 +755,7 @@
 <div class="viewcode-block" id="ViewReq">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewReq">[docs]</a>
 <span class="k">class</span> <span class="nc">ViewReq</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">43</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">49</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -782,7 +784,7 @@
 <div class="viewcode-block" id="ViewRes">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewRes">[docs]</a>
 <span class="k">class</span> <span class="nc">ViewRes</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">63</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">69</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -791,7 +793,10 @@
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewRes.new">[docs]</a>
     <span class="nd">@staticmethod</span>
     <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
-        <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">,</span> <span class="n">l</span><span class="p">:</span> <span class="nb">int</span>
+        <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+        <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span><span class="p">,</span>
+        <span class="n">l</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ViewRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">ViewRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">vb_to_vd</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
@@ -809,7 +814,7 @@
         <span class="k">return</span> <span class="n">vd_to_vb</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span></div>
 
 
@@ -817,7 +822,7 @@
 <div class="viewcode-block" id="ViewEntry">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.ViewEntry">[docs]</a>
 <span class="k">class</span> <span class="nc">ViewEntry</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">23</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">29</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -882,7 +887,7 @@
 <div class="viewcode-block" id="Canvas2D">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas2D">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas2D</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">10</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -895,7 +900,7 @@
         <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">,</span>
-        <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">l</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas2D&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas2D</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c2b_to_c2d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
@@ -917,7 +922,7 @@
         <span class="k">return</span> <span class="n">c2d_to_c2b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span></div>
 
 
@@ -925,7 +930,7 @@
 <div class="viewcode-block" id="Canvas2DReq">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas2DReq">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas2DReq</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">44</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">50</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -954,7 +959,7 @@
 <div class="viewcode-block" id="Canvas2DRes">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas2DRes">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas2DRes</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">64</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">70</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -968,7 +973,7 @@
         <span class="n">w</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">h</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>
         <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas2d_base.Canvas2DComponentBase]&quot;</span><span class="p">,</span>
-        <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">l</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas2DRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas2DRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">:</span> <span class="n">w</span><span class="p">,</span> <span class="s2">&quot;h&quot;</span><span class="p">:</span> <span class="n">h</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c2b_to_c2d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
@@ -994,7 +999,7 @@
         <span class="k">return</span> <span class="n">c2d_to_c2b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span></div>
 
 
@@ -1002,7 +1007,7 @@
 <div class="viewcode-block" id="Canvas2DEntry">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas2DEntry">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas2DEntry</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">24</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">30</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -1069,7 +1074,7 @@
 <div class="viewcode-block" id="Canvas3D">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas3D">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3D</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">11</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -1080,7 +1085,7 @@
     <span class="k">def</span> <span class="nf">new</span><span class="p">(</span>
         <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">,</span>
-        <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">l</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas3D</span><span class="p">({</span><span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c3b_to_c3d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
@@ -1094,7 +1099,7 @@
         <span class="k">return</span> <span class="n">c3d_to_c3b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span></div>
 
 
@@ -1102,7 +1107,7 @@
 <div class="viewcode-block" id="Canvas3DReq">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas3DReq">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3DReq</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">47</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">51</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -1131,7 +1136,7 @@
 <div class="viewcode-block" id="Canvas3DRes">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas3DRes">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3DRes</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">67</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">71</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>
@@ -1143,7 +1148,7 @@
         <span class="n">i</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
         <span class="n">f</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
         <span class="n">d</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span><span class="p">,</span>
-        <span class="n">l</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span>
+        <span class="n">l</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3DRes&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Canvas3DRes</span><span class="p">({</span><span class="s2">&quot;i&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span> <span class="s2">&quot;f&quot;</span><span class="p">:</span> <span class="n">f</span><span class="p">,</span> <span class="s2">&quot;d&quot;</span><span class="p">:</span> <span class="n">c3b_to_c3d</span><span class="p">(</span><span class="n">d</span><span class="p">),</span> <span class="s2">&quot;l&quot;</span><span class="p">:</span> <span class="n">l</span><span class="p">})</span></div>
 
@@ -1161,7 +1166,7 @@
         <span class="k">return</span> <span class="n">c3d_to_c3b</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;d&quot;</span><span class="p">])</span>
 
     <span class="nd">@property</span>
-    <span class="k">def</span> <span class="nf">length</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">ids</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]:</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">msg</span><span class="p">[</span><span class="s2">&quot;l&quot;</span><span class="p">]</span></div>
 
 
@@ -1169,7 +1174,7 @@
 <div class="viewcode-block" id="Canvas3DEntry">
 <a class="viewcode-back" href="../../webcface.message.html#webcface.message.Canvas3DEntry">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3DEntry</span><span class="p">(</span><span class="n">MessageBase</span><span class="p">):</span>
-    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">27</span>
+    <span class="n">kind_def</span> <span class="o">=</span> <span class="mi">31</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">msg</span><span class="p">:</span> <span class="nb">dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">kind_def</span><span class="p">,</span> <span class="n">msg</span><span class="p">)</span>

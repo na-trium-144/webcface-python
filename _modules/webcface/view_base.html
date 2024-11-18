@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.view_base &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.view_base &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,13 +69,49 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.view_base</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
-<span class="kn">import</span> <span class="nn">webcface.client_data</span>
+
+
+<div class="viewcode-block" id="ViewComponentType">
+<a class="viewcode-back" href="../../webcface.view_base.html#webcface.ViewComponentType">[docs]</a>
+<span class="k">class</span> <span class="nc">ViewComponentType</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">TEXT</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">NEW_LINE</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">BUTTON</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">TEXT_INPUT</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">DECIMAL_INPUT</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">NUMBER_INPUT</span> <span class="o">=</span> <span class="mi">5</span>
+    <span class="n">TOGGLE_INPUT</span> <span class="o">=</span> <span class="mi">6</span>
+    <span class="n">SELECT_INPUT</span> <span class="o">=</span> <span class="mi">7</span>
+    <span class="n">SLIDER_INPUT</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">CHECK_INPUT</span> <span class="o">=</span> <span class="mi">9</span></div>
+
+
+
+<div class="viewcode-block" id="ViewColor">
+<a class="viewcode-back" href="../../webcface.view_base.html#webcface.ViewColor">[docs]</a>
+<span class="k">class</span> <span class="nc">ViewColor</span><span class="p">(</span><span class="n">IntEnum</span><span class="p">):</span>
+    <span class="n">INHERIT</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">BLACK</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">WHITE</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">GRAY</span> <span class="o">=</span> <span class="mi">4</span>
+    <span class="n">RED</span> <span class="o">=</span> <span class="mi">8</span>
+    <span class="n">ORANGE</span> <span class="o">=</span> <span class="mi">9</span>
+    <span class="n">YELLOW</span> <span class="o">=</span> <span class="mi">11</span>
+    <span class="n">GREEN</span> <span class="o">=</span> <span class="mi">13</span>
+    <span class="n">TEAL</span> <span class="o">=</span> <span class="mi">15</span>
+    <span class="n">CYAN</span> <span class="o">=</span> <span class="mi">16</span>
+    <span class="n">BLUE</span> <span class="o">=</span> <span class="mi">18</span>
+    <span class="n">INDIGO</span> <span class="o">=</span> <span class="mi">19</span>
+    <span class="n">PURPLE</span> <span class="o">=</span> <span class="mi">21</span>
+    <span class="n">PINK</span> <span class="o">=</span> <span class="mi">23</span></div>
+
 
 
 <div class="viewcode-block" id="ViewComponentBase">
-<a class="viewcode-back" href="../../webcface.view_base.html#webcface.view_base.ViewComponentBase">[docs]</a>
+<a class="viewcode-back" href="../../webcface.view_base.html#webcface.ViewComponentBase">[docs]</a>
 <span class="k">class</span> <span class="nc">ViewComponentBase</span><span class="p">:</span>
     <span class="n">_type</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">_text</span><span class="p">:</span> <span class="nb">str</span>
@@ -110,7 +146,41 @@
         <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">=</span> <span class="nb">min</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">=</span> <span class="nb">max</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">=</span> <span class="n">step</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_option</span> <span class="o">=</span> <span class="n">option</span> <span class="ow">or</span> <span class="p">[]</span></div>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_option</span> <span class="o">=</span> <span class="n">option</span> <span class="ow">or</span> <span class="p">[]</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ViewComponentBase</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_type</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_member</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_member</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_field</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="p">(</span>
+                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="ow">or</span> <span class="p">(</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_member</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_member</span>
+                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_field</span>
+                <span class="p">)</span>
+            <span class="p">)</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_color</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_color</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bg_color</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_bg_color</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_step</span>
+            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_option</span>
+        <span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span></div>
 
 </pre></div>
 

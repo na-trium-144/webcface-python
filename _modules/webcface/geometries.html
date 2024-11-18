@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.geometries &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.geometries &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,7 +69,7 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.geometries</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">SupportsFloat</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">,</span> <span class="n">Tuple</span>
 <span class="kn">from</span> <span class="nn">enum</span> <span class="kn">import</span> <span class="n">IntEnum</span>
 <span class="kn">import</span> <span class="nn">webcface.transform</span>
 
@@ -117,7 +117,7 @@
     <span class="n">_geometry_type</span><span class="p">:</span> <span class="nb">int</span>
     <span class="n">_properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
 
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">geometry_type</span><span class="p">:</span> <span class="nb">int</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_geometry_type</span> <span class="o">=</span> <span class="n">geometry_type</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span> <span class="o">=</span> <span class="p">[</span><span class="nb">float</span><span class="p">(</span><span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">properties</span><span class="p">]</span>
 
@@ -162,7 +162,7 @@
 <div class="viewcode-block" id="Line">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Line">[docs]</a>
 <span class="k">class</span> <span class="nc">Line</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">LINE</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
@@ -179,8 +179,8 @@
 <div class="viewcode-block" id="line">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.line">[docs]</a>
 <span class="k">def</span> <span class="nf">line</span><span class="p">(</span>
-    <span class="n">begin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
-    <span class="n">end</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
+    <span class="n">begin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
+    <span class="n">end</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Line</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">):</span>
         <span class="n">begin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">begin</span><span class="p">)</span>
@@ -193,7 +193,7 @@
 <div class="viewcode-block" id="Polygon">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Polygon">[docs]</a>
 <span class="k">class</span> <span class="nc">Polygon</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">%</span> <span class="mi">3</span> <span class="o">==</span> <span class="mi">0</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">POLYGON</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
@@ -209,7 +209,7 @@
 <div class="viewcode-block" id="polygon">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.polygon">[docs]</a>
 <span class="k">def</span> <span class="nf">polygon</span><span class="p">(</span>
-    <span class="n">points</span><span class="p">:</span> <span class="s2">&quot;List[Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]]&quot;</span><span class="p">,</span>
+    <span class="n">points</span><span class="p">:</span> <span class="s2">&quot;Sequence[Union[webcface.transform.Point, Sequence[SupportsFloat]]]&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Polygon</span><span class="p">:</span>
     <span class="n">props</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">points</span><span class="p">:</span>
@@ -223,14 +223,15 @@
 <div class="viewcode-block" id="Plane">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Plane">[docs]</a>
 <span class="k">class</span> <span class="nc">Plane</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">PLANE</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rot_from_euler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]),</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -258,12 +259,18 @@
 <div class="viewcode-block" id="plane">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.plane">[docs]</a>
 <span class="k">def</span> <span class="nf">plane</span><span class="p">(</span>
-    <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]&quot;</span><span class="p">,</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span>
+        <span class="n">Tuple</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]],</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
     <span class="n">width</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
     <span class="n">height</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Plane</span><span class="p">:</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">convert_to_transform</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Plane</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">rot</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">])</span></div>
 
 
@@ -271,15 +278,15 @@
 <div class="viewcode-block" id="rect">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.rect">[docs]</a>
 <span class="k">def</span> <span class="nf">rect</span><span class="p">(</span>
-    <span class="n">begin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
-    <span class="n">end</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
+    <span class="n">begin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
+    <span class="n">end</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Plane</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">begin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">):</span>
         <span class="n">begin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">begin</span><span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">end</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">):</span>
         <span class="n">end</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">end</span><span class="p">)</span>
-    <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span>
-        <span class="p">[(</span><span class="n">b</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">begin</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">pos</span><span class="p">)],</span> <span class="mi">0</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">translation</span><span class="p">(</span>
+        <span class="p">[(</span><span class="n">b</span> <span class="o">+</span> <span class="n">e</span><span class="p">)</span> <span class="o">/</span> <span class="mi">2</span> <span class="k">for</span> <span class="n">b</span><span class="p">,</span> <span class="n">e</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">begin</span><span class="o">.</span><span class="n">pos</span><span class="p">,</span> <span class="n">end</span><span class="o">.</span><span class="n">pos</span><span class="p">)],</span>
     <span class="p">)</span>
     <span class="n">width</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">begin</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">-</span> <span class="n">end</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
     <span class="n">height</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">begin</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">end</span><span class="o">.</span><span class="n">pos</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
@@ -290,7 +297,7 @@
 <div class="viewcode-block" id="Box">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Box">[docs]</a>
 <span class="k">class</span> <span class="nc">Box</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">6</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">BOX</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
@@ -307,8 +314,8 @@
 <div class="viewcode-block" id="box">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.box">[docs]</a>
 <span class="k">def</span> <span class="nf">box</span><span class="p">(</span>
-    <span class="n">vertex1</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
-    <span class="n">vertex2</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
+    <span class="n">vertex1</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
+    <span class="n">vertex2</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Box</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">vertex1</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">):</span>
         <span class="n">vertex1</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">(</span><span class="n">vertex1</span><span class="p">)</span>
@@ -321,14 +328,15 @@
 <div class="viewcode-block" id="Circle">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Circle">[docs]</a>
 <span class="k">class</span> <span class="nc">Circle</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">7</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">CIRCLE</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rot_from_euler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]),</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -340,11 +348,19 @@
 <div class="viewcode-block" id="circle">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.circle">[docs]</a>
 <span class="k">def</span> <span class="nf">circle</span><span class="p">(</span>
-    <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]&quot;</span><span class="p">,</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span>
+        <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span>
+        <span class="n">Tuple</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]],</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Circle</span><span class="p">:</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">convert_to_transform</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Circle</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">rot</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">radius</span><span class="p">])</span></div>
 
 
@@ -352,14 +368,15 @@
 <div class="viewcode-block" id="Cylinder">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Cylinder">[docs]</a>
 <span class="k">class</span> <span class="nc">Cylinder</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">8</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">CYLINDER</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span><span class="mi">3</span><span class="p">],</span>
+            <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rot_from_euler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_properties</span><span class="p">[</span><span class="mi">3</span><span class="p">:</span><span class="mi">6</span><span class="p">]),</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
@@ -375,12 +392,20 @@
 <div class="viewcode-block" id="cylinder">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.cylinder">[docs]</a>
 <span class="k">def</span> <span class="nf">cylinder</span><span class="p">(</span>
-    <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Transform, webcface.transform.ConvertibleToTransform]&quot;</span><span class="p">,</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span>
+        <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span>
+        <span class="n">Tuple</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Point&quot;</span><span class="p">,</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]],</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.transform.Rotation&quot;</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">],</span>
+        <span class="p">],</span>
+    <span class="p">],</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
     <span class="n">length</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Cylinder</span><span class="p">:</span>
-    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">):</span>
-        <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="n">origin</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">origin</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">convert_to_transform</span><span class="p">(</span><span class="n">origin</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">Cylinder</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">pos</span><span class="p">)</span> <span class="o">+</span> <span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">rot</span><span class="p">)</span> <span class="o">+</span> <span class="p">[</span><span class="n">radius</span><span class="p">,</span> <span class="n">length</span><span class="p">])</span></div>
 
 
@@ -388,7 +413,7 @@
 <div class="viewcode-block" id="Sphere">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.Sphere">[docs]</a>
 <span class="k">class</span> <span class="nc">Sphere</span><span class="p">(</span><span class="n">Geometry</span><span class="p">):</span>
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">properties</span><span class="p">:</span> <span class="n">Sequence</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">properties</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span><span class="n">GeometryType</span><span class="o">.</span><span class="n">SPHERE</span><span class="p">,</span> <span class="n">properties</span><span class="p">)</span>
 
@@ -405,7 +430,7 @@
 <div class="viewcode-block" id="sphere">
 <a class="viewcode-back" href="../../webcface.geometries.html#webcface.sphere">[docs]</a>
 <span class="k">def</span> <span class="nf">sphere</span><span class="p">(</span>
-    <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, webcface.transform.ConvertibleToPoint]&quot;</span><span class="p">,</span>
+    <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.transform.Point, Sequence[SupportsFloat]]&quot;</span><span class="p">,</span>
     <span class="n">radius</span><span class="p">:</span> <span class="n">SupportsFloat</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Sphere</span><span class="p">:</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">origin</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Point</span><span class="p">):</span>

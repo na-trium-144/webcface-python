@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.canvas3d &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.canvas3d &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,24 +69,40 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.canvas3d</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Union</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas3d_base</span>
 <span class="kn">import</span> <span class="nn">webcface.geometries</span>
 <span class="kn">import</span> <span class="nn">webcface.client_data</span>
 <span class="kn">import</span> <span class="nn">webcface.transform</span>
-<span class="kn">import</span> <span class="nn">webcface.view_components</span>
+<span class="kn">import</span> <span class="nn">webcface.view_base</span>
+
+
+<div class="viewcode-block" id="Canvas3DData">
+<a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3DData">[docs]</a>
+<span class="k">class</span> <span class="nc">Canvas3DData</span><span class="p">:</span>
+    <span class="n">tmp_components</span><span class="p">:</span> <span class="s2">&quot;List[webcface.temporal_component.TemporalComponent]&quot;</span>
+    <span class="n">components</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.canvas3d_base.Canvas3DComponentBase]&quot;</span>
+    <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span></div>
+
 
 
 <div class="viewcode-block" id="Canvas3DComponent">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3DComponent</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">):</span>
     <span class="n">_data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span>
+    <span class="n">_id</span><span class="p">:</span> <span class="nb">str</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.canvas3d_base.Canvas3DComponentBase&quot;</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span><span class="p">,</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">base</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span>
@@ -100,6 +116,24 @@
             <span class="n">base</span><span class="o">.</span><span class="n">_angles</span><span class="p">,</span>
         <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
+
+    <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;プロパティの比較 (ver3.0〜)</span>
+
+<span class="sd">        :return: id以外のプロパティが全部等しければTrueになる</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">other</span><span class="p">,</span> <span class="n">Canvas3DComponent</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+        <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;要素のid (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -112,7 +146,9 @@
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">origin</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.transform.Transform&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;表示する要素の移動&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin_pos</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_origin_rot</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_origin_pos</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">rot_from_euler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_origin_rot</span><span class="p">)</span>
+        <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">color</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -137,7 +173,7 @@
 <div class="viewcode-block" id="Canvas3D">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D">[docs]</a>
 <span class="k">class</span> <span class="nc">Canvas3D</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
-    <span class="n">_c3data</span><span class="p">:</span> <span class="s2">&quot;Optional[List[webcface.canvas3d_base.Canvas3DComponentBase]]&quot;</span>
+    <span class="n">_c3data</span><span class="p">:</span> <span class="s2">&quot;Optional[Canvas3DData]&quot;</span>
     <span class="n">_modified</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
@@ -215,7 +251,10 @@
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
         <span class="n">v2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Canvas3DComponent</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">v2</span> <span class="o">=</span> <span class="p">[</span><span class="n">Canvas3DComponent</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span> <span class="k">for</span> <span class="n">vb</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="p">[</span>
+                <span class="n">Canvas3DComponent</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">v_id</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">v_id</span><span class="p">)</span>
+                <span class="k">for</span> <span class="n">v_id</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">ids</span>
+            <span class="p">]</span>
         <span class="k">return</span> <span class="n">v2</span></div>
 
 
@@ -248,7 +287,7 @@
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.init">[docs]</a>
     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このCanvas3Dオブジェクトにaddした内容を初期化する&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="o">=</span> <span class="n">Canvas3DData</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -263,7 +302,15 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewの内容をclientに反映し送信可能にする&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="p">)</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
+            <span class="n">data_idx</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="o">.</span><span class="n">tmp_components</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">data_idx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">_canvas3d_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">data_idx</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_canvas3d_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">lock_tmp</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;c3&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;..</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">_canvas3d_type</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">to_canvas3d</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="o">.</span><span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">canvas3d_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="n">on_change</span> <span class="o">=</span> <span class="p">(</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_canvas3d_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
@@ -275,17 +322,42 @@
 
 <div class="viewcode-block" id="Canvas3D.add">
 <a class="viewcode-back" href="../../webcface.canvas3d.html#webcface.canvas3d.Canvas3D.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+            <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;webcface.geometries.Geometry3D&quot;</span><span class="p">,</span>
+        <span class="p">],</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;要素を追加</span>
 
-<span class="sd">        引数は add_geometry() にそのまま渡される</span>
+<span class="sd">        :arg args: (ver3.0〜) 追加する要素 (複数指定した場合すべて追加される。)</span>
+<span class="sd">        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。</span>
+<span class="sd">        詳細は TemporalComponent のコンストラクタを参照</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="p">(</span><span class="n">args</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">args</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">webcface</span><span class="o">.</span><span class="n">geometries</span><span class="o">.</span><span class="n">Geometry</span><span class="p">))</span> <span class="ow">or</span> <span class="p">(</span>
-            <span class="s2">&quot;geometry&quot;</span> <span class="ow">in</span> <span class="n">kwargs</span>
-        <span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">add_geometry</span><span class="p">(</span><span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Invalid argument type in Canvas3D.add&quot;</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;no components given to Canvas3D.add()&quot;</span>
+        <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;kwargs is not allowed because </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2"> is already a component&quot;</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">geometries</span><span class="o">.</span><span class="n">Geometry</span><span class="p">):</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">(</span>
+                        <span class="n">canvas3d_type</span><span class="o">=</span><span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentType</span><span class="o">.</span><span class="n">GEOMETRY</span><span class="p">,</span>
+                        <span class="n">geometry</span><span class="o">=</span><span class="n">c</span><span class="p">,</span>
+                        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+                    <span class="p">)</span>
+                <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid component </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
@@ -295,28 +367,13 @@
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">geometry</span><span class="p">:</span> <span class="s2">&quot;webcface.geometries.Geometry3D&quot;</span><span class="p">,</span>
         <span class="n">origin</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.transform.Transform]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_components</span><span class="o">.</span><span class="n">ViewColor</span><span class="o">.</span><span class="n">INHERIT</span><span class="p">,</span>
+        <span class="n">color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewColor</span><span class="o">.</span><span class="n">INHERIT</span><span class="p">,</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Canvas3D&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Geometryを追加&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
-        <span class="k">if</span> <span class="n">origin</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">origin</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">transform</span><span class="o">.</span><span class="n">Transform</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_c3data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
-            <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentBase</span><span class="p">(</span>
-                <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d_base</span><span class="o">.</span><span class="n">Canvas3DComponentType</span><span class="o">.</span><span class="n">GEOMETRY</span><span class="p">,</span>
-                <span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">pos</span><span class="p">),</span>
-                <span class="nb">list</span><span class="p">(</span><span class="n">origin</span><span class="o">.</span><span class="n">rot</span><span class="p">),</span>
-                <span class="n">color</span><span class="p">,</span>
-                <span class="n">geometry</span><span class="o">.</span><span class="n">type</span><span class="p">,</span>
-                <span class="n">geometry</span><span class="o">.</span><span class="n">_properties</span><span class="p">,</span>
-                <span class="kc">None</span><span class="p">,</span>
-                <span class="kc">None</span><span class="p">,</span>
-                <span class="kc">None</span><span class="p">,</span>
-            <span class="p">)</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Geometryを追加</span>
+
+<span class="sd">        .. deprecated:: ver3.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">geometry</span><span class="p">,</span> <span class="n">origin</span><span class="o">=</span><span class="n">origin</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">color</span><span class="p">)</span></div>
 </div>
 
 </pre></div>

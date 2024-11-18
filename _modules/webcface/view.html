@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.view &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.view &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="../../_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="../../_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -29,7 +29,7 @@
           
           
           <a href="../../index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="../../search.html" method="get">
@@ -50,7 +50,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="../../index.html">WebCFace-Python 2.4.0</a>
+          <a href="../../index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -69,36 +69,49 @@
            <div itemprop="articleBody">
              
   <h1>Source code for webcface.view</h1><div class="highlight"><pre>
-<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Union</span>
+<span></span><span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">Dict</span>
 <span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.text</span>
 <span class="kn">import</span> <span class="nn">webcface.view_base</span>
-<span class="kn">import</span> <span class="nn">webcface.view_components</span>
+<span class="kn">import</span> <span class="nn">webcface.components</span>
 <span class="kn">import</span> <span class="nn">webcface.client_data</span>
 <span class="kn">import</span> <span class="nn">webcface.func</span>
+<span class="kn">import</span> <span class="nn">webcface.temporal_component</span>
 <span class="kn">from</span> <span class="nn">webcface.typing</span> <span class="kn">import</span> <span class="n">convertible_to_float</span>
+
+
+<div class="viewcode-block" id="ViewData">
+<a class="viewcode-back" href="../../webcface.view.html#webcface.ViewData">[docs]</a>
+<span class="k">class</span> <span class="nc">ViewData</span><span class="p">:</span>
+    <span class="n">tmp_components</span><span class="p">:</span> <span class="s2">&quot;List[webcface.temporal_component.TemporalComponent]&quot;</span>
+    <span class="n">components</span><span class="p">:</span> <span class="s2">&quot;Dict[str, webcface.view_base.ViewComponentBase]&quot;</span>
+    <span class="n">ids</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">tmp_components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span></div>
+
 
 
 <div class="viewcode-block" id="ViewComponent">
 <a class="viewcode-back" href="../../webcface.view.html#webcface.ViewComponent">[docs]</a>
 <span class="k">class</span> <span class="nc">ViewComponent</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="p">):</span>
     <span class="n">_data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span>
-    <span class="n">_on_click_func_tmp</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Callable</span><span class="p">]</span>
-    <span class="n">_bind_tmp</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.text.InputRef]&quot;</span>
-    <span class="n">_init</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+    <span class="n">_id</span><span class="p">:</span> <span class="nb">str</span>
 
-<div class="viewcode-block" id="ViewComponent.from_base">
-<a class="viewcode-back" href="../../webcface.view.html#webcface.ViewComponent.from_base">[docs]</a>
-    <span class="nd">@staticmethod</span>
-    <span class="k">def</span> <span class="nf">from_base</span><span class="p">(</span>
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
         <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.view_base.ViewComponentBase&quot;</span><span class="p">,</span>
         <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ViewComponent&quot;</span><span class="p">:</span>
-        <span class="n">vc</span> <span class="o">=</span> <span class="n">ViewComponent</span><span class="p">(</span>
+        <span class="nb">id</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="nb">type</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_type</span><span class="p">,</span>
             <span class="n">text</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_text</span><span class="p">,</span>
             <span class="n">on_click</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_on_click_func</span><span class="p">,</span>
+            <span class="n">text_ref</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_text_ref</span><span class="p">,</span>
             <span class="n">text_color</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_text_color</span><span class="p">,</span>
             <span class="n">bg_color</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_bg_color</span><span class="p">,</span>
             <span class="nb">min</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_min</span><span class="p">,</span>
@@ -106,173 +119,25 @@
             <span class="n">step</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_step</span><span class="p">,</span>
             <span class="n">option</span><span class="o">=</span><span class="n">base</span><span class="o">.</span><span class="n">_option</span><span class="p">,</span>
         <span class="p">)</span>
-        <span class="n">vc</span><span class="o">.</span><span class="n">_text_ref</span> <span class="o">=</span> <span class="n">base</span><span class="o">.</span><span class="n">_text_ref</span>
-        <span class="n">vc</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
-        <span class="k">return</span> <span class="n">vc</span></div>
-
-
-    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span>
-        <span class="nb">type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">on_click</span><span class="p">:</span> <span class="s2">&quot;Optional[Union[webcface.field.FieldBase, Callable]]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">text_color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">bg_color</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
-        <span class="n">on_change</span><span class="p">:</span> <span class="s2">&quot;Optional[Union[webcface.func.Func, Callable]]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">bind</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.text.InputRef]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="nb">min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">init</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;コンポーネントを作成</span>
-
-<span class="sd">        :arg type: コンポーネントの種類 (text(), button()などコンポーネントを作成する各種関数を使えば自動で設定される)</span>
-<span class="sd">        :arg text: 表示する文字列</span>
-<span class="sd">        :arg on_click: クリック時に実行する関数</span>
-<span class="sd">        :arg text_color: 文字の色 (ViewColorのEnumを使う)</span>
-<span class="sd">        :arg bg_color: 背景の色 (ViewColorのEnumを使う)</span>
-<span class="sd">        :arg on_change: (ver2.0〜) Inputの値が変更されたときに実行する関数</span>
-<span class="sd">        :arg bind: (ver2.0〜) Inputの値をバインドするInputRef</span>
-<span class="sd">            (on_changeとbindはどちらか片方のみを指定すること)</span>
-<span class="sd">        :arg min: (ver2.0〜) Inputの最小値/最小文字数</span>
-<span class="sd">        :arg max: (ver2.0〜) Inputの最大値/最大文字数</span>
-<span class="sd">        :arg step: (ver2.0〜) Inputの刻み幅</span>
-<span class="sd">        :arg option: (ver2.0〜) Inputの選択肢</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">option2</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">]]</span> <span class="o">=</span> <span class="p">[]</span>
-        <span class="k">if</span> <span class="n">option</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">for</span> <span class="n">op</span> <span class="ow">in</span> <span class="n">option</span><span class="p">:</span>
-                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">op</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-                    <span class="n">option2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">op</span><span class="p">)</span>
-                <span class="k">elif</span> <span class="n">convertible_to_float</span><span class="p">(</span><span class="n">init</span><span class="p">):</span>
-                    <span class="n">option2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
-                <span class="k">else</span><span class="p">:</span>
-                    <span class="n">option2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
-            <span class="nb">type</span><span class="p">,</span>
-            <span class="n">text</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>
-            <span class="kc">None</span><span class="p">,</span>
-            <span class="n">text_color</span><span class="p">,</span>
-            <span class="n">bg_color</span><span class="p">,</span>
-            <span class="kc">None</span> <span class="k">if</span> <span class="nb">min</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="nb">min</span><span class="p">),</span>
-            <span class="kc">None</span> <span class="k">if</span> <span class="nb">max</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="nb">max</span><span class="p">),</span>
-            <span class="kc">None</span> <span class="k">if</span> <span class="n">step</span> <span class="ow">is</span> <span class="kc">None</span> <span class="k">else</span> <span class="nb">float</span><span class="p">(</span><span class="n">step</span><span class="p">),</span>
-            <span class="n">option2</span><span class="p">,</span>
-        <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func_tmp</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">if</span> <span class="n">init</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="kc">None</span>
-        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">init</span><span class="p">,</span> <span class="nb">bool</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="n">init</span>
-        <span class="k">elif</span> <span class="n">convertible_to_float</span><span class="p">(</span><span class="n">init</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">init</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_change</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">):</span>
-                <span class="n">bind_new</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">InputRef</span><span class="p">()</span>
-
-                <span class="k">def</span> <span class="nf">on_change_impl</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
-                    <span class="k">if</span> <span class="n">bind_new</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">bind_new</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">on_change</span><span class="o">.</span><span class="n">run</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-
-                <span class="n">bind</span> <span class="o">=</span> <span class="n">bind_new</span>
-                <span class="n">on_click</span> <span class="o">=</span> <span class="n">on_change_impl</span>
-            <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">on_change</span><span class="p">):</span>
-                <span class="n">bind_new</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">InputRef</span><span class="p">()</span>
-
-                <span class="k">def</span> <span class="nf">on_change_impl</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
-                    <span class="k">if</span> <span class="n">bind_new</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                        <span class="n">bind_new</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-                    <span class="k">return</span> <span class="n">on_change</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-
-                <span class="n">bind</span> <span class="o">=</span> <span class="n">bind_new</span>
-                <span class="n">on_click</span> <span class="o">=</span> <span class="n">on_change_impl</span>
-        <span class="k">elif</span> <span class="n">bind</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-
-            <span class="k">def</span> <span class="nf">on_change_impl</span><span class="p">(</span><span class="n">val</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]):</span>
-                <span class="k">if</span> <span class="n">bind</span><span class="o">.</span><span class="n">_state</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-                    <span class="n">bind</span><span class="o">.</span><span class="n">_state</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">val</span><span class="p">)</span>
-
-            <span class="n">on_click</span> <span class="o">=</span> <span class="n">on_change_impl</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_bind_tmp</span> <span class="o">=</span> <span class="n">bind</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">FieldBase</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span>
-        <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">on_click</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func_tmp</span> <span class="o">=</span> <span class="n">on_click</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">)</span> <span class="ow">and</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_data</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_change</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">)</span> <span class="ow">and</span> <span class="n">on_change</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">on_change</span><span class="o">.</span><span class="n">_data</span>
-
-<div class="viewcode-block" id="ViewComponent.lock_tmp">
-<a class="viewcode-back" href="../../webcface.view.html#webcface.ViewComponent.lock_tmp">[docs]</a>
-    <span class="k">def</span> <span class="nf">lock_tmp</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;webcface.client_data.ClientData&quot;</span><span class="p">,</span> <span class="n">field_id</span><span class="p">:</span> <span class="nb">str</span>
-    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;ViewComponent&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;on_clickをFuncオブジェクトにlockする&quot;&quot;&quot;</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func_tmp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">on_click</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">(</span>
-                <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">),</span> <span class="n">field_id</span>
-            <span class="p">)</span>
-            <span class="n">on_click</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func_tmp</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bind_tmp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">text_ref</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Variant</span><span class="p">(</span>
-                <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">),</span> <span class="n">field_id</span>
-            <span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_bind_tmp</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">text_ref</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="o">=</span> <span class="n">text_ref</span>
-            <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">text_ref</span><span class="o">.</span><span class="n">try_get</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-                <span class="n">text_ref</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>
-        <span class="k">return</span> <span class="bp">self</span></div>
-
+        <span class="bp">self</span><span class="o">.</span><span class="n">_id</span> <span class="o">=</span> <span class="nb">id</span>
 
     <span class="k">def</span> <span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;プロパティの比較</span>
 
-<span class="sd">        :return: プロパティが全部等しければTrueになる</span>
+<span class="sd">        :return: id以外のプロパティが全部等しければTrueになる</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="p">(</span>
-            <span class="nb">isinstance</span><span class="p">(</span><span class="n">other</span><span class="p">,</span> <span class="n">ViewComponent</span><span class="p">)</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_type</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_type</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text</span>
-            <span class="ow">and</span> <span class="p">(</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="ow">or</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_member</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_member</span>
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_on_click_func</span><span class="o">.</span><span class="n">_field</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-            <span class="ow">and</span> <span class="p">(</span>
-                <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">)</span>
-                <span class="ow">or</span> <span class="p">(</span>
-                    <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_member</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_member</span>
-                    <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_field</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_ref</span><span class="o">.</span><span class="n">_field</span>
-                <span class="p">)</span>
-            <span class="p">)</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_text_color</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_text_color</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bg_color</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_bg_color</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_min</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_min</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_max</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_max</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_step</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_step</span>
-            <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_option</span> <span class="o">==</span> <span class="n">other</span><span class="o">.</span><span class="n">_option</span>
-        <span class="p">)</span>
+        <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">other</span><span class="p">,</span> <span class="n">ViewComponent</span>
+        <span class="p">)</span> <span class="ow">and</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view_base</span><span class="o">.</span><span class="n">ViewComponentBase</span><span class="o">.</span><span class="fm">__eq__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="fm">__ne__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">other</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
         <span class="k">return</span> <span class="ow">not</span> <span class="bp">self</span> <span class="o">==</span> <span class="n">other</span>
+
+    <span class="nd">@property</span>
+    <span class="k">def</span> <span class="nf">id</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;要素のid (ver3.0〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">type</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
@@ -378,7 +243,7 @@
 <div class="viewcode-block" id="View">
 <a class="viewcode-back" href="../../webcface.view.html#webcface.View">[docs]</a>
 <span class="k">class</span> <span class="nc">View</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
-    <span class="n">_components</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ViewComponent</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">float</span><span class="p">,</span> <span class="nb">int</span><span class="p">]]</span>
+    <span class="n">_vdata</span><span class="p">:</span> <span class="s2">&quot;Optional[ViewData]&quot;</span>
     <span class="n">_modified</span><span class="p">:</span> <span class="nb">bool</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
@@ -392,7 +257,7 @@
         <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
             <span class="n">base</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="n">field</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">base</span><span class="o">.</span><span class="n">_field</span>
         <span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
 
     <span class="nd">@property</span>
@@ -452,7 +317,7 @@
         <span class="n">v</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
         <span class="n">v2</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="n">ViewComponent</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span>
         <span class="k">if</span> <span class="n">v</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">v2</span> <span class="o">=</span> <span class="p">[</span><span class="n">ViewComponent</span><span class="o">.</span><span class="n">from_base</span><span class="p">(</span><span class="n">vb</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">)</span> <span class="k">for</span> <span class="n">vb</span> <span class="ow">in</span> <span class="n">v</span><span class="p">]</span>
+            <span class="n">v2</span> <span class="o">=</span> <span class="p">[</span><span class="n">ViewComponent</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">v_id</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">v_id</span><span class="p">)</span> <span class="k">for</span> <span class="n">v_id</span> <span class="ow">in</span> <span class="n">v</span><span class="o">.</span><span class="n">ids</span><span class="p">]</span>
         <span class="k">return</span> <span class="n">v2</span></div>
 
 
@@ -479,30 +344,22 @@
 <div class="viewcode-block" id="View.set">
 <a class="viewcode-back" href="../../webcface.view.html#webcface.View.set">[docs]</a>
     <span class="k">def</span> <span class="nf">set</span><span class="p">(</span>
-        <span class="bp">self</span><span class="p">,</span> <span class="n">components</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">ViewComponent</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="n">components</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span>
+                <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">,</span>
+                <span class="nb">str</span><span class="p">,</span>
+                <span class="nb">bool</span><span class="p">,</span>
+                <span class="n">SupportsFloat</span><span class="p">,</span>
+            <span class="p">]</span>
+        <span class="p">],</span>
     <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewのリストをセットする&quot;&quot;&quot;</span>
-        <span class="n">data2</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewのリストをセットする</span>
+
+<span class="sd">        .. deprecated:: ver3.0</span>
+<span class="sd">        &quot;&quot;&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">components</span><span class="p">:</span>
-            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">ViewComponent</span><span class="p">):</span>
-                <span class="n">data2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
-            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-                <span class="k">while</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
-                    <span class="n">s</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:</span> <span class="n">c</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)]</span>
-                    <span class="n">data2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_components</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">s</span><span class="p">))</span>
-                    <span class="n">data2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_components</span><span class="o">.</span><span class="n">new_line</span><span class="p">())</span>
-                    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
-                <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
-                    <span class="n">data2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_components</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">c</span><span class="p">))</span>
-            <span class="k">else</span><span class="p">:</span>
-                <span class="n">data2</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">view_components</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">)))</span>
-        <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">c</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">data2</span><span class="p">):</span>
-            <span class="n">data2</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">lock_tmp</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">(),</span> <span class="sa">f</span><span class="s2">&quot;..v</span><span class="si">{</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="nb">list</span><span class="p">(</span><span class="n">data2</span><span class="p">))</span>
-        <span class="n">on_change</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">on_view_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="n">on_change</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
@@ -515,7 +372,7 @@
 <a class="viewcode-back" href="../../webcface.view.html#webcface.View.init">[docs]</a>
     <span class="k">def</span> <span class="nf">init</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;このViewオブジェクトにaddした内容を初期化する&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_components</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span> <span class="o">=</span> <span class="n">ViewData</span><span class="p">()</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
@@ -529,21 +386,70 @@
     <span class="k">def</span> <span class="nf">sync</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewの内容をclientに反映し送信可能にする&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="p">)</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">components</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">ids</span> <span class="o">=</span> <span class="p">[]</span>
+            <span class="n">data_idx</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+            <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">tmp_components</span><span class="p">:</span>
+                <span class="n">idx</span> <span class="o">=</span> <span class="n">data_idx</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">_view_type</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+                <span class="n">data_idx</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">_view_type</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span> <span class="o">+</span> <span class="mi">1</span>
+                <span class="n">c</span><span class="o">.</span><span class="n">lock_tmp</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="s2">&quot;v&quot;</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;..</span><span class="si">{</span><span class="n">c</span><span class="o">.</span><span class="n">_view_type</span><span class="si">}</span><span class="s2">.</span><span class="si">{</span><span class="n">idx</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">components</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">]</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">to_view</span><span class="p">()</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">ids</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="o">.</span><span class="n">id</span><span class="p">)</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">view_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="p">)</span>
+            <span class="n">on_change</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">on_view_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+            <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+                <span class="n">on_change</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">False</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 
 
 <div class="viewcode-block" id="View.add">
 <a class="viewcode-back" href="../../webcface.view.html#webcface.View.add">[docs]</a>
-    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">ViewComponent</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">SupportsFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;コンポーネントを追加</span>
+    <span class="k">def</span> <span class="nf">add</span><span class="p">(</span>
+        <span class="bp">self</span><span class="p">,</span>
+        <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+            <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">,</span> <span class="nb">str</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="n">SupportsFloat</span>
+        <span class="p">],</span>
+        <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+    <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;View&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewに要素を追加</span>
 
-<span class="sd">        Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする</span>
+<span class="sd">        :arg args: 追加する要素</span>
+<span class="sd">        複数指定した場合すべて追加される。</span>
+<span class="sd">        :arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。</span>
+<span class="sd">        詳細は TemporalComponent のコンストラクタを参照</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">init</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">args</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;no components given to View.add()&quot;</span>
         <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">args</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">temporal_component</span><span class="o">.</span><span class="n">TemporalComponent</span><span class="p">):</span>
+                <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="sa">f</span><span class="s2">&quot;kwargs is not allowed because </span><span class="si">{</span><span class="n">c</span><span class="si">}</span><span class="s2"> is already a component&quot;</span>
+                    <span class="p">)</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+            <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+                <span class="k">while</span> <span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span> <span class="ow">in</span> <span class="n">c</span><span class="p">:</span>
+                    <span class="n">s</span> <span class="o">=</span> <span class="n">c</span><span class="p">[:</span> <span class="n">c</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)]</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">webcface</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">webcface</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">new_line</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="p">)</span>
+                    <span class="n">c</span> <span class="o">=</span> <span class="n">c</span><span class="p">[</span><span class="n">c</span><span class="o">.</span><span class="n">find</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">&quot;</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span> <span class="p">:]</span>
+                <span class="k">if</span> <span class="n">c</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span><span class="p">:</span>
+                    <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                        <span class="n">webcface</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                    <span class="p">)</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="bp">self</span><span class="o">.</span><span class="n">_vdata</span><span class="o">.</span><span class="n">tmp_components</span><span class="o">.</span><span class="n">append</span><span class="p">(</span>
+                    <span class="n">webcface</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+                <span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_modified</span> <span class="o">=</span> <span class="kc">True</span>
         <span class="k">return</span> <span class="bp">self</span></div>
 </div>

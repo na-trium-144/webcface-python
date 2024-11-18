@@ -1,0 +1,7 @@
+webcface.temporal\_component module
+===================================
+
+.. automodule:: webcface.temporal_component
+   :members:
+   :undoc-members:
+   :show-inheritance:

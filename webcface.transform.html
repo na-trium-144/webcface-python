@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface.transform module &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface.transform module &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -19,7 +19,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="webcface.typing module" href="webcface.typing.html" />
+    <link rel="next" title="webcface.transform_impl module" href="webcface.transform_impl.html" />
     <link rel="prev" title="webcface.text module" href="webcface.text.html" /> 
 </head>
 
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -53,6 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.components.html">webcface.components module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
@@ -64,18 +65,31 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html">webcface.temporal_component module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
 <li class="toctree-l3 current"><a class="current reference internal" href="#">webcface.transform module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.AxisSequence"><code class="docutils literal notranslate"><span class="pre">AxisSequence</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.transform.Point"><code class="docutils literal notranslate"><span class="pre">Point</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.Rotation"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.transform.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.convert_to_transform"><code class="docutils literal notranslate"><span class="pre">convert_to_transform()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.transform.identity"><code class="docutils literal notranslate"><span class="pre">identity()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_2d"><code class="docutils literal notranslate"><span class="pre">rot_2d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_from_axis_angle"><code class="docutils literal notranslate"><span class="pre">rot_from_axis_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_from_euler"><code class="docutils literal notranslate"><span class="pre">rot_from_euler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_from_matrix"><code class="docutils literal notranslate"><span class="pre">rot_from_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_from_quat"><code class="docutils literal notranslate"><span class="pre">rot_from_quat()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_x"><code class="docutils literal notranslate"><span class="pre">rot_x()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_y"><code class="docutils literal notranslate"><span class="pre">rot_y()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.rot_z"><code class="docutils literal notranslate"><span class="pre">rot_z()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.transform.translation"><code class="docutils literal notranslate"><span class="pre">translation()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform_impl.html">webcface.transform_impl module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.typing.html">webcface.typing module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html">webcface.view_components module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.html#module-webcface">Module contents</a></li>
@@ -89,7 +103,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 2.4.0</a>
+          <a href="index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -111,10 +125,90 @@
   <section id="module-webcface.transform">
 <span id="webcface-transform-module"></span><h1>webcface.transform module<a class="headerlink" href="#module-webcface.transform" title="Link to this heading"></a></h1>
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">AxisSequence</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#AxisSequence"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.AxisSequence" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
+<p>オイラー角の回転順序 (ver3.0〜)</p>
+<ul class="simple">
+<li><p>右手系の座標系で、</p></li>
+</ul>
+<p>内的回転(intrinsic rotation)でz軸,y軸,x軸の順に回転させる系
+= 外的回転(extrinsic rotation)でX軸,Y軸,Z軸の順に回転させる系
+= 回転行列がZ(α)Y(β)X(γ)と表される系
+を、 AxisSequence::ZYX と表記する。
+* ver2.3までの実装はすべてZYXで、現在もWebCFaceの内部表現は基本的にZYXの系である。
+* またWebCFaceのインタフェースでオイラー角の回転角を指定する場合、
+軸の指定順は内的回転を指す。(AxisSequenceにおける左から右の並び順と一致。)</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.XYX">
+<span class="sig-name descname"><span class="pre">XYX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">1</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.XYX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.XYZ">
+<span class="sig-name descname"><span class="pre">XYZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">6</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.XYZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.XZX">
+<span class="sig-name descname"><span class="pre">XZX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">4</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.XZX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.XZY">
+<span class="sig-name descname"><span class="pre">XZY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">9</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.XZY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.YXY">
+<span class="sig-name descname"><span class="pre">YXY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">5</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.YXY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.YXZ">
+<span class="sig-name descname"><span class="pre">YXZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">11</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.YXZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.YZX">
+<span class="sig-name descname"><span class="pre">YZX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">7</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.YZX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.YZY">
+<span class="sig-name descname"><span class="pre">YZY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">2</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.YZY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.ZXY">
+<span class="sig-name descname"><span class="pre">ZXY</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">8</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.ZXY" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.ZXZ">
+<span class="sig-name descname"><span class="pre">ZXZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">0</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.ZXZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.ZYX">
+<span class="sig-name descname"><span class="pre">ZYX</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">10</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.ZYX" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="webcface.transform.AxisSequence.ZYZ">
+<span class="sig-name descname"><span class="pre">ZYZ</span></span><em class="property"><span class="w"> </span><span class="p"><span class="pre">=</span></span><span class="w"> </span><span class="pre">3</span></em><a class="headerlink" href="#webcface.transform.AxisSequence.ZYZ" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.transform.Point">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Point" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Point" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>3次元or2次元の座標</p>
+<p>手動でコンストラクタを呼んでもいいが、
+PointをうけとるAPIは基本的に Sequence[SupportsFloat] を受け付け、
+内部でPointに変換される。</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.transform.Point.pos">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.transform.Point.pos" title="Link to this definition"></a></dt>
@@ -124,47 +218,330 @@
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.transform.Point.set_pos">
-<span class="sig-name descname"><span class="pre">set_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Point.set_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Point.set_pos" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Point.set_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Point.set_pos" title="Link to this definition"></a></dt>
 <dd><p>座標をセット</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_pos</strong> – 座標 2次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float]</span></code>, 3次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float,</span> <span class="pre">float]</span></code> など</p>
+<dd class="field-odd"><p><strong>pos</strong> – 座標</p>
 </dd>
 </dl>
+<p>2次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float]</span></code>,
+3次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float,</span> <span class="pre">float]</span></code> など</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt class="sig sig-object py" id="webcface.transform.Rotation">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">Rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">az</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ay</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rmat</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<p>3次元の回転 (ver3.0〜)</p>
+<ul class="simple">
+<li><p>内部ではz-y-x系のオイラー角または3x3回転行列で保持している。</p></li>
+<li><p>送受信時にはすべてこのzyxのオイラー角に変換される。</p></li>
+<li><p>2次元の回転を表すのにも使われ、</p></li>
+</ul>
+<p>その場合オイラー角 rot() の最初の要素(=z軸周りの回転)を使って回転を表し、
+残りの要素(x,y軸周りの回転)を0とする。</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.applied_to_point">
+<span class="sig-name descname"><span class="pre">applied_to_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.applied_to_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.applied_to_point" title="Link to this definition"></a></dt>
+<dd><p>Point を回転させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 回転させる対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.applied_to_rotation">
+<span class="sig-name descname"><span class="pre">applied_to_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.applied_to_rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.applied_to_rotation" title="Link to this definition"></a></dt>
+<dd><p>Rotation を回転させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 回転させる対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.applied_to_transform">
+<span class="sig-name descname"><span class="pre">applied_to_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.applied_to_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.applied_to_transform" title="Link to this definition"></a></dt>
+<dd><p>Transform を回転させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 回転させる対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.inversed">
+<span class="sig-name descname"><span class="pre">inversed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.inversed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.inversed" title="Link to this definition"></a></dt>
+<dd><p>逆回転を取得</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.rot">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.transform.Rotation.rot" title="Link to this definition"></a></dt>
+<dd><p>回転角を取得</p>
+<p>2次元の場合は rot[0] を使う</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version ver3.0.</span></p>
+</div>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.rot_2d">
+<span class="sig-name descname"><span class="pre">rot_2d</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.rot_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.rot_2d" title="Link to this definition"></a></dt>
+<dd><p>2次元の回転角を取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.rot_axis_angle">
+<span class="sig-name descname"><span class="pre">rot_axis_angle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.rot_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.rot_axis_angle" title="Link to this definition"></a></dt>
+<dd><p>回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.rot_euler">
+<span class="sig-name descname"><span class="pre">rot_euler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AxisSequence.ZYX</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.rot_euler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.rot_euler" title="Link to this definition"></a></dt>
+<dd><p>回転角をオイラー角として取得 (ver3.0〜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>axis</strong> – オイラー角の回転順序</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.rot_matrix">
+<span class="sig-name descname"><span class="pre">rot_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.rot_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.rot_matrix" title="Link to this definition"></a></dt>
+<dd><p>回転角を回転行列として取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Rotation.rot_quat">
+<span class="sig-name descname"><span class="pre">rot_quat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Rotation.rot_quat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Rotation.rot_quat" title="Link to this definition"></a></dt>
+<dd><p>回転角をクォータニオン(w, x, y, z)として取得 (ver3.0〜)</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.transform.Transform">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>3次元の座標と回転</p>
 <p>内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。</p>
+<p>手動でコンストラクタを呼んでもいいが、
+TransformをうけとるAPIは基本的にPointとRotationのタプルを受け付け、
+内部でTransformに変換される。</p>
+<p>平行移動のみの場合は translation() を使用する。
+回転のみの場合はRotationだけ渡せば直接Transformに変換される</p>
+<p>ver3.0〜 Pointを継承せず別のクラスとしての実装に変更</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.applied_to_point">
+<span class="sig-name descname"><span class="pre">applied_to_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.applied_to_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.applied_to_point" title="Link to this definition"></a></dt>
+<dd><p>Point を回転+平行移動させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 変換する対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.applied_to_rotation">
+<span class="sig-name descname"><span class="pre">applied_to_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.applied_to_rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.applied_to_rotation" title="Link to this definition"></a></dt>
+<dd><p>Rotation を回転+平行移動させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 変換する対象</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>返り値はRotationではなくTransform。 applied_to_transformと同じ結果になる</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.applied_to_transform">
+<span class="sig-name descname"><span class="pre">applied_to_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.applied_to_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.applied_to_transform" title="Link to this definition"></a></dt>
+<dd><p>Transform を回転+平行移動させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 変換する対象対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.inversed">
+<span class="sig-name descname"><span class="pre">inversed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.inversed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.inversed" title="Link to this definition"></a></dt>
+<dd><p>逆変換を取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.transform.Transform.pos">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.transform.Transform.pos" title="Link to this definition"></a></dt>
+<dd><p>座標を返す</p>
+<p>2次元の場合は pos[0:2] を使う</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.transform.Transform.rot">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.transform.Transform.rot" title="Link to this definition"></a></dt>
 <dd><p>回転角を取得</p>
 <p>2次元の場合は rot[0] を使う</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version ver3.0.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="webcface.transform.Transform.set_rot">
-<span class="sig-name descname"><span class="pre">set_rot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_rot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.set_rot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.set_rot" title="Link to this definition"></a></dt>
-<dd><p>回転角をセット</p>
+<dt class="sig sig-object py" id="webcface.transform.Transform.rot_axis_angle">
+<span class="sig-name descname"><span class="pre">rot_axis_angle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.rot_axis_angle" title="Link to this definition"></a></dt>
+<dd><p>回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.rot_euler">
+<span class="sig-name descname"><span class="pre">rot_euler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AxisSequence.ZYX</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_euler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.rot_euler" title="Link to this definition"></a></dt>
+<dd><p>回転角をオイラー角として取得 (ver3.0〜)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_rot</strong> – 座標 2次元の場合 <code class="code docutils literal notranslate"><span class="pre">float</span></code>, 3次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float,</span> <span class="pre">float]</span></code> など</p>
+<dd class="field-odd"><p><strong>axis</strong> – オイラー角の回転順序</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.rot_matrix">
+<span class="sig-name descname"><span class="pre">rot_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.rot_matrix" title="Link to this definition"></a></dt>
+<dd><p>回転角を回転行列として取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.transform.Transform.rot_quat">
+<span class="sig-name descname"><span class="pre">rot_quat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_quat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.Transform.rot_quat" title="Link to this definition"></a></dt>
+<dd><p>回転角をクォータニオン(w, x, y, z)として取得 (ver3.0〜)</p>
 </dd></dl>
 
 </dd></dl>
 
 <dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.convert_to_transform">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">convert_to_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">origin</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#convert_to_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.convert_to_transform" title="Link to this definition"></a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
 <dt class="sig sig-object py" id="webcface.transform.identity">
 <span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">identity</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#identity"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.identity" title="Link to this definition"></a></dt>
-<dd></dd></dl>
+<dd><p>なにもしないTransformを作成</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_2d">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_2d" title="Link to this definition"></a></dt>
+<dd><p>2次元の回転を作成 (ver3.0〜)</p>
+<p>rot_z() と同じ。</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> – 回転角</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_from_axis_angle">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_from_axis_angle</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_from_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_from_axis_angle" title="Link to this definition"></a></dt>
+<dd><p>軸と角度からRotationを作成</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>axis</strong> – 軸</p></li>
+<li><p><strong>angle</strong> – 角度</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_from_euler">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_from_euler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angles</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AxisSequence.ZYX</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_from_euler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_from_euler" title="Link to this definition"></a></dt>
+<dd><p>オイラー角からRotationを作成</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>angles</strong> – オイラー角</p></li>
+<li><p><strong>axis</strong> – オイラー角の回転順序</p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_from_matrix">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_from_matrix</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">rmat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_from_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_from_matrix" title="Link to this definition"></a></dt>
+<dd><p>回転行列からRotationを作成</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>rmat</strong> – 回転行列</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_from_quat">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_from_quat</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">quat</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_from_quat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_from_quat" title="Link to this definition"></a></dt>
+<dd><p>クォータニオンからRotationを作成</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>quat</strong> – クォータニオン (w, x, y, z)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_x">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_x</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_x"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_x" title="Link to this definition"></a></dt>
+<dd><p>x軸周りの回転を作成 (ver3.0〜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> – 回転角</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_y">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_y</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_y"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_y" title="Link to this definition"></a></dt>
+<dd><p>y軸周りの回転を作成 (ver3.0〜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> – 回転角</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.rot_z">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">rot_z</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">angle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#rot_z"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.rot_z" title="Link to this definition"></a></dt>
+<dd><p>z軸周りの回転を作成 (ver3.0〜)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>angle</strong> – 回転角</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="webcface.transform.translation">
+<span class="sig-prename descclassname"><span class="pre">webcface.transform.</span></span><span class="sig-name descname"><span class="pre">translation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#translation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.transform.translation" title="Link to this definition"></a></dt>
+<dd><p>平行移動のみをするTransformを作成 (ver3.0〜)</p>
+</dd></dl>
 
 </section>
 
@@ -173,7 +550,7 @@
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="webcface.text.html" class="btn btn-neutral float-left" title="webcface.text module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="webcface.typing.html" class="btn btn-neutral float-right" title="webcface.typing module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="webcface.transform_impl.html" class="btn btn-neutral float-right" title="webcface.transform_impl module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>

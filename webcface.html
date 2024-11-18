@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface package &mdash; WebCFace-Python 2.4.0  documentation</title>
+  <title>webcface package &mdash; WebCFace-Python 3.0.0  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 2.4.0
+            WebCFace-Python 3.0.0
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -53,6 +53,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client.html">webcface.client module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html">webcface.client_data module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_impl.html">webcface.client_impl module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.components.html">webcface.components module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.field.html">webcface.field module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func.html">webcface.func module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.func_info.html">webcface.func_info module</a></li>
@@ -64,13 +65,14 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.log_handler.html">webcface.log_handler module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.member.html">webcface.member module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html">webcface.message module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html">webcface.temporal_component module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.text.html">webcface.text module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform_impl.html">webcface.transform_impl module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.typing.html">webcface.typing module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.value.html">webcface.value module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html">webcface.view module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html">webcface.view_components module</a></li>
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="#module-webcface">Module contents</a><ul>
@@ -283,8 +285,16 @@
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#webcface.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.applied_to_point"><code class="docutils literal notranslate"><span class="pre">Transform.applied_to_point()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.applied_to_rotation"><code class="docutils literal notranslate"><span class="pre">Transform.applied_to_rotation()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.applied_to_transform"><code class="docutils literal notranslate"><span class="pre">Transform.applied_to_transform()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.inversed"><code class="docutils literal notranslate"><span class="pre">Transform.inversed()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.pos"><code class="docutils literal notranslate"><span class="pre">Transform.pos</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.rot"><code class="docutils literal notranslate"><span class="pre">Transform.rot</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.set_rot"><code class="docutils literal notranslate"><span class="pre">Transform.set_rot()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.rot_axis_angle"><code class="docutils literal notranslate"><span class="pre">Transform.rot_axis_angle()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.rot_euler"><code class="docutils literal notranslate"><span class="pre">Transform.rot_euler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.rot_matrix"><code class="docutils literal notranslate"><span class="pre">Transform.rot_matrix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Transform.rot_quat"><code class="docutils literal notranslate"><span class="pre">Transform.rot_quat()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="#webcface.ValType"><code class="docutils literal notranslate"><span class="pre">ValType</span></code></a><ul>
@@ -379,7 +389,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 2.4.0</a>
+          <a href="index.html">WebCFace-Python 3.0.0</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -424,9 +434,18 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.color"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.color</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.fill"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.fill</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.geometry"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.geometry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.id"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.origin"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.origin</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.stroke_width"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.stroke_width</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DComponent.type"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponent.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DData"><code class="docutils literal notranslate"><span class="pre">Canvas2DData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DData.components"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.components</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DData.height"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DData.ids"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DData.tmp_components"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.tmp_components</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2DData.width"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.width</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -435,12 +454,6 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentBase"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponentBase</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentType"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponentType</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DComponentType.GEOMETRY"><code class="docutils literal notranslate"><span class="pre">Canvas2DComponentType.GEOMETRY</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DData"><code class="docutils literal notranslate"><span class="pre">Canvas2DData</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DData.components"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.components</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DData.height"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.height</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.canvas2d_base.html#webcface.canvas2d_base.Canvas2DData.width"><code class="docutils literal notranslate"><span class="pre">Canvas2DData.width</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -464,8 +477,15 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent"><code class="docutils literal notranslate"><span class="pre">Canvas3DComponent</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent.color"><code class="docutils literal notranslate"><span class="pre">Canvas3DComponent.color</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent.geometry"><code class="docutils literal notranslate"><span class="pre">Canvas3DComponent.geometry</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent.id"><code class="docutils literal notranslate"><span class="pre">Canvas3DComponent.id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent.origin"><code class="docutils literal notranslate"><span class="pre">Canvas3DComponent.origin</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DComponent.type"><code class="docutils literal notranslate"><span class="pre">Canvas3DComponent.type</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DData"><code class="docutils literal notranslate"><span class="pre">Canvas3DData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DData.components"><code class="docutils literal notranslate"><span class="pre">Canvas3DData.components</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DData.ids"><code class="docutils literal notranslate"><span class="pre">Canvas3DData.ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3DData.tmp_components"><code class="docutils literal notranslate"><span class="pre">Canvas3DData.tmp_components</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -621,6 +641,12 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.client_impl.html#webcface.client_impl.on_recv"><code class="docutils literal notranslate"><span class="pre">on_recv()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.client_impl.html#webcface.client_impl.sync_data"><code class="docutils literal notranslate"><span class="pre">sync_data()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.client_impl.html#webcface.client_impl.sync_data_first"><code class="docutils literal notranslate"><span class="pre">sync_data_first()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="webcface.components.html">webcface.components module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.components.html#webcface.components.button"><code class="docutils literal notranslate"><span class="pre">button()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.components.html#webcface.components.new_line"><code class="docutils literal notranslate"><span class="pre">new_line()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.components.html#webcface.components.text"><code class="docutils literal notranslate"><span class="pre">text()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.field.html">webcface.field module</a><ul>
@@ -961,8 +987,8 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.data"><code class="docutils literal notranslate"><span class="pre">Canvas2D.data</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.field"><code class="docutils literal notranslate"><span class="pre">Canvas2D.field</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.height"><code class="docutils literal notranslate"><span class="pre">Canvas2D.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.ids"><code class="docutils literal notranslate"><span class="pre">Canvas2D.ids</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.kind_def"><code class="docutils literal notranslate"><span class="pre">Canvas2D.kind_def</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.length"><code class="docutils literal notranslate"><span class="pre">Canvas2D.length</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.new"><code class="docutils literal notranslate"><span class="pre">Canvas2D.new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2D.width"><code class="docutils literal notranslate"><span class="pre">Canvas2D.width</span></code></a></li>
 </ul>
@@ -985,8 +1011,8 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.data_diff"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.data_diff</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.height"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.height</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.ids"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.ids</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.kind_def"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.kind_def</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.length"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.length</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.new"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.req_id"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.req_id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas2DRes.sub_field"><code class="docutils literal notranslate"><span class="pre">Canvas2DRes.sub_field</span></code></a></li>
@@ -996,8 +1022,8 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D"><code class="docutils literal notranslate"><span class="pre">Canvas3D</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D.data"><code class="docutils literal notranslate"><span class="pre">Canvas3D.data</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D.field"><code class="docutils literal notranslate"><span class="pre">Canvas3D.field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D.ids"><code class="docutils literal notranslate"><span class="pre">Canvas3D.ids</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D.kind_def"><code class="docutils literal notranslate"><span class="pre">Canvas3D.kind_def</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D.length"><code class="docutils literal notranslate"><span class="pre">Canvas3D.length</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3D.new"><code class="docutils literal notranslate"><span class="pre">Canvas3D.new()</span></code></a></li>
 </ul>
 </li>
@@ -1018,8 +1044,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.data_diff"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.data_diff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.ids"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.ids</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.kind_def"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.kind_def</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.length"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.length</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.new"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.req_id"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.req_id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.Canvas3DRes.sub_field"><code class="docutils literal notranslate"><span class="pre">Canvas3DRes.sub_field</span></code></a></li>
@@ -1221,8 +1247,8 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.View"><code class="docutils literal notranslate"><span class="pre">View</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.View.data"><code class="docutils literal notranslate"><span class="pre">View.data</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.View.field"><code class="docutils literal notranslate"><span class="pre">View.field</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.View.ids"><code class="docutils literal notranslate"><span class="pre">View.ids</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.View.kind_def"><code class="docutils literal notranslate"><span class="pre">View.kind_def</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.View.length"><code class="docutils literal notranslate"><span class="pre">View.length</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.View.new"><code class="docutils literal notranslate"><span class="pre">View.new()</span></code></a></li>
 </ul>
 </li>
@@ -1243,8 +1269,8 @@
 </li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes"><code class="docutils literal notranslate"><span class="pre">ViewRes</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.data_diff"><code class="docutils literal notranslate"><span class="pre">ViewRes.data_diff</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.ids"><code class="docutils literal notranslate"><span class="pre">ViewRes.ids</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.kind_def"><code class="docutils literal notranslate"><span class="pre">ViewRes.kind_def</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.length"><code class="docutils literal notranslate"><span class="pre">ViewRes.length</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.new"><code class="docutils literal notranslate"><span class="pre">ViewRes.new()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.req_id"><code class="docutils literal notranslate"><span class="pre">ViewRes.req_id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.message.html#webcface.message.ViewRes.sub_field"><code class="docutils literal notranslate"><span class="pre">ViewRes.sub_field</span></code></a></li>
@@ -1262,6 +1288,17 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.unpack"><code class="docutils literal notranslate"><span class="pre">unpack()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.vb_to_vd"><code class="docutils literal notranslate"><span class="pre">vb_to_vd()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.message.html#webcface.message.vd_to_vb"><code class="docutils literal notranslate"><span class="pre">vd_to_vb()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="webcface.temporal_component.html">webcface.temporal_component module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent"><code class="docutils literal notranslate"><span class="pre">TemporalComponent</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent.id"><code class="docutils literal notranslate"><span class="pre">TemporalComponent.id</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent.lock_tmp"><code class="docutils literal notranslate"><span class="pre">TemporalComponent.lock_tmp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent.to_canvas2d"><code class="docutils literal notranslate"><span class="pre">TemporalComponent.to_canvas2d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent.to_canvas3d"><code class="docutils literal notranslate"><span class="pre">TemporalComponent.to_canvas3d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent.to_view"><code class="docutils literal notranslate"><span class="pre">TemporalComponent.to_view()</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.text.html">webcface.text module</a><ul>
@@ -1291,21 +1328,84 @@
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.transform.html">webcface.transform module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence"><code class="docutils literal notranslate"><span class="pre">AxisSequence</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.XYX"><code class="docutils literal notranslate"><span class="pre">AxisSequence.XYX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.XYZ"><code class="docutils literal notranslate"><span class="pre">AxisSequence.XYZ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.XZX"><code class="docutils literal notranslate"><span class="pre">AxisSequence.XZX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.XZY"><code class="docutils literal notranslate"><span class="pre">AxisSequence.XZY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.YXY"><code class="docutils literal notranslate"><span class="pre">AxisSequence.YXY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.YXZ"><code class="docutils literal notranslate"><span class="pre">AxisSequence.YXZ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.YZX"><code class="docutils literal notranslate"><span class="pre">AxisSequence.YZX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.YZY"><code class="docutils literal notranslate"><span class="pre">AxisSequence.YZY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.ZXY"><code class="docutils literal notranslate"><span class="pre">AxisSequence.ZXY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.ZXZ"><code class="docutils literal notranslate"><span class="pre">AxisSequence.ZXZ</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.ZYX"><code class="docutils literal notranslate"><span class="pre">AxisSequence.ZYX</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.AxisSequence.ZYZ"><code class="docutils literal notranslate"><span class="pre">AxisSequence.ZYZ</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.Point"><code class="docutils literal notranslate"><span class="pre">Point</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Point.pos"><code class="docutils literal notranslate"><span class="pre">Point.pos</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Point.set_pos"><code class="docutils literal notranslate"><span class="pre">Point.set_pos()</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.rot"><code class="docutils literal notranslate"><span class="pre">Transform.rot</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.set_rot"><code class="docutils literal notranslate"><span class="pre">Transform.set_rot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation"><code class="docutils literal notranslate"><span class="pre">Rotation</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.applied_to_point"><code class="docutils literal notranslate"><span class="pre">Rotation.applied_to_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.applied_to_rotation"><code class="docutils literal notranslate"><span class="pre">Rotation.applied_to_rotation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.applied_to_transform"><code class="docutils literal notranslate"><span class="pre">Rotation.applied_to_transform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.inversed"><code class="docutils literal notranslate"><span class="pre">Rotation.inversed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.rot"><code class="docutils literal notranslate"><span class="pre">Rotation.rot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.rot_2d"><code class="docutils literal notranslate"><span class="pre">Rotation.rot_2d()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.rot_axis_angle"><code class="docutils literal notranslate"><span class="pre">Rotation.rot_axis_angle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.rot_euler"><code class="docutils literal notranslate"><span class="pre">Rotation.rot_euler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.rot_matrix"><code class="docutils literal notranslate"><span class="pre">Rotation.rot_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation.rot_quat"><code class="docutils literal notranslate"><span class="pre">Rotation.rot_quat()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform"><code class="docutils literal notranslate"><span class="pre">Transform</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.applied_to_point"><code class="docutils literal notranslate"><span class="pre">Transform.applied_to_point()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.applied_to_rotation"><code class="docutils literal notranslate"><span class="pre">Transform.applied_to_rotation()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.applied_to_transform"><code class="docutils literal notranslate"><span class="pre">Transform.applied_to_transform()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.inversed"><code class="docutils literal notranslate"><span class="pre">Transform.inversed()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.pos"><code class="docutils literal notranslate"><span class="pre">Transform.pos</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.rot"><code class="docutils literal notranslate"><span class="pre">Transform.rot</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.rot_axis_angle"><code class="docutils literal notranslate"><span class="pre">Transform.rot_axis_angle()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.rot_euler"><code class="docutils literal notranslate"><span class="pre">Transform.rot_euler()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.rot_matrix"><code class="docutils literal notranslate"><span class="pre">Transform.rot_matrix()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform.rot_quat"><code class="docutils literal notranslate"><span class="pre">Transform.rot_quat()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.convert_to_transform"><code class="docutils literal notranslate"><span class="pre">convert_to_transform()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.identity"><code class="docutils literal notranslate"><span class="pre">identity()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_2d"><code class="docutils literal notranslate"><span class="pre">rot_2d()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_from_axis_angle"><code class="docutils literal notranslate"><span class="pre">rot_from_axis_angle()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_from_euler"><code class="docutils literal notranslate"><span class="pre">rot_from_euler()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_from_matrix"><code class="docutils literal notranslate"><span class="pre">rot_from_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_from_quat"><code class="docutils literal notranslate"><span class="pre">rot_from_quat()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_x"><code class="docutils literal notranslate"><span class="pre">rot_x()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_y"><code class="docutils literal notranslate"><span class="pre">rot_y()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.rot_z"><code class="docutils literal notranslate"><span class="pre">rot_z()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform.html#webcface.transform.translation"><code class="docutils literal notranslate"><span class="pre">translation()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="webcface.transform_impl.html">webcface.transform_impl module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.apply_rot_point"><code class="docutils literal notranslate"><span class="pre">apply_rot_point()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.apply_rot_rot"><code class="docutils literal notranslate"><span class="pre">apply_rot_rot()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.axis_angle_to_quaternion"><code class="docutils literal notranslate"><span class="pre">axis_angle_to_quaternion()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.euler_to_matrix"><code class="docutils literal notranslate"><span class="pre">euler_to_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.inverse_matrix"><code class="docutils literal notranslate"><span class="pre">inverse_matrix()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.inverse_transform"><code class="docutils literal notranslate"><span class="pre">inverse_transform()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.is_zero"><code class="docutils literal notranslate"><span class="pre">is_zero()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.matrix_to_euler"><code class="docutils literal notranslate"><span class="pre">matrix_to_euler()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.matrix_to_proper_euler"><code class="docutils literal notranslate"><span class="pre">matrix_to_proper_euler()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.matrix_to_quaternion"><code class="docutils literal notranslate"><span class="pre">matrix_to_quaternion()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.matrix_to_tait_bryan_euler"><code class="docutils literal notranslate"><span class="pre">matrix_to_tait_bryan_euler()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.quaternion_to_axis_angle"><code class="docutils literal notranslate"><span class="pre">quaternion_to_axis_angle()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.transform_impl.html#webcface.transform_impl.quaternion_to_matrix"><code class="docutils literal notranslate"><span class="pre">quaternion_to_matrix()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.typing.html">webcface.typing module</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="webcface.typing.html#webcface.typing.convertible_to_float"><code class="docutils literal notranslate"><span class="pre">convertible_to_float()</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.typing.html#webcface.typing.is_float_sequence"><code class="docutils literal notranslate"><span class="pre">is_float_sequence()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.value.html">webcface.value module</a><ul>
@@ -1344,8 +1444,7 @@
 <li class="toctree-l2"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent"><code class="docutils literal notranslate"><span class="pre">ViewComponent</span></code></a><ul>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.bg_color"><code class="docutils literal notranslate"><span class="pre">ViewComponent.bg_color</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.bind"><code class="docutils literal notranslate"><span class="pre">ViewComponent.bind</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.from_base"><code class="docutils literal notranslate"><span class="pre">ViewComponent.from_base()</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.lock_tmp"><code class="docutils literal notranslate"><span class="pre">ViewComponent.lock_tmp()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.id"><code class="docutils literal notranslate"><span class="pre">ViewComponent.id</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.max"><code class="docutils literal notranslate"><span class="pre">ViewComponent.max</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.min"><code class="docutils literal notranslate"><span class="pre">ViewComponent.min</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.on_change"><code class="docutils literal notranslate"><span class="pre">ViewComponent.on_change</span></code></a></li>
@@ -1357,46 +1456,46 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent.type"><code class="docutils literal notranslate"><span class="pre">ViewComponent.type</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.view.html#webcface.view.ViewData"><code class="docutils literal notranslate"><span class="pre">ViewData</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewData.components"><code class="docutils literal notranslate"><span class="pre">ViewData.components</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewData.ids"><code class="docutils literal notranslate"><span class="pre">ViewData.ids</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view.html#webcface.view.ViewData.tmp_components"><code class="docutils literal notranslate"><span class="pre">ViewData.tmp_components</span></code></a></li>
+</ul>
+</li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="webcface.view_base.html">webcface.view_base module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor"><code class="docutils literal notranslate"><span class="pre">ViewColor</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.BLACK"><code class="docutils literal notranslate"><span class="pre">ViewColor.BLACK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.BLUE"><code class="docutils literal notranslate"><span class="pre">ViewColor.BLUE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.CYAN"><code class="docutils literal notranslate"><span class="pre">ViewColor.CYAN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.GRAY"><code class="docutils literal notranslate"><span class="pre">ViewColor.GRAY</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.GREEN"><code class="docutils literal notranslate"><span class="pre">ViewColor.GREEN</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.INDIGO"><code class="docutils literal notranslate"><span class="pre">ViewColor.INDIGO</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.INHERIT"><code class="docutils literal notranslate"><span class="pre">ViewColor.INHERIT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.ORANGE"><code class="docutils literal notranslate"><span class="pre">ViewColor.ORANGE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.PINK"><code class="docutils literal notranslate"><span class="pre">ViewColor.PINK</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.PURPLE"><code class="docutils literal notranslate"><span class="pre">ViewColor.PURPLE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.RED"><code class="docutils literal notranslate"><span class="pre">ViewColor.RED</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.TEAL"><code class="docutils literal notranslate"><span class="pre">ViewColor.TEAL</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.WHITE"><code class="docutils literal notranslate"><span class="pre">ViewColor.WHITE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewColor.YELLOW"><code class="docutils literal notranslate"><span class="pre">ViewColor.YELLOW</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentBase"><code class="docutils literal notranslate"><span class="pre">ViewComponentBase</span></code></a></li>
+<li class="toctree-l2"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType"><code class="docutils literal notranslate"><span class="pre">ViewComponentType</span></code></a><ul>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.BUTTON"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.BUTTON</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.CHECK_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.CHECK_INPUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.DECIMAL_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.DECIMAL_INPUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.NEW_LINE"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.NEW_LINE</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.NUMBER_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.NUMBER_INPUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.SELECT_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.SELECT_INPUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.SLIDER_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.SLIDER_INPUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.TEXT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.TEXT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.TEXT_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.TEXT_INPUT</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.view_base.html#webcface.view_base.ViewComponentType.TOGGLE_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.TOGGLE_INPUT</span></code></a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="webcface.view_components.html">webcface.view_components module</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor"><code class="docutils literal notranslate"><span class="pre">ViewColor</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.BLACK"><code class="docutils literal notranslate"><span class="pre">ViewColor.BLACK</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.BLUE"><code class="docutils literal notranslate"><span class="pre">ViewColor.BLUE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.CYAN"><code class="docutils literal notranslate"><span class="pre">ViewColor.CYAN</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.GRAY"><code class="docutils literal notranslate"><span class="pre">ViewColor.GRAY</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.GREEN"><code class="docutils literal notranslate"><span class="pre">ViewColor.GREEN</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.INDIGO"><code class="docutils literal notranslate"><span class="pre">ViewColor.INDIGO</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.INHERIT"><code class="docutils literal notranslate"><span class="pre">ViewColor.INHERIT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.ORANGE"><code class="docutils literal notranslate"><span class="pre">ViewColor.ORANGE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.PINK"><code class="docutils literal notranslate"><span class="pre">ViewColor.PINK</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.PURPLE"><code class="docutils literal notranslate"><span class="pre">ViewColor.PURPLE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.RED"><code class="docutils literal notranslate"><span class="pre">ViewColor.RED</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.TEAL"><code class="docutils literal notranslate"><span class="pre">ViewColor.TEAL</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.WHITE"><code class="docutils literal notranslate"><span class="pre">ViewColor.WHITE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewColor.YELLOW"><code class="docutils literal notranslate"><span class="pre">ViewColor.YELLOW</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType"><code class="docutils literal notranslate"><span class="pre">ViewComponentType</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.BUTTON"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.BUTTON</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.CHECK_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.CHECK_INPUT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.DECIMAL_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.DECIMAL_INPUT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.NEW_LINE"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.NEW_LINE</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.NUMBER_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.NUMBER_INPUT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.SELECT_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.SELECT_INPUT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.SLIDER_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.SLIDER_INPUT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.TEXT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.TEXT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.TEXT_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.TEXT_INPUT</span></code></a></li>
-<li class="toctree-l3"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.ViewComponentType.TOGGLE_INPUT"><code class="docutils literal notranslate"><span class="pre">ViewComponentType.TOGGLE_INPUT</span></code></a></li>
-</ul>
-</li>
-<li class="toctree-l2"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.button"><code class="docutils literal notranslate"><span class="pre">button()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.new_line"><code class="docutils literal notranslate"><span class="pre">new_line()</span></code></a></li>
-<li class="toctree-l2"><a class="reference internal" href="webcface.view_components.html#webcface.view_components.text"><code class="docutils literal notranslate"><span class="pre">text()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -1761,7 +1860,7 @@ timeout=0 または負の値なら再試行せず即座にreturnする。
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.Geometry">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/geometries.html#Geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Geometry" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Geometry</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">geometry_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">properties</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/geometries.html#Geometry"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Geometry" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.Geometry.as_box">
@@ -2104,7 +2203,7 @@ color_mode がBGRA,RGBAの場合 (height, width, 4)
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.Log.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">11,</span> <span class="pre">6,</span> <span class="pre">6,</span> <span class="pre">46,</span> <span class="pre">8,</span> <span class="pre">887095)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">11,</span> <span class="pre">18,</span> <span class="pre">8,</span> <span class="pre">48,</span> <span class="pre">49,</span> <span class="pre">549646)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
 <dd><p>ログをwebcfaceに送信する
 (ver2.0〜)</p>
 <p>コンソールなどには出力されない</p>
@@ -2505,9 +2604,12 @@ sync()後通信速度が得られるようになる
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.Point">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Point" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Point" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>3次元or2次元の座標</p>
+<p>手動でコンストラクタを呼んでもいいが、
+PointをうけとるAPIは基本的に Sequence[SupportsFloat] を受け付け、
+内部でPointに変換される。</p>
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.Point.pos">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.Point.pos" title="Link to this definition"></a></dt>
@@ -2517,13 +2619,15 @@ sync()後通信速度が得られるようになる
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.Point.set_pos">
-<span class="sig-name descname"><span class="pre">set_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Point.set_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Point.set_pos" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set_pos</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Point.set_pos"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Point.set_pos" title="Link to this definition"></a></dt>
 <dd><p>座標をセット</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_pos</strong> – 座標 2次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float]</span></code>, 3次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float,</span> <span class="pre">float]</span></code> など</p>
+<dd class="field-odd"><p><strong>pos</strong> – 座標</p>
 </dd>
 </dl>
+<p>2次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float]</span></code>,
+3次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float,</span> <span class="pre">float]</span></code> など</p>
 </dd></dl>
 
 </dd></dl>
@@ -2732,26 +2836,102 @@ sync()後通信速度が得られるようになる
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.Transform">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pos</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">rot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform" title="Link to this definition"></a></dt>
-<dd><p>Bases: <a class="reference internal" href="webcface.transform.html#webcface.transform.Point" title="webcface.transform.Point"><code class="xref py py-class docutils literal notranslate"><span class="pre">Point</span></code></a></p>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg1</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.transform.html#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></em>, <em class="sig-param"><span class="n"><span class="pre">arg2</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/transform.html#Transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform" title="Link to this definition"></a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <p>3次元の座標と回転</p>
 <p>内部ではx, y, zの座標とz-y-x系のオイラー角で保持している。</p>
+<p>手動でコンストラクタを呼んでもいいが、
+TransformをうけとるAPIは基本的にPointとRotationのタプルを受け付け、
+内部でTransformに変換される。</p>
+<p>平行移動のみの場合は translation() を使用する。
+回転のみの場合はRotationだけ渡せば直接Transformに変換される</p>
+<p>ver3.0〜 Pointを継承せず別のクラスとしての実装に変更</p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.applied_to_point">
+<span class="sig-name descname"><span class="pre">applied_to_point</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.transform.html#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Sequence</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.transform.html#webcface.transform.Point" title="webcface.transform.Point"><span class="pre">Point</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.applied_to_point"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.applied_to_point" title="Link to this definition"></a></dt>
+<dd><p>Point を回転+平行移動させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 変換する対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.applied_to_rotation">
+<span class="sig-name descname"><span class="pre">applied_to_rotation</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.transform.html#webcface.transform.Rotation" title="webcface.transform.Rotation"><span class="pre">Rotation</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.applied_to_rotation"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.applied_to_rotation" title="Link to this definition"></a></dt>
+<dd><p>Rotation を回転+平行移動させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 変換する対象</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>返り値はRotationではなくTransform。 applied_to_transformと同じ結果になる</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.applied_to_transform">
+<span class="sig-name descname"><span class="pre">applied_to_transform</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">other</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.applied_to_transform"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.applied_to_transform" title="Link to this definition"></a></dt>
+<dd><p>Transform を回転+平行移動させた結果を返す</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>other</strong> – 変換する対象対象</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.inversed">
+<span class="sig-name descname"><span class="pre">inversed</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.transform.html#webcface.transform.Transform" title="webcface.transform.Transform"><span class="pre">Transform</span></a></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.inversed"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.inversed" title="Link to this definition"></a></dt>
+<dd><p>逆変換を取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.Transform.pos">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">pos</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.Transform.pos" title="Link to this definition"></a></dt>
+<dd><p>座標を返す</p>
+<p>2次元の場合は pos[0:2] を使う</p>
+</dd></dl>
+
 <dl class="py property">
 <dt class="sig sig-object py" id="webcface.Transform.rot">
 <em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">rot</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#webcface.Transform.rot" title="Link to this definition"></a></dt>
 <dd><p>回転角を取得</p>
 <p>2次元の場合は rot[0] を使う</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version ver3.0.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
-<dt class="sig sig-object py" id="webcface.Transform.set_rot">
-<span class="sig-name descname"><span class="pre">set_rot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">new_rot</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.set_rot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.set_rot" title="Link to this definition"></a></dt>
-<dd><p>回転角をセット</p>
+<dt class="sig sig-object py" id="webcface.Transform.rot_axis_angle">
+<span class="sig-name descname"><span class="pre">rot_axis_angle</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_axis_angle"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.rot_axis_angle" title="Link to this definition"></a></dt>
+<dd><p>回転角を軸と角度((x, y, z), angle)として取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.rot_euler">
+<span class="sig-name descname"><span class="pre">rot_euler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">axis</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">AxisSequence.ZYX</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_euler"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.rot_euler" title="Link to this definition"></a></dt>
+<dd><p>回転角をオイラー角として取得 (ver3.0〜)</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>new_rot</strong> – 座標 2次元の場合 <code class="code docutils literal notranslate"><span class="pre">float</span></code>, 3次元の場合 <code class="code docutils literal notranslate"><span class="pre">[float,</span> <span class="pre">float,</span> <span class="pre">float]</span></code> など</p>
+<dd class="field-odd"><p><strong>axis</strong> – オイラー角の回転順序</p>
 </dd>
 </dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.rot_matrix">
+<span class="sig-name descname"><span class="pre">rot_matrix</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_matrix"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.rot_matrix" title="Link to this definition"></a></dt>
+<dd><p>回転角を回転行列として取得 (ver3.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Transform.rot_quat">
+<span class="sig-name descname"><span class="pre">rot_quat</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/transform.html#Transform.rot_quat"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Transform.rot_quat" title="Link to this definition"></a></dt>
+<dd><p>回転角をクォータニオン(w, x, y, z)として取得 (ver3.0〜)</p>
 </dd></dl>
 
 </dd></dl>
@@ -2953,9 +3133,16 @@ sync()後通信速度が得られるようになる
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.View.add">
-<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.View.add" title="Link to this definition"></a></dt>
-<dd><p>コンポーネントを追加</p>
-<p>Viewオブジェクトが生成されて最初のaddのとき自動でinit()をする</p>
+<span class="sig-name descname"><span class="pre">add</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent" title="webcface.temporal_component.TemporalComponent"><span class="pre">TemporalComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.add"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.View.add" title="Link to this definition"></a></dt>
+<dd><p>Viewに要素を追加</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>args</strong> – 追加する要素</p>
+</dd>
+</dl>
+<p>複数指定した場合すべて追加される。
+:arg kwargs: (ver3.0〜) argsが初期化済みの要素でない場合、要素の初期化時に渡すオプション。
+詳細は TemporalComponent のコンストラクタを参照</p>
 </dd></dl>
 
 <dl class="py method">
@@ -3019,8 +3206,11 @@ sync()後通信速度が得られるようになる
 
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.View.set">
-<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.view.html#webcface.view.ViewComponent" title="webcface.view.ViewComponent"><span class="pre">ViewComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.View.set" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">set</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">components</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.temporal_component.html#webcface.temporal_component.TemporalComponent" title="webcface.temporal_component.TemporalComponent"><span class="pre">TemporalComponent</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">str</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">bool</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">SupportsFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/view.html#View.set"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.View.set" title="Link to this definition"></a></dt>
 <dd><p>Viewのリストをセットする</p>
+<div class="deprecated">
+<p><span class="versionmodified deprecated">Deprecated since version ver3.0.</span></p>
+</div>
 </dd></dl>
 
 <dl class="py method">
@@ -3039,7 +3229,7 @@ sync()後通信速度が得られるようになる
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.ViewColor">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ViewColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view_components.html#ViewColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ViewColor" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ViewColor</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view_base.html#ViewColor"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ViewColor" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
 <p>An enumeration.</p>
 <dl class="py attribute">
@@ -3116,7 +3306,7 @@ sync()後通信速度が得られるようになる
 
 <dl class="py class">
 <dt class="sig sig-object py" id="webcface.ViewComponentType">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ViewComponentType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view_components.html#ViewComponentType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ViewComponentType" title="Link to this definition"></a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">ViewComponentType</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">value</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/view_base.html#ViewComponentType"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.ViewComponentType" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">IntEnum</span></code></p>
 <p>An enumeration.</p>
 <dl class="py attribute">
