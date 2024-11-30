@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>webcface package &mdash; WebCFace-Python 3.0.0  documentation</title>
+  <title>webcface package &mdash; WebCFace-Python 3.0.1  documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
   <!--[if lt IE 9]>
@@ -32,7 +32,7 @@
           
           
           <a href="index.html" class="icon icon-home">
-            WebCFace-Python 3.0.0
+            WebCFace-Python 3.0.1
           </a>
 <div role="search">
   <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
@@ -389,7 +389,7 @@
 
     <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap"><nav class="wy-nav-top" aria-label="Mobile navigation menu" >
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="index.html">WebCFace-Python 3.0.0</a>
+          <a href="index.html">WebCFace-Python 3.0.1</a>
       </nav>
 
       <div class="wy-nav-content">
@@ -606,7 +606,6 @@
 </ul>
 </li>
 <li class="toctree-l2"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2</span></code></a><ul>
-<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.add_member"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.add_member()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.add_req"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.add_req()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.data_recv"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.data_recv</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.data_send"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.data_send</span></code></a></li>
@@ -618,6 +617,7 @@
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_req"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_req()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_req_info"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_req_info()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.get_send_prev"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.get_send_prev()</span></code></a></li>
+<li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.init_member"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.init_member()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.is_self"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.is_self()</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.lock"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.lock</span></code></a></li>
 <li class="toctree-l3"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.SyncDataStore2.req"><code class="docutils literal notranslate"><span class="pre">SyncDataStore2.req</span></code></a></li>
@@ -2203,7 +2203,7 @@ color_mode がBGRA,RGBAの場合 (height, width, 4)
 <dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><code class="xref py py-class docutils literal notranslate"><span class="pre">Field</span></code></a></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.Log.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">11,</span> <span class="pre">18,</span> <span class="pre">8,</span> <span class="pre">48,</span> <span class="pre">49,</span> <span class="pre">549646)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2024,</span> <span class="pre">11,</span> <span class="pre">30,</span> <span class="pre">9,</span> <span class="pre">5,</span> <span class="pre">22,</span> <span class="pre">83943)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
 <dd><p>ログをwebcfaceに送信する
 (ver2.0〜)</p>
 <p>コンソールなどには出力されない</p>
