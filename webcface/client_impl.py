@@ -36,13 +36,13 @@ def on_recv(
                 data.sync_time_store.set_recv(member, m.time)
                 sync_members.append(member)
             if isinstance(m, webcface.message.SyncInit):
-                data.value_store.add_member(m.member_name)
-                data.text_store.add_member(m.member_name)
-                data.func_store.add_member(m.member_name)
-                data.view_store.add_member(m.member_name)
-                data.canvas2d_store.add_member(m.member_name)
-                data.canvas3d_store.add_member(m.member_name)
-                data.log_store.add_member(m.member_name)
+                data.value_store.init_member(m.member_name)
+                data.text_store.init_member(m.member_name)
+                data.func_store.init_member(m.member_name)
+                data.view_store.init_member(m.member_name)
+                data.canvas2d_store.init_member(m.member_name)
+                data.canvas3d_store.init_member(m.member_name)
+                data.log_store.init_member(m.member_name)
                 data.member_ids[m.member_name] = m.member_id
                 data.member_lib_name[m.member_id] = m.lib_name
                 data.member_lib_ver[m.member_id] = m.lib_ver

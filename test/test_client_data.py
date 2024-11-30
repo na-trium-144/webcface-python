@@ -43,9 +43,12 @@ def test_s2_unset_recv(s2):
     assert s2.unset_recv(self_name, "b") is False
 
 
-def test_s2_add_member(s2):
-    s2.add_member("a")
+def test_s2_init_member(s2):
+    s2.entry["a"] = ["b"]
+    s2.data_recv["a"] = {"b": "c"}
+    s2.init_member("a")
     assert s2.entry["a"] == []
+    assert "b" not in s2.data_recv["a"]
 
 
 def test_s2_set_entry(s2):

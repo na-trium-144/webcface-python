@@ -121,9 +121,10 @@ class SyncDataStore2(Generic[T, R]):
         with self.lock:
             return self.entry.get(member, [])
 
-    def add_member(self, member: str) -> None:
+    def init_member(self, member: str) -> None:
         with self.lock:
             self.entry[member] = []
+            self.data_recv[member] = {}
 
     def set_entry(self, member: str, field: str) -> None:
         with self.lock:
