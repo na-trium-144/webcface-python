@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "webcface"
-version = "3.0.1"
+version = "3.0.2"
 description = "WebCFace Client for Python"
 authors = ["na-trium-144 <100704180+na-trium-144@users.noreply.github.com>"]
 license = "MIT"
