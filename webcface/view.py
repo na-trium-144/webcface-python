@@ -207,11 +207,8 @@ class View(webcface.field.Field):
         return func
 
     def child(self, field: str) -> "View":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
-        """
-        return View(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするView"""
+        return View(webcface.field.Field.child(self, field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""

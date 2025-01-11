@@ -41,11 +41,8 @@ class Image(webcface.field.Field):
         return func
 
     def child(self, field: str) -> "Image":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするImage
-        """
-        return Image(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするImage"""
+        return Image(webcface.field.Field.child(self, field))
 
     def _try_request(self) -> None:
         # req_dataがNoneの場合以前のreq_dataは上書きされない

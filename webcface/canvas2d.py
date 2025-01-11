@@ -155,11 +155,8 @@ class Canvas2D(webcface.field.Field):
         return func
 
     def child(self, field: str) -> "Canvas2D":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
-        """
-        return Canvas2D(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするCanvas2D"""
+        return Canvas2D(webcface.field.Field.child(self, field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""

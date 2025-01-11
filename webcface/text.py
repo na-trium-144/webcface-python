@@ -39,11 +39,8 @@ class Variant(webcface.field.Field):
         return func
 
     def child(self, field: str) -> "Variant":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText
-        """
-        return Variant(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするVariant"""
+        return Variant(webcface.field.Field.child(self, field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""
@@ -121,11 +118,8 @@ class Text(Variant):
         return func
 
     def child(self, field: str) -> "Text":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText
-        """
-        return Text(super().child(field))
+        """「(thisの名前).(追加の名前)」を新しい名前とするText"""
+        return Text(webcface.field.Field.child(self, field))
 
     def try_get(self) -> Optional[str]:
         """文字列をstrまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""

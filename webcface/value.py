@@ -44,11 +44,8 @@ class Value(webcface.field.Field):
         return func
 
     def child(self, field: str) -> "Value":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするValue
-        """
-        return Value(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするValue"""
+        return Value(webcface.field.Field.child(self, field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""

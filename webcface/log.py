@@ -32,6 +32,10 @@ class Log(webcface.field.Field):
         """field名を返す(ver2.1〜)"""
         return self._field
 
+    def child(self, field: str) -> "Log":
+        """「(thisの名前).(追加の名前)」を新しい名前とするLog (ver3.1〜)"""
+        return Log(webcface.field.Field.child(self, field))
+
     def on_change(self, func: Callable) -> Callable:
         """logが追加されたときのイベント
         (ver2.0〜)
