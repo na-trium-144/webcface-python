@@ -1,15 +1,5 @@
 from typing import Callable, Optional, Iterable, SupportsFloat, List
 import webcface.client_data
-import webcface.value
-import webcface.text
-import webcface.view
-import webcface.func
-import webcface.func_listener
-import webcface.log
-import webcface.image
-import webcface.message
-import webcface.canvas2d
-import webcface.canvas3d
 
 
 class FieldBase:
@@ -130,18 +120,17 @@ class Field(FieldBase):
         return webcface.func_listener.FuncListener(self.child(field))
 
     def _entries(self, entries: List[str], store, recurse=True):
-        entries_prev_len = len(entries)
         prefix_with_sep = self._field + "." if self._field != "" else ""
-        for e in store.get_entries(self._member):
+        for e in store.get_entry(self._member):
             if self._field == "" or e.startswith(prefix_with_sep):
-                if not recurse:
+                if not recurse and "." in e[len(prefix_with_sep) :]:
                     e = e[: e.find(".", len(prefix_with_sep))]
-                if e not in entries[:entries_prev_len]:
+                if e not in entries:
                     entries.append(e)
 
     def _has_entries(self, store) -> bool:
         prefix_with_sep = self._field + "." if self._field != "" else ""
-        for e in store.get_entries(self._member):
+        for e in store.get_entry(self._member):
             if self._field == "" or e.startswith(prefix_with_sep):
                 return True
         return False
