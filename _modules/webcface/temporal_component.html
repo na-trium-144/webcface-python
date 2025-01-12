@@ -100,6 +100,8 @@
     <span class="n">_max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">_step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">float</span><span class="p">]</span>
     <span class="n">_option</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span>
+    <span class="n">_width</span><span class="p">:</span> <span class="nb">int</span>
+    <span class="n">_height</span><span class="p">:</span> <span class="nb">int</span>
 
     <span class="c1"># canvas2d</span>
     <span class="n">_canvas2d_type</span><span class="p">:</span> <span class="nb">int</span>
@@ -136,6 +138,8 @@
         <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">step</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">option</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Sequence</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">width</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
+        <span class="n">height</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="n">init</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">origin</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
             <span class="n">Union</span><span class="p">[</span>
@@ -174,6 +178,8 @@
 <span class="sd">        :arg max: (ver2.0〜) Inputの最大値/最大文字数</span>
 <span class="sd">        :arg step: (ver2.0〜) Inputの刻み幅</span>
 <span class="sd">        :arg option: (ver2.0〜) Inputの選択肢</span>
+<span class="sd">        :arg width: (ver3.1〜) 要素の幅</span>
+<span class="sd">        :arg height: (ver3.1〜) 要素の高さ</span>
 <span class="sd">        :arg origin: 要素の位置を移動する</span>
 <span class="sd">        :arg color: 要素の色 (text_colorと同じ)</span>
 <span class="sd">        :arg fill: 要素の塗りつぶし色 (bg_colorと同じ)</span>
@@ -212,6 +218,8 @@
                     <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">float</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">op</span><span class="p">))</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_width</span> <span class="o">=</span> <span class="n">width</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_height</span> <span class="o">=</span> <span class="n">height</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_stroke_width</span> <span class="o">=</span> <span class="mi">0</span>
         <span class="k">if</span> <span class="n">stroke_width</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_stroke_width</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">stroke_width</span><span class="p">)</span>
@@ -335,6 +343,8 @@
             <span class="bp">self</span><span class="o">.</span><span class="n">_max</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_step</span><span class="p">,</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_option</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_width</span><span class="p">,</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_height</span><span class="p">,</span>
         <span class="p">)</span></div>
 
 
