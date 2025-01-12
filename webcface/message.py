@@ -488,6 +488,8 @@ def vb_to_vd(vb: "Dict[str, webcface.view_base.ViewComponentBase]") -> dict:
             "ix": b._max,
             "is": b._step,
             "io": b._option,
+            "w": b._width,
+            "h": b._height,
         }
     return vd
 
@@ -515,6 +517,8 @@ def vd_to_vb(vd: dict) -> "Dict[str, webcface.view_base.ViewComponentBase]":
             max=d.get("ix"),
             step=d.get("is"),
             option=d.get("io"),
+            width=d.get("w", 0),
+            height=d.get("h", 0),
         )
     return vb
 

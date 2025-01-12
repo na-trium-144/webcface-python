@@ -27,6 +27,8 @@ class TemporalComponent:
     _max: Optional[float]
     _step: Optional[float]
     _option: List[Union[float, bool, str]]
+    _width: int
+    _height: int
 
     # canvas2d
     _canvas2d_type: int
@@ -63,6 +65,8 @@ class TemporalComponent:
         max: Optional[SupportsFloat] = None,
         step: Optional[SupportsFloat] = None,
         option: Optional[Sequence[Union[SupportsFloat, bool, str]]] = None,
+        width: int = 0,
+        height: int = 0,
         init: Optional[Union[SupportsFloat, bool, str]] = None,
         origin: Optional[
             Union[
@@ -101,6 +105,8 @@ class TemporalComponent:
         :arg max: (ver2.0〜) Inputの最大値/最大文字数
         :arg step: (ver2.0〜) Inputの刻み幅
         :arg option: (ver2.0〜) Inputの選択肢
+        :arg width: (ver3.1〜) 要素の幅
+        :arg height: (ver3.1〜) 要素の高さ
         :arg origin: 要素の位置を移動する
         :arg color: 要素の色 (text_colorと同じ)
         :arg fill: 要素の塗りつぶし色 (bg_colorと同じ)
@@ -139,6 +145,8 @@ class TemporalComponent:
                     self._option.append(float(op))
                 else:
                     self._option.append(str(op))
+        self._width = width
+        self._height = height
         self._stroke_width = 0
         if stroke_width is not None:
             self._stroke_width = float(stroke_width)
@@ -257,6 +265,8 @@ class TemporalComponent:
             self._max,
             self._step,
             self._option,
+            self._width,
+            self._height,
         )
 
     def to_canvas2d(self) -> "webcface.canvas2d_base.Canvas2DComponentBase":
