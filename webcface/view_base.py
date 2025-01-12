@@ -44,6 +44,8 @@ class ViewComponentBase:
     _max: Optional[float]
     _step: Optional[float]
     _option: List[Union[float, bool, str]]
+    _width: int
+    _height: int
 
     def __init__(
         self,
@@ -57,6 +59,8 @@ class ViewComponentBase:
         max: Optional[float] = None,
         step: Optional[float] = None,
         option: Optional[List[Union[float, bool, str]]] = None,
+        width: int = 0,
+        height: int = 0,
     ) -> None:
         self._type = type
         self._text = text
@@ -68,6 +72,8 @@ class ViewComponentBase:
         self._max = max
         self._step = step
         self._option = option or []
+        self._width = width
+        self._height = height
 
     def __eq__(self, other) -> bool:
         return (
@@ -98,6 +104,8 @@ class ViewComponentBase:
             and self._max == other._max
             and self._step == other._step
             and self._option == other._option
+            and self._width == other._width
+            and self._height == other._height
         )
 
     def __ne__(self, other) -> bool:

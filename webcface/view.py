@@ -42,6 +42,8 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
             max=base._max,
             step=base._step,
             option=base._option,
+            width=base._width,
+            height=base._height,
         )
         self._data = data
         self._id = id
@@ -161,6 +163,16 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         (ver2.0〜)
         """
         return self._option
+
+    @property
+    def width(self) -> int:
+        """要素の幅 (ver3.1〜)"""
+        return self._width
+
+    @property
+    def height(self) -> int:
+        """要素の高さ (ver3.1〜)"""
+        return self._height
 
 
 class View(webcface.field.Field):
