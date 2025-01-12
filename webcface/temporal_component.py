@@ -2,6 +2,8 @@ from typing import Optional, List, Callable, SupportsFloat, Union, Sequence, Tup
 from webcface.typing import convertible_to_float, is_float_sequence
 import webcface.client_data
 import webcface.text
+import webcface.func
+import webcface.func_listener
 import webcface.field
 import webcface.view_base
 import webcface.canvas2d_base
@@ -54,10 +56,12 @@ class TemporalComponent:
         canvas3d_type: int = 0,
         id: Optional[str] = None,
         text: str = "",
-        on_click: "Optional[Union[webcface.field.FieldBase, Callable]]" = None,
+        on_click: Optional[
+            Union["webcface.func.Func", "webcface.func_listener.FuncListener", Callable]
+        ] = None,
         text_color: Optional[int] = None,
         bg_color: Optional[int] = None,
-        on_change: "Optional[Union[webcface.func.Func, Callable]]" = None,
+        on_change: Optional[Union["webcface.func.Func", Callable]] = None,
         bind: "Optional[webcface.text.InputRef]" = None,
         min: Optional[SupportsFloat] = None,
         max: Optional[SupportsFloat] = None,
@@ -197,14 +201,23 @@ class TemporalComponent:
 
             on_click = on_change_impl
         self._bind_tmp = bind
-        if isinstance(on_click, webcface.field.FieldBase):
-            self._on_click_func = on_click
+        if isinstance(on_click, webcface.func.Func) or isinstance(
+            on_click, webcface.func_listener.FuncListener
+        ):
+            self._on_click_func = on_click._base
         elif callable(on_click):
             self._on_click_func_tmp = on_click
-        if isinstance(on_click, webcface.field.Field) and on_click._data is not None:
-            self._data = on_click._data
-        if isinstance(on_change, webcface.field.Field) and on_change._data is not None:
-            self._data = on_change._data
+        if (
+            isinstance(on_click, webcface.func.Func)
+            or isinstance(on_click, webcface.func_listener.FuncListener)
+            and on_click._base._data is not None
+        ):
+            self._data = on_click._base._data
+        if (
+            isinstance(on_change, webcface.func.Func)
+            and on_change._base._data is not None
+        ):
+            self._data = on_change._base._data
         if (
             isinstance(self._field, webcface.field.Field)
             and self._field._data is not None
@@ -232,14 +245,14 @@ class TemporalComponent:
                 ".." + data_type + field_name + "." + self._id,
             )
             on_click.set(self._on_click_func_tmp)
-            self._on_click_func = on_click
+            self._on_click_func = on_click._base
         if self._bind_tmp is not None:
             text_ref = webcface.text.Variant(
                 webcface.field.Field(data, data.self_member_name),
                 "..ir" + field_name + "." + self._id,
             )
             self._bind_tmp._state = text_ref
-            self._text_ref = text_ref
+            self._text_ref = text_ref._base
             if self._init is not None and text_ref.try_get() is None:
                 text_ref.set(self._init)
         self._data = data

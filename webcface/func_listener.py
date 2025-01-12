@@ -3,7 +3,9 @@ import webcface.field
 import webcface.func_info
 
 
-class FuncListener(webcface.field.Field):
+class FuncListener:
+    _base: "webcface.field.Field"
+
     def __init__(
         self,
         base: "Optional[webcface.field.Field]",
@@ -17,29 +19,29 @@ class FuncListener(webcface.field.Field):
         詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
         """
         if base is None:
-            super().__init__(None, "", "")
+            self._base = webcface.field.Field(None, "", "")
         else:
-            super().__init__(
+            self._base = webcface.field.Field(
                 base._data, base._member, field if field != "" else base._field
             )
 
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def _set_info(self, info: "webcface.func_info.FuncInfo") -> None:
-        self._set_check().func_store.set_send(self._field, info)
+        self._base._set_check().func_store.set_send(self._base._field, info)
 
     def _handlers(self):
-        if self._field not in self._set_check().func_listener_handlers:
-            self._set_check().func_listener_handlers[self._field] = []
-        return self._set_check().func_listener_handlers[self._field]
+        if self._base._field not in self._base._set_check().func_listener_handlers:
+            self._base._set_check().func_listener_handlers[self._base._field] = []
+        return self._base._set_check().func_listener_handlers[self._base._field]
 
     def listen(
         self,

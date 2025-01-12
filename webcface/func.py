@@ -5,7 +5,8 @@ import webcface.field
 import webcface.func_info
 
 
-class Func(webcface.field.Field):
+class Func:
+    _base: "webcface.field.Field"
     _return_type: Optional[Union[int, type]]
     _args: "Optional[List[webcface.func_info.Arg]]"
     _handle: bool
@@ -26,9 +27,9 @@ class Func(webcface.field.Field):
         詳細は `Funcのドキュメント <https://na-trium-144.github.io/webcface/md_30__func.html>`_ を参照
         """
         if base is None:
-            super().__init__(None, "", "")
+            self._base = webcface.field.Field(None, "", "")
         else:
-            super().__init__(
+            self._base = webcface.field.Field(
                 base._data, base._member, field if field != "" else base._field
             )
         self._return_type = return_type
@@ -38,18 +39,20 @@ class Func(webcface.field.Field):
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def _set_info(self, info: "webcface.func_info.FuncInfo") -> None:
-        self._set_check().func_store.set_send(self._field, info)
+        self._base._set_check().func_store.set_send(self._base._field, info)
 
     def _get_info(self) -> "webcface.func_info.FuncInfo":
-        func_info = self._data_check().func_store.get_recv(self._member, self._field)
+        func_info = self._base._data_check().func_store.get_recv(
+            self._base._member, self._base._field
+        )
         if func_info is None:
             raise ValueError("Func not set")
         return func_info
@@ -59,7 +62,9 @@ class Func(webcface.field.Field):
         (ver2.0〜)
 
         """
-        return self._field in self._data_check().func_store.get_entry(self._member)
+        return self._base._field in self._base._data_check().func_store.get_entry(
+            self._base._member
+        )
 
     def set(
         self,
@@ -126,7 +131,9 @@ class Func(webcface.field.Field):
 
     def free(self) -> "Func":
         """関数の設定を削除"""
-        self._data_check().func_store.unset_recv(self._member, self._field)
+        self._base._data_check().func_store.unset_recv(
+            self._base._member, self._base._field
+        )
         return self
 
     def run(self, *args) -> Union[float, bool, str]:
@@ -146,7 +153,7 @@ class Func(webcface.field.Field):
         ret = self.run_async(*args)
         ret.wait_finish()
         if not ret.found:
-            raise webcface.func_info.FuncNotFoundError(self)
+            raise webcface.func_info.FuncNotFoundError(self._base)
         if ret.is_error:
             raise RuntimeError(ret.rejection)
         return ret.response
@@ -156,11 +163,12 @@ class Func(webcface.field.Field):
 
         * 戻り値やエラー、例外はPromiseから取得する
         """
-        r = self._data_check().func_result_store.add_result("", self)
-        if self._data_check().is_self(self._member):
+        data = self._base._data_check()
+        r = data.func_result_store.add_result("", self._base)
+        if data.is_self(self._base._member):
             with r._data._cv:
-                func_info = self._data_check().func_store.get_recv(
-                    self._member, self._field
+                func_info = data.func_store.get_recv(
+                    self._base._member, self._base._field
                 )
                 if func_info is None:
                     r._data._set_reach(False)
@@ -168,13 +176,13 @@ class Func(webcface.field.Field):
                     r._data._set_reach(True)
                     func_info.run(r._data, args)
         else:
-            if not self._data_check().queue_msg_online(
+            if not data.queue_msg_online(
                 [
                     webcface.message.Call.new(
                         r._data._caller_id,
                         0,
-                        self._data_check().get_member_id_from_name(self._member),
-                        self._field,
+                        data.get_member_id_from_name(self._base._member),
+                        self._base._field,
                         list(args),
                     )
                 ]
@@ -189,8 +197,8 @@ class Func(webcface.field.Field):
         それ以外の場合、run()する
         """
         if len(args) == 1 and callable(args[0]):
-            if self._field == "":
-                self._field = args[0].__name__
+            if self._base._field == "":
+                self._base._field = args[0].__name__
             self.set(args[0])
             return args[0]
         else:

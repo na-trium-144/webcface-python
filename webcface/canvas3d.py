@@ -93,7 +93,8 @@ class Canvas3DComponent(webcface.canvas3d_base.Canvas3DComponentBase):
     #     pass
 
 
-class Canvas3D(webcface.field.Field):
+class Canvas3D:
+    _base: "webcface.field.Field"
     _c3data: "Optional[Canvas3DData]"
     _modified: bool
 
@@ -109,7 +110,7 @@ class Canvas3D(webcface.field.Field):
 
         詳細は `Canvas3Dのドキュメント <https://na-trium-144.github.io/webcface/md_20__canvas3d.html>`_ を参照
         """
-        super().__init__(
+        self._base = webcface.field.Field(
             base._data, base._member, field if field != "" else base._field
         )
         self._c3data = None
@@ -118,12 +119,12 @@ class Canvas3D(webcface.field.Field):
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
@@ -134,32 +135,40 @@ class Canvas3D(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        data = self._data_check()
-        if self._member not in data.on_canvas3d_change:
-            data.on_canvas3d_change[self._member] = {}
-        data.on_canvas3d_change[self._member][self._field] = func
+        data = self._base._data_check()
+        if self._base._member not in data.on_canvas3d_change:
+            data.on_canvas3d_change[self._base._member] = {}
+        data.on_canvas3d_change[self._base._member][self._base._field] = func
         return func
 
     def child(self, field: str) -> "Canvas3D":
         """「(thisの名前).(追加の名前)」を新しい名前とするCanvas3D"""
-        return Canvas3D(webcface.field.Field.child(self, field))
+        return Canvas3D(self._base.child(field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""
-        req = self._data_check().canvas3d_store.add_req(self._member, self._field)
+        req = self._base._data_check().canvas3d_store.add_req(
+            self._base._member, self._base._field
+        )
         if req > 0:
-            self._data_check().queue_msg_req(
-                [webcface.message.Canvas3DReq.new(self._member, self._field, req)]
+            self._base._data_check().queue_msg_req(
+                [
+                    webcface.message.Canvas3DReq.new(
+                        self._base._member, self._base._field, req
+                    )
+                ]
             )
 
     def try_get(self) -> Optional[List[Canvas3DComponent]]:
         """CanvasをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
-        v = self._data_check().canvas3d_store.get_recv(self._member, self._field)
+        v = self._base._data_check().canvas3d_store.get_recv(
+            self._base._member, self._base._field
+        )
         v2: Optional[List[Canvas3DComponent]] = None
         if v is not None:
             v2 = [
-                Canvas3DComponent(v.components[v_id], self._data, v_id)
+                Canvas3DComponent(v.components[v_id], self._base._data, v_id)
                 for v_id in v.ids
             ]
         return v2
@@ -176,7 +185,9 @@ class Canvas3D(webcface.field.Field):
         try_get() などとは違って、実際のデータを受信しない。
         リクエストもしない。
         """
-        return self._field in self._data_check().canvas3d_store.get_entry(self._member)
+        return self._base._field in self._base._data_check().canvas3d_store.get_entry(
+            self._base._member
+        )
 
     def __enter__(self) -> "Canvas3D":
         """with構文の最初でinit"""
@@ -195,20 +206,19 @@ class Canvas3D(webcface.field.Field):
 
     def sync(self) -> "Canvas3D":
         """Viewの内容をclientに反映し送信可能にする"""
-        self._set_check()
+        data = self._base._set_check()
         if self._modified and self._c3data is not None:
-            data = self._set_check()
             data_idx: Dict[int, int] = {}
             for c in self._c3data.tmp_components:
                 idx = data_idx.get(c._canvas3d_type, 0)
                 data_idx[c._canvas3d_type] = idx + 1
-                c.lock_tmp(data, "c3", self._field, f"..{c._canvas3d_type}.{idx}")
+                c.lock_tmp(data, "c3", self._base._field, f"..{c._canvas3d_type}.{idx}")
                 self._c3data.components[c.id] = c.to_canvas3d()
                 self._c3data.ids.append(c.id)
-            data.canvas3d_store.set_send(self._field, self._c3data)
+            data.canvas3d_store.set_send(self._base._field, self._c3data)
             self._modified = False
-        on_change = (
-            self._data_check().on_canvas3d_change.get(self._member, {}).get(self._field)
+        on_change = data.on_canvas3d_change.get(self._base._member, {}).get(
+            self._base._field
         )
         if on_change is not None:
             on_change(self)

@@ -1,5 +1,15 @@
 from typing import Callable, Optional, Iterable, SupportsFloat, List
 import webcface.client_data
+import webcface.value
+import webcface.text
+import webcface.view
+import webcface.func
+import webcface.func_listener
+import webcface.log
+import webcface.image
+import webcface.message
+import webcface.canvas2d
+import webcface.canvas3d
 
 
 class FieldBase:

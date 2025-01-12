@@ -22,7 +22,9 @@ def new_line(**kwargs) -> "webcface.temporal_component.TemporalComponent":
 
 def button(
     text: str,
-    on_click: "Union[webcface.field.FieldBase, Callable]",
+    on_click: Union[
+        "webcface.func.Func", "webcface.func_listener.FuncListener", Callable
+    ],
     **kwargs,
 ) -> "webcface.temporal_component.TemporalComponent":
     """button要素"""
