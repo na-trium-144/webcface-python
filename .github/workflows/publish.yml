@@ -17,7 +17,7 @@ jobs:
     - run: poetry install
     - run: poetry build
     - run: poetry publish
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: wheel
         path: ${{github.workspace}}/dist/*.whl
@@ -27,14 +27,14 @@ jobs:
     needs: [publish]
     steps:
       - uses: actions/checkout@v4
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: wheel
-          path: ${{github.workspace}}/artifact
+          path: ${{github.workspace}}/dist
       - name: Release
         uses: docker://antonyurchenko/git-release:v5
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           ALLOW_EMPTY_CHANGELOG: true
         with:
-          args: artifact/*
+          args: dist/*
