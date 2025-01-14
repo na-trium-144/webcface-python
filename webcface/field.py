@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Iterable, SupportsFloat, List
+from typing import Optional, Iterable, SupportsFloat, List
 import webcface.client_data
 import webcface.value
 import webcface.text
@@ -68,11 +68,11 @@ class Field(FieldBase):
         return Field(self._data, self._member, new_field)
 
     def value(self, field: str = "") -> "webcface.value.Value":
-        """Valueオブジェクトを生成(ver3.1〜)"""
+        """Valueオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         return webcface.value.Value(self.child(field))
 
     def text(self, field: str = "") -> "webcface.text.Text":
-        """Textオブジェクトを生成(ver3.1〜)"""
+        """Textオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         return webcface.text.Text(self.child(field))
 
     def variant(self, field: str = "") -> "webcface.text.Variant":
@@ -80,11 +80,11 @@ class Field(FieldBase):
         return webcface.text.Variant(self.child(field))
 
     def image(self, field: str = "") -> "webcface.image.Image":
-        """Imageオブジェクトを生成(ver3.1〜)"""
+        """Imageオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         return webcface.image.Image(self.child(field))
 
     def view(self, field: str = "") -> "webcface.view.View":
-        """Viewオブジェクトを生成(ver3.1〜)"""
+        """Viewオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         return webcface.view.View(self.child(field))
 
     def canvas2d(
@@ -93,25 +93,25 @@ class Field(FieldBase):
         width: Optional[SupportsFloat] = None,
         height: Optional[SupportsFloat] = None,
     ) -> "webcface.canvas2d.Canvas2D":
-        """Canvas2Dオブジェクトを生成(ver3.1〜)
+        """Canvas2Dオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)
 
         :arg width, height: Canvas2Dのサイズを指定して初期化する
         """
         return webcface.canvas2d.Canvas2D(self, field, width, height)
 
     def canvas3d(self, field: str = "") -> "webcface.canvas3d.Canvas3D":
-        """Canvas3Dオブジェクトを生成(ver3.1〜)"""
+        """Canvas3Dオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         return webcface.canvas3d.Canvas3D(self.child(field))
 
     def log(self, field: str = "default") -> "webcface.log.Log":
-        """Logオブジェクトを生成(ver3.1〜)
+        """Logオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)
 
         :arg field: (ver2.1〜) Logの名前を指定可能(省略すると"default")
         """
         return webcface.log.Log(self.child(field))
 
     def func(self, arg: str = "", **kwargs) -> "webcface.func.Func":
-        """Funcオブジェクトを生成(ver3.1〜)
+        """Funcオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)
 
         #. member.func(arg: str)
             * 指定した名前のFuncオブジェクトを生成・参照する。
@@ -126,7 +126,7 @@ class Field(FieldBase):
         return webcface.func.Func(self.child(arg), **kwargs)
 
     def func_listener(self, field: str = "") -> "webcface.func_listener.FuncListener":
-        """FuncListenerオブジェクトを生成(ver3.1〜)"""
+        """FuncListenerオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         return webcface.func_listener.FuncListener(self.child(field))
 
     def _entries(self, entries: List[str], store, recurse=True):
@@ -177,49 +177,49 @@ class Field(FieldBase):
         )
 
     def value_entries(self) -> "Iterable[webcface.value.Value]":
-        """「(thisの名前).(追加の名前)」で公開されているvalueをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているvalueをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().value_store, True)
         return map(lambda n: webcface.value.Value(self, n), entries)
 
     def text_entries(self) -> "Iterable[webcface.text.Text]":
-        """「(thisの名前).(追加の名前)」で公開されているtextをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているtextをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().text_store, True)
         return map(lambda n: webcface.text.Text(self, n), entries)
 
     def image_entries(self) -> "Iterable[webcface.image.Image]":
-        """「(thisの名前).(追加の名前)」で公開されているimageをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているimageをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().image_store, True)
         return map(lambda n: webcface.image.Image(self, n), entries)
 
     def view_entries(self) -> "Iterable[webcface.view.View]":
-        """「(thisの名前).(追加の名前)」で公開されているviewをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているviewをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().view_store, True)
         return map(lambda n: webcface.view.View(self, n), entries)
 
     def func_entries(self) -> "Iterable[webcface.func.Func]":
-        """「(thisの名前).(追加の名前)」で公開されているfuncをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているfuncをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().func_store, True)
         return map(lambda n: webcface.func.Func(self, n), entries)
 
     def canvas2d_entries(self) -> "Iterable[webcface.canvas2d.Canvas2D]":
-        """「(thisの名前).(追加の名前)」で公開されているcanvas2dをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているcanvas2dをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().canvas2d_store, True)
         return map(lambda n: webcface.canvas2d.Canvas2D(self, n), entries)
 
     def canvas3d_entries(self) -> "Iterable[webcface.canvas3d.Canvas3D]":
-        """「(thisの名前).(追加の名前)」で公開されているcanvas3dをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているcanvas3dをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().canvas3d_store, True)
         return map(lambda n: webcface.canvas3d.Canvas3D(self, n), entries)
 
     def log_entries(self) -> "Iterable[webcface.log.Log]":
-        """「(thisの名前).(追加の名前)」で公開されているlogをすべて取得する (ver3.1〜)"""
+        """「(thisの名前).(追加の名前)」で公開されているlogをすべて取得する (ver3.1〜 / ver2.1〜3.0までMemberクラスのメソッド)"""
         entries: List[str] = []
         self._entries(entries, self._data_check().log_store, True)
         return map(lambda n: webcface.log.Log(self, n), entries)

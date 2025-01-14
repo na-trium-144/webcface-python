@@ -1,4 +1,4 @@
-from typing import Callable, Optional, Iterable, SupportsFloat
+from typing import Callable, Optional, Iterable
 import datetime
 import webcface.field
 import webcface.value
@@ -29,82 +29,12 @@ class Member(webcface.field.Field):
         """Member名"""
         return self._member
 
-    def value(self, field: str) -> "webcface.value.Value":
-        """Valueオブジェクトを生成"""
-        return webcface.value.Value(self, field)
-
-    def text(self, field: str) -> "webcface.text.Text":
-        """Textオブジェクトを生成"""
-        return webcface.text.Text(self, field)
-
-    def variant(self, field: str) -> "webcface.text.Variant":
-        """Variantオブジェクトを生成 (ver2.0〜)"""
-        return webcface.text.Variant(self, field)
-
-    def image(self, field: str) -> "webcface.image.Image":
-        """Imageオブジェクトを生成"""
-        return webcface.image.Image(self, field)
-
-    def view(self, field: str) -> "webcface.view.View":
-        """Viewオブジェクトを生成"""
-        return webcface.view.View(self, field)
-
-    def canvas2d(
-        self,
-        field: str,
-        width: Optional[SupportsFloat] = None,
-        height: Optional[SupportsFloat] = None,
-    ) -> "webcface.canvas2d.Canvas2D":
-        """Canvas2Dオブジェクトを生成
-
-        :arg width, height: Canvas2Dのサイズを指定して初期化する
-        """
-        return webcface.canvas2d.Canvas2D(self, field, width, height)
-
-    def canvas3d(self, field: str) -> "webcface.canvas3d.Canvas3D":
-        """Canvas3Dオブジェクトを生成"""
-        return webcface.canvas3d.Canvas3D(self, field)
-
-    def log(self, field: str = "default") -> "webcface.log.Log":
-        """Logオブジェクトを生成
-
-        :arg field: (ver2.1〜) Logの名前を指定可能(省略すると"default")
-        """
-        return webcface.log.Log(self, field)
-
-    def func(self, arg: str = "", **kwargs) -> "webcface.func.Func":
-        """Funcオブジェクトを生成
-
-        #. member.func(arg: str)
-            * 指定した名前のFuncオブジェクトを生成・参照する。
-        #. @member.func(arg: str, [**kwargs])
-            * デコレータとして使い、デコレートした関数を指定した名前でセットする。
-            * デコレート後、関数は元のまま返す。
-        #. @member.func([**kwargs])
-            * 3と同じだが、名前はデコレートした関数から自動で取得される。
-        #. member.func(arg: Callable, [**kwargs])
-            * これはver2.0で削除。
-
-        2, 3 の場合のkwargsは Func.set() を参照。
-        """
-        return webcface.func.Func(self, arg, **kwargs)
-
-    def func_listener(self, field: str) -> "webcface.func_listener.FuncListener":
-        """FuncListenerオブジェクトを生成
-        (ver2.2〜)
-        """
-        return webcface.func_listener.FuncListener(self, field)
-
     def values(self) -> "Iterable[webcface.value.Value]":
         """このメンバーのValueをすべて取得する。
 
         .. deprecated:: 1.1
         """
         return self.value_entries()
-
-    def value_entries(self) -> "Iterable[webcface.value.Value]":
-        """このメンバーのValueをすべて取得する。"""
-        return map(self.value, self._data_check().value_store.get_entry(self._member))
 
     def texts(self) -> "Iterable[webcface.text.Text]":
         """このメンバーのTextをすべて取得する。
@@ -113,14 +43,6 @@ class Member(webcface.field.Field):
         """
         return self.text_entries()
 
-    def text_entries(self) -> "Iterable[webcface.text.Text]":
-        """このメンバーのTextをすべて取得する。"""
-        return map(self.text, self._data_check().text_store.get_entry(self._member))
-
-    def image_entries(self) -> "Iterable[webcface.image.Image]":
-        """このメンバーのImageをすべて取得する。"""
-        return map(self.image, self._data_check().image_store.get_entry(self._member))
-
     def views(self) -> "Iterable[webcface.view.View]":
         """このメンバーのViewをすべて取得する。
 
@@ -128,36 +50,12 @@ class Member(webcface.field.Field):
         """
         return self.view_entries()
 
-    def view_entries(self) -> "Iterable[webcface.view.View]":
-        """このメンバーのViewをすべて取得する。"""
-        return map(self.view, self._data_check().view_store.get_entry(self._member))
-
     def funcs(self) -> "Iterable[webcface.func.Func]":
         """このメンバーのFuncをすべて取得する。
 
         .. deprecated:: 1.1
         """
         return self.func_entries()
-
-    def func_entries(self) -> "Iterable[webcface.func.Func]":
-        """このメンバーのFuncをすべて取得する。"""
-        return map(self.func, self._data_check().func_store.get_entry(self._member))
-
-    def canvas2d_entries(self) -> "Iterable[webcface.canvas2d.Canvas2D]":
-        """このメンバーのCanvas2Dをすべて取得する。"""
-        return map(
-            self.canvas2d, self._data_check().canvas2d_store.get_entry(self._member)
-        )
-
-    def canvas3d_entries(self) -> "Iterable[webcface.canvas3d.Canvas3D]":
-        """このメンバーのCanvas3Dをすべて取得する。"""
-        return map(
-            self.canvas3d, self._data_check().canvas3d_store.get_entry(self._member)
-        )
-
-    def log_entries(self) -> "Iterable[webcface.log.Log]":
-        """このメンバーのLogをすべて取得する。(ver2.1〜)"""
-        return map(self.log, self._data_check().log_store.get_entry(self._member))
 
     def on_value_entry(self, func: Callable) -> Callable:
         """Valueが追加されたときのイベント

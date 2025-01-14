@@ -128,7 +128,7 @@ class Text(Variant):
 
         まだ値をリクエストされてなければ自動でリクエストされる
         """
-        super().on_change(lambda var: func(Text(var)))
+        super().on_change(lambda var: func(Text(var._base)))
         return func
 
     def child(self, field: str) -> "Text":
