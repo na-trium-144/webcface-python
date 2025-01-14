@@ -78,26 +78,28 @@
 
 <div class="viewcode-block" id="Image">
 <a class="viewcode-back" href="../../webcface.image.html#webcface.Image">[docs]</a>
-<span class="k">class</span> <span class="nc">Image</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Image</span><span class="p">:</span>
+    <span class="n">_base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Imageを指すクラス</span>
 
 <span class="sd">        このコンストラクタを直接使わず、</span>
 <span class="sd">        Member.image(), Member.images(), Member.onImageEntry などを使うこと</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
             <span class="n">base</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="n">field</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">base</span><span class="o">.</span><span class="n">_field</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.member.Member&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Memberを返す&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;field名を返す&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
 
 <div class="viewcode-block" id="Image.on_change">
 <a class="viewcode-back" href="../../webcface.image.html#webcface.Image.on_change">[docs]</a>
@@ -109,26 +111,25 @@
 <span class="sd">        まだ値をリクエストされてなければ自動でリクエストされる</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="p">:</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">on_image_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">return</span> <span class="n">func</span></div>
 
 
 <div class="viewcode-block" id="Image.child">
 <a class="viewcode-back" href="../../webcface.image.html#webcface.Image.child">[docs]</a>
     <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Image&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;子フィールドを返す</span>
-
-<span class="sd">        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするImage</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">field</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」を新しい名前とするImage&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
     <span class="k">def</span> <span class="nf">_try_request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
         <span class="c1"># req_dataがNoneの場合以前のreq_dataは上書きされない</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
 
@@ -160,13 +161,15 @@
         <span class="n">img_req</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">image_frame</span><span class="o">.</span><span class="n">ImageReq</span><span class="p">(</span>
             <span class="n">width</span><span class="p">,</span> <span class="n">height</span><span class="p">,</span> <span class="n">color_mode</span><span class="p">,</span> <span class="n">compress_mode</span><span class="p">,</span> <span class="n">quality</span><span class="p">,</span> <span class="n">frame_rate</span>
         <span class="p">)</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">img_req</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">img_req</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
                 <span class="p">[</span>
                     <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">ImageReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span>
-                        <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span>
                         <span class="n">req</span><span class="p">,</span>
                         <span class="n">img_req</span><span class="p">,</span>
                     <span class="p">)</span>
@@ -179,7 +182,9 @@
     <span class="k">def</span> <span class="nf">try_get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Optional[webcface.image_frame.ImageFrame]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;画像を返す、まだリクエストされてなければ自動でリクエストされる&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Image.get">
@@ -198,16 +203,20 @@
 <span class="sd">        try_get() などとは違って、実際のデータを受信しない。</span>
 <span class="sd">        リクエストもしない。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Image.set">
 <a class="viewcode-back" href="../../webcface.image.html#webcface.Image.set">[docs]</a>
     <span class="k">def</span> <span class="nf">set</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">data</span><span class="p">:</span> <span class="s2">&quot;webcface.image_frame.ImageFrame&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Image&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;画像をセットする&quot;&quot;&quot;</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span><span class="o">.</span><span class="n">image_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">data</span><span class="p">)</span>
         <span class="n">on_change</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_image_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">on_image_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">on_change</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>

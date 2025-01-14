@@ -73,6 +73,8 @@
 <span class="kn">from</span> <span class="nn">webcface.typing</span> <span class="kn">import</span> <span class="n">convertible_to_float</span><span class="p">,</span> <span class="n">is_float_sequence</span>
 <span class="kn">import</span> <span class="nn">webcface.client_data</span>
 <span class="kn">import</span> <span class="nn">webcface.text</span>
+<span class="kn">import</span> <span class="nn">webcface.func</span>
+<span class="kn">import</span> <span class="nn">webcface.func_listener</span>
 <span class="kn">import</span> <span class="nn">webcface.field</span>
 <span class="kn">import</span> <span class="nn">webcface.view_base</span>
 <span class="kn">import</span> <span class="nn">webcface.canvas2d_base</span>
@@ -129,10 +131,12 @@
         <span class="n">canvas3d_type</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span>
         <span class="nb">id</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">text</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
-        <span class="n">on_click</span><span class="p">:</span> <span class="s2">&quot;Optional[Union[webcface.field.FieldBase, Callable]]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">on_click</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span>
+            <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.func.Func&quot;</span><span class="p">,</span> <span class="s2">&quot;webcface.func_listener.FuncListener&quot;</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]</span>
+        <span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">text_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">bg_color</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="nb">int</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-        <span class="n">on_change</span><span class="p">:</span> <span class="s2">&quot;Optional[Union[webcface.func.Func, Callable]]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+        <span class="n">on_change</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="s2">&quot;webcface.func.Func&quot;</span><span class="p">,</span> <span class="n">Callable</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="n">bind</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.text.InputRef]&quot;</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="nb">min</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
         <span class="nb">max</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">SupportsFloat</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -278,14 +282,23 @@
 
             <span class="n">on_click</span> <span class="o">=</span> <span class="n">on_change_impl</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_bind_tmp</span> <span class="o">=</span> <span class="n">bind</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">FieldBase</span><span class="p">):</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">)</span> <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span>
+            <span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_listener</span><span class="o">.</span><span class="n">FuncListener</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_base</span>
         <span class="k">elif</span> <span class="nb">callable</span><span class="p">(</span><span class="n">on_click</span><span class="p">):</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func_tmp</span> <span class="o">=</span> <span class="n">on_click</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">)</span> <span class="ow">and</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_data</span>
-        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_change</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">)</span> <span class="ow">and</span> <span class="n">on_change</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">on_change</span><span class="o">.</span><span class="n">_data</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">)</span>
+            <span class="ow">or</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_click</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_listener</span><span class="o">.</span><span class="n">FuncListener</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data</span>
+        <span class="k">if</span> <span class="p">(</span>
+            <span class="nb">isinstance</span><span class="p">(</span><span class="n">on_change</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func</span><span class="o">.</span><span class="n">Func</span><span class="p">)</span>
+            <span class="ow">and</span> <span class="n">on_change</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+        <span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">on_change</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data</span>
         <span class="k">if</span> <span class="p">(</span>
             <span class="nb">isinstance</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">)</span>
             <span class="ow">and</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="o">.</span><span class="n">_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
@@ -315,14 +328,14 @@
                 <span class="s2">&quot;..&quot;</span> <span class="o">+</span> <span class="n">data_type</span> <span class="o">+</span> <span class="n">field_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="n">on_click</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func_tmp</span><span class="p">)</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_on_click_func</span> <span class="o">=</span> <span class="n">on_click</span><span class="o">.</span><span class="n">_base</span>
         <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_bind_tmp</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">text_ref</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Variant</span><span class="p">(</span>
                 <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span><span class="n">data</span><span class="p">,</span> <span class="n">data</span><span class="o">.</span><span class="n">self_member_name</span><span class="p">),</span>
                 <span class="s2">&quot;..ir&quot;</span> <span class="o">+</span> <span class="n">field_name</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">_id</span><span class="p">,</span>
             <span class="p">)</span>
             <span class="bp">self</span><span class="o">.</span><span class="n">_bind_tmp</span><span class="o">.</span><span class="n">_state</span> <span class="o">=</span> <span class="n">text_ref</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="o">=</span> <span class="n">text_ref</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_text_ref</span> <span class="o">=</span> <span class="n">text_ref</span><span class="o">.</span><span class="n">_base</span>
             <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_init</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">text_ref</span><span class="o">.</span><span class="n">try_get</span><span class="p">()</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">text_ref</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_init</span><span class="p">)</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">_data</span> <span class="o">=</span> <span class="n">data</span>

@@ -101,7 +101,9 @@
 <a class="viewcode-back" href="../../webcface.components.html#webcface.components.button">[docs]</a>
 <span class="k">def</span> <span class="nf">button</span><span class="p">(</span>
     <span class="n">text</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="n">on_click</span><span class="p">:</span> <span class="s2">&quot;Union[webcface.field.FieldBase, Callable]&quot;</span><span class="p">,</span>
+    <span class="n">on_click</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span>
+        <span class="s2">&quot;webcface.func.Func&quot;</span><span class="p">,</span> <span class="s2">&quot;webcface.func_listener.FuncListener&quot;</span><span class="p">,</span> <span class="n">Callable</span>
+    <span class="p">],</span>
     <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.temporal_component.TemporalComponent&quot;</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;button要素&quot;&quot;&quot;</span>

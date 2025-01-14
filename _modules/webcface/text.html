@@ -77,24 +77,26 @@
 
 <div class="viewcode-block" id="Variant">
 <a class="viewcode-back" href="../../webcface.text.html#webcface.Variant">[docs]</a>
-<span class="k">class</span> <span class="nc">Variant</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Variant</span><span class="p">:</span>
+    <span class="n">_base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span>
+
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;文字列、数値などの型を送受信するVariantを指すクラス</span>
 <span class="sd">        (ver2.0〜)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
             <span class="n">base</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="n">field</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">base</span><span class="o">.</span><span class="n">_field</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.member.Member&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Memberを返す&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;field名を返す&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
 
 <div class="viewcode-block" id="Variant.on_change">
 <a class="viewcode-back" href="../../webcface.text.html#webcface.Variant.on_change">[docs]</a>
@@ -107,31 +109,34 @@
 <span class="sd">        まだ値をリクエストされてなければ自動でリクエストされる</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
-        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">on_text_change</span><span class="p">:</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">on_text_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="n">data</span><span class="o">.</span><span class="n">on_text_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">data</span><span class="o">.</span><span class="n">on_text_change</span><span class="p">:</span>
+            <span class="n">data</span><span class="o">.</span><span class="n">on_text_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="n">data</span><span class="o">.</span><span class="n">on_text_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">][</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">return</span> <span class="n">func</span></div>
 
 
 <div class="viewcode-block" id="Variant.child">
 <a class="viewcode-back" href="../../webcface.text.html#webcface.Variant.child">[docs]</a>
     <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Variant&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;子フィールドを返す</span>
-
-<span class="sd">        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="o">+</span> <span class="s2">&quot;.&quot;</span> <span class="o">+</span> <span class="n">field</span><span class="p">)</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」を新しい名前とするVariant&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Variant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Variant.request">
 <a class="viewcode-back" href="../../webcface.text.html#webcface.Variant.request">[docs]</a>
     <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;値の受信をリクエストする&quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">TextReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">req</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">TextReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">req</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
             <span class="p">)</span></div>
 
 
@@ -140,7 +145,9 @@
     <span class="k">def</span> <span class="nf">try_get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Union</span><span class="p">[</span><span class="nb">float</span><span class="p">,</span> <span class="nb">bool</span><span class="p">,</span> <span class="nb">str</span><span class="p">]]:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;データまたはNoneを返す、まだリクエストされてなければ自動でリクエストされる&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Variant.get">
@@ -160,7 +167,9 @@
 <span class="sd">        try_get() などとは違って、実際のデータを受信しない。</span>
 <span class="sd">        リクエストもしない。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span>
+        <span class="p">)</span></div>
 
 
     <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
@@ -182,9 +191,11 @@
             <span class="n">data2</span> <span class="o">=</span> <span class="nb">float</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
         <span class="k">else</span><span class="p">:</span>
             <span class="n">data2</span> <span class="o">=</span> <span class="nb">str</span><span class="p">(</span><span class="n">data</span><span class="p">)</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span><span class="o">.</span><span class="n">text_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">data2</span><span class="p">)</span>
         <span class="n">on_change</span> <span class="o">=</span> <span class="p">(</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_text_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span>
+            <span class="o">.</span><span class="n">on_text_change</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
         <span class="p">)</span>
         <span class="k">if</span> <span class="n">on_change</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">on_change</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
@@ -216,18 +227,15 @@
 
 <span class="sd">        まだ値をリクエストされてなければ自動でリクエストされる</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_change</span><span class="p">(</span><span class="k">lambda</span> <span class="n">var</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">var</span><span class="p">)))</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">on_change</span><span class="p">(</span><span class="k">lambda</span> <span class="n">var</span><span class="p">:</span> <span class="n">func</span><span class="p">(</span><span class="n">Text</span><span class="p">(</span><span class="n">var</span><span class="o">.</span><span class="n">_base</span><span class="p">)))</span>
         <span class="k">return</span> <span class="n">func</span></div>
 
 
 <div class="viewcode-block" id="Text.child">
 <a class="viewcode-back" href="../../webcface.text.html#webcface.Text.child">[docs]</a>
     <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Text&quot;</span><span class="p">:</span>
-<span class="w">        </span><span class="sd">&quot;&quot;&quot;子フィールドを返す</span>
-
-<span class="sd">        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText</span>
-<span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」を新しい名前とするText&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Text.try_get">

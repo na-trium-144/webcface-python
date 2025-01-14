@@ -80,8 +80,9 @@
 
 <div class="viewcode-block" id="Log">
 <a class="viewcode-back" href="../../webcface.log.html#webcface.Log">[docs]</a>
-<span class="k">class</span> <span class="nc">Log</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">):</span>
+<span class="k">class</span> <span class="nc">Log</span><span class="p">:</span>
     <span class="n">keep_lines</span><span class="p">:</span> <span class="nb">int</span> <span class="o">=</span> <span class="mi">1000</span>
+    <span class="n">_base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span>
 
     <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">base</span><span class="p">:</span> <span class="s2">&quot;webcface.field.Field&quot;</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Logを指すクラス</span>
@@ -91,19 +92,26 @@
 
 <span class="sd">        詳細は `Logのドキュメント &lt;https://na-trium-144.github.io/webcface/md_40__log.html&gt;`_ を参照</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">(</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">field</span><span class="o">.</span><span class="n">Field</span><span class="p">(</span>
             <span class="n">base</span><span class="o">.</span><span class="n">_data</span><span class="p">,</span> <span class="n">base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="n">field</span> <span class="k">if</span> <span class="n">field</span> <span class="o">!=</span> <span class="s2">&quot;&quot;</span> <span class="k">else</span> <span class="n">base</span><span class="o">.</span><span class="n">_field</span>
         <span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.member.Member&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Memberを返す&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">member</span><span class="o">.</span><span class="n">Member</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">name</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;field名を返す(ver2.1〜)&quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+
+<div class="viewcode-block" id="Log.child">
+<a class="viewcode-back" href="../../webcface.log.html#webcface.Log.child">[docs]</a>
+    <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Log&quot;</span><span class="p">:</span>
+<span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」を新しい名前とするLog (ver3.1〜)&quot;&quot;&quot;</span>
+        <span class="k">return</span> <span class="n">Log</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
+
 
 <div class="viewcode-block" id="Log.on_change">
 <a class="viewcode-back" href="../../webcface.log.html#webcface.Log.on_change">[docs]</a>
@@ -116,7 +124,7 @@
 <span class="sd">        まだ値をリクエストされてなければ自動でリクエストされる</span>
 <span class="sd">        &quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_log_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">on_log_change</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">]</span> <span class="o">=</span> <span class="n">func</span>
         <span class="k">return</span> <span class="n">func</span></div>
 
 
@@ -124,10 +132,16 @@
 <a class="viewcode-back" href="../../webcface.log.html#webcface.Log.request">[docs]</a>
     <span class="k">def</span> <span class="nf">request</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;値の受信をリクエストする&quot;&quot;&quot;</span>
-        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="n">req</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">add_req</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">req</span><span class="p">:</span>
-            <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
-                <span class="p">[</span><span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">LogReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">req</span><span class="p">)]</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">queue_msg_req</span><span class="p">(</span>
+                <span class="p">[</span>
+                    <span class="n">webcface</span><span class="o">.</span><span class="n">message</span><span class="o">.</span><span class="n">LogReq</span><span class="o">.</span><span class="n">new</span><span class="p">(</span>
+                        <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">req</span>
+                    <span class="p">)</span>
+                <span class="p">]</span>
             <span class="p">)</span></div>
 
 
@@ -136,7 +150,9 @@
     <span class="k">def</span> <span class="nf">try_get</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Optional[List[webcface.log_handler.LogLine]]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;ログをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる&quot;&quot;&quot;</span>
         <span class="bp">self</span><span class="o">.</span><span class="n">request</span><span class="p">()</span>
-        <span class="n">log_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="n">log_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">log_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">log_data</span><span class="o">.</span><span class="n">data</span><span class="p">[:]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -157,7 +173,9 @@
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;受信したログを空にする</span>
 
 <span class="sd">        リクエスト状態はクリアしない&quot;&quot;&quot;</span>
-        <span class="n">log_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="n">log_data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span>
         <span class="k">if</span> <span class="n">log_data</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
             <span class="n">log_data</span><span class="o">.</span><span class="n">data</span> <span class="o">=</span> <span class="p">[]</span>
         <span class="k">return</span> <span class="bp">self</span></div>
@@ -172,7 +190,9 @@
 <span class="sd">        try_get() などとは違って、実際のデータを受信しない。</span>
 <span class="sd">        リクエストもしない。</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">()</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_entry</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span>
+        <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="Log.append">
@@ -188,13 +208,13 @@
 
 <span class="sd">        コンソールなどには出力されない</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
+        <span class="n">data</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_set_check</span><span class="p">()</span>
         <span class="k">with</span> <span class="n">data</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">lock</span><span class="p">:</span>
-            <span class="n">log_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+            <span class="n">log_data</span> <span class="o">=</span> <span class="n">data</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">get_recv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_member</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
             <span class="k">if</span> <span class="n">log_data</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
                 <span class="n">log_data</span> <span class="o">=</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogData</span><span class="p">()</span>
             <span class="n">log_data</span><span class="o">.</span><span class="n">data</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogLine</span><span class="p">(</span><span class="n">level</span><span class="p">,</span> <span class="n">time</span><span class="p">,</span> <span class="n">message</span><span class="p">))</span>
-            <span class="n">data</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">log_data</span><span class="p">)</span></div>
+            <span class="n">data</span><span class="o">.</span><span class="n">log_store</span><span class="o">.</span><span class="n">set_send</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">,</span> <span class="n">log_data</span><span class="p">)</span></div>
 
 
     <span class="nd">@property</span>
@@ -204,14 +224,16 @@
 
 <span class="sd">        :return: logger.addHandler にセットして使う</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">Handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">Handler</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span>
 
     <span class="nd">@property</span>
     <span class="k">def</span> <span class="nf">io</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">io</span><span class="o">.</span><span class="n">TextIOBase</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;webcfaceとstderrに出力するio</span>
 <span class="sd">        (ver2.1〜)</span>
 <span class="sd">        &quot;&quot;&quot;</span>
-        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogWriteIO</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">_data_check</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span><span class="p">)</span></div>
+        <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">log_handler</span><span class="o">.</span><span class="n">LogWriteIO</span><span class="p">(</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_data_check</span><span class="p">(),</span> <span class="bp">self</span><span class="o">.</span><span class="n">_base</span><span class="o">.</span><span class="n">_field</span>
+        <span class="p">)</span></div>
 
 </pre></div>
 
