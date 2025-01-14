@@ -5,7 +5,9 @@ import webcface.message
 from webcface.typing import convertible_to_float
 
 
-class Value(webcface.field.Field):
+class Value:
+    _base: "webcface.field.Field"
+
     def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """Valueを指すクラス
 
@@ -14,19 +16,19 @@ class Value(webcface.field.Field):
 
         詳細は `Valueのドキュメント <https://na-trium-144.github.io/webcface/md_10__value.html>`_ を参照
         """
-        super().__init__(
+        self._base = webcface.field.Field(
             base._data, base._member, field if field != "" else base._field
         )
 
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
@@ -37,31 +39,36 @@ class Value(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        data = self._data_check()
-        if self._member not in data.on_value_change:
-            data.on_value_change[self._member] = {}
-        data.on_value_change[self._member][self._field] = func
+        data = self._base._data_check()
+        if self._base._member not in data.on_value_change:
+            data.on_value_change[self._base._member] = {}
+        data.on_value_change[self._base._member][self._base._field] = func
         return func
 
     def child(self, field: str) -> "Value":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするValue
-        """
-        return Value(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするValue"""
+        return Value(self._base.child(field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""
-        req = self._data_check().value_store.add_req(self._member, self._field)
+        req = self._base._data_check().value_store.add_req(
+            self._base._member, self._base._field
+        )
         if req > 0:
-            self._data_check().queue_msg_req(
-                [webcface.message.ValueReq.new(self._member, self._field, req)]
+            self._base._data_check().queue_msg_req(
+                [
+                    webcface.message.ValueReq.new(
+                        self._base._member, self._base._field, req
+                    )
+                ]
             )
 
     def try_get_vec(self) -> Optional[List[float]]:
         """値をlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
-        return self._data_check().value_store.get_recv(self._member, self._field)
+        return self._base._data_check().value_store.get_recv(
+            self._base._member, self._base._field
+        )
 
     def try_get(self) -> Optional[float]:
         """値をfloatまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
@@ -85,7 +92,9 @@ class Value(webcface.field.Field):
         try_get() などとは違って、実際のデータを受信しない。
         リクエストもしない。
         """
-        return self._field in self._data_check().value_store.get_entry(self._member)
+        return self._base._field in self._base._data_check().value_store.get_entry(
+            self._base._member
+        )
 
     def __str__(self) -> str:
         """printしたときなど
@@ -96,17 +105,21 @@ class Value(webcface.field.Field):
 
     def set(self, data: Union[List[SupportsFloat], SupportsFloat]) -> "Value":
         """値をセットする"""
-        self._set_check()
+        self._base._set_check()
         if convertible_to_float(data):
-            self._set_check().value_store.set_send(self._field, [float(data)])
+            self._base._set_check().value_store.set_send(
+                self._base._field, [float(data)]
+            )
         elif isinstance(data, list):
-            self._set_check().value_store.set_send(
-                self._field, [float(v) for v in data]
+            self._base._set_check().value_store.set_send(
+                self._base._field, [float(v) for v in data]
             )
         else:
             raise TypeError("unsupported data type for value.set(): " + str(data))
         on_change = (
-            self._data_check().on_value_change.get(self._member, {}).get(self._field)
+            self._base._data_check()
+            .on_value_change.get(self._base._member, {})
+            .get(self._base._field)
         )
         if on_change is not None:
             on_change(self)

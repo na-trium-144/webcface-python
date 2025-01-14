@@ -175,7 +175,8 @@ class ViewComponent(webcface.view_base.ViewComponentBase):
         return self._height
 
 
-class View(webcface.field.Field):
+class View:
+    _base: "webcface.field.Field"
     _vdata: "Optional[ViewData]"
     _modified: bool
 
@@ -187,7 +188,7 @@ class View(webcface.field.Field):
 
         詳細は `Viewのドキュメント <https://na-trium-144.github.io/webcface/md_13__view.html>`_ を参照
         """
-        super().__init__(
+        self._base = webcface.field.Field(
             base._data, base._member, field if field != "" else base._field
         )
         self._vdata = None
@@ -196,12 +197,12 @@ class View(webcface.field.Field):
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
@@ -212,34 +213,42 @@ class View(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        data = self._data_check()
-        if self._member not in data.on_view_change:
-            data.on_view_change[self._member] = {}
-        data.on_view_change[self._member][self._field] = func
+        data = self._base._data_check()
+        if self._base._member not in data.on_view_change:
+            data.on_view_change[self._base._member] = {}
+        data.on_view_change[self._base._member][self._base._field] = func
         return func
 
     def child(self, field: str) -> "View":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
-        """
-        return View(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするView"""
+        return View(self._base.child(field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""
-        req = self._data_check().view_store.add_req(self._member, self._field)
+        req = self._base._data_check().view_store.add_req(
+            self._base._member, self._base._field
+        )
         if req > 0:
-            self._data_check().queue_msg_req(
-                [webcface.message.ViewReq.new(self._member, self._field, req)]
+            self._base._data_check().queue_msg_req(
+                [
+                    webcface.message.ViewReq.new(
+                        self._base._member, self._base._field, req
+                    )
+                ]
             )
 
     def try_get(self) -> Optional[List[ViewComponent]]:
         """ViewをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
-        v = self._data_check().view_store.get_recv(self._member, self._field)
+        v = self._base._data_check().view_store.get_recv(
+            self._base._member, self._base._field
+        )
         v2: Optional[List[ViewComponent]] = None
         if v is not None:
-            v2 = [ViewComponent(v.components[v_id], self._data, v_id) for v_id in v.ids]
+            v2 = [
+                ViewComponent(v.components[v_id], self._base._data, v_id)
+                for v_id in v.ids
+            ]
         return v2
 
     def get(self) -> List[ViewComponent]:
@@ -254,7 +263,9 @@ class View(webcface.field.Field):
         try_get() などとは違って、実際のデータを受信しない。
         リクエストもしない。
         """
-        return self._field in self._data_check().view_store.get_entry(self._member)
+        return self._base._field in self._base._data_check().view_store.get_entry(
+            self._base._member
+        )
 
     def set(
         self,
@@ -292,20 +303,22 @@ class View(webcface.field.Field):
 
     def sync(self) -> "View":
         """Viewの内容をclientに反映し送信可能にする"""
-        self._set_check()
+        self._base._set_check()
         if self._modified and self._vdata is not None:
-            data = self._set_check()
+            data = self._base._set_check()
             self._vdata.components = {}
             self._vdata.ids = []
             data_idx: Dict[int, int] = {}
             for c in self._vdata.tmp_components:
                 idx = data_idx.get(c._view_type, 0)
                 data_idx[c._view_type] = idx + 1
-                c.lock_tmp(data, "v", self._field, f"..{c._view_type}.{idx}")
+                c.lock_tmp(data, "v", self._base._field, f"..{c._view_type}.{idx}")
                 self._vdata.components[c.id] = c.to_view()
                 self._vdata.ids.append(c.id)
-            data.view_store.set_send(self._field, self._vdata)
-            on_change = data.on_view_change.get(self._member, {}).get(self._field)
+            data.view_store.set_send(self._base._field, self._vdata)
+            on_change = data.on_view_change.get(self._base._member, {}).get(
+                self._base._field
+            )
             if on_change is not None:
                 on_change(self)
             self._modified = False

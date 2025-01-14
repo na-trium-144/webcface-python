@@ -4,24 +4,26 @@ import webcface.member
 from webcface.typing import convertible_to_float
 
 
-class Variant(webcface.field.Field):
+class Variant:
+    _base: "webcface.field.Field"
+
     def __init__(self, base: "webcface.field.Field", field: str = "") -> None:
         """文字列、数値などの型を送受信するVariantを指すクラス
         (ver2.0〜)
         """
-        super().__init__(
+        self._base = webcface.field.Field(
             base._data, base._member, field if field != "" else base._field
         )
 
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
@@ -32,31 +34,36 @@ class Variant(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        data = self._data_check()
-        if self._member not in data.on_text_change:
-            data.on_text_change[self._member] = {}
-        data.on_text_change[self._member][self._field] = func
+        data = self._base._data_check()
+        if self._base._member not in data.on_text_change:
+            data.on_text_change[self._base._member] = {}
+        data.on_text_change[self._base._member][self._base._field] = func
         return func
 
     def child(self, field: str) -> "Variant":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText
-        """
-        return Variant(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするVariant"""
+        return Variant(self._base.child(field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""
-        req = self._data_check().text_store.add_req(self._member, self._field)
+        req = self._base._data_check().text_store.add_req(
+            self._base._member, self._base._field
+        )
         if req > 0:
-            self._data_check().queue_msg_req(
-                [webcface.message.TextReq.new(self._member, self._field, req)]
+            self._base._data_check().queue_msg_req(
+                [
+                    webcface.message.TextReq.new(
+                        self._base._member, self._base._field, req
+                    )
+                ]
             )
 
     def try_get(self) -> Optional[Union[float, bool, str]]:
         """データまたはNoneを返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
-        return self._data_check().text_store.get_recv(self._member, self._field)
+        return self._base._data_check().text_store.get_recv(
+            self._base._member, self._base._field
+        )
 
     def get(self) -> Union[float, bool, str]:
         """データを返す、まだリクエストされてなければ自動でリクエストされる"""
@@ -70,7 +77,9 @@ class Variant(webcface.field.Field):
         try_get() などとは違って、実際のデータを受信しない。
         リクエストもしない。
         """
-        return self._field in self._data_check().text_store.get_entry(self._member)
+        return self._base._field in self._base._data_check().text_store.get_entry(
+            self._base._member
+        )
 
     def __str__(self) -> str:
         """printしたときなど
@@ -89,9 +98,11 @@ class Variant(webcface.field.Field):
             data2 = float(data)
         else:
             data2 = str(data)
-        self._set_check().text_store.set_send(self._field, data2)
+        self._base._set_check().text_store.set_send(self._base._field, data2)
         on_change = (
-            self._data_check().on_text_change.get(self._member, {}).get(self._field)
+            self._base._data_check()
+            .on_text_change.get(self._base._member, {})
+            .get(self._base._field)
         )
         if on_change is not None:
             on_change(self)
@@ -117,15 +128,12 @@ class Text(Variant):
 
         まだ値をリクエストされてなければ自動でリクエストされる
         """
-        super().on_change(lambda var: func(Text(var)))
+        super().on_change(lambda var: func(Text(var._base)))
         return func
 
     def child(self, field: str) -> "Text":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするText
-        """
-        return Text(super().child(field))
+        """「(thisの名前).(追加の名前)」を新しい名前とするText"""
+        return Text(self._base.child(field))
 
     def try_get(self) -> Optional[str]:
         """文字列をstrまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""

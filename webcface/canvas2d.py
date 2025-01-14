@@ -101,7 +101,8 @@ class Canvas2DComponent(webcface.canvas2d_base.Canvas2DComponentBase):
         )
 
 
-class Canvas2D(webcface.field.Field):
+class Canvas2D:
+    _base: "webcface.field.Field"
     _c2data: "Optional[Canvas2DData]"
     _modified: bool
 
@@ -121,7 +122,7 @@ class Canvas2D(webcface.field.Field):
 
         詳細は `Canvas2Dのドキュメント <https://na-trium-144.github.io/webcface/md_14__canvas2d.html>`_ を参照
         """
-        super().__init__(
+        self._base = webcface.field.Field(
             base._data, base._member, field if field != "" else base._field
         )
         self._c2data = None
@@ -132,12 +133,12 @@ class Canvas2D(webcface.field.Field):
     @property
     def member(self) -> "webcface.member.Member":
         """Memberを返す"""
-        return webcface.member.Member(self)
+        return webcface.member.Member(self._base)
 
     @property
     def name(self) -> str:
         """field名を返す"""
-        return self._field
+        return self._base._field
 
     def on_change(self, func: Callable) -> Callable:
         """値が変化したときのイベント
@@ -148,35 +149,40 @@ class Canvas2D(webcface.field.Field):
         まだ値をリクエストされてなければ自動でリクエストされる
         """
         self.request()
-        data = self._data_check()
-        if self._member not in data.on_canvas2d_change:
-            data.on_canvas2d_change[self._member] = {}
-        data.on_canvas2d_change[self._member][self._field] = func
+        data = self._base._data_check()
+        if self._base._member not in data.on_canvas2d_change:
+            data.on_canvas2d_change[self._base._member] = {}
+        data.on_canvas2d_change[self._base._member][self._base._field] = func
         return func
 
     def child(self, field: str) -> "Canvas2D":
-        """子フィールドを返す
-
-        :return: 「(thisのフィールド名).(子フィールド名)」をフィールド名とするView
-        """
-        return Canvas2D(self, self._field + "." + field)
+        """「(thisの名前).(追加の名前)」を新しい名前とするCanvas2D"""
+        return Canvas2D(self._base.child(field))
 
     def request(self) -> None:
         """値の受信をリクエストする"""
-        req = self._data_check().canvas2d_store.add_req(self._member, self._field)
+        req = self._base._data_check().canvas2d_store.add_req(
+            self._base._member, self._base._field
+        )
         if req > 0:
-            self._data_check().queue_msg_req(
-                [webcface.message.Canvas2DReq.new(self._member, self._field, req)]
+            self._base._data_check().queue_msg_req(
+                [
+                    webcface.message.Canvas2DReq.new(
+                        self._base._member, self._base._field, req
+                    )
+                ]
             )
 
     def try_get(self) -> "Optional[List[Canvas2DComponent]]":
         """CanvasをlistまたはNoneで返す、まだリクエストされてなければ自動でリクエストされる"""
         self.request()
-        v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
+        v = self._base._data_check().canvas2d_store.get_recv(
+            self._base._member, self._base._field
+        )
         v2: Optional[List[Canvas2DComponent]] = None
         if v is not None:
             v2 = [
-                Canvas2DComponent(v.components[v_id], self._data, v_id)
+                Canvas2DComponent(v.components[v_id], self._base._data, v_id)
                 for v_id in v.ids
             ]
         return v2
@@ -193,7 +199,9 @@ class Canvas2D(webcface.field.Field):
         try_get() などとは違って、実際のデータを受信しない。
         リクエストもしない。
         """
-        return self._field in self._data_check().canvas2d_store.get_entry(self._member)
+        return self._base._field in self._base._data_check().canvas2d_store.get_entry(
+            self._base._member
+        )
 
     @property
     def width(self) -> float:
@@ -204,7 +212,9 @@ class Canvas2D(webcface.field.Field):
             return self._c2data.width
         else:
             self.request()
-            v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
+            v = self._base._data_check().canvas2d_store.get_recv(
+                self._base._member, self._base._field
+            )
             if v is not None:
                 return v.width
             else:
@@ -219,7 +229,9 @@ class Canvas2D(webcface.field.Field):
             return self._c2data.height
         else:
             self.request()
-            v = self._data_check().canvas2d_store.get_recv(self._member, self._field)
+            v = self._base._data_check().canvas2d_store.get_recv(
+                self._base._member, self._base._field
+            )
             if v is not None:
                 return v.height
             else:
@@ -243,20 +255,19 @@ class Canvas2D(webcface.field.Field):
 
     def sync(self) -> "Canvas2D":
         """Viewの内容をclientに反映し送信可能にする"""
-        self._set_check()
+        data = self._base._set_check()
         if self._modified and self._c2data is not None:
-            data = self._set_check()
             data_idx: Dict[int, int] = {}
             for c in self._c2data.tmp_components:
                 idx = data_idx.get(c._canvas2d_type, 0)
                 data_idx[c._canvas2d_type] = idx + 1
-                c.lock_tmp(data, "c2", self._field, f"..{c._canvas2d_type}.{idx}")
+                c.lock_tmp(data, "c2", self._base._field, f"..{c._canvas2d_type}.{idx}")
                 self._c2data.components[c.id] = c.to_canvas2d()
                 self._c2data.ids.append(c.id)
-            self._set_check().canvas2d_store.set_send(self._field, self._c2data)
+            data.canvas2d_store.set_send(self._base._field, self._c2data)
             self._modified = False
-        on_change = (
-            self._data_check().on_canvas2d_change.get(self._member, {}).get(self._field)
+        on_change = data.on_canvas2d_change.get(self._base._member, {}).get(
+            self._base._field
         )
         if on_change is not None:
             on_change(self)

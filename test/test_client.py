@@ -191,6 +191,60 @@ def test_entry(wcli):
     called = 0
 
 
+def test_children_entry(wcli):
+    send_back(wcli, [SyncInit.new_full("a", 10, "b", "1", "12345")])
+    m = wcli.member("a")
+    assert len(list(m.children())) == 0
+    assert m.has_children() is False
+    assert m.child("c").has_children() is False
+
+    send_back(wcli, [ValueEntry.new(10, "a")])
+    send_back(wcli, [TextEntry.new(10, "b")])
+    send_back(wcli, [TextEntry.new(10, "c.a")])
+    send_back(wcli, [TextEntry.new(10, "c.b")])
+    send_back(wcli, [TextEntry.new(10, "c.c")])
+
+    assert len(list(m.value_entries())) == 1
+    assert len(list(m.text_entries())) == 4
+    assert len(list(m.child("c").value_entries())) == 0
+    assert len(list(m.child("c").text_entries())) == 3
+
+    assert m.has_children() is True
+    children = list(m.children())
+    assert len(children) == 3
+    assert children[0].member.name == "a"
+    assert children[0].name == "a"
+    assert children[1].member.name == "a"
+    assert children[1].name == "b"
+    assert children[2].member.name == "a"
+    assert children[2].name == "c"
+
+    children = list(m.children(recurse=True))
+    assert len(children) == 5
+    assert children[0].member.name == "a"
+    assert children[0].name == "a"
+    assert children[1].member.name == "a"
+    assert children[1].name == "b"
+    assert children[2].member.name == "a"
+    assert children[2].name == "c.a"
+    assert children[3].name == "c.b"
+    assert children[4].name == "c.c"
+
+    assert m.child("a").has_children() is False
+    children = list(m.child("a").children())
+    assert len(children) == 0
+
+    assert m.child("c").has_children() is True
+    children = list(m.child("c").children())
+    assert len(children) == 3
+    assert children[0].member.name == "a"
+    assert children[0].name == "c.a"
+    assert children[1].member.name == "a"
+    assert children[1].name == "c.b"
+    assert children[2].member.name == "a"
+    assert children[2].name == "c.c"
+
+
 def test_value_send(wcli):
     wcli._data_check().value_store.set_send("a", [5])
     wcli.sync()
