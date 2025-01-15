@@ -1,4 +1,5 @@
 from .member import Member
+from .field import Field
 from .value import Value
 from .text import Text, Variant, InputRef
 from .image import Image
@@ -25,6 +26,7 @@ except PackageNotFoundError:
 
 __all__ = [
     "Member",
+    "Field",
     "Value",
     "Text",
     "Variant",
