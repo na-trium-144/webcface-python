@@ -1,3 +1,10 @@
+## [3.1.0] - 2025-01-15
+### Added
+* Field.member(), name(), child(), children(), has_children(), 各種データ型の関数(value(), text(), ...と、 value_entries(), text_entries(), ...) 追加 (#42)
+    * Log.child() がなかったので追加
+    * Value, Textなど各種データ型がFieldを継承するのをやめる
+* Viewの要素にwidthとheight追加 (#43)
+
 ## [3.0.2] - 2024-12-16
 ### Fixed
 * components.button() の引数on_clickの型を修正 (#41)
