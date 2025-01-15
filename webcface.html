@@ -109,6 +109,32 @@
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Client.wait_connection"><code class="docutils literal notranslate"><span class="pre">Client.wait_connection()</span></code></a></li>
 </ul>
 </li>
+<li class="toctree-l3"><a class="reference internal" href="#webcface.Field"><code class="docutils literal notranslate"><span class="pre">Field</span></code></a><ul>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.canvas2d"><code class="docutils literal notranslate"><span class="pre">Field.canvas2d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.canvas2d_entries"><code class="docutils literal notranslate"><span class="pre">Field.canvas2d_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.canvas3d"><code class="docutils literal notranslate"><span class="pre">Field.canvas3d()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.canvas3d_entries"><code class="docutils literal notranslate"><span class="pre">Field.canvas3d_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.child"><code class="docutils literal notranslate"><span class="pre">Field.child()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.children"><code class="docutils literal notranslate"><span class="pre">Field.children()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.func"><code class="docutils literal notranslate"><span class="pre">Field.func()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.func_entries"><code class="docutils literal notranslate"><span class="pre">Field.func_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.func_listener"><code class="docutils literal notranslate"><span class="pre">Field.func_listener()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.has_children"><code class="docutils literal notranslate"><span class="pre">Field.has_children()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.image"><code class="docutils literal notranslate"><span class="pre">Field.image()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.image_entries"><code class="docutils literal notranslate"><span class="pre">Field.image_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.log"><code class="docutils literal notranslate"><span class="pre">Field.log()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.log_entries"><code class="docutils literal notranslate"><span class="pre">Field.log_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.member"><code class="docutils literal notranslate"><span class="pre">Field.member</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.name"><code class="docutils literal notranslate"><span class="pre">Field.name</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.text"><code class="docutils literal notranslate"><span class="pre">Field.text()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.text_entries"><code class="docutils literal notranslate"><span class="pre">Field.text_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.value"><code class="docutils literal notranslate"><span class="pre">Field.value()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.value_entries"><code class="docutils literal notranslate"><span class="pre">Field.value_entries()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.variant"><code class="docutils literal notranslate"><span class="pre">Field.variant()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.view"><code class="docutils literal notranslate"><span class="pre">Field.view()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="#webcface.Field.view_entries"><code class="docutils literal notranslate"><span class="pre">Field.view_entries()</span></code></a></li>
+</ul>
+</li>
 <li class="toctree-l3"><a class="reference internal" href="#webcface.Func"><code class="docutils literal notranslate"><span class="pre">Func</span></code></a><ul>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Func.args"><code class="docutils literal notranslate"><span class="pre">Func.args</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="#webcface.Func.exists"><code class="docutils literal notranslate"><span class="pre">Func.exists()</span></code></a></li>
@@ -1708,6 +1734,193 @@ timeout=0 または負の値なら再試行せず即座にreturnする。
 </dd></dl>
 
 <dl class="py class">
+<dt class="sig sig-object py" id="webcface.Field">
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Field</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.client_data.html#webcface.client_data.ClientData" title="webcface.client_data.ClientData"><span class="pre">ClientData</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">member</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/field.html#Field"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field" title="Link to this definition"></a></dt>
+<dd><p>Bases: <a class="reference internal" href="webcface.field.html#webcface.field.FieldBase" title="webcface.field.FieldBase"><code class="xref py py-class docutils literal notranslate"><span class="pre">FieldBase</span></code></a></p>
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.canvas2d">
+<span class="sig-name descname"><span class="pre">canvas2d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">width</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">height</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SupportsFloat</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2D" title="webcface.canvas2d.Canvas2D"><span class="pre">Canvas2D</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.canvas2d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.canvas2d" title="Link to this definition"></a></dt>
+<dd><p>Canvas2Dオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>height</strong> (<em>width</em><em>,</em>) – Canvas2Dのサイズを指定して初期化する</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.canvas2d_entries">
+<span class="sig-name descname"><span class="pre">canvas2d_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.canvas2d.html#webcface.canvas2d.Canvas2D" title="webcface.canvas2d.Canvas2D"><span class="pre">Canvas2D</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.canvas2d_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.canvas2d_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているcanvas2dをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.canvas3d">
+<span class="sig-name descname"><span class="pre">canvas3d</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3D" title="webcface.canvas3d.Canvas3D"><span class="pre">Canvas3D</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.canvas3d"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.canvas3d" title="Link to this definition"></a></dt>
+<dd><p>Canvas3Dオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.canvas3d_entries">
+<span class="sig-name descname"><span class="pre">canvas3d_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.canvas3d.html#webcface.canvas3d.Canvas3D" title="webcface.canvas3d.Canvas3D"><span class="pre">Canvas3D</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.canvas3d_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.canvas3d_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているcanvas3dをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.child">
+<span class="sig-name descname"><span class="pre">child</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.child"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.child" title="Link to this definition"></a></dt>
+<dd><p>「(このFieldの名前).(追加の名前)」を新しい名前とするField (ver3.1〜)</p>
+<ul class="simple">
+<li><p>このFieldの名前が空文字列の場合はピリオドをつけず新しい名前とする。</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.children">
+<span class="sig-name descname"><span class="pre">children</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">recurse</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.children" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているデータをすべて取得する (ver3.1〜)</p>
+<ul class="simple">
+<li><p>データ型を問わずすべてのデータを列挙する。</p></li>
+<li><p>recurseがFalseの場合、名前にさらにピリオドが含まれる場合はその前までの名前を返す。</p></li>
+<li><p>同名で複数のデータが存在する場合も1回のみカウントする。</p></li>
+</ul>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.func">
+<span class="sig-name descname"><span class="pre">func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">arg</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.func" title="Link to this definition"></a></dt>
+<dd><p>Funcオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+<ol class="arabic simple">
+<li><dl class="simple">
+<dt>member.func(arg: str)</dt><dd><ul class="simple">
+<li><p>指定した名前のFuncオブジェクトを生成・参照する。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>&#64;member.func(arg: str, [<a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs])</dt><dd><ul class="simple">
+<li><p>デコレータとして使い、デコレートした関数を指定した名前でセットする。</p></li>
+<li><p>デコレート後、関数は元のまま返す。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="simple">
+<dt>&#64;member.func([<a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs])</dt><dd><ul class="simple">
+<li><p>3と同じだが、名前はデコレートした関数から自動で取得される。</p></li>
+</ul>
+</dd>
+</dl>
+</li>
+</ol>
+<p>2, 3 の場合のkwargsは Func.set() を参照。</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.func_entries">
+<span class="sig-name descname"><span class="pre">func_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func.html#webcface.func.Func" title="webcface.func.Func"><span class="pre">Func</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.func_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.func_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているfuncをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.func_listener">
+<span class="sig-name descname"><span class="pre">func_listener</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.func_listener.html#webcface.func_listener.FuncListener" title="webcface.func_listener.FuncListener"><span class="pre">FuncListener</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.func_listener"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.func_listener" title="Link to this definition"></a></dt>
+<dd><p>FuncListenerオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.has_children">
+<span class="sig-name descname"><span class="pre">has_children</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">bool</span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.has_children"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.has_children" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているデータが1つ以上あればtrue (ver3.1〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.image">
+<span class="sig-name descname"><span class="pre">image</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.image.html#webcface.image.Image" title="webcface.image.Image"><span class="pre">Image</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.image"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.image" title="Link to this definition"></a></dt>
+<dd><p>Imageオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.image_entries">
+<span class="sig-name descname"><span class="pre">image_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.image.html#webcface.image.Image" title="webcface.image.Image"><span class="pre">Image</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.image_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.image_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているimageをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.log">
+<span class="sig-name descname"><span class="pre">log</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.log"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.log" title="Link to this definition"></a></dt>
+<dd><p>Logオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>field</strong> – (ver2.1〜) Logの名前を指定可能(省略すると”default”)</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.log_entries">
+<span class="sig-name descname"><span class="pre">log_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.log.html#webcface.log.Log" title="webcface.log.Log"><span class="pre">Log</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.log_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.log_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているlogをすべて取得する (ver3.1〜 / ver2.1〜3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.Field.member">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">member</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><a class="reference internal" href="webcface.member.html#webcface.member.Member" title="webcface.member.Member"><span class="pre">Member</span></a></em><a class="headerlink" href="#webcface.Field.member" title="Link to this definition"></a></dt>
+<dd><p>Memberを返す (ver3.1〜)</p>
+</dd></dl>
+
+<dl class="py property">
+<dt class="sig sig-object py" id="webcface.Field.name">
+<em class="property"><span class="pre">property</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">name</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#webcface.Field.name" title="Link to this definition"></a></dt>
+<dd><p>field名を返す (ver3.1〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.text">
+<span class="sig-name descname"><span class="pre">text</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.text"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.text" title="Link to this definition"></a></dt>
+<dd><p>Textオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.text_entries">
+<span class="sig-name descname"><span class="pre">text_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.text.html#webcface.text.Text" title="webcface.text.Text"><span class="pre">Text</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.text_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.text_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているtextをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.value">
+<span class="sig-name descname"><span class="pre">value</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.value"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.value" title="Link to this definition"></a></dt>
+<dd><p>Valueオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.value_entries">
+<span class="sig-name descname"><span class="pre">value_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.value.html#webcface.value.Value" title="webcface.value.Value"><span class="pre">Value</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.value_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.value_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているvalueをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.variant">
+<span class="sig-name descname"><span class="pre">variant</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.text.html#webcface.text.Variant" title="webcface.text.Variant"><span class="pre">Variant</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.variant"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.variant" title="Link to this definition"></a></dt>
+<dd><p>Variantオブジェクトを生成 (ver2.0〜)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.view">
+<span class="sig-name descname"><span class="pre">view</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.view"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.view" title="Link to this definition"></a></dt>
+<dd><p>Viewオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+<dl class="py method">
+<dt class="sig sig-object py" id="webcface.Field.view_entries">
+<span class="sig-name descname"><span class="pre">view_entries</span></span><span class="sig-paren">(</span><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Iterable</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.view.html#webcface.view.View" title="webcface.view.View"><span class="pre">View</span></a><span class="p"><span class="pre">]</span></span></span></span><a class="reference internal" href="_modules/webcface/field.html#Field.view_entries"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Field.view_entries" title="Link to this definition"></a></dt>
+<dd><p>「(thisの名前).(追加の名前)」で公開されているviewをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)</p>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
 <dt class="sig sig-object py" id="webcface.Func">
 <em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-prename descclassname"><span class="pre">webcface.</span></span><span class="sig-name descname"><span class="pre">Func</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">base</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><a class="reference internal" href="webcface.field.html#webcface.field.Field" title="webcface.field.Field"><span class="pre">Field</span></a><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">field</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">''</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">type</span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">args</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><a class="reference internal" href="webcface.func_info.html#webcface.func_info.Arg" title="webcface.func_info.Arg"><span class="pre">Arg</span></a><span class="p"><span class="pre">]</span></span><span class="w"> </span><span class="p"><span class="pre">|</span></span><span class="w"> </span><span class="pre">None</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">handle</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/webcface/func.html#Func"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Func" title="Link to this definition"></a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
@@ -2191,7 +2404,7 @@ color_mode がBGRA,RGBAの場合 (height, width, 4)
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="py method">
 <dt class="sig sig-object py" id="webcface.Log.append">
-<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2025,</span> <span class="pre">1,</span> <span class="pre">14,</span> <span class="pre">9,</span> <span class="pre">32,</span> <span class="pre">21,</span> <span class="pre">354939)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
+<span class="sig-name descname"><span class="pre">append</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">level</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">message</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">time</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">datetime</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">datetime.datetime(2025,</span> <span class="pre">1,</span> <span class="pre">15,</span> <span class="pre">6,</span> <span class="pre">43,</span> <span class="pre">0,</span> <span class="pre">771105)</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">None</span></span></span><a class="reference internal" href="_modules/webcface/log.html#Log.append"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#webcface.Log.append" title="Link to this definition"></a></dt>
 <dd><p>ログをwebcfaceに送信する
 (ver2.0〜)</p>
 <p>コンソールなどには出力されない</p>

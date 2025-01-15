@@ -84,7 +84,7 @@
 
 
 <div class="viewcode-block" id="FieldBase">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.FieldBase">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.FieldBase">[docs]</a>
 <span class="k">class</span> <span class="nc">FieldBase</span><span class="p">:</span>
     <span class="n">_member</span><span class="p">:</span> <span class="nb">str</span>
     <span class="n">_field</span><span class="p">:</span> <span class="nb">str</span>
@@ -96,7 +96,7 @@
 
 
 <div class="viewcode-block" id="Field">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field">[docs]</a>
 <span class="k">class</span> <span class="nc">Field</span><span class="p">(</span><span class="n">FieldBase</span><span class="p">):</span>
     <span class="n">_data</span><span class="p">:</span> <span class="s2">&quot;Optional[webcface.client_data.ClientData]&quot;</span>
 
@@ -131,7 +131,7 @@
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="n">_field</span>
 
 <div class="viewcode-block" id="Field.child">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.child">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.child">[docs]</a>
     <span class="k">def</span> <span class="nf">child</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Field&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(このFieldの名前).(追加の名前)」を新しい名前とするField (ver3.1〜)</span>
 
@@ -147,42 +147,42 @@
 
 
 <div class="viewcode-block" id="Field.value">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.value">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.value">[docs]</a>
     <span class="k">def</span> <span class="nf">value</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.value.Value&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Valueオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">value</span><span class="o">.</span><span class="n">Value</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Field.text">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.text">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.text">[docs]</a>
     <span class="k">def</span> <span class="nf">text</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.text.Text&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Textオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Text</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Field.variant">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.variant">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.variant">[docs]</a>
     <span class="k">def</span> <span class="nf">variant</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.text.Variant&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Variantオブジェクトを生成 (ver2.0〜)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">text</span><span class="o">.</span><span class="n">Variant</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Field.image">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.image">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.image">[docs]</a>
     <span class="k">def</span> <span class="nf">image</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.image.Image&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Imageオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">image</span><span class="o">.</span><span class="n">Image</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Field.view">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.view">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.view">[docs]</a>
     <span class="k">def</span> <span class="nf">view</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.view.View&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Viewオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">view</span><span class="o">.</span><span class="n">View</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Field.canvas2d">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.canvas2d">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.canvas2d">[docs]</a>
     <span class="k">def</span> <span class="nf">canvas2d</span><span class="p">(</span>
         <span class="bp">self</span><span class="p">,</span>
         <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span>
@@ -197,14 +197,14 @@
 
 
 <div class="viewcode-block" id="Field.canvas3d">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.canvas3d">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.canvas3d">[docs]</a>
     <span class="k">def</span> <span class="nf">canvas3d</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.canvas3d.Canvas3D&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Canvas3Dオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">canvas3d</span><span class="o">.</span><span class="n">Canvas3D</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
 
 
 <div class="viewcode-block" id="Field.log">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.log">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.log">[docs]</a>
     <span class="k">def</span> <span class="nf">log</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.log.Log&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Logオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</span>
 
@@ -214,7 +214,7 @@
 
 
 <div class="viewcode-block" id="Field.func">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.func">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.func">[docs]</a>
     <span class="k">def</span> <span class="nf">func</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">arg</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.func.Func&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;Funcオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)</span>
 
@@ -232,7 +232,7 @@
 
 
 <div class="viewcode-block" id="Field.func_listener">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.func_listener">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.func_listener">[docs]</a>
     <span class="k">def</span> <span class="nf">func_listener</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">field</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;webcface.func_listener.FuncListener&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;FuncListenerオブジェクトを生成(ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="n">webcface</span><span class="o">.</span><span class="n">func_listener</span><span class="o">.</span><span class="n">FuncListener</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">child</span><span class="p">(</span><span class="n">field</span><span class="p">))</span></div>
@@ -255,7 +255,7 @@
         <span class="k">return</span> <span class="kc">False</span>
 
 <div class="viewcode-block" id="Field.children">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.children">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.children">[docs]</a>
     <span class="k">def</span> <span class="nf">children</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">recurse</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.field.Field]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているデータをすべて取得する (ver3.1〜)</span>
 
@@ -276,7 +276,7 @@
 
 
 <div class="viewcode-block" id="Field.has_children">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.has_children">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.has_children">[docs]</a>
     <span class="k">def</span> <span class="nf">has_children</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているデータが1つ以上あればtrue (ver3.1〜)&quot;&quot;&quot;</span>
         <span class="k">return</span> <span class="p">(</span>
@@ -292,7 +292,7 @@
 
 
 <div class="viewcode-block" id="Field.value_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.value_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.value_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">value_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.value.Value]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているvalueをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -301,7 +301,7 @@
 
 
 <div class="viewcode-block" id="Field.text_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.text_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.text_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">text_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.text.Text]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているtextをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -310,7 +310,7 @@
 
 
 <div class="viewcode-block" id="Field.image_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.image_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.image_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">image_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.image.Image]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているimageをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -319,7 +319,7 @@
 
 
 <div class="viewcode-block" id="Field.view_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.view_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.view_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">view_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.view.View]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているviewをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -328,7 +328,7 @@
 
 
 <div class="viewcode-block" id="Field.func_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.func_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.func_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">func_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.func.Func]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているfuncをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -337,7 +337,7 @@
 
 
 <div class="viewcode-block" id="Field.canvas2d_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.canvas2d_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.canvas2d_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">canvas2d_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.canvas2d.Canvas2D]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているcanvas2dをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -346,7 +346,7 @@
 
 
 <div class="viewcode-block" id="Field.canvas3d_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.canvas3d_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.canvas3d_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">canvas3d_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.canvas3d.Canvas3D]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているcanvas3dをすべて取得する (ver3.1〜 / ver3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
@@ -355,7 +355,7 @@
 
 
 <div class="viewcode-block" id="Field.log_entries">
-<a class="viewcode-back" href="../../webcface.field.html#webcface.field.Field.log_entries">[docs]</a>
+<a class="viewcode-back" href="../../webcface.field.html#webcface.Field.log_entries">[docs]</a>
     <span class="k">def</span> <span class="nf">log_entries</span><span class="p">(</span><span class="bp">self</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="s2">&quot;Iterable[webcface.log.Log]&quot;</span><span class="p">:</span>
 <span class="w">        </span><span class="sd">&quot;&quot;&quot;「(thisの名前).(追加の名前)」で公開されているlogをすべて取得する (ver3.1〜 / ver2.1〜3.0までMemberクラスのメソッド)&quot;&quot;&quot;</span>
         <span class="n">entries</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
